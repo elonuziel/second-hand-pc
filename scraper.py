@@ -351,8 +351,10 @@ class ITOutletScraper:
                     if not HardwareClassifier.is_laptop(title):
                         continue
 
-                    prices = [int(p[0].replace(',', '')) for p in re.findall(r'(\d[\d,]*)\s*₪', b) if int(p[0].replace(',', '')) > 500]
-                    raw_price = prices[-1] if prices else 2000
+                    # Find all prices, ignore discounts <= 500 or the banner coupon 1500 threshold
+                    raw_prices = [int(p.replace(',', '')) for p in re.findall(r'(\d[\d,]*)\s*₪', b)]
+                    valid_prices = [p for p in raw_prices if 600 < p and p != 1500]
+                    raw_price = valid_prices[-1] if valid_prices else 2000
 
                     # Smart Discount & Deal Price Logic
                     if 'p14s' in title.lower():
