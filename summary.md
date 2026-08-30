@@ -5,7 +5,7 @@
 3. 🏬 **LaptopTech LTS (לפטופ.טק):** [lts.co.il/מחשבים-ניידים-מחודשים-יד-2](https://lts.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%99%D7%93-2/)
 4. 🏬 **Recomp Computers (ריקומפ):** [recomp.co.il/מחשבים-מחודשים-במבצע](https://recomp.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%99%d7%9d-%d7%9e%d7%97%d7%95%d7%93%d7%a9%d7%99%d7%9d-%d7%91%d7%9e%d7%91%d7%a6%d7%a2/)
 
-*Last Automated Live Audit: August 30, 2026 (06:18)*
+*Last Automated Live Audit: August 30, 2026 (06:20)*
 
 ---
 
@@ -43,16 +43,17 @@
 
 ---
 
-## 🏆 Top Overall Available Picks (Audited Live Stock)
+## 🏆 Top Overall Available Picks (Dynamically Auto-Ranked from Live Inventory)
 
 | Category | Model | Key Specs | Best Deal Price | Store | Storage Interface | RAM Architecture | Upgradability | Direct Link |
 | :--- | :--- | :--- | :---: | :---: | :--- | :--- | :---: | :---: |
-| 👑 **Best Value RAM Champion** | **Lenovo ThinkPad T14 Gen 1** | i7 (10th Gen) • **32GB RAM** • 512GB SSD • 14" | **1,900 ₪** *(100 ₪ off)* | IT Outlet | ⚡ **M.2 2280 PCIe NVMe** (Swappable) | 16GB sold. + 16GB slot (max 48GB) | 🟡 **7.5** | [View Product](https://www.itoutlet.co.il/items/5337411-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Lenovo-ThinkPad-T14-GEN1-i7-32GB-512GB-SSD) |
-| 🚀 **Best 32GB + 1TB Workhorse** | **Lenovo ThinkPad P14s Gen 1** | i7-10510U • **32GB RAM** • **1TB SSD** • Quadro P520 | **2,500 ₪** *(Code `IT14`)* | IT Outlet | ⚡ **M.2 2280 PCIe NVMe** (Swappable) | 16GB sold. + 16GB slot (max 48GB) | 🟡 **7.5** | [View Product](https://www.itoutlet.co.il/items/8733190-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-%D7%9C%D7%A2%D7%A8%D7%99%D7%9B%D7%94-%D7%92%D7%A8%D7%A4%D7%99%D7%AA-Lenovo-ThinkPad-P14s-Gen-1-i7-32GB-1TB-SSD) |
-| ⚡ **Best Modern CPU Power (12th Gen)**| **Lenovo ThinkPad E14 Gen 4** | **i7-12th Gen** • 16GB RAM • 512GB SSD • 14" | **2,400 ₪** *(100 ₪ off)* | IT Outlet | ⚡ **Dual M.2 NVMe Slots** (2242 + 2280) | 8GB sold. + 1x SODIMM Slot | 🟢 **8.5** | [View Product](https://www.itoutlet.co.il/items/8914011-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Lenovo-ThinkPad-E14-Gen-4-i7-16GB-512GB-SSD) |
-| 🥈 **Best 2-in-1 / Touchscreen** | **HP EliteBook x360 830 G8** | i7-1185G7 • 16GB RAM • 512GB SSD • 360° Touch | **2,199 ₪** *(24M Warranty)* | Ecology | ⚡ **M.2 2280 PCIe NVMe** (Swappable) | 16GB LPDDR4x (Soldered) | 🟠 **5.0** | [View Product](https://www.ecommunity.org.il/lti71030g8_touch) |
-| 🏗️ **Best Heavy Workstation** | **HP ZBook Fury 15 G8** | i7 (11th Gen 45W) • 16GB • 512GB SSD • Quadro GPU | **3,699 ₪** *(24M Warranty)* | Ecology | ⚡ **Quad M.2 NVMe Slots** (Up to 4 SSDs) | 4x SODIMM Slots (up to 128GB) | 🟢 **10** | [View Product](https://www.ecommunity.org.il/page_26485) |
-| 🪶 **Best Featherlight (< 1.2kg)**| **Dell Latitude 7320** | i7 (11th Gen) • 16GB RAM • 256GB SSD • 1.2 kg | **1,949 ₪** *(24M Warranty)* | Ecology | ⚡ **M.2 2280 PCIe NVMe** (Swappable) | 16GB LPDDR4x (Soldered) | 🟠 **5.0** | [View Product](https://www.ecommunity.org.il/page_21110) |
+| **👑 Best Value RAM Champion** | **Lenovo ThinkPad P15 GEN1 i7/32GB/1TB SSD** | Core i7 (10th Gen) • **32GB RAM** • 1000GB SSD | **1,900 ₪ (100 ₪ Coupon)** | IT Outlet | ⚡ Quad/Dual M.2 NVMe Slots | 4x SODIMM Slots (up to 128GB) | 🟢 10.0 | [View Product](https://www.itoutlet.co.il/items/7388291-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-%D7%9C%D7%A2%D7%A8%D7%99%D7%9B%D7%94-%D7%92%D7%A8%D7%A4%D7%99%D7%AA-Lenovo-ThinkPad-P15-GEN1-i7-32GB-1TB-SSD) |
+| **🚀 Best 32GB + 1TB Workhorse** | **Lenovo ThinkPad P15 GEN1 i7/32GB/1TB SSD** | Core i7 (10th Gen) • **32GB RAM** • 1000GB SSD | **1,900 ₪ (100 ₪ Coupon)** | IT Outlet | ⚡ Quad/Dual M.2 NVMe Slots | 4x SODIMM Slots (up to 128GB) | 🟢 10.0 | [View Product](https://www.itoutlet.co.il/items/7388291-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-%D7%9C%D7%A2%D7%A8%D7%99%D7%9B%D7%94-%D7%92%D7%A8%D7%A4%D7%99%D7%AA-Lenovo-ThinkPad-P15-GEN1-i7-32GB-1TB-SSD) |
+| **⚡ Best Modern CPU Power (12th Gen)** | **Dell Latitude 5431 i7/32GB/1TB SSD** | Core i7 (12th Gen) • **32GB RAM** • 1000GB SSD | **1,900 ₪ (100 ₪ Coupon)** | IT Outlet | ⚡ M.2 2280 PCIe NVMe (Swappable) | 2x SODIMM Slots (up to 64GB) | 🟢 9.0 | [View Product](https://www.itoutlet.co.il/items/6960903-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Dell-Latitude-5431-i7-32GB-1TB-SSD-) |
+| **🥈 Best 2-in-1 / Touchscreen** | **Lenovo ThinkPad T14 Touch i5 16GB 256GB** | Core i5 • **16GB RAM** • 256GB SSD | **1,849 ₪ (24M Warranty)** | Ecology Computers | ⚡ M.2 2280 PCIe NVMe (Swappable) | 1x Soldered + 1x SODIMM Slot (max 48GB) | 🟡 7.5 | [View Product](https://www.ecommunity.org.il/thinkpad_t14) |
+| **🏗️ Best Heavy Workstation** | **HP ZBook Fury 15 G7 i7 16GB 512GB (45W GPU)** | Core i7 (10th Gen) • **16GB RAM** • 512GB SSD | **3,499 ₪ (24M Warranty)** | Ecology Computers | ⚡ Quad/Dual M.2 NVMe Slots | 4x SODIMM Slots (up to 128GB) | 🟢 10.0 | [View Product](https://www.ecommunity.org.il/page_25916) |
+| **🪶 Best Featherlight (< 1.3kg)** | **Dell Latitude 7320 i7 16GB 256GB (1.2 kg)** | Core i7 (11th Gen) • **16GB RAM** • 256GB SSD | **1,949 ₪ (24M Warranty)** | Ecology Computers | ⚡ M.2 2280 PCIe NVMe (Swappable) | Soldered LPDDR4x/5 (Fixed) | 🟠 5.0 | [View Product](https://www.ecommunity.org.il/page_21110) |
+| **🛡️ Best Peace of Mind** | **HP/Dell/Lenovo G-4 i5 8GB 240GB** | Core i5 (4th Gen) • **8GB RAM** • 240GB SSD | **849 ₪ (24M Warranty)** | Ecology Computers | 🐢 2.5" SATA SSD / Bay | 2x SODIMM Slots | 🟡 8.0 | [View Product](https://www.ecommunity.org.il/%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-i5-%D7%9E%D7%97%D7%95%D7%93%D7%A9) |
 
 ---
 

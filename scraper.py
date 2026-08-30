@@ -7,6 +7,17 @@ Enterprise-grade, modular, and resilient scraper for Israeli refurbished PC stor
 2. IT Outlet (itoutlet.co.il)
 3. LaptopTech LTS (lts.co.il)
 4. Recomp Computers (recomp.co.il)
+
+Features:
+- Dynamic Auto-Computation of "Top Overall Available Picks" based on live inventory
+- Strongly typed Dataclasses (LaptopItem) with hardware classification
+- Robust connection pooling with exponential backoff retries (urllib3/requests)
+- Multithreaded concurrent scraping
+- Dual export to JSON & CSV + Auto-generation of production markdown guide (`summary.md`)
+- Advanced CLI filtering (--min-ram, --max-price, --min-score, --store, --csv, --json)
+
+Author: Advanced Coding Agent
+Updated: August 2026
 """
 
 from __future__ import annotations
@@ -246,6 +257,64 @@ class HardwareClassifier:
         return True
 
 
+# --- Dynamic Top Picks Selector Engine ---
+class TopPicksEngine:
+    """Algorithmically analyzes the entire live inventory and selects the best top picks."""
+
+    @staticmethod
+    def select_top_picks(all_items: List[LaptopItem]) -> List[Tuple[str, str, LaptopItem]]:
+        """
+        Returns a list of (CategoryEmoji, CategoryTitle, BestLaptopItem).
+        """
+        picks: List[Tuple[str, str, LaptopItem]] = []
+        valid_items = [i for i in all_items if i.deal_price_ils > 0 and i.stock_status.startswith("🟢")]
+
+        # 1. 👑 Best Value RAM Champion (>= 32GB RAM)
+        ram_32 = [i for i in valid_items if i.ram_gb >= 32]
+        if ram_32:
+            ram_32.sort(key=lambda x: (x.deal_price_ils, -x.upgradability_score))
+            picks.append(("👑 Best Value RAM Champion", "Highest RAM per Shekel (>= 32GB)", ram_32[0]))
+
+        # 2. 🚀 Best 32GB + 1TB Workhorse
+        workhorse = [i for i in valid_items if i.ram_gb >= 32 and i.storage_gb >= 1000]
+        if workhorse:
+            workhorse.sort(key=lambda x: (x.deal_price_ils, -x.upgradability_score))
+            picks.append(("🚀 Best 32GB + 1TB Workhorse", "32GB RAM + 1TB NVMe Powerhouse", workhorse[0]))
+
+        # 3. ⚡ Best Modern CPU Power (12th Gen)
+        gen12 = [i for i in valid_items if '12th Gen' in i.cpu or 'ultra' in i.cpu.lower()]
+        if gen12:
+            gen12.sort(key=lambda x: (x.deal_price_ils, -x.ram_gb))
+            picks.append(("⚡ Best Modern CPU Power (12th Gen)", "Latest Architecture Performance", gen12[0]))
+
+        # 4. 🥈 Best 2-in-1 / Touchscreen
+        touch = [i for i in valid_items if any(k in i.title.lower() for k in ['touch', 'x360', '2-in-1', 'טאצ'])]
+        if touch:
+            # Prioritize higher generation and warranty
+            touch.sort(key=lambda x: (-x.warranty_months, x.deal_price_ils))
+            picks.append(("🥈 Best 2-in-1 / Touchscreen", "Versatile 360° / Touch Display", touch[0]))
+
+        # 5. 🏗️ Best Heavy Workstation (10/10)
+        workstations = [i for i in valid_items if i.upgradability_score >= 10.0]
+        if workstations:
+            workstations.sort(key=lambda x: (-x.warranty_months, x.deal_price_ils))
+            picks.append(("🏗️ Best Heavy Workstation", "4x RAM Slots + Multi-NVMe Bays", workstations[0]))
+
+        # 6. 🪶 Best Featherlight / Portable (< 1.3kg)
+        ultrabooks = [i for i in valid_items if any(k in i.title.lower() for k in ['7320', '7330', 'x13', 'carbon', 'x30l'])]
+        if ultrabooks:
+            ultrabooks.sort(key=lambda x: (-x.warranty_months, x.deal_price_ils))
+            picks.append(("🪶 Best Featherlight (< 1.3kg)", "Maximum Portability & Battery Life", ultrabooks[0]))
+
+        # 7. 🛡️ Best Long Warranty Deal (24-Month Warranty)
+        warranty_24 = [i for i in valid_items if i.warranty_months >= 24]
+        if warranty_24:
+            warranty_24.sort(key=lambda x: x.deal_price_ils)
+            picks.append(("🛡️ Best Peace of Mind", "Full 24-Month Official Warranty", warranty_24[0]))
+
+        return picks
+
+
 # --- Store 1: IT Outlet Scraper ---
 class ITOutletScraper:
     STORE_NAME = "IT Outlet"
@@ -266,7 +335,7 @@ class ITOutletScraper:
                 if r.status_code != 200:
                     break
 
-                blocks = re.findall(r'<div[^>]*class=[\"\'][^\"\']*(?:item|product)[^\"\']*[\"\'][^>]*>(.*?)</div>\s*</div>', r.text, re.DOTALL)
+                blocks = re.findall(r'<div[^>]*class=[\"\'][^\"\']*layout_list_item[^\"\']*[\"\'][^>]*>(.*?)(?=<div[^>]*class=[\"\'][^\"\']*layout_list_item|$)', r.text, re.DOTALL)
                 for b in blocks:
                     link_m = re.findall(r'href=[\"\']\s*(/items/\d+-[^\"\']+)[\"\']', b)
                     if not link_m:
@@ -276,16 +345,14 @@ class ITOutletScraper:
                         continue
                     seen_urls.add(full_link)
 
-                    title_m = re.findall(r'<h[234][^>]*>(.*?)</h[234]>|title=[\"\']([^\"\']+)[\"\']', b, re.DOTALL)
+                    title_m = re.findall(r'alt=[\"\']([^\"\']+)[\"\']|<h[234][^>]*>(.*?)</h[234]>', b)
                     raw_title = title_m[0][0] or title_m[0][1] if title_m else "Laptop"
                     title = HardwareClassifier.clean_text(raw_title)
                     if not HardwareClassifier.is_laptop(title):
                         continue
 
-                    price_m = re.findall(r'class=[\"\']crntPrice[\"\'][^>]*>(\d[\d,]*)', b)
-                    if not price_m:
-                        price_m = re.findall(r'(\d[\d,]*)\s*₪', b)
-                    raw_price = int(price_m[0].replace(',', '')) if price_m else 2000
+                    prices = [int(p[0].replace(',', '')) for p in re.findall(r'(\d[\d,]*)\s*₪', b) if int(p[0].replace(',', '')) > 500]
+                    raw_price = prices[-1] if prices else 2000
 
                     # Smart Discount & Deal Price Logic
                     if 'p14s' in title.lower():
@@ -580,6 +647,13 @@ class ReportGenerator:
         lts_items = all_results.get('lts', [])
         rec_items = all_results.get('recomp', [])
 
+        # Flatten all items to dynamically compute Top Overall Picks
+        all_laptops: List[LaptopItem] = []
+        for v in all_results.values():
+            all_laptops.extend(v)
+
+        top_picks = TopPicksEngine.select_top_picks(all_laptops)
+
         md = f"""# 💻 Refurbished Laptops Market Research & Multi-Store Comparison Guide
 **Stores Audited & Researched:**
 1. 🏬 **Ecology Computers (אקולוגיה לקהילה מוגנת):** [ecommunity.org.il/מחשבים-ניידים](https://www.ecommunity.org.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D)
@@ -625,17 +699,17 @@ class ReportGenerator:
 
 ---
 
-## 🏆 Top Overall Available Picks (Audited Live Stock)
+## 🏆 Top Overall Available Picks (Dynamically Auto-Ranked from Live Inventory)
 
 | Category | Model | Key Specs | Best Deal Price | Store | Storage Interface | RAM Architecture | Upgradability | Direct Link |
 | :--- | :--- | :--- | :---: | :---: | :--- | :--- | :---: | :---: |
-| 👑 **Best Value RAM Champion** | **Lenovo ThinkPad T14 Gen 1** | i7 (10th Gen) • **32GB RAM** • 512GB SSD • 14" | **1,900 ₪** *(100 ₪ off)* | IT Outlet | ⚡ **M.2 2280 PCIe NVMe** (Swappable) | 16GB sold. + 16GB slot (max 48GB) | 🟡 **7.5** | [View Product](https://www.itoutlet.co.il/items/5337411-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Lenovo-ThinkPad-T14-GEN1-i7-32GB-512GB-SSD) |
-| 🚀 **Best 32GB + 1TB Workhorse** | **Lenovo ThinkPad P14s Gen 1** | i7-10510U • **32GB RAM** • **1TB SSD** • Quadro P520 | **2,500 ₪** *(Code `IT14`)* | IT Outlet | ⚡ **M.2 2280 PCIe NVMe** (Swappable) | 16GB sold. + 16GB slot (max 48GB) | 🟡 **7.5** | [View Product](https://www.itoutlet.co.il/items/8733190-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-%D7%9C%D7%A2%D7%A8%D7%99%D7%9B%D7%94-%D7%92%D7%A8%D7%A4%D7%99%D7%AA-Lenovo-ThinkPad-P14s-Gen-1-i7-32GB-1TB-SSD) |
-| ⚡ **Best Modern CPU Power (12th Gen)**| **Lenovo ThinkPad E14 Gen 4** | **i7-12th Gen** • 16GB RAM • 512GB SSD • 14" | **2,400 ₪** *(100 ₪ off)* | IT Outlet | ⚡ **Dual M.2 NVMe Slots** (2242 + 2280) | 8GB sold. + 1x SODIMM Slot | 🟢 **8.5** | [View Product](https://www.itoutlet.co.il/items/8914011-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Lenovo-ThinkPad-E14-Gen-4-i7-16GB-512GB-SSD) |
-| 🥈 **Best 2-in-1 / Touchscreen** | **HP EliteBook x360 830 G8** | i7-1185G7 • 16GB RAM • 512GB SSD • 360° Touch | **2,199 ₪** *(24M Warranty)* | Ecology | ⚡ **M.2 2280 PCIe NVMe** (Swappable) | 16GB LPDDR4x (Soldered) | 🟠 **5.0** | [View Product](https://www.ecommunity.org.il/lti71030g8_touch) |
-| 🏗️ **Best Heavy Workstation** | **HP ZBook Fury 15 G8** | i7 (11th Gen 45W) • 16GB • 512GB SSD • Quadro GPU | **3,699 ₪** *(24M Warranty)* | Ecology | ⚡ **Quad M.2 NVMe Slots** (Up to 4 SSDs) | 4x SODIMM Slots (up to 128GB) | 🟢 **10** | [View Product](https://www.ecommunity.org.il/page_26485) |
-| 🪶 **Best Featherlight (< 1.2kg)**| **Dell Latitude 7320** | i7 (11th Gen) • 16GB RAM • 256GB SSD • 1.2 kg | **1,949 ₪** *(24M Warranty)* | Ecology | ⚡ **M.2 2280 PCIe NVMe** (Swappable) | 16GB LPDDR4x (Soldered) | 🟠 **5.0** | [View Product](https://www.ecommunity.org.il/page_21110) |
+"""
+        for cat_emoji, cat_desc, p in top_picks:
+            score_badge = f"🟢 {p.upgradability_score}" if p.upgradability_score >= 8.5 else (f"🟡 {p.upgradability_score}" if p.upgradability_score >= 7.0 else f"🟠 {p.upgradability_score}")
+            specs_summary = f"{p.cpu} • **{p.ram_gb}GB RAM** • {p.storage_gb}GB SSD"
+            md += f"| **{cat_emoji}** | **{p.title}** | {specs_summary} | **{p.deal_label}** | {p.store} | {p.storage_type} | {p.ram_type} | {score_badge} | [View Product]({p.url}) |\n"
 
+        md += """
 ---
 
 ## 📸 Featured Deal: Lenovo ThinkPad P14s Gen 1 (IT Outlet)
@@ -793,7 +867,7 @@ def main():
     if args.csv:
         ReportGenerator.export_csv(all_items, CSV_PATH)
 
-    # Auto-update summary.md
+    # Auto-update summary.md with dynamic Top Picks
     if not args.no_md:
         ReportGenerator.update_summary_markdown(results, SUMMARY_MD_PATH)
 
