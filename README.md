@@ -3,6 +3,10 @@
 A data‑driven toolkit for researching, evaluating, and comparing **second‑hand laptops**, with a focus on **2‑in‑1 devices**, **touch laptops**, and detailed model‑specific reviews.  
 This repository combines scraping tools, structured datasets, and curated documentation to help buyers make informed decisions when purchasing refurbished or used laptops.
 
+## 🌐 Live site
+
+Project website: https://elonuziel.github.io/second-hand-pc/
+
 ---
 
 ## 📌 Project Overview
@@ -127,7 +131,7 @@ You can help by:
 
 ## 📄 License
 
-standart MIT license
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
