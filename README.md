@@ -127,22 +127,10 @@ You can help by:
 
 ## 📄 License
 
-This project currently has **no license specified**.  
-Add one if you plan to allow public reuse.
+standart MIT license
 
 ---
 
 ## ⭐ Acknowledgements
 
 Thanks to the open‑source community and refurbished laptop marketplaces that make this research possible.
-
----
-
-If you'd like, I can also:
-
-- Add badges (Python version, workflow status)
-- Write a more marketing‑style README
-- Add screenshots or diagrams
-- Generate a logo for the project
-
-Just tell me the style you want.
