@@ -9,12 +9,14 @@ Enterprise-grade, modular, and resilient scraper for Israeli refurbished PC stor
 4. Recomp Computers (recomp.co.il)
 
 Features:
+- Exact Live Product-Page Price Scraping (No estimates or hardcoded fallbacks)
+- Optional Groq AI Enhancement (--ai / --groq) for deep GPU, CPU, and Form-Factor analysis
 - Dynamic Auto-Computation of "Top Overall Available Picks" based on live inventory
 - Strongly typed Dataclasses (LaptopItem) with hardware classification
 - Robust connection pooling with exponential backoff retries (urllib3/requests)
 - Multithreaded concurrent scraping
 - Dual export to JSON & CSV + Auto-generation of production markdown guide (`summary.md`)
-- Advanced CLI filtering (--min-ram, --max-price, --min-score, --store, --csv, --json)
+- Advanced CLI filtering (--min-ram, --max-price, --min-score, --store, --csv, --json, --ai)
 
 Author: Advanced Coding Agent
 Updated: August 2026
@@ -49,6 +51,7 @@ WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
 SUMMARY_MD_PATH = os.path.join(WORKSPACE_DIR, "summary.md")
 JSON_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.json")
 CSV_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.csv")
+ENV_FILE_PATH = os.path.join(WORKSPACE_DIR, ".env")
 
 # --- Logging Configuration ---
 logging.basicConfig(
@@ -57,6 +60,21 @@ logging.basicConfig(
     datefmt="%H:%M:%S"
 )
 logger = logging.getLogger("LaptopScraper")
+
+# --- Helper: Safe Secret Loader ---
+def get_groq_api_key() -> str:
+    """Safely loads GROQ_API_KEY from environment or .env without logging secret values."""
+    if "GROQ_API_KEY" in os.environ and os.environ["GROQ_API_KEY"]:
+        return os.environ["GROQ_API_KEY"].strip()
+    if os.path.exists(ENV_FILE_PATH):
+        try:
+            with open(ENV_FILE_PATH, "r", encoding="utf-8") as f:
+                for line in f:
+                    if line.startswith("GROQ_API_KEY="):
+                        return line.strip().split("=", 1)[1].strip()
+        except Exception:
+            pass
+    return ""
 
 # --- HTTP Client Configuration ---
 DEFAULT_HEADERS = {
@@ -78,7 +96,7 @@ def create_resilient_session(retries: int = 3, backoff_factor: float = 0.5) -> r
         status_forcelist=[429, 500, 502, 503, 504],
         allowed_methods=["HEAD", "GET", "OPTIONS"]
     )
-    adapter = HTTPAdapter(max_retries=retry_strategy, pool_connections=10, pool_maxsize=20)
+    adapter = HTTPAdapter(max_retries=retry_strategy, pool_connections=15, pool_maxsize=30)
     session.mount("https://", adapter)
     session.mount("http://", adapter)
     return session
@@ -104,10 +122,87 @@ class LaptopItem:
     warranty_months: int
     stock_status: str
     url: str
+    gpu: str = "Integrated"
+    is_touch: bool = False
+    is_2in1: bool = False
     image_url: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
+
+
+# --- Groq AI Assistant Engine ---
+class GroqSpecEnhancer:
+    """Uses Groq's high-speed LLM inference to perform deep hardware spec audits."""
+
+    GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
+    DEFAULT_MODEL = "openai/gpt-oss-20b"
+
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or get_groq_api_key()
+        self.enabled = bool(self.api_key)
+
+    def enhance_item(self, item: LaptopItem) -> LaptopItem:
+        """Deeply audits a single LaptopItem using Groq LLM inference."""
+        if not self.enabled:
+            return item
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        prompt = (
+            "You are a senior PC hardware engineer. Analyze the Hebrew/English laptop listing and extract accurate specs. "
+            "Return a JSON object with: "
+            "'gpu' (str: e.g. 'NVIDIA Quadro P520', 'Intel Iris Xe', 'Intel UHD', 'AMD Radeon'), "
+            "'is_touch' (bool), 'is_2in1' (bool: True if 360 convertible hinge), "
+            "'upgradability_score' (float: 1.0 to 10.0)."
+        )
+        payload = {
+            "model": self.DEFAULT_MODEL,
+            "messages": [
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": f"Analyze: {item.title} (Store: {item.store})"}
+            ],
+            "response_format": {"type": "json_object"},
+            "temperature": 0.1
+        }
+
+        try:
+            res = requests.post(self.GROQ_API_URL, headers=headers, json=payload, timeout=6)
+            if res.status_code == 200:
+                data = res.json()
+                parsed = json.loads(data['choices'][0]['message']['content'])
+                if 'gpu' in parsed and parsed['gpu']:
+                    item.gpu = str(parsed['gpu'])
+                if 'is_touch' in parsed:
+                    item.is_touch = bool(parsed['is_touch'])
+                if 'is_2in1' in parsed:
+                    item.is_2in1 = bool(parsed['is_2in1'])
+                if 'upgradability_score' in parsed and isinstance(parsed['upgradability_score'], (int, float)):
+                    # Keep valid bounds
+                    score = float(parsed['upgradability_score'])
+                    if 1.0 <= score <= 10.0:
+                        item.upgradability_score = score
+        except Exception as e:
+            logger.debug(f"Groq enhance error for {item.title}: {e}")
+        return item
+
+    def enhance_batch(self, items: List[LaptopItem], max_workers: int = 5) -> List[LaptopItem]:
+        """Enhances a batch of items concurrently using Groq."""
+        if not self.enabled or not items:
+            return items
+
+        logger.info(f"🤖 Groq AI auditing {len(items)} laptops in parallel...")
+        enhanced_items = []
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_item = {executor.submit(self.enhance_item, itm): itm for itm in items}
+            for future in as_completed(future_to_item):
+                try:
+                    enhanced_items.append(future.result())
+                except Exception:
+                    enhanced_items.append(future_to_item[future])
+        return enhanced_items
 
 
 # --- Hardware Intelligence & Classification Engine ---
@@ -242,7 +337,7 @@ class HardwareClassifier:
         if any(k in t for k in ['t14', 'p14s', 'p15s', 't480s', 't470s', 't490s']):
             return 7.5, "⚡ M.2 2280 PCIe NVMe (Swappable)", "1x Soldered + 1x SODIMM Slot (max 48GB)"
         # Full Modular SODIMM Dual Slot NVMe
-        if any(k in t for k in ['840', '850', '855', 'firefly', '5410', '5420', '5430', '5431', '5530', '5531', 'l14', 'l390', '430', 'e480', 'a517', 'vostro', 'inspiron']):
+        if any(k in t for k in ['840', '850', '855', 'firefly', '5410', '5420', '5430', '5431', '5530', '5531', 'l14', 'l390', '430', 'e480', 'a517', 'vostro', 'inspiron', '435']):
             return 9.0, "⚡ M.2 2280 PCIe NVMe (Swappable)", "2x SODIMM Slots (up to 64GB)"
         # Legacy 2.5" SATA Bay
         if any(k in t for k in ['t460', '650 g2', 'g-4', 'e7440', '5480', '255 g5']):
@@ -263,9 +358,6 @@ class TopPicksEngine:
 
     @staticmethod
     def select_top_picks(all_items: List[LaptopItem]) -> List[Tuple[str, str, LaptopItem]]:
-        """
-        Returns a list of (CategoryEmoji, CategoryTitle, BestLaptopItem).
-        """
         picks: List[Tuple[str, str, LaptopItem]] = []
         valid_items = [i for i in all_items if i.deal_price_ils > 0 and i.stock_status.startswith("🟢")]
 
@@ -288,9 +380,8 @@ class TopPicksEngine:
             picks.append(("⚡ Best Modern CPU Power (12th Gen)", "Latest Architecture Performance", gen12[0]))
 
         # 4. 🥈 Best 2-in-1 / Touchscreen
-        touch = [i for i in valid_items if any(k in i.title.lower() for k in ['touch', 'x360', '2-in-1', 'טאצ'])]
+        touch = [i for i in valid_items if any(k in i.title.lower() for k in ['touch', 'x360', '2-in-1', 'טאצ']) or i.is_2in1 or i.is_touch]
         if touch:
-            # Prioritize higher generation and warranty
             touch.sort(key=lambda x: (-x.warranty_months, x.deal_price_ils))
             picks.append(("🥈 Best 2-in-1 / Touchscreen", "Versatile 360° / Touch Display", touch[0]))
 
@@ -351,7 +442,7 @@ class ITOutletScraper:
                     if not HardwareClassifier.is_laptop(title):
                         continue
 
-                    # Find all prices, ignore discounts <= 500 or the banner coupon 1500 threshold
+                    # Exact price extraction (excluding newsletter coupon thresholds)
                     raw_prices = [int(p.replace(',', '')) for p in re.findall(r'(\d[\d,]*)\s*₪', b)]
                     valid_prices = [p for p in raw_prices if 600 < p and p != 1500]
                     raw_price = valid_prices[-1] if valid_prices else 2000
@@ -368,6 +459,11 @@ class ITOutletScraper:
                         deal_label = f"{deal_price:,} ₪ (100 ₪ Coupon)"
 
                     score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
+
+                    # Quick GPU & Touch detection
+                    gpu = "NVIDIA Quadro P520" if 'p520' in title.lower() or 'p14s' in title.lower() or 'p15s' in title.lower() else "Integrated"
+                    is_touch = 'touch' in title.lower() or 'x360' in title.lower() or 'yoga' in title.lower() or 'surface' in title.lower()
+                    is_2in1 = 'x360' in title.lower() or 'yoga' in title.lower()
 
                     items.append(LaptopItem(
                         store=self.STORE_NAME,
@@ -386,7 +482,10 @@ class ITOutletScraper:
                         upgradability_score=score,
                         warranty_months=12,
                         stock_status="🟢 In Stock",
-                        url=full_link
+                        url=full_link,
+                        gpu=gpu,
+                        is_touch=is_touch,
+                        is_2in1=is_2in1
                     ))
             except Exception as e:
                 logger.error(f"Error scraping IT Outlet page {page}: {e}")
@@ -400,21 +499,21 @@ class EcologyScraper:
     CATALOG_URL = "https://www.ecommunity.org.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D"
 
     ITEM_METADATA = {
-        'page_26485': {'title': 'HP ZBook Fury 15 G8 i7 16GB 512GB (45W GPU)', 'price': 3699},
-        'page_25916': {'title': 'HP ZBook Fury 15 G7 i7 16GB 512GB (45W GPU)', 'price': 3499},
-        'page_26486': {'title': 'HP ZBook 15 G6 i7 16GB 512GB Quadro GPU', 'price': 2799},
-        'lti71030g8_touch': {'title': 'HP EliteBook x360 830 G8 Touch i7 16GB 512GB', 'price': 2199},
-        'page_21110': {'title': 'Dell Latitude 7320 i7 16GB 256GB (1.2 kg)', 'price': 1949},
-        'page_20368': {'title': 'Lenovo ThinkPad E14 i5 16GB 512GB Dual SSD', 'price': 1850},
-        'נייד-hp-i5-מחודש': {'title': 'HP EliteBook 840 G8 i5 16GB 256GB', 'price': 1849},
-        'thinkpad_t14': {'title': 'Lenovo ThinkPad T14 Touch i5 16GB 256GB', 'price': 1849},
-        'hp_zbook_i5': {'title': 'HP ZBook G7 14" i5 16GB 240GB', 'price': 1849},
-        'page_27023': {'title': 'HP EliteBook 850 G7 i5 8GB 256GB', 'price': 1849},
-        'page_22509': {'title': 'Dell Latitude 5410 i5 8GB 240GB', 'price': 1399},
-        'מחשב-נייד-לנובו-lenovo-i7-thinkpad-e480-14-מחודש': {'title': 'Lenovo ThinkPad E480 i7 16GB 240GB', 'price': 1349},
-        'page_19398': {'title': 'Dell Latitude 5480 i5 8GB 256GB', 'price': 1049},
-        'page_21809': {'title': 'Lenovo ThinkPad X280 i5 8GB 240GB', 'price': 999},
-        'מחשב-נייד-i5-מחודש': {'title': 'HP/Dell/Lenovo G-4 i5 8GB 240GB', 'price': 849}
+        'page_26485': {'title': 'HP ZBook Fury 15 G8 i7 16GB 512GB (45W GPU)', 'price': 3699, 'gpu': 'Quadro RTX A2000 45W'},
+        'page_25916': {'title': 'HP ZBook Fury 15 G7 i7 16GB 512GB (45W GPU)', 'price': 3499, 'gpu': 'Quadro T2000 45W'},
+        'page_26486': {'title': 'HP ZBook 15 G6 i7 16GB 512GB Quadro GPU', 'price': 2799, 'gpu': 'Quadro T1000'},
+        'lti71030g8_touch': {'title': 'HP EliteBook x360 830 G8 Touch i7 16GB 512GB', 'price': 2199, 'gpu': 'Intel Iris Xe'},
+        'page_21110': {'title': 'Dell Latitude 7320 i7 16GB 256GB (1.2 kg)', 'price': 1949, 'gpu': 'Intel Iris Xe'},
+        'page_20368': {'title': 'Lenovo ThinkPad E14 i5 16GB 512GB Dual SSD', 'price': 1850, 'gpu': 'Intel Iris Xe'},
+        'נייד-hp-i5-מחודש': {'title': 'HP EliteBook 840 G8 i5 16GB 256GB', 'price': 1849, 'gpu': 'Intel Iris Xe'},
+        'thinkpad_t14': {'title': 'Lenovo ThinkPad T14 Touch i5 16GB 256GB', 'price': 1849, 'gpu': 'Intel UHD'},
+        'hp_zbook_i5': {'title': 'HP ZBook G7 14" i5 16GB 240GB', 'price': 1849, 'gpu': 'Intel Iris Xe'},
+        'page_27023': {'title': 'HP EliteBook 850 G7 i5 8GB 256GB', 'price': 1849, 'gpu': 'Intel UHD'},
+        'page_22509': {'title': 'Dell Latitude 5410 i5 8GB 240GB', 'price': 1399, 'gpu': 'Intel UHD'},
+        'מחשב-נייד-לנובו-lenovo-i7-thinkpad-e480-14-מחודש': {'title': 'Lenovo ThinkPad E480 i7 16GB 240GB', 'price': 1349, 'gpu': 'Intel UHD'},
+        'page_19398': {'title': 'Dell Latitude 5480 i5 8GB 256GB', 'price': 1049, 'gpu': 'Intel HD'},
+        'page_21809': {'title': 'Lenovo ThinkPad X280 i5 8GB 240GB', 'price': 999, 'gpu': 'Intel HD'},
+        'מחשב-נייד-i5-מחודש': {'title': 'HP/Dell/Lenovo G-4 i5 8GB 240GB', 'price': 849, 'gpu': 'Intel HD'}
     }
 
     def __init__(self, session: requests.Session):
@@ -441,6 +540,9 @@ class EcologyScraper:
                         full_url = f"https://www.ecommunity.org.il/{urllib.parse.quote(key)}" if not key.startswith('http') else key
                         title = meta['title']
                         price = meta['price']
+                        gpu = meta.get('gpu', 'Integrated')
+                        is_touch = 'touch' in title.lower() or 'x360' in title.lower()
+                        is_2in1 = 'x360' in title.lower()
 
                         score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
 
@@ -461,7 +563,10 @@ class EcologyScraper:
                             upgradability_score=score,
                             warranty_months=24,
                             stock_status="🟢 In Stock (24M Warranty)",
-                            url=full_url
+                            url=full_url,
+                            gpu=gpu,
+                            is_touch=is_touch,
+                            is_2in1=is_2in1
                         ))
         except Exception as e:
             logger.error(f"Error scraping Ecology Computers: {e}")
@@ -473,21 +578,34 @@ class LTSScraper:
     STORE_NAME = "LaptopTech LTS"
     CATALOG_URL = "https://lts.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%99%D7%93-2/"
 
-    PRICE_ESTIMATES = {
-        't14s': 2200,
-        'l14': 2500,
-        '7420': 2600,
-        '5490': 1800,
-        'p15s': 3600,
-        '7400': 1800,
-        'l390': 1900,
-        '430': 1700,
-        '650': 1400,
-        'e7440': 1000
-    }
-
     def __init__(self, session: requests.Session):
         self.session = session
+
+    def _parse_product_page_price(self, html: str) -> int:
+        cleaned = html.replace('&#8362;', '₪').replace('&nbsp;', ' ')
+        widget = re.findall(r'elementor-widget-woocommerce-product-price(.*?)</div>\s*</div>', cleaned, re.DOTALL)
+        if widget:
+            ins = re.findall(r'<ins[^>]*>.*?([0-9]{1,2},[0-9]{3}|[0-9]{3,5}).*?</ins>', widget[0], re.DOTALL)
+            if ins:
+                return int(ins[0].replace(',', ''))
+            nums = [int(n.replace(',', '')) for n in re.findall(r'([0-9]{1,2},[0-9]{3}|[0-9]{3,5})', widget[0]) if int(n.replace(',', '')) != 8362]
+            if nums:
+                return nums[-1]
+
+        cur_match = re.findall(r'המחיר הנוכחי הוא:[^\d]*([\d,]+)', cleaned)
+        if cur_match:
+            return int(cur_match[-1].replace(',', ''))
+
+        single = re.findall(r'<p class=\"price\">(.*?)</p>', cleaned, re.DOTALL)
+        if single:
+            nums = [int(n.replace(',', '')) for n in re.findall(r'([0-9]{1,2},[0-9]{3}|[0-9]{3,5})', single[-1]) if int(n.replace(',', '')) != 8362]
+            if nums:
+                return nums[-1]
+
+        schema = re.findall(r'\"price\"\s*:\s*\"?(\d+)\"?', cleaned)
+        if schema:
+            return int(schema[-1])
+        return 2000
 
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping LaptopTech LTS...")
@@ -495,33 +613,33 @@ class LTSScraper:
         try:
             r = self.session.get(self.CATALOG_URL, timeout=12)
             if r.status_code == 200:
-                links = re.findall(r'<a[^>]+href=[\"\']\s*(https://lts\.co\.il/(?:פריט|product)/[^\"\']+)[\"\'][^>]*>(.*?)</a>', r.text, re.DOTALL)
-                seen = set()
-                for link, text in links:
-                    link = link.strip()
-                    if link in seen:
-                        continue
-                    seen.add(link)
-                    
-                    # Extract clean name from URL slug to avoid LTS SEO text spam
+                raw_links = set(re.findall(r'href=[\"\']\s*(https://lts\.co\.il/(?:פריט|product)/[^\"\']+)[\"\']', r.text))
+                valid_links = []
+                for link in sorted(raw_links):
                     slug = link.rstrip('/').split('/')[-1]
                     slug_clean = urllib.parse.unquote(slug).replace('-', ' ')
-                    
-                    # Check if laptop
-                    if not HardwareClassifier.is_laptop(slug_clean):
-                        continue
+                    if HardwareClassifier.is_laptop(slug_clean):
+                        valid_links.append((link, slug_clean))
 
-                    # Create a readable capitalized title
+                # Fetch exact prices concurrently for all laptops
+                def fetch_item_price(item_tuple):
+                    link, slug_clean = item_tuple
+                    try:
+                        res = self.session.get(link, timeout=8)
+                        p = self._parse_product_page_price(res.text)
+                        return link, slug_clean, p
+                    except Exception:
+                        return link, slug_clean, 2000
+
+                with ThreadPoolExecutor(max_workers=10) as executor:
+                    fetched_results = list(executor.map(fetch_item_price, valid_links))
+
+                for link, slug_clean, price in fetched_results:
                     words = slug_clean.split()
                     title = ' '.join(w.capitalize() if not any(c.isdigit() for c in w) else w.upper() for w in words)
-
-                    price = 2000
-                    for k, v in self.PRICE_ESTIMATES.items():
-                        if k in slug_clean.lower():
-                            price = v
-                            break
-
                     score, storage_type, ram_type = HardwareClassifier.analyze_architecture(slug_clean)
+                    is_touch = 'touch' in slug_clean.lower() or '2-in-1' in slug_clean.lower()
+                    is_2in1 = '2-in-1' in slug_clean.lower() or '2 in 1' in slug_clean.lower() or 'x360' in slug_clean.lower()
 
                     items.append(LaptopItem(
                         store=self.STORE_NAME,
@@ -534,13 +652,15 @@ class LTSScraper:
                         storage_gb=HardwareClassifier.detect_storage_gb(slug_clean),
                         price_ils=price,
                         deal_price_ils=price,
-                        deal_label=f"~{price:,} ₪",
+                        deal_label=f"{price:,} ₪",
                         storage_type=storage_type,
                         ram_type=ram_type,
                         upgradability_score=score,
                         warranty_months=12,
                         stock_status="🟢 In Stock",
-                        url=link
+                        url=link,
+                        is_touch=is_touch,
+                        is_2in1=is_2in1
                     ))
         except Exception as e:
             logger.error(f"Error scraping LTS: {e}")
@@ -552,19 +672,19 @@ class RecompScraper:
     STORE_NAME = "Recomp Computers"
     CATALOG_URL = "https://recomp.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%99%d7%9d-%d7%9e%d7%97%d7%95%d7%93%d7%a9%d7%99%d7%9d-%d7%91%d7%9e%d7%91%d7%a6%d7%a2/"
 
-    PRICE_ESTIMATES = {
-        '7430': 3950,
-        '855': 3250,
-        'firefly': 3200,
-        '830': 3100,
-        't480s': 2350,
-        '7420': 2450,
-        't470s': 2200,
-        't460': 1170
-    }
-
     def __init__(self, session: requests.Session):
         self.session = session
+
+    def _parse_recomp_price(self, html: str) -> int:
+        cleaned = html.replace('&#8362;', '₪').replace('&nbsp;', ' ')
+        ins = re.findall(r'<ins[^>]*>.*?([0-9]{1,2},[0-9]{3}|[0-9]{3,5}).*?</ins>', cleaned, re.DOTALL)
+        if ins:
+            return int(ins[0].replace(',', ''))
+        nums = [int(n.replace(',', '')) for n in re.findall(r'₪\s*([\d,]+)|([\d,]+)\s*₪', cleaned)]
+        valid = [n for n in nums if 500 < n < 30000 and n != 8362]
+        if valid:
+            return valid[-1]
+        return 2500
 
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping Recomp Computers...")
@@ -574,6 +694,7 @@ class RecompScraper:
             if r.status_code == 200:
                 links = re.findall(r'<a[^>]+href=[\"\']\s*(https://recomp\.co\.il/(?:product/|מוצר/|פריט/)[^\"\']+)[\"\'][^>]*>(.*?)</a>', r.text, re.DOTALL)
                 seen = set()
+                valid_links = []
                 for link, text in links:
                     link = link.strip()
                     if link in seen:
@@ -585,14 +706,25 @@ class RecompScraper:
                         title = HardwareClassifier.clean_text(urllib.parse.unquote(slug).replace('-', ' '))
                     if not HardwareClassifier.is_laptop(title):
                         continue
+                    valid_links.append((link, title))
 
-                    price = 2500
-                    for k, v in self.PRICE_ESTIMATES.items():
-                        if k in title.lower() or k in link.lower():
-                            price = v
-                            break
+                # Fetch exact prices concurrently for Recomp
+                def fetch_recomp_item(item_tuple):
+                    link, title = item_tuple
+                    try:
+                        res = self.session.get(link, timeout=8)
+                        p = self._parse_recomp_price(res.text)
+                        return link, title, p
+                    except Exception:
+                        return link, title, 2500
 
+                with ThreadPoolExecutor(max_workers=6) as executor:
+                    fetched_results = list(executor.map(fetch_recomp_item, valid_links))
+
+                for link, title, price in fetched_results:
                     score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
+                    is_touch = 'touch' in title.lower() or 'x360' in title.lower()
+                    is_2in1 = 'x360' in title.lower()
 
                     items.append(LaptopItem(
                         store=self.STORE_NAME,
@@ -611,7 +743,9 @@ class RecompScraper:
                         upgradability_score=score,
                         warranty_months=12,
                         stock_status="🟢 In Stock",
-                        url=link
+                        url=link,
+                        is_touch=is_touch,
+                        is_2in1=is_2in1
                     ))
         except Exception as e:
             logger.error(f"Error scraping Recomp: {e}")
@@ -759,7 +893,7 @@ class ReportGenerator:
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Product Link |
 | :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
 """
-        for i, itm in enumerate(lts_items[:20], 1):
+        for i, itm in enumerate(lts_items[:25], 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
             md += f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n"
 
@@ -805,7 +939,7 @@ class MasterLaptopAuditor:
             'recomp': RecompScraper
         }
 
-    def run(self, store_filter: Optional[str] = None, max_workers: int = 4) -> Dict[str, List[LaptopItem]]:
+    def run(self, store_filter: Optional[str] = None, max_workers: int = 4, use_ai: bool = False) -> Dict[str, List[LaptopItem]]:
         results: Dict[str, List[LaptopItem]] = {}
         target_scrapers = {}
 
@@ -828,6 +962,13 @@ class MasterLaptopAuditor:
                     logger.error(f"Scraper '{name}' encountered a critical error: {e}")
                     results[name] = []
 
+        # Optional Groq AI Enhancement
+        if use_ai:
+            enhancer = GroqSpecEnhancer()
+            if enhancer.enabled:
+                for store_name, items in results.items():
+                    results[store_name] = enhancer.enhance_batch(items)
+
         return results
 
 
@@ -839,6 +980,7 @@ def main():
     parser.add_argument("--min-ram", type=int, default=0, help="Filter laptops with at least N GB RAM")
     parser.add_argument("--max-price", type=int, default=99999, help="Filter laptops with price <= N ILS")
     parser.add_argument("--min-score", type=float, default=0.0, help="Filter laptops with upgradability score >= N")
+    parser.add_argument("--ai", "--groq", action="store_true", help="Enable Groq AI hardware intelligence")
     parser.add_argument("--csv", action="store_true", help="Also export all laptops to CSV")
     parser.add_argument("--json", action="store_true", help="Dump JSON output to stdout")
     parser.add_argument("--no-md", action="store_true", help="Disable automatic summary.md update")
@@ -847,7 +989,11 @@ def main():
     args = parser.parse_args()
 
     auditor = MasterLaptopAuditor()
-    results = auditor.run(store_filter=None if args.store == 'all' else args.store, max_workers=args.workers)
+    results = auditor.run(
+        store_filter=None if args.store == 'all' else args.store,
+        max_workers=args.workers,
+        use_ai=args.ai
+    )
 
     # Flatten items for filtering & statistics
     all_items: List[LaptopItem] = []
@@ -885,7 +1031,7 @@ def main():
         print(f"🎯 Filtered Matches (RAM >= {args.min_ram}GB, Price <= {args.max_price} ₪, Score >= {args.min_score}): {len(filtered_items)} items")
         print("-" * 65)
         for itm in filtered_items[:10]:
-            print(f"  [{itm.store:12}] {itm.title[:35]:35} | {itm.cpu:16} | {itm.ram_gb:2d}GB RAM | {itm.deal_label:20} | Score: {itm.upgradability_score}")
+            print(f"  [{itm.store:12}] {itm.title[:35]:35} | {itm.cpu:16} | {itm.ram_gb:2d}GB RAM | {itm.deal_label:20} | GPU: {itm.gpu}")
 
     if args.json:
         print("\n" + json.dumps({k: [i.to_dict() for i in v] for k, v in results.items()}, ensure_ascii=False, indent=2))

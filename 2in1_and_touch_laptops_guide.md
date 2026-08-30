@@ -22,11 +22,12 @@ A complete, verified comparison of all **360° Convertible Laptops (2-in-1)** an
 | Category | Model | Form Factor | Verified Best Deal Price | Store | Direct Product Link |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | 🛡️ **Best Overall 360° 2-in-1 (2-Year Warranty)** | **HP EliteBook x360 830 G8** | 🔄 360° Convertible | **2,199 ₪** *(24M Warranty)* | Ecology | [View Product](https://www.ecommunity.org.il/lti71030g8_touch) |
+| 💰 **Best Budget 360° Convertible (< 1,500 ₪)** | **Dell Inspiron 13 5379 2-in-1** | 🔄 360° Convertible | **1,400 ₪** *(Was 1,500 ₪)* | LTS | [View Product](https://lts.co.il/פריט/dell-inspiron-13-5379-2-in-1-touch-13-3-i7-8gb-250gb/) |
 | 🖊️ **Best Integrated Garage Stylus 2-in-1** | **Lenovo ThinkPad X1 Yoga Gen 6** | 🔄 360° Convertible | **3,168 ₪** *(4% Card Disc.)* | IT Outlet | [View Product](https://www.itoutlet.co.il/items/8299691-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Lenovo-Thinkpad-X1-Yoga-Gen6-i7-16GB-500GB-) |
 | 🚀 **Best 32GB RAM 2-in-1 (Upgradable)** | **HP ProBook x360 435 G7 (32GB)**| 🔄 360° Convertible | **2,880 ₪** *(4% Card Disc.)* | IT Outlet | [View Product](https://www.itoutlet.co.il/items/9538702-HP-ProBook-x360-435-G7-Ryzen-7-32GB-512GB-SSD) |
 | 🏢 **Best Business Touchscreen Clamshell** | **Lenovo ThinkPad T14 Touch** | 💻 Touch Clamshell | **1,849 ₪** *(24M Warranty)* | Ecology | [View Product](https://www.ecommunity.org.il/thinkpad_t14) |
 | 🎨 **Best High-Res 3:2 Display for Reading** | **Microsoft Surface Laptop 4 (32GB/1TB)** | 💻 Touch Clamshell | **3,360 ₪** *(4% Card Disc.)* | IT Outlet | [View Product](https://www.itoutlet.co.il/items/9347740-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Microsoft-Surface-4-i7-32GB-1TB-SSD) |
-| 💰 **Best Budget Touchscreen (< 1,000 ₪)** | **Dell Latitude E7440 Touch** | 💻 Touch Clamshell | **~1,000 ₪** | LTS | [View Product](https://lts.co.il/פריט/dell-latitude-e7440-touch-14-i5-8gb-500gb/) |
+| 🪙 **Lowest Price Touchscreen Laptop** | **Dell Latitude E7440 Touch** | 💻 Touch Clamshell | **1,000 ₪** | LTS | [View Product](https://lts.co.il/פריט/dell-latitude-e7440-touch-14-i5-8gb-500gb/) |
 
 ---
 
@@ -36,11 +37,11 @@ These laptops fold backwards 360° into tablets and support active digital pens.
 
 | # | Model | CPU & Cores | RAM & Slots | Storage & Interface | Pen / Stylus Support | Verified Sale Price | Best Deal Price | Store | Score | Direct Link |
 | :-: | :--- | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| 1 | **HP EliteBook x360 830 G8** | Core i7-1185G7 (4C/8T) | 16GB LPDDR4x (Soldered) | 512GB ⚡ M.2 PCIe NVMe | 🖊️ Active HP Pen | **2,199 ₪** | **2,199 ₪** *(24M Warranty)* | Ecology | 🟠 5.0 | [View Product](https://www.ecommunity.org.il/lti71030g8_touch) |
-| 2 | **HP ProBook x360 435 G7 (Ryzen 5)** | Ryzen 5 PRO 4650U (6C/12T) | 16GB (2x SODIMM Slots) | 512GB ⚡ M.2 PCIe NVMe | 🖊️ Active HP Pen | **2,500 ₪** | **2,400 ₪** *(100 ₪ Coupon)* | IT Outlet | 🟢 9.0 | [View Product](https://www.itoutlet.co.il/items/9538791-HP-ProBook-x360-435-G7-Ryzen-5-16GB-512GB-SSD) |
-| 3 | **HP ProBook x360 435 G7 (Ryzen 7)** | Ryzen 7 PRO 4750U (8C/16T) | **32GB** (2x SODIMM Slots)| 512GB ⚡ M.2 PCIe NVMe | 🖊️ Active HP Pen | **3,000 ₪** | **2,880 ₪** *(4% Card Disc.)* | IT Outlet | 🟢 9.0 | [View Product](https://www.itoutlet.co.il/items/9538702-HP-ProBook-x360-435-G7-Ryzen-7-32GB-512GB-SSD) |
-| 4 | **Lenovo ThinkPad X1 Yoga Gen 6** | Core i7-1165G7 (4C/8T) | 16GB LPDDR4x (Soldered) | 500GB ⚡ M.2 PCIe Gen4 | 🖊️ **Built-in Garage Pen** | **3,300 ₪** | **3,168 ₪** *(4% Card Disc.)* | IT Outlet | 🟡 7.5 | [View Product](https://www.itoutlet.co.il/items/8299691-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Lenovo-Thinkpad-X1-Yoga-Gen6-i7-16GB-500GB-) |
-| 5 | **Dell Inspiron 13 5379 2-in-1** | Core i7-8550U (4C/8T) | 8GB (2x SODIMM Slots) | 250GB ⚡ M.2 NVMe / Bay | 🖊️ Capacitive Stylus | **~2,000 ₪** | **~2,000 ₪** | LTS | 🟢 9.0 | [View Product](https://lts.co.il/פריט/dell-inspiron-13-5379-2-in-1-touch-13-3-i7-8gb-250gb/) |
+| 1 | **Dell Inspiron 13 5379 2-in-1** | Core i7-8550U (4C/8T) | 8GB (2x SODIMM Slots) | 250GB ⚡ M.2 NVMe / Bay | 🖊️ Capacitive Touch | **1,400 ₪** *(Was 1,500 ₪)* | **1,400 ₪** | LTS | 🟢 9.0 | [View Product](https://lts.co.il/פריט/dell-inspiron-13-5379-2-in-1-touch-13-3-i7-8gb-250gb/) |
+| 2 | **HP EliteBook x360 830 G8** | Core i7-1185G7 (4C/8T) | 16GB LPDDR4x (Soldered) | 512GB ⚡ M.2 PCIe NVMe | 🖊️ Active HP Pen | **2,199 ₪** | **2,199 ₪** *(24M Warranty)* | Ecology | 🟠 5.0 | [View Product](https://www.ecommunity.org.il/lti71030g8_touch) |
+| 3 | **HP ProBook x360 435 G7 (Ryzen 5)** | Ryzen 5 PRO 4650U (6C/12T) | 16GB (2x SODIMM Slots) | 512GB ⚡ M.2 PCIe NVMe | 🖊️ Active HP Pen | **2,500 ₪** | **2,400 ₪** *(100 ₪ Coupon)* | IT Outlet | 🟢 9.0 | [View Product](https://www.itoutlet.co.il/items/9538791-HP-ProBook-x360-435-G7-Ryzen-5-16GB-512GB-SSD) |
+| 4 | **HP ProBook x360 435 G7 (Ryzen 7)** | Ryzen 7 PRO 4750U (8C/16T) | **32GB** (2x SODIMM Slots)| 512GB ⚡ M.2 PCIe NVMe | 🖊️ Active HP Pen | **3,000 ₪** | **2,880 ₪** *(4% Card Disc.)* | IT Outlet | 🟢 9.0 | [View Product](https://www.itoutlet.co.il/items/9538702-HP-ProBook-x360-435-G7-Ryzen-7-32GB-512GB-SSD) |
+| 5 | **Lenovo ThinkPad X1 Yoga Gen 6** | Core i7-1165G7 (4C/8T) | 16GB LPDDR4x (Soldered) | 500GB ⚡ M.2 PCIe Gen4 | 🖊️ **Built-in Garage Pen** | **3,300 ₪** | **3,168 ₪** *(4% Card Disc.)* | IT Outlet | 🟡 7.5 | [View Product](https://www.itoutlet.co.il/items/8299691-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Lenovo-Thinkpad-X1-Yoga-Gen6-i7-16GB-500GB-) |
 
 ---
 
@@ -50,12 +51,12 @@ These laptops have standard laptop hinges (~180° flat) with integrated multi-to
 
 | # | Model | CPU & Cores | RAM & Slots | Storage & Interface | Screen Type | Verified Sale Price | Best Deal Price | Store | Score | Direct Link |
 | :-: | :--- | :--- | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| 1 | **Lenovo ThinkPad T14 Touch** | Core i5-10210U (10th) | 16GB (1 sold. + 1 slot) | 256GB ⚡ M.2 PCIe NVMe | 14.0" FHD Touch (Anti-glare) | **1,849 ₪** | **1,849 ₪** *(24M Warranty)* | Ecology | 🟡 7.5 | [View Product](https://www.ecommunity.org.il/thinkpad_t14) |
-| 2 | **Microsoft Surface Laptop 3** | Core i7 (10th Gen) | 16GB LPDDR4x (Soldered) | 500GB ⚡ M.2 2230 NVMe | 13.5" PixelSense 3:2 Touch | **2,500 ₪** | **2,400 ₪** *(100 ₪ Coupon)* | IT Outlet | 🔴 1.0 | [View Product](https://www.itoutlet.co.il/items/7283286-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Microsoft-Surface-3-i7-16GB-500GB-SSD) |
-| 3 | **Microsoft Surface Laptop 4 (16GB)**| Core i7-1185G7 (11th)| 16GB LPDDR4x (Soldered) | 500GB ⚡ M.2 2230 NVMe | 13.5" PixelSense 3:2 (2256x1504) | **2,800 ₪** | **2,688 ₪** *(4% Card Disc.)* | IT Outlet | 🔴 1.0 | [View Product](https://www.itoutlet.co.il/items/7777501-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Microsoft-Surface-4-i7-16GB-500GB-SSD) |
-| 4 | **Microsoft Surface Laptop 4 (32GB)**| Core i7-1185G7 (11th)| **32GB** LPDDR4x (Soldered)| **1TB** ⚡ M.2 2230 NVMe | 13.5" PixelSense 3:2 (2256x1504) | **3,500 ₪** | **3,360 ₪** *(4% Card Disc.)* | IT Outlet | 🔴 1.0 | [View Product](https://www.itoutlet.co.il/items/9347740-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Microsoft-Surface-4-i7-32GB-1TB-SSD) |
-| 5 | **Lenovo ThinkPad X1 Carbon Touch** | Core i7 (8th Gen) | 16GB (Soldered) | **1TB** ⚡ M.2 PCIe NVMe | 14.0" FHD In-cell Touch | **~2,000 ₪** | **~2,000 ₪** | LTS | 🟠 5.0 | [View Product](https://lts.co.il/פריט/lenovo-thinkpad-x1-carbon-touch-14-i7-16g-1tb/) |
-| 6 | **Dell Latitude E7440 Touch** | Core i5-4300U (4th Gen) | 8GB (2x SODIMM Slots) | 500GB 🐢 2.5" SATA SSD | 14.0" Full HD Touch | **~1,000 ₪** | **~1,000 ₪** | LTS | 🟢 8.0 | [View Product](https://lts.co.il/פריט/dell-latitude-e7440-touch-14-i5-8gb-500gb/) |
+| 1 | **Dell Latitude E7440 Touch** | Core i5-4300U (4th Gen) | 8GB (2x SODIMM Slots) | 500GB 🐢 2.5" SATA SSD | 14.0" Full HD Touch | **1,000 ₪** | **1,000 ₪** | LTS | 🟢 8.0 | [View Product](https://lts.co.il/פריט/dell-latitude-e7440-touch-14-i5-8gb-500gb/) |
+| 2 | **Lenovo ThinkPad T14 Touch** | Core i5-10210U (10th) | 16GB (1 sold. + 1 slot) | 256GB ⚡ M.2 PCIe NVMe | 14.0" FHD Touch (Anti-glare) | **1,849 ₪** | **1,849 ₪** *(24M Warranty)* | Ecology | 🟡 7.5 | [View Product](https://www.ecommunity.org.il/thinkpad_t14) |
+| 3 | **Microsoft Surface Laptop 3** | Core i7 (10th Gen) | 16GB LPDDR4x (Soldered) | 500GB ⚡ M.2 2230 NVMe | 13.5" PixelSense 3:2 Touch | **2,500 ₪** | **2,400 ₪** *(100 ₪ Coupon)* | IT Outlet | 🔴 1.0 | [View Product](https://www.itoutlet.co.il/items/7283286-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Microsoft-Surface-3-i7-16GB-500GB-SSD) |
+| 4 | **Microsoft Surface Laptop 4 (16GB)**| Core i7-1185G7 (11th)| 16GB LPDDR4x (Soldered) | 500GB ⚡ M.2 2230 NVMe | 13.5" PixelSense 3:2 (2256x1504) | **2,800 ₪** | **2,688 ₪** *(4% Card Disc.)* | IT Outlet | 🔴 1.0 | [View Product](https://www.itoutlet.co.il/items/7777501-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Microsoft-Surface-4-i7-16GB-500GB-SSD) |
+| 5 | **Lenovo ThinkPad X1 Carbon Touch** | Core i7 (8th Gen) | 16GB (Soldered) | **1TB** ⚡ M.2 PCIe NVMe | 14.0" FHD In-cell Touch | **3,000 ₪** | **3,000 ₪** | LTS | 🟠 5.0 | [View Product](https://lts.co.il/פריט/lenovo-thinkpad-x1-carbon-touch-14-i7-16g-1tb/) |
+| 6 | **Microsoft Surface Laptop 4 (32GB)**| Core i7-1185G7 (11th)| **32GB** LPDDR4x (Soldered)| **1TB** ⚡ M.2 2230 NVMe | 13.5" PixelSense 3:2 (2256x1504) | **3,500 ₪** | **3,360 ₪** *(4% Card Disc.)* | IT Outlet | 🔴 1.0 | [View Product](https://www.itoutlet.co.il/items/9347740-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Microsoft-Surface-4-i7-32GB-1TB-SSD) |
 
 ---
 
@@ -88,14 +89,12 @@ These laptops have standard laptop hinges (~180° flat) with integrated multi-to
 
 ---
 
-### 3. 🎨 Microsoft Surface Laptop 4 (PixelSense 3:2 Touchscreen)
+### 3. 💰 Dell Inspiron 13 5379 2-in-1 Touch (Best Budget 2-in-1)
 
-* **Form Factor:** Clamshell Touchscreen Laptop (does not flip 360°).
-* **Screen:** 13.5" PixelSense (2256 x 1504) with high pixel density (201 PPI) and 3:2 aspect ratio.
-* **Why buy it:** Unmatched screen clarity and vertical estate for reading books, reviewing code, and working with documents. Compatible with Surface Pen.
-* **Pricing:**
-  * **32GB RAM / 1TB SSD:** 3,500 ₪ list $\rightarrow$ **3,360 ₪** (with 4% phone card discount).
-  * **16GB RAM / 500GB SSD:** 2,800 ₪ list $\rightarrow$ **2,688 ₪** (with 4% phone card discount).
+* **Form Factor:** 13.3" Full HD IPS Touch 360° Convertible (Laptop, Tent, Stand, Tablet).
+* **Specs:** Intel Core i7-8550U, 8GB DDR4 RAM, 250GB SSD, Windows 11 Pro.
+* **Upgradability:** **2x SODIMM Slots** (supports upgrading to 16GB or 32GB RAM anytime) + standard swappable SSD.
+* **Price:** **1,400 ₪** (on sale from 1,500 ₪ at LaptopTech LTS).
 
 ---
 
@@ -105,14 +104,15 @@ These laptops have standard laptop hinges (~180° flat) with integrated multi-to
 graph TD
     Start["Which Touch / 2-in-1 Laptop should you buy?"] --> Hinge{"Do you need a 360° flip hinge (Tablet Mode)?"}
     
-    Hinge -- "Yes (360° 2-in-1 Convertible)" --> Budget{"What is your budget priority?"}
+    Hinge -- "Yes (360° 2-in-1 Convertible)" --> Budget{"What is your priority?"}
     Hinge -- "No (Standard Clamshell Touchscreen)" --> TouchUse{"What is your priority?"}
     
+    Budget -- "Lowest Price (< 1,500 ₪)" --> B0["💰 Dell Inspiron 13 5379 2-in-1 (1,400 ₪)"]
     Budget -- "Best Value + 2-Year Warranty" --> B1["🛡️ HP EliteBook x360 830 G8 (2,199 ₪ / 24M Warranty)"]
     Budget -- "Built-in Stylus Pen + 16:10 Screen" --> B2["🖊️ Lenovo ThinkPad X1 Yoga Gen 6 (3,168 ₪)"]
     Budget -- "8 CPU Cores + 32GB RAM Upgradable" --> B3["🚀 HP ProBook x360 435 G7 32GB (2,880 ₪)"]
     
     TouchUse -- "Durability + 2-Year Warranty" --> T1["🏢 Lenovo ThinkPad T14 Touch (1,849 ₪ / 24M Warranty)"]
     TouchUse -- "3:2 High-Res Screen for Reading" --> T2["🎨 Microsoft Surface Laptop 4 32GB/1TB (3,360 ₪)"]
-    TouchUse -- "Budget under 1,000 ₪" --> T3["💰 Dell Latitude E7440 Touch (~1,000 ₪)"]
+    TouchUse -- "Budget under 1,000 ₪" --> T3["🪙 Dell Latitude E7440 Touch (1,000 ₪)"]
 ```
