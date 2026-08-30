@@ -7,18 +7,6 @@ Enterprise-grade, modular, and resilient scraper for Israeli refurbished PC stor
 2. IT Outlet (itoutlet.co.il)
 3. LaptopTech LTS (lts.co.il)
 4. Recomp Computers (recomp.co.il)
-
-Best Practices Implemented:
-- Object-Oriented Extensible Scraper Architecture (BaseStoreScraper)
-- Strongly typed Dataclasses (LaptopItem) with hardware classification
-- Robust session handling with exponential backoff retries & connection pooling
-- Multithreaded concurrent store scraping
-- Automatic Upgradability and Storage interface detection
-- Dual export to JSON & CSV + Auto-generation of production markdown guide (`summary.md`)
-- Advanced CLI filtering (--min-ram, --max-price, --min-score, --store, --csv, --json)
-
-Author: Advanced Coding Agent
-Updated: August 2026
 """
 
 from __future__ import annotations
@@ -33,7 +21,7 @@ import logging
 import argparse
 import datetime
 import urllib.parse
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, asdict
 from typing import List, Dict, Optional, Tuple, Any
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -124,7 +112,16 @@ class HardwareClassifier:
         alt_m = re.findall(r'alt=[\"\']([^\"\']+)[\"\']', text)
         if alt_m:
             text = alt_m[0]
+        # Strip long SEO keyword spam blocks (like ", מחשבים ניידים...")
+        if ',' in text:
+            first_part = text.split(',')[0].strip()
+            if len(first_part) >= 5:
+                text = first_part
+        # Remove leading SKU digits like "93070 - "
+        text = re.sub(r'^\d+\s*-\s*', '', text)
         text = re.sub(r'<[^>]+>', ' ', text)
+        # Remove repetitive phrases
+        text = re.sub(r'מחשב\s*נייד\s*(?:מחודש)?\s*(?:לעריכה\s*גרפית)?', '', text).strip()
         return ' '.join(text.split()).strip()
 
     @classmethod
@@ -132,19 +129,21 @@ class HardwareClassifier:
         t = title.lower()
         if any(k in t for k in ['thinkpad', 'lenovo', 'ideapad', 'legion', 'לנובו']):
             return "Lenovo"
-        if any(k in t for k in ['dell', 'latitude', 'precision', 'xps', 'דל']):
+        if any(k in t for k in ['dell', 'latitude', 'precision', 'xps', 'דל', 'vostro', 'inspiron']):
             return "Dell"
         if any(k in t for k in ['hp', 'elitebook', 'zbook', 'probook']):
             return "HP"
         if any(k in t for k in ['surface', 'microsoft']):
             return "Microsoft"
-        if any(k in t for k in ['macbook', 'apple', 'אפל']):
+        if any(k in t for k in ['macbook', 'apple', 'אפל', 'mac']):
             return "Apple"
         if 'acer' in t:
             return "Acer"
-        if 'asus' in t:
+        if 'asus' in t or 'vivobook' in t:
             return "Asus"
-        return "Generic"
+        if 'toshiba' in t or 'protege' in t:
+            return "Toshiba"
+        return "Business Laptop"
 
     @classmethod
     def detect_series(cls, title: str) -> str:
@@ -158,28 +157,35 @@ class HardwareClassifier:
         if 'probook' in t: return "ProBook"
         if 'surface' in t: return "Surface"
         if 'ideapad' in t: return "IdeaPad"
-        return "Business Laptop"
+        if 'macbook' in t: return "MacBook"
+        return "Business Series"
 
     @classmethod
     def detect_cpu(cls, title: str) -> str:
         t = title.lower()
+        if 'm1' in t: return "Apple M1"
+        if 'm2' in t: return "Apple M2"
         if 'ryzen 7' in t: return "AMD Ryzen 7 PRO"
         if 'ryzen 5' in t: return "AMD Ryzen 5 PRO"
+        if 'amd' in t: return "AMD Ryzen"
+        if 'celeron' in t: return "Intel Celeron"
         if 'ultra 7' in t: return "Intel Core Ultra 7"
 
-        gen12 = re.search(r'(?:12th|דור\s*12|gen\s*4|5431|5531|7430|1270p|1260p|1250u)', t)
-        gen11 = re.search(r'(?:11th|דור\s*11|g8|gen\s*2|7420|7320|5420|5320|5520|1185g7|1165g7|1135g7)', t)
-        gen10 = re.search(r'(?:10th|דור\s*10|g7|gen\s*1|7410|5410|5510|10510u|10610u|10875h)', t)
-        gen8 = re.search(r'(?:8th|דור\s*8|g6|e480|l390|7400|5490|5400|x280|t480|8250u|8350u|8650u)', t)
+        gen12 = re.search(r'(?:12th|דור\s*12|gen\s*4|5431|5531|7430|1270p|1260p|1250u|1280p|1240p|1235u)', t)
+        gen11 = re.search(r'(?:11th|דור\s*11|g8|gen\s*2|7420|7320|5420|5320|5520|1185g7|1165g7|1135g7|1145g7)', t)
+        gen10 = re.search(r'(?:10th|דור\s*10|g7|gen\s*1|7410|5410|5510|10510u|10610u|10875h|10210u|10310u)', t)
+        gen9 = re.search(r'(?:9th|דור\s*9|g6|9750h|9850h)', t)
+        gen8 = re.search(r'(?:8th|דור\s*8|e480|l390|7400|5490|5400|x280|t480|8250u|8350u|8650u|8550u)', t)
         gen7 = re.search(r'(?:7th|דור\s*7|t470|5480|7200u|7300u|7500u)', t)
-        gen6 = re.search(r'(?:6th|דור\s*6|t460|650\s*g2|6200u|6300u)', t)
+        gen6 = re.search(r'(?:6th|דור\s*6|t460|650\s*g2|6200u|6300u|840\s*g3)', t)
         gen4 = re.search(r'(?:4th|דור\s*4|g-4|e7440|4200u|4300u)', t)
 
-        i_level = "i7" if "i7" in t else ("i5" if "i5" in t else ("i9" if "i9" in t else "i3"))
+        i_level = "i7" if "i7" in t else ("i5" if "i5" in t else ("i9" if "i9" in t else ("i3" if "i3" in t else "i5")))
 
         if gen12: return f"Core {i_level} (12th Gen)"
         if gen11: return f"Core {i_level} (11th Gen)"
         if gen10: return f"Core {i_level} (10th Gen)"
+        if gen9:  return f"Core {i_level} (9th Gen)"
         if gen8:  return f"Core {i_level} (8th Gen)"
         if gen7:  return f"Core {i_level} (7th Gen)"
         if gen6:  return f"Core {i_level} (6th Gen)"
@@ -216,47 +222,37 @@ class HardwareClassifier:
         if 'thinkpad p1' in t:
             return 9.5, "⚡ Dual M.2 PCIe NVMe Slots", "2x SODIMM Slots (up to 64GB)"
         # Glued / Locked Down
-        if 'surface' in t:
-            return 1.0, "🔒 Soldered BGA NVMe (Non-swappable)", "Soldered (Non-upgradeable)"
+        if 'surface' in t or 'macbook' in t:
+            return 1.0, "🔒 Soldered BGA NVMe / Unified", "Soldered (Non-upgradeable)"
         # Soldered RAM Ultrabooks with Standard NVMe M.2 SSD
         if any(k in t for k in ['x360', '7320', '7410', '7420', '7430', 'x1 carbon', 'x13', 't14s', 'x280']):
             return 5.0, "⚡ M.2 2280 PCIe NVMe (Swappable)", "Soldered LPDDR4x/5 (Fixed)"
         # Semi-Modular Business Laptops
-        if any(k in t for k in ['t14', 'p14s', 'p15s', 't480s', 't470s']):
+        if any(k in t for k in ['t14', 'p14s', 'p15s', 't480s', 't470s', 't490s']):
             return 7.5, "⚡ M.2 2280 PCIe NVMe (Swappable)", "1x Soldered + 1x SODIMM Slot (max 48GB)"
         # Full Modular SODIMM Dual Slot NVMe
-        if any(k in t for k in ['840', '850', '855', 'firefly', '5410', '5420', '5430', '5431', '5530', '5531', 'l14', 'l390', '430', 'e480']):
+        if any(k in t for k in ['840', '850', '855', 'firefly', '5410', '5420', '5430', '5431', '5530', '5531', 'l14', 'l390', '430', 'e480', 'a517', 'vostro', 'inspiron']):
             return 9.0, "⚡ M.2 2280 PCIe NVMe (Swappable)", "2x SODIMM Slots (up to 64GB)"
         # Legacy 2.5" SATA Bay
-        if any(k in t for k in ['t460', '650 g2', 'g-4', 'e7440', '5480']):
+        if any(k in t for k in ['t460', '650 g2', 'g-4', 'e7440', '5480', '255 g5']):
             return 8.0, "🐢 2.5\" SATA SSD / Bay", "2x SODIMM Slots"
         return 7.5, "⚡ M.2 2280 PCIe NVMe (Swappable)", "Modular / Semi-Modular"
 
     @classmethod
     def is_laptop(cls, title: str) -> bool:
         t = title.lower()
-        # Filter out mini desktop boxes and accessories
-        if any(k in t for k in ['mini pc', 'desktop', 'prodesk', 'elitedesk', 'optiplex', 'מקלדת', 'סוללה', 'מטען', 'מסך ']):
+        if any(k in t for k in ['mini pc', 'desktop', 'prodesk', 'elitedesk', 'optiplex', 'שולחני', 'מחשב שולחני', 'מקלדת', 'סוללה', 'מטען', 'מסך ', 'זכרון ']):
             return False
         return True
 
 
-# --- Base Scraper Interface ---
-class BaseStoreScraper:
-    """Abstract Base Class for store scrapers."""
-    STORE_NAME: str = "Generic Store"
+# --- Store 1: IT Outlet Scraper ---
+class ITOutletScraper:
+    STORE_NAME = "IT Outlet"
+    CATALOG_URL = "https://www.itoutlet.co.il/164920-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D?order=up_price"
 
     def __init__(self, session: requests.Session):
         self.session = session
-
-    def scrape(self) -> List[LaptopItem]:
-        raise NotImplementedError("Subclasses must implement scrape()")
-
-
-# --- Store 1: IT Outlet Scraper ---
-class ITOutletScraper(BaseStoreScraper):
-    STORE_NAME = "IT Outlet"
-    CATALOG_URL = "https://www.itoutlet.co.il/164920-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D?order=up_price"
 
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping IT Outlet...")
@@ -281,7 +277,8 @@ class ITOutletScraper(BaseStoreScraper):
                     seen_urls.add(full_link)
 
                     title_m = re.findall(r'<h[234][^>]*>(.*?)</h[234]>|title=[\"\']([^\"\']+)[\"\']', b, re.DOTALL)
-                    title = HardwareClassifier.clean_text(title_m[0][0] or title_m[0][1]) if title_m else "Laptop"
+                    raw_title = title_m[0][0] or title_m[0][1] if title_m else "Laptop"
+                    title = HardwareClassifier.clean_text(raw_title)
                     if not HardwareClassifier.is_laptop(title):
                         continue
 
@@ -329,7 +326,7 @@ class ITOutletScraper(BaseStoreScraper):
 
 
 # --- Store 2: Ecology Computers Scraper ---
-class EcologyScraper(BaseStoreScraper):
+class EcologyScraper:
     STORE_NAME = "Ecology Computers"
     CATALOG_URL = "https://www.ecommunity.org.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D"
 
@@ -350,6 +347,9 @@ class EcologyScraper(BaseStoreScraper):
         'page_21809': {'title': 'Lenovo ThinkPad X280 i5 8GB 240GB', 'price': 999},
         'מחשב-נייד-i5-מחודש': {'title': 'HP/Dell/Lenovo G-4 i5 8GB 240GB', 'price': 849}
     }
+
+    def __init__(self, session: requests.Session):
+        self.session = session
 
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping Ecology Computers...")
@@ -400,7 +400,7 @@ class EcologyScraper(BaseStoreScraper):
 
 
 # --- Store 3: LaptopTech LTS Scraper ---
-class LTSScraper(BaseStoreScraper):
+class LTSScraper:
     STORE_NAME = "LaptopTech LTS"
     CATALOG_URL = "https://lts.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%99%D7%93-2/"
 
@@ -417,6 +417,9 @@ class LTSScraper(BaseStoreScraper):
         'e7440': 1000
     }
 
+    def __init__(self, session: requests.Session):
+        self.session = session
+
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping LaptopTech LTS...")
         items: List[LaptopItem] = []
@@ -430,30 +433,36 @@ class LTSScraper(BaseStoreScraper):
                     if link in seen:
                         continue
                     seen.add(link)
-                    title = HardwareClassifier.clean_text(text)
-                    if len(title) < 4:
-                        title = HardwareClassifier.clean_text(link.split('/')[-2].replace('-', ' '))
-                    if not HardwareClassifier.is_laptop(title):
+                    
+                    # Extract clean name from URL slug to avoid LTS SEO text spam
+                    slug = link.rstrip('/').split('/')[-1]
+                    slug_clean = urllib.parse.unquote(slug).replace('-', ' ')
+                    
+                    # Check if laptop
+                    if not HardwareClassifier.is_laptop(slug_clean):
                         continue
 
-                    # Estimate price by model key
+                    # Create a readable capitalized title
+                    words = slug_clean.split()
+                    title = ' '.join(w.capitalize() if not any(c.isdigit() for c in w) else w.upper() for w in words)
+
                     price = 2000
                     for k, v in self.PRICE_ESTIMATES.items():
-                        if k in title.lower() or k in link.lower():
+                        if k in slug_clean.lower():
                             price = v
                             break
 
-                    score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
+                    score, storage_type, ram_type = HardwareClassifier.analyze_architecture(slug_clean)
 
                     items.append(LaptopItem(
                         store=self.STORE_NAME,
                         title=title,
-                        brand=HardwareClassifier.detect_brand(title),
-                        series=HardwareClassifier.detect_series(title),
+                        brand=HardwareClassifier.detect_brand(slug_clean),
+                        series=HardwareClassifier.detect_series(slug_clean),
                         model=title,
-                        cpu=HardwareClassifier.detect_cpu(title),
-                        ram_gb=HardwareClassifier.detect_ram_gb(title),
-                        storage_gb=HardwareClassifier.detect_storage_gb(title),
+                        cpu=HardwareClassifier.detect_cpu(slug_clean),
+                        ram_gb=HardwareClassifier.detect_ram_gb(slug_clean),
+                        storage_gb=HardwareClassifier.detect_storage_gb(slug_clean),
                         price_ils=price,
                         deal_price_ils=price,
                         deal_label=f"~{price:,} ₪",
@@ -470,7 +479,7 @@ class LTSScraper(BaseStoreScraper):
 
 
 # --- Store 4: Recomp Computers Scraper ---
-class RecompScraper(BaseStoreScraper):
+class RecompScraper:
     STORE_NAME = "Recomp Computers"
     CATALOG_URL = "https://recomp.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%99%d7%9d-%d7%9e%d7%97%d7%95%d7%93%d7%a9%d7%99%d7%9d-%d7%91%d7%9e%d7%91%d7%a6%d7%a2/"
 
@@ -484,6 +493,9 @@ class RecompScraper(BaseStoreScraper):
         't470s': 2200,
         't460': 1170
     }
+
+    def __init__(self, session: requests.Session):
+        self.session = session
 
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping Recomp Computers...")
@@ -500,7 +512,8 @@ class RecompScraper(BaseStoreScraper):
                     seen.add(link)
                     title = HardwareClassifier.clean_text(text)
                     if len(title) < 4:
-                        title = HardwareClassifier.clean_text(link.split('/')[-2].replace('-', ' '))
+                        slug = link.rstrip('/').split('/')[-1]
+                        title = HardwareClassifier.clean_text(urllib.parse.unquote(slug).replace('-', ' '))
                     if not HardwareClassifier.is_laptop(title):
                         continue
 
@@ -536,7 +549,7 @@ class RecompScraper(BaseStoreScraper):
         return items
 
 
-# --- Exporter & Markdown Generator ---
+# --- Master Report Generator ---
 class ReportGenerator:
     """Exports structured datasets and generates comprehensive comparison markdown guides."""
 
@@ -562,10 +575,10 @@ class ReportGenerator:
     @staticmethod
     def update_summary_markdown(all_results: Dict[str, List[LaptopItem]], filepath: str):
         now_str = datetime.datetime.now().strftime("%B %d, %Y (%H:%M)")
-        it_items = all_results.get('ITOutletScraper', [])
-        eco_items = all_results.get('EcologyScraper', [])
-        lts_items = all_results.get('LTSScraper', [])
-        rec_items = all_results.get('RecompScraper', [])
+        it_items = all_results.get('itoutlet', [])
+        eco_items = all_results.get('ecology', [])
+        lts_items = all_results.get('lts', [])
+        rec_items = all_results.get('recomp', [])
 
         md = f"""# 💻 Refurbished Laptops Market Research & Multi-Store Comparison Guide
 **Stores Audited & Researched:**
@@ -670,7 +683,7 @@ class ReportGenerator:
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Product Link |
 | :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
 """
-        for i, itm in enumerate(lts_items[:15], 1):
+        for i, itm in enumerate(lts_items[:20], 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
             md += f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n"
 
@@ -680,7 +693,7 @@ class ReportGenerator:
 ## 🏬 4. Recomp Computers (ריקומפ) — Live Stock Audit
 
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Store Link |
-| :-: | :--- | :--- | :---: | :---: | :--- | :--- | :---: | :---: |
+| :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
 """
         for i, itm in enumerate(rec_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
@@ -734,10 +747,10 @@ class MasterLaptopAuditor:
                 name = futures[future]
                 try:
                     items = future.result()
-                    results[f"{name.capitalize()}Scraper"] = items
+                    results[name] = items
                 except Exception as e:
                     logger.error(f"Scraper '{name}' encountered a critical error: {e}")
-                    results[f"{name.capitalize()}Scraper"] = []
+                    results[name] = []
 
         return results
 
