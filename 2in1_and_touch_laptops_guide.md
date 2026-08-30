@@ -93,3 +93,4 @@ graph TD
 
 3. **For Heavy Coding & Multitasking:**  
    👉 Choose the **[HP ProBook x360 435 G7 with 32GB RAM](https://www.itoutlet.co.il/items/9538702-HP-ProBook-x360-435-G7-Ryzen-7-32GB-512GB-SSD)** (**1,900 ₪**). 8 full CPU cores with modular 2x SODIMM RAM slots.
+
