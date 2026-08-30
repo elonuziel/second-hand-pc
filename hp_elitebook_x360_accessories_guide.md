@@ -134,3 +134,4 @@ graph TD
     FilmChoice -- "Mostly type & browse" --> F1["Option A: Use bare Gorilla Glass 5 (0 ₪) OR BROTECT Smooth Matte (~35 ₪ from ProtectionFilms24)"]
     FilmChoice -- "Heavy Chemistry Notes & Drawing" --> F2["Option B: BELLEMOND Kent Paper (~45 ₪ from Japan) OR ViaScreens Paper (~75 ₪)"]
 ```
+
