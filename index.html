@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Second-Hand PC Hub</title>
+    <meta
+      name="description"
+      content="Friendly GitHub Pages site for second-hand PC guides, reviews, and research notes."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.2/dist/purify.min.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <div>
+          <p class="eyebrow">Second-hand PC research</p>
+          <h1>Second-Hand PC Hub</h1>
+        </div>
+        <div class="header-actions">
+          <label class="search-box" aria-label="Search documents">
+            <span>Search</span>
+            <input id="searchInput" type="search" placeholder="Search guides, models, terms..." />
+          </label>
+        </div>
+      </header>
+
+      <nav class="filter-bar" aria-label="Document filter">
+        <button class="filter-btn active" data-filter="all" type="button">All</button>
+        <button class="filter-btn" data-filter="project" type="button">Project</button>
+        <button class="filter-btn" data-filter="summary" type="button">Summary</button>
+        <button class="filter-btn" data-filter="guide" type="button">Guides</button>
+        <button class="filter-btn" data-filter="review" type="button">Reviews</button>
+      </nav>
+
+      <main class="content-layout">
+        <aside class="sidebar">
+          <div class="sidebar-card">
+            <h2>Documents</h2>
+            <div id="tabList" class="tab-list" role="tablist" aria-label="Markdown documents"></div>
+          </div>
+          <div class="sidebar-card mini-stats">
+            <h3>Quick facts</h3>
+            <ul>
+              <li>Research-first buying guidance</li>
+              <li>Repaired/refurbished focus</li>
+              <li>Model-specific reviews</li>
+            </ul>
+          </div>
+        </aside>
+
+        <section class="document-panel">
+          <div id="statusBar" class="status-bar" aria-live="polite"></div>
+          <article id="documentContent" class="markdown-body" aria-live="polite"></article>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
