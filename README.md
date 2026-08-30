@@ -1,7 +1,3 @@
-Here’s a clean, professional **README.md** tailored to the structure and purpose of your repo, fully grounded in the content from your GitHub page   [Current page](citation-section://1645521870/1).
-
----
-
 # second-hand-pc
 
 A data‑driven toolkit for researching, evaluating, and comparing **second‑hand laptops**, with a focus on **2‑in‑1 devices**, **touch laptops**, and detailed model‑specific reviews.  
