@@ -39,7 +39,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes in catalog."
           else
-            git commit -m "chore(audit): auto-update live laptop catalog & summaries [skip ci]"
+            git commit -m "chore(audit): auto-update live laptop catalog & summaries"
             git push
           fi
 
