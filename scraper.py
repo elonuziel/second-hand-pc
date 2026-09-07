@@ -209,13 +209,31 @@ class GroqSpecEnhancer:
 class HardwareClassifier:
     """Classifies PC hardware architecture based on verified engineering specifications."""
 
-    @staticmethod
-    def clean_text(text: str) -> str:
+    # Pre-compiled regular expressions for text cleaning and spec detection
+    _ALT_TEXT_RE = re.compile(r'alt=[\"\']([^\"\']+)[\"\']')
+    _SKU_PREFIX_RE = re.compile(r'^\d+\s*-\s*')
+    _HTML_TAG_RE = re.compile(r'<[^>]+>')
+    _CLEAN_PHRASE_RE = re.compile(r'מחשב\s*נייד\s*(?:מחודש)?\s*(?:לעריכה\s*גרפית)?')
+
+    _GEN12_RE = re.compile(r'(?:12th|דור\s*12|gen\s*4|5431|5531|7430|1270p|1260p|1250u|1280p|1240p|1235u)')
+    _GEN11_RE = re.compile(r'(?:11th|דור\s*11|g8|gen\s*2|7420|7320|5420|5320|5520|1185g7|1165g7|1135g7|1145g7)')
+    _GEN10_RE = re.compile(r'(?:10th|דור\s*10|g7|gen\s*1|7410|5410|5510|10510u|10610u|10875h|10210u|10310u)')
+    _GEN9_RE = re.compile(r'(?:9th|דור\s*9|g6|9750h|9850h)')
+    _GEN8_RE = re.compile(r'(?:8th|דור\s*8|e480|l390|7400|5490|5400|x280|t480|8250u|8350u|8650u|8550u)')
+    _GEN7_RE = re.compile(r'(?:7th|דור\s*7|t470|5480|7200u|7300u|7500u)')
+    _GEN6_RE = re.compile(r'(?:6th|דור\s*6|t460|650\s*g2|6200u|6300u|840\s*g3)')
+    _GEN4_RE = re.compile(r'(?:4th|דור\s*4|g-4|e7440|4200u|4300u)')
+
+    _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
+    _STORAGE_GB_RE = re.compile(r'(?:^|[^\w])(128|240|250|256|480|500|512)\s*(?:gb|g|גיגה)?(?:\s*ssd|\s*nvme|\s*אחסון)?(?:[^\w]|$)')
+
+    @classmethod
+    def clean_text(cls, text: str) -> str:
         if not text:
             return ""
         text = urllib.parse.unquote(text)
         # Extract alt text if wrapped in img tags
-        alt_m = re.findall(r'alt=[\"\']([^\"\']+)[\"\']', text)
+        alt_m = cls._ALT_TEXT_RE.findall(text)
         if alt_m:
             text = alt_m[0]
         # Strip long SEO keyword spam blocks (like ", מחשבים ניידים...")
@@ -224,10 +242,10 @@ class HardwareClassifier:
             if len(first_part) >= 5:
                 text = first_part
         # Remove leading SKU digits like "93070 - "
-        text = re.sub(r'^\d+\s*-\s*', '', text)
-        text = re.sub(r'<[^>]+>', ' ', text)
+        text = cls._SKU_PREFIX_RE.sub('', text)
+        text = cls._HTML_TAG_RE.sub(' ', text)
         # Remove repetitive phrases
-        text = re.sub(r'מחשב\s*נייד\s*(?:מחודש)?\s*(?:לעריכה\s*גרפית)?', '', text).strip()
+        text = cls._CLEAN_PHRASE_RE.sub('', text).strip()
         return ' '.join(text.split()).strip()
 
     @classmethod
@@ -277,14 +295,14 @@ class HardwareClassifier:
         if 'celeron' in t: return "Intel Celeron"
         if 'ultra 7' in t: return "Intel Core Ultra 7"
 
-        gen12 = re.search(r'(?:12th|דור\s*12|gen\s*4|5431|5531|7430|1270p|1260p|1250u|1280p|1240p|1235u)', t)
-        gen11 = re.search(r'(?:11th|דור\s*11|g8|gen\s*2|7420|7320|5420|5320|5520|1185g7|1165g7|1135g7|1145g7)', t)
-        gen10 = re.search(r'(?:10th|דור\s*10|g7|gen\s*1|7410|5410|5510|10510u|10610u|10875h|10210u|10310u)', t)
-        gen9 = re.search(r'(?:9th|דור\s*9|g6|9750h|9850h)', t)
-        gen8 = re.search(r'(?:8th|דור\s*8|e480|l390|7400|5490|5400|x280|t480|8250u|8350u|8650u|8550u)', t)
-        gen7 = re.search(r'(?:7th|דור\s*7|t470|5480|7200u|7300u|7500u)', t)
-        gen6 = re.search(r'(?:6th|דור\s*6|t460|650\s*g2|6200u|6300u|840\s*g3)', t)
-        gen4 = re.search(r'(?:4th|דור\s*4|g-4|e7440|4200u|4300u)', t)
+        gen12 = cls._GEN12_RE.search(t)
+        gen11 = cls._GEN11_RE.search(t)
+        gen10 = cls._GEN10_RE.search(t)
+        gen9 = cls._GEN9_RE.search(t)
+        gen8 = cls._GEN8_RE.search(t)
+        gen7 = cls._GEN7_RE.search(t)
+        gen6 = cls._GEN6_RE.search(t)
+        gen4 = cls._GEN4_RE.search(t)
 
         i_level = "i7" if "i7" in t else ("i5" if "i5" in t else ("i9" if "i9" in t else ("i3" if "i3" in t else "i5")))
 
@@ -300,7 +318,7 @@ class HardwareClassifier:
 
     @classmethod
     def detect_ram_gb(cls, title: str) -> int:
-        m = re.search(r'(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)(?:[^\w]|$)', title, re.IGNORECASE)
+        m = cls._RAM_GB_RE.search(title)
         if m:
             return int(m.group(1))
         return 16
@@ -310,7 +328,7 @@ class HardwareClassifier:
         t = title.lower()
         if '2tb' in t: return 2000
         if '1tb' in t or '1 טרה' in t or '1000g' in t or '1000gb' in t: return 1000
-        m = re.search(r'(?:^|[^\w])(128|240|250|256|480|500|512)\s*(?:gb|g|גיגה)?(?:\s*ssd|\s*nvme|\s*אחסון)?(?:[^\w]|$)', t)
+        m = cls._STORAGE_GB_RE.search(t)
         if m:
             return int(m.group(1))
         return 512
