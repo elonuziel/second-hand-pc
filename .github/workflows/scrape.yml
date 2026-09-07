@@ -3,8 +3,8 @@ name: Live Laptop Market Audit
 on:
   workflow_dispatch:
   schedule:
-    # Run every 12 hours
-    - cron: '0 */12 * * *'
+    # Run once every 3 days
+    - cron: '0 0 */3 * *'
 
 jobs:
   audit:
