@@ -51,25 +51,36 @@ const state = {
   }
 };
 
-const tabList = document.getElementById('tabList');
-const documentContent = document.getElementById('documentContent');
-const catalogContent = document.getElementById('catalogContent');
-const searchInput = document.getElementById('searchInput');
-const statusBar = document.getElementById('statusBar');
+const tabList = typeof document !== 'undefined' ? document.getElementById('tabList') : null;
+const documentContent = typeof document !== 'undefined' ? document.getElementById('documentContent') : null;
+const catalogContent = typeof document !== 'undefined' ? document.getElementById('catalogContent') : null;
+const searchInput = typeof document !== 'undefined' ? document.getElementById('searchInput') : null;
+const statusBar = typeof document !== 'undefined' ? document.getElementById('statusBar') : null;
 
-const documentSidebarCard = document.getElementById('documentSidebarCard');
-const catalogFiltersCard = document.getElementById('catalogFiltersCard');
+const documentSidebarCard = typeof document !== 'undefined' ? document.getElementById('documentSidebarCard') : null;
+const catalogFiltersCard = typeof document !== 'undefined' ? document.getElementById('catalogFiltersCard') : null;
 
-const storeFilter = document.getElementById('storeFilter');
-const brandFilter = document.getElementById('brandFilter');
-const ramFilter = document.getElementById('ramFilter');
-const formFilter = document.getElementById('formFilter');
-const upgradabilityFilter = document.getElementById('upgradabilityFilter');
-const sortFilter = document.getElementById('sortFilter');
+const storeFilter = typeof document !== 'undefined' ? document.getElementById('storeFilter') : null;
+const brandFilter = typeof document !== 'undefined' ? document.getElementById('brandFilter') : null;
+const ramFilter = typeof document !== 'undefined' ? document.getElementById('ramFilter') : null;
+const formFilter = typeof document !== 'undefined' ? document.getElementById('formFilter') : null;
+const upgradabilityFilter = typeof document !== 'undefined' ? document.getElementById('upgradabilityFilter') : null;
+const sortFilter = typeof document !== 'undefined' ? document.getElementById('sortFilter') : null;
+
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 function setStatus(message, type = 'info') {
   const badgeClass = type === 'error' ? 'status-badge error' : 'status-badge';
-  statusBar.innerHTML = `<span class="${badgeClass}">${message}</span>`;
+  if (statusBar) {
+    statusBar.innerHTML = `<span class="${badgeClass}">${escapeHtml(message)}</span>`;
+  }
 }
 
 async function preloadDocContents() {
@@ -146,6 +157,7 @@ function getVisibleDoc() {
 }
 
 function renderTabs() {
+  if (!tabList) return;
   const visibleDocs = buildVisibleDocs();
 
   if (visibleDocs.length === 0) {
@@ -168,11 +180,11 @@ function renderTabs() {
         <button
           type="button"
           class="tab-button ${doc.id === state.activeDocId ? 'active' : ''}"
-          data-doc-id="${doc.id}"
+          data-doc-id="${escapeHtml(doc.id)}"
           role="tab"
           aria-selected="${doc.id === state.activeDocId}"
         >
-          <span>${doc.title}</span>
+          <span>${escapeHtml(doc.title)}</span>
           ${badgeHtml}
         </button>
       `;
@@ -197,6 +209,7 @@ function sanitizeMarkdown(rawText) {
 
 async function loadDocument() {
   if (state.filter === 'catalog') return;
+  if (!documentContent) return;
 
   const selectedDoc = docs.find((doc) => doc.id === state.activeDocId) || buildVisibleDocs()[0];
   if (!selectedDoc) {
@@ -225,7 +238,7 @@ async function loadDocument() {
       <div class="empty-state">
         <div>
           <h3>Unable to load this document.</h3>
-          <p>${error.message}</p>
+          <p>${escapeHtml(error.message)}</p>
         </div>
       </div>
     `;
@@ -241,6 +254,7 @@ function getUpgradabilityBadge(score) {
 }
 
 function renderCatalog() {
+  if (!catalogContent) return;
   const { store, brand, ram, form, upgradability, sort } = state.catalogFilters;
   const q = state.query.toLowerCase();
 
@@ -288,27 +302,27 @@ function renderCatalog() {
       <div class="catalog-card">
         <div class="card-header">
           <div class="card-title-group">
-            <span class="store-tag">${laptop.store}</span>
-            <h3 class="laptop-title">${laptop.title}</h3>
+            <span class="store-tag">${escapeHtml(laptop.store)}</span>
+            <h3 class="laptop-title">${escapeHtml(laptop.title)}</h3>
           </div>
           <div class="price-box">
-            <span class="price-value">${laptop.deal_price_ils ? laptop.deal_price_ils.toLocaleString() + ' ₪' : 'Check Store'}</span>
-            ${laptop.deal_label && !laptop.deal_label.includes(laptop.deal_price_ils) ? `<span class="deal-note">${laptop.deal_label}</span>` : ''}
+            <span class="price-value">${laptop.deal_price_ils ? escapeHtml(laptop.deal_price_ils.toLocaleString()) + ' ₪' : 'Check Store'}</span>
+            ${laptop.deal_label && !laptop.deal_label.includes(laptop.deal_price_ils) ? `<span class="deal-note">${escapeHtml(laptop.deal_label)}</span>` : ''}
           </div>
         </div>
 
         <div class="specs-grid">
           <div class="spec-item">
             <span class="spec-label">CPU:</span>
-            <span class="spec-value">${laptop.cpu}</span>
+            <span class="spec-value">${escapeHtml(laptop.cpu)}</span>
           </div>
           <div class="spec-item">
             <span class="spec-label">RAM:</span>
-            <span class="spec-value">${laptop.ram_gb} GB (${laptop.ram_type})</span>
+            <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB (${escapeHtml(laptop.ram_type)})</span>
           </div>
           <div class="spec-item">
             <span class="spec-label">Storage:</span>
-            <span class="spec-value">${laptop.storage_gb} GB (${laptop.storage_type})</span>
+            <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB (${escapeHtml(laptop.storage_type)})</span>
           </div>
           <div class="spec-item">
             <span class="spec-label">Upgradability:</span>
@@ -320,12 +334,12 @@ function renderCatalog() {
           </div>
           <div class="spec-item">
             <span class="spec-label">Warranty:</span>
-            <span class="spec-value">${laptop.warranty_months} Months Warranty</span>
+            <span class="spec-value">${escapeHtml(laptop.warranty_months)} Months Warranty</span>
           </div>
         </div>
 
         <div class="card-footer">
-          <a href="${laptop.url}" target="_blank" rel="noopener noreferrer" class="buy-btn">
+          <a href="${escapeHtml(laptop.url)}" target="_blank" rel="noopener noreferrer" class="buy-btn">
             View on Store ↗
           </a>
         </div>
@@ -344,22 +358,23 @@ function renderCatalog() {
 
 function updateViewMode() {
   if (state.filter === 'catalog') {
-    documentSidebarCard.classList.add('hidden');
-    catalogFiltersCard.classList.remove('hidden');
-    documentContent.classList.add('hidden');
-    catalogContent.classList.remove('hidden');
+    if (documentSidebarCard) documentSidebarCard.classList.add('hidden');
+    if (catalogFiltersCard) catalogFiltersCard.classList.remove('hidden');
+    if (documentContent) documentContent.classList.add('hidden');
+    if (catalogContent) catalogContent.classList.remove('hidden');
     renderCatalog();
   } else {
-    documentSidebarCard.classList.remove('hidden');
-    catalogFiltersCard.classList.add('hidden');
-    documentContent.classList.remove('hidden');
-    catalogContent.classList.add('hidden');
+    if (documentSidebarCard) documentSidebarCard.classList.remove('hidden');
+    if (catalogFiltersCard) catalogFiltersCard.classList.add('hidden');
+    if (documentContent) documentContent.classList.remove('hidden');
+    if (catalogContent) catalogContent.classList.add('hidden');
     renderTabs();
     loadDocument();
   }
 }
 
 function updateFilterButtons() {
+  if (typeof document === 'undefined') return;
   document.querySelectorAll('.filter-btn').forEach((button) => {
     const isActive = button.dataset.filter === state.filter;
     button.classList.toggle('active', isActive);
@@ -367,6 +382,8 @@ function updateFilterButtons() {
 }
 
 function bindEvents() {
+  if (typeof document === 'undefined') return;
+
   document.querySelectorAll('.filter-btn').forEach((button) => {
     button.addEventListener('click', () => {
       state.filter = button.dataset.filter;
@@ -375,51 +392,70 @@ function bindEvents() {
     });
   });
 
-  searchInput.addEventListener('input', (event) => {
-    state.query = event.target.value.trim();
-    if (state.filter === 'catalog') {
+  if (searchInput) {
+    searchInput.addEventListener('input', (event) => {
+      state.query = event.target.value.trim();
+      if (state.filter === 'catalog') {
+        renderCatalog();
+      } else {
+        renderTabs();
+        loadDocument();
+      }
+    });
+  }
+
+  if (storeFilter) {
+    storeFilter.addEventListener('change', (e) => {
+      state.catalogFilters.store = e.target.value;
       renderCatalog();
-    } else {
-      renderTabs();
-      loadDocument();
-    }
-  });
+    });
+  }
 
-  storeFilter.addEventListener('change', (e) => {
-    state.catalogFilters.store = e.target.value;
-    renderCatalog();
-  });
+  if (brandFilter) {
+    brandFilter.addEventListener('change', (e) => {
+      state.catalogFilters.brand = e.target.value;
+      renderCatalog();
+    });
+  }
 
-  brandFilter.addEventListener('change', (e) => {
-    state.catalogFilters.brand = e.target.value;
-    renderCatalog();
-  });
+  if (ramFilter) {
+    ramFilter.addEventListener('change', (e) => {
+      state.catalogFilters.ram = Number(e.target.value);
+      renderCatalog();
+    });
+  }
 
-  ramFilter.addEventListener('change', (e) => {
-    state.catalogFilters.ram = Number(e.target.value);
-    renderCatalog();
-  });
+  if (formFilter) {
+    formFilter.addEventListener('change', (e) => {
+      state.catalogFilters.form = e.target.value;
+      renderCatalog();
+    });
+  }
 
-  formFilter.addEventListener('change', (e) => {
-    state.catalogFilters.form = e.target.value;
-    renderCatalog();
-  });
+  if (upgradabilityFilter) {
+    upgradabilityFilter.addEventListener('change', (e) => {
+      state.catalogFilters.upgradability = Number(e.target.value);
+      renderCatalog();
+    });
+  }
 
-  upgradabilityFilter.addEventListener('change', (e) => {
-    state.catalogFilters.upgradability = Number(e.target.value);
-    renderCatalog();
-  });
-
-  sortFilter.addEventListener('change', (e) => {
-    state.catalogFilters.sort = e.target.value;
-    renderCatalog();
-  });
+  if (sortFilter) {
+    sortFilter.addEventListener('change', (e) => {
+      state.catalogFilters.sort = e.target.value;
+      renderCatalog();
+    });
+  }
 }
 
 async function init() {
+  if (typeof document === 'undefined') return;
   bindEvents();
   await Promise.all([preloadDocContents(), loadCatalogData()]);
   updateViewMode();
 }
 
 init();
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { escapeHtml };
+}
