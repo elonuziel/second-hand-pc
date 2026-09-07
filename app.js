@@ -37,10 +37,19 @@ const state = {
   query: ''
 };
 
-const tabList = document.getElementById('tabList');
-const documentContent = document.getElementById('documentContent');
-const searchInput = document.getElementById('searchInput');
-const statusBar = document.getElementById('statusBar');
+const tabList = typeof document !== 'undefined' ? document.getElementById('tabList') : null;
+const documentContent = typeof document !== 'undefined' ? document.getElementById('documentContent') : null;
+const searchInput = typeof document !== 'undefined' ? document.getElementById('searchInput') : null;
+const statusBar = typeof document !== 'undefined' ? document.getElementById('statusBar') : null;
+
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 function normalizeText(value) {
   return String(value || '').toLowerCase();
@@ -57,7 +66,9 @@ function buildVisibleDocs() {
 
 function setStatus(message, type = 'info') {
   const badgeClass = type === 'error' ? 'status-badge error' : 'status-badge';
-  statusBar.innerHTML = `<span class="${badgeClass}">${message}</span>`;
+  if (statusBar) {
+    statusBar.innerHTML = `<span class="${badgeClass}">${escapeHtml(message)}</span>`;
+  }
 }
 
 function getVisibleDoc() {
@@ -87,11 +98,11 @@ function renderTabs() {
         <button
           type="button"
           class="tab-button ${doc.id === state.activeDocId ? 'active' : ''}"
-          data-doc-id="${doc.id}"
+          data-doc-id="${escapeHtml(doc.id)}"
           role="tab"
           aria-selected="${doc.id === state.activeDocId}"
         >
-          ${doc.title}
+          ${escapeHtml(doc.title)}
         </button>
       `
     )
@@ -139,7 +150,7 @@ async function loadDocument() {
       <div class="empty-state">
         <div>
           <h3>Unable to load this document.</h3>
-          <p>${error.message}</p>
+          <p>${escapeHtml(error.message)}</p>
         </div>
       </div>
     `;
@@ -172,9 +183,14 @@ function bindEvents() {
 }
 
 async function init() {
+  if (typeof document === 'undefined') return;
   bindEvents();
   renderTabs();
   await loadDocument();
 }
 
 init();
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { escapeHtml };
+}
