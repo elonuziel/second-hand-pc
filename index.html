@@ -20,33 +20,101 @@
           <h1>Second-Hand PC Hub</h1>
         </div>
         <div class="header-actions">
-          <label class="search-box" aria-label="Search documents">
+          <label class="search-box" aria-label="Search site & catalog">
             <span>Search</span>
-            <input id="searchInput" type="search" placeholder="Search guides, models, terms..." />
+            <input id="searchInput" type="search" placeholder="Search guides, laptops, specs (e.g. i7, 32GB, ThinkPad)..." />
           </label>
         </div>
       </header>
 
-      <nav class="filter-bar" aria-label="Document filter">
-        <button class="filter-btn active" data-filter="all" type="button">All</button>
+      <nav class="filter-bar" aria-label="Document & Catalog filter">
+        <button class="filter-btn active" data-filter="all" type="button">All Docs</button>
         <button class="filter-btn" data-filter="project" type="button">Project</button>
         <button class="filter-btn" data-filter="summary" type="button">Summary</button>
         <button class="filter-btn" data-filter="guide" type="button">Guides</button>
         <button class="filter-btn" data-filter="review" type="button">Reviews</button>
+        <button class="filter-btn catalog-nav-btn" data-filter="catalog" type="button">💻 Laptop Catalog Finder</button>
       </nav>
 
       <main class="content-layout">
         <aside class="sidebar">
-          <div class="sidebar-card">
+          <div id="documentSidebarCard" class="sidebar-card">
             <h2>Documents</h2>
             <div id="tabList" class="tab-list" role="tablist" aria-label="Markdown documents"></div>
           </div>
+
+          <div id="catalogFiltersCard" class="sidebar-card hidden">
+            <h2>Catalog Filters</h2>
+            <div class="filter-group">
+              <label for="storeFilter">Store</label>
+              <select id="storeFilter" class="filter-select">
+                <option value="all">All Stores</option>
+                <option value="IT Outlet">IT Outlet</option>
+                <option value="Ecology Computers">Ecology Computers</option>
+                <option value="LaptopTech LTS">LaptopTech LTS</option>
+                <option value="Recomp Computers">Recomp Computers</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="brandFilter">Brand</label>
+              <select id="brandFilter" class="filter-select">
+                <option value="all">All Brands</option>
+                <option value="Lenovo">Lenovo</option>
+                <option value="Dell">Dell</option>
+                <option value="HP">HP</option>
+                <option value="Apple">Apple</option>
+                <option value="Asus">Asus</option>
+                <option value="Acer">Acer</option>
+                <option value="Microsoft">Microsoft</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="ramFilter">Min RAM</label>
+              <select id="ramFilter" class="filter-select">
+                <option value="0">Any RAM</option>
+                <option value="8">8 GB+</option>
+                <option value="16">16 GB+</option>
+                <option value="32">32 GB+</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="formFilter">Type / Screen</label>
+              <select id="formFilter" class="filter-select">
+                <option value="all">All Types</option>
+                <option value="2in1">2-in-1 / Touchscreen</option>
+                <option value="clamshell">Clamshell Standard</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="upgradabilityFilter">Upgradability</label>
+              <select id="upgradabilityFilter" class="filter-select">
+                <option value="0">Any Rating</option>
+                <option value="7">🟢 Highly Upgradable (7+)</option>
+                <option value="9">🟢 Fully Modular (9+)</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="sortFilter">Sort By</label>
+              <select id="sortFilter" class="filter-select">
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="upgrade-desc">Upgradability Score</option>
+                <option value="ram-desc">RAM Capacity</option>
+              </select>
+            </div>
+          </div>
+
           <div class="sidebar-card mini-stats">
             <h3>Quick facts</h3>
             <ul>
-              <li>Research-first buying guidance</li>
-              <li>Repaired/refurbished focus</li>
-              <li>Model-specific reviews</li>
+              <li>Full-text search across docs</li>
+              <li>Live scraped laptop database</li>
+              <li>Multi-store price & spec comparison</li>
             </ul>
           </div>
         </aside>
@@ -54,6 +122,7 @@
         <section class="document-panel">
           <div id="statusBar" class="status-bar" aria-live="polite"></div>
           <article id="documentContent" class="markdown-body" aria-live="polite"></article>
+          <div id="catalogContent" class="catalog-view hidden" aria-live="polite"></div>
         </section>
       </main>
     </div>

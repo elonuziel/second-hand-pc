@@ -1,4 +1,5 @@
 # 💻 Refurbished Laptops Market Research & Multi-Store Comparison Guide
+
 **Stores Audited & Researched:**
 1. 🏬 **Ecology Computers (אקולוגיה לקהילה מוגנת):** [ecommunity.org.il/מחשבים-ניידים](https://www.ecommunity.org.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D)
 2. 🏬 **IT Outlet (איי טי אאוטלט):** [itoutlet.co.il/מחשבים-ניידים](https://www.itoutlet.co.il/164920-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D?order=up_price)
@@ -6,6 +7,19 @@
 4. 🏬 **Recomp Computers (ריקומפ):** [recomp.co.il/מחשבים-מחודשים-במבצע](https://recomp.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%99%d7%9d-%d7%9e%d7%97%d7%95%d7%93%d7%a9%d7%99%d7%9d-%d7%91%d7%9e%d7%91%d7%a6%d7%a2/)
 
 *Last Automated Live Audit: September 07, 2026 (17:30)*
+
+---
+
+## 📌 Quick Navigation
+- [💾 Storage Interfaces Explained](#-storage-interfaces-explained-nvme-vs-sata-vs-soldered)
+- [🔧 Upgradability Scoring Guide](#-upgradability-scoring-guide)
+- [🏷️ Store Discounts & Coupons](#️-it-outlet-discounts--coupon-optimization)
+- [🏆 Top Recommended Picks](#-top-overall-available-picks-dynamically-auto-ranked-from-live-inventory)
+- [🏬 IT Outlet Live Audit](#-1-it-outlet-איי-טי-אאוטלט--live-catalog--stock-audit)
+- [🏬 Ecology Computers Live Audit](#-2-ecology-computers-אקולוגיה-לקהילה-מוגנת--live-stock-audit)
+- [🏬 LaptopTech LTS Live Audit](#-3-laptoptech-lts-לפטופטק--live-stock-audit)
+- [🏬 Recomp Computers Live Audit](#-4-recomp-computers-ריקומפ--live-stock-audit)
+- [🎯 Buyer Rules of Thumb](#-quick-rules-of-thumb)
 
 ---
 
@@ -39,7 +53,7 @@
 
 | 100 ₪ Email Discount | 4% Credit Card Discount |
 | :---: | :---: |
-| ![100 NIS Newsletter Discount](/home/elonu/github/scrap/assets/itoutlet_100nis_discount.png) | ![4 Percent Credit Card Discount](/home/elonu/github/scrap/assets/itoutlet_4percent_discount.png) |
+| ![100 NIS Newsletter Discount](./assets/itoutlet_100nis_discount.png) | ![4 Percent Credit Card Discount](./assets/itoutlet_4percent_discount.png) |
 
 ---
 
@@ -67,7 +81,7 @@
 > **Memory:** 16 GB Soldered + 16 GB SODIMM Slot = **32 GB RAM** *(Expandable up to 48 GB)*  
 > **Upgradability Score:** 🟡 **7.5/10**
 
-![Lenovo ThinkPad P14s Deal Offer](/home/elonu/github/scrap/assets/thinkpad_p14s_offer.png)
+![Lenovo ThinkPad P14s Deal Offer](./assets/thinkpad_p14s_offer.png)
 
 ---
 
