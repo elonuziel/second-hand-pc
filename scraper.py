@@ -808,12 +808,13 @@ class ReportGenerator:
 
         top_picks = TopPicksEngine.select_top_picks(all_laptops)
 
-        md = f"""# 💻 Refurbished Laptops Market Research & Multi-Store Comparison Guide
+        md_parts = []
+        md_parts.append(f"""# 💻 Refurbished Laptops Market Research & Multi-Store Comparison Guide
 **Stores Audited & Researched:**
 1. 🏬 **Ecology Computers (אקולוגיה לקהילה מוגנת):** [ecommunity.org.il/מחשבים-ניידים](https://www.ecommunity.org.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D)
 2. 🏬 **IT Outlet (איי טי אאוטלט):** [itoutlet.co.il/מחשבים-ניידים](https://www.itoutlet.co.il/164920-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D?order=up_price)
 3. 🏬 **LaptopTech LTS (לפטופ.טק):** [lts.co.il/מחשבים-ניידים-מחודשים-יד-2](https://lts.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%99%D7%93-2/)
-4. 🏬 **Recomp Computers (ריקומפ):** [recomp.co.il/מחשבים-מחודשים-במבצע](https://recomp.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%99%d7%9d-%d7%9e%d7%97%d7%95%d7%93%d7%a9%d7%99%d7%9d-%d7%91%d7%9e%d7%91%d7%a6%d7%a2/)
+4. 🏬 **Recomp Computers (ריקומפ):** [recomp.co.il/מחשבים-מחודשים-במבצע](https://recomp.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%99%d7%9d-%d7%9e%d7%97%D7%95%D7%93%D7%a9%d7%99%d7%9d-%d7%91%d7%9e%d7%91%d7%a6%d7%a2/)
 
 *Last Automated Live Audit: {now_str}*
 
@@ -857,13 +858,13 @@ class ReportGenerator:
 
 | Category | Model | Key Specs | Best Deal Price | Store | Storage Interface | RAM Architecture | Upgradability | Direct Link |
 | :--- | :--- | :--- | :---: | :---: | :--- | :--- | :---: | :---: |
-"""
+""")
         for cat_emoji, cat_desc, p in top_picks:
             score_badge = f"🟢 {p.upgradability_score}" if p.upgradability_score >= 8.5 else (f"🟡 {p.upgradability_score}" if p.upgradability_score >= 7.0 else f"🟠 {p.upgradability_score}")
             specs_summary = f"{p.cpu} • **{p.ram_gb}GB RAM** • {p.storage_gb}GB SSD"
-            md += f"| **{cat_emoji}** | **{p.title}** | {specs_summary} | **{p.deal_label}** | {p.store} | {p.storage_type} | {p.ram_type} | {score_badge} | [View Product]({p.url}) |\n"
+            md_parts.append(f"| **{cat_emoji}** | **{p.title}** | {specs_summary} | **{p.deal_label}** | {p.store} | {p.storage_type} | {p.ram_type} | {score_badge} | [View Product]({p.url}) |\n")
 
-        md += """
+        md_parts.append("""
 ---
 
 ## 📸 Featured Deal: Lenovo ThinkPad P14s Gen 1 (IT Outlet)
@@ -884,12 +885,12 @@ class ReportGenerator:
 
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Deal Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Product Link |
 | :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
-"""
+""")
         for i, itm in enumerate(it_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md += f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n"
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
-        md += f"""
+        md_parts.append(f"""
 ---
 
 ## 🏬 2. Ecology Computers (אקולוגיה לקהילה מוגנת) — Live Stock Audit
@@ -898,36 +899,36 @@ class ReportGenerator:
 
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Deal Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Product Link |
 | :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
-"""
+""")
         for i, itm in enumerate(eco_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md += f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.price_ils:,} ₪** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n"
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.price_ils:,} ₪** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
-        md += f"""
+        md_parts.append(f"""
 ---
 
 ## 🏬 3. LaptopTech LTS (לפטופ.טק) — Live Stock Audit
 
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Product Link |
 | :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
-"""
+""")
         for i, itm in enumerate(lts_items[:25], 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md += f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n"
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
-        md += f"""
+        md_parts.append(f"""
 ---
 
 ## 🏬 4. Recomp Computers (ריקומפ) — Live Stock Audit
 
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Store Link |
 | :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
-"""
+""")
         for i, itm in enumerate(rec_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md += f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View on Recomp]({itm.url}) |\n"
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View on Recomp]({itm.url}) |\n")
 
-        md += """
+        md_parts.append("""
 ---
 
 ## 🎯 Quick Rules of Thumb
@@ -940,7 +941,8 @@ class ReportGenerator:
    * If you see **🟠 5/10**, the **NVMe SSD is fully upgradeable**, but the **RAM is soldered**.
    * If you see **🟢 9/10** or **🟢 10/10**, both the **RAM and NVMe SSD are 100% modular and upgradeable**.
    * If you see **🔴 1/10 (Surface Laptop 2)**, everything is permanently soldered and glued shut.
-"""
+""")
+        md = "".join(md_parts)
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(md.strip() + "\n")
         logger.info(f"Markdown guide updated: {filepath}")
