@@ -126,6 +126,9 @@ class LaptopItem:
     is_touch: bool = False
     is_2in1: bool = False
     image_url: str = ""
+    screen_size_in: float = 14.0
+    weight_kg: float = 1.5
+    battery_wh: int = 50
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
