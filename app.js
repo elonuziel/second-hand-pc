@@ -40,6 +40,7 @@ const state = {
   activeDocId: 'overview',
   filter: 'all', // 'all', 'project', 'summary', 'guide', 'review', 'catalog'
   query: '',
+  activePreset: 'all',
   catalogData: [],
   catalogFilters: {
     store: 'all',
@@ -47,7 +48,7 @@ const state = {
     ram: 0,
     form: 'all',
     upgradability: 0,
-    sort: 'price-asc'
+    sort: 'value-desc'
   }
 };
 
@@ -59,6 +60,10 @@ const statusBar = typeof document !== 'undefined' ? document.getElementById('sta
 
 const documentSidebarCard = typeof document !== 'undefined' ? document.getElementById('documentSidebarCard') : null;
 const catalogFiltersCard = typeof document !== 'undefined' ? document.getElementById('catalogFiltersCard') : null;
+const catalogFilterFields = typeof document !== 'undefined' ? document.getElementById('catalogFilterFields') : null;
+const toggleFiltersBtn = typeof document !== 'undefined' ? document.getElementById('toggleFiltersBtn') : null;
+const resetFiltersBtn = typeof document !== 'undefined' ? document.getElementById('resetFiltersBtn') : null;
+const themeToggle = typeof document !== 'undefined' ? document.getElementById('themeToggle') : null;
 
 const storeFilter = typeof document !== 'undefined' ? document.getElementById('storeFilter') : null;
 const brandFilter = typeof document !== 'undefined' ? document.getElementById('brandFilter') : null;
@@ -76,10 +81,77 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+function calculateValueScore(laptop) {
+  const price = laptop.deal_price_ils || laptop.price_ils || 0;
+  if (price <= 300) return 5.0;
+
+  const ramPts = (laptop.ram_gb || 8) * 12;
+  const storagePts = (laptop.storage_gb || 256) * 0.1;
+  const upgradePts = (laptop.upgradability_score || 5) * 12;
+
+  let cpuBonus = 0;
+  const cpuLower = (laptop.cpu || '').toLowerCase();
+  if (cpuLower.includes('13th') || cpuLower.includes('14th') || cpuLower.includes('ultra')) cpuBonus = 80;
+  else if (cpuLower.includes('12th') || cpuLower.includes('m2') || cpuLower.includes('m3')) cpuBonus = 65;
+  else if (cpuLower.includes('11th') || cpuLower.includes('m1')) cpuBonus = 45;
+  else if (cpuLower.includes('10th')) cpuBonus = 25;
+  else if (cpuLower.includes('8th') || cpuLower.includes('9th')) cpuBonus = 10;
+
+  const totalPoints = ramPts + storagePts + upgradePts + cpuBonus;
+  const rawRatio = (totalPoints / price) * 1000;
+  const normalized = Math.min(9.9, Math.max(5.0, ((rawRatio - 80) / 190) * 4.9 + 5.0));
+  return Number(normalized.toFixed(1));
+}
+
+function getBrandBadge(brand) {
+  const b = (brand || '').toLowerCase();
+  if (b.includes('lenovo')) return '<span class="brand-badge brand-lenovo">🔴 Lenovo</span>';
+  if (b.includes('dell')) return '<span class="brand-badge brand-dell">🔵 Dell</span>';
+  if (b.includes('hp')) return '<span class="brand-badge brand-hp">⚪ HP</span>';
+  if (b.includes('apple')) return '<span class="brand-badge brand-apple">🍏 Apple</span>';
+  if (b.includes('asus')) return '<span class="brand-badge brand-asus">⚡ Asus</span>';
+  if (b.includes('microsoft')) return '<span class="brand-badge brand-ms">🪟 Microsoft</span>';
+  return `<span class="brand-badge brand-default">💻 ${escapeHtml(brand || 'PC')}</span>`;
+}
+
+function getStoreClass(store) {
+  const s = (store || '').toLowerCase();
+  if (s.includes('outlet')) return 'store-itoutlet';
+  if (s.includes('ecology') || s.includes('אקולוגיה')) return 'store-ecology';
+  if (s.includes('lts') || s.includes('laptoptech') || s.includes('לפטופטק')) return 'store-lts';
+  if (s.includes('recomp') || s.includes('ריקומפ')) return 'store-recomp';
+  return 'store-default';
+}
+
 function setStatus(message, type = 'info') {
   const badgeClass = type === 'error' ? 'status-badge error' : 'status-badge';
   if (statusBar) {
     statusBar.innerHTML = `<span class="${badgeClass}">${escapeHtml(message)}</span>`;
+  }
+}
+
+function initTheme() {
+  if (typeof document === 'undefined') return;
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+  setTheme(theme);
+}
+
+function setTheme(theme) {
+  if (typeof document === 'undefined') return;
+  document.documentElement.setAttribute('data-theme', theme);
+  try {
+    localStorage.setItem('theme', theme);
+  } catch (e) {}
+
+  const themeIcon = document.getElementById('themeIcon');
+  const themeText = document.querySelector('#themeToggle .theme-text');
+  if (themeIcon) {
+    themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+  if (themeText) {
+    themeText.textContent = theme === 'dark' ? 'Light' : 'Dark';
   }
 }
 
@@ -115,24 +187,38 @@ async function loadCatalogData() {
       });
     }
 
-    state.catalogData = unified.map((laptop) => ({
-      title: laptop.title || laptop.model || 'Laptop Listing',
-      brand: laptop.brand || 'Other',
-      store: laptop.store || 'Refurbished Store',
-      cpu: laptop.cpu || 'N/A',
-      ram_gb: Number(laptop.ram_gb) || 0,
-      storage_gb: Number(laptop.storage_gb) || 0,
-      price_ils: Number(laptop.price_ils || laptop.deal_price_ils) || 0,
-      deal_price_ils: Number(laptop.deal_price_ils || laptop.price_ils) || 0,
-      deal_label: laptop.deal_label || `${laptop.deal_price_ils || laptop.price_ils || ''} ₪`,
-      storage_type: laptop.storage_type || 'NVMe / SATA',
-      ram_type: laptop.ram_type || 'Standard',
-      upgradability_score: Number(laptop.upgradability_score) || 5.0,
-      warranty_months: laptop.warranty_months || 12,
-      is_touch: Boolean(laptop.is_touch),
-      is_2in1: Boolean(laptop.is_2in1),
-      url: laptop.url || '#'
-    }));
+    state.catalogData = unified.map((laptop, index) => {
+      const brand = laptop.brand || 'Other';
+      const store = laptop.store || 'Refurbished Store';
+      const deal_price_ils = Number(laptop.deal_price_ils || laptop.price_ils) || 0;
+      const price_ils = Number(laptop.price_ils || laptop.deal_price_ils) || 0;
+      const ram_gb = Number(laptop.ram_gb) || 0;
+      const storage_gb = Number(laptop.storage_gb) || 0;
+      const upgradability_score = Number(laptop.upgradability_score) || 5.0;
+      const cpu = laptop.cpu || 'N/A';
+
+      const item = {
+        id: `laptop-${index}-${store.replace(/\s+/g, '_')}`,
+        title: laptop.title || laptop.model || 'Laptop Listing',
+        brand,
+        store,
+        cpu,
+        ram_gb,
+        storage_gb,
+        price_ils,
+        deal_price_ils,
+        deal_label: laptop.deal_label || `${deal_price_ils || price_ils || ''} ₪`,
+        storage_type: laptop.storage_type || 'NVMe / SATA',
+        ram_type: laptop.ram_type || 'Standard',
+        upgradability_score,
+        warranty_months: laptop.warranty_months || 12,
+        is_touch: Boolean(laptop.is_touch),
+        is_2in1: Boolean(laptop.is_2in1),
+        url: laptop.url || '#'
+      };
+      item.value_score = calculateValueScore(item);
+      return item;
+    });
   } catch (err) {
     console.warn('Failed to load scraped_laptops.json', err);
     state.catalogData = [];
@@ -253,6 +339,44 @@ function getUpgradabilityBadge(score) {
   return `<span class="score-badge score-locked">🔴 ${score}/10</span>`;
 }
 
+function setQuickPreset(preset) {
+  state.activePreset = preset;
+
+  if (preset === 'top-value') {
+    state.catalogFilters.sort = 'value-desc';
+    if (sortFilter) sortFilter.value = 'value-desc';
+  } else if (preset === 'ram-32') {
+    state.catalogFilters.ram = 32;
+    if (ramFilter) ramFilter.value = '32';
+  } else if (preset === '2in1') {
+    state.catalogFilters.form = '2in1';
+    if (formFilter) formFilter.value = '2in1';
+  } else if (preset === 'modular') {
+    state.catalogFilters.upgradability = 7;
+    if (upgradabilityFilter) upgradabilityFilter.value = '7';
+  } else if (preset === 'budget') {
+    state.catalogFilters.sort = 'price-asc';
+    if (sortFilter) sortFilter.value = 'price-asc';
+  } else if (preset === 'all') {
+    state.catalogFilters = {
+      store: 'all',
+      brand: 'all',
+      ram: 0,
+      form: 'all',
+      upgradability: 0,
+      sort: 'value-desc'
+    };
+    if (storeFilter) storeFilter.value = 'all';
+    if (brandFilter) brandFilter.value = 'all';
+    if (ramFilter) ramFilter.value = '0';
+    if (formFilter) formFilter.value = 'all';
+    if (upgradabilityFilter) upgradabilityFilter.value = '0';
+    if (sortFilter) sortFilter.value = 'value-desc';
+  }
+
+  renderCatalog();
+}
+
 function renderCatalog() {
   if (!catalogContent) return;
   const { store, brand, ram, form, upgradability, sort } = state.catalogFilters;
@@ -277,6 +401,7 @@ function renderCatalog() {
 
   // Sorting
   filtered.sort((a, b) => {
+    if (sort === 'value-desc') return (b.value_score || 0) - (a.value_score || 0);
     if (sort === 'price-asc') return a.deal_price_ils - b.deal_price_ils;
     if (sort === 'price-desc') return b.deal_price_ils - a.deal_price_ils;
     if (sort === 'upgrade-desc') return b.upgradability_score - a.upgradability_score;
@@ -284,76 +409,119 @@ function renderCatalog() {
     return 0;
   });
 
+  // Identify top 3 value picks in current filtered view
+  const topValueIds = new Set(
+    [...filtered]
+      .filter((l) => (l.deal_price_ils || l.price_ils) > 0 && l.value_score > 0)
+      .sort((a, b) => b.value_score - a.value_score)
+      .slice(0, 3)
+      .map((l) => l.id)
+  );
+
   setStatus(`Catalog: Found ${filtered.length} laptops matching criteria`, 'success');
+
+  const chipsHtml = `
+    <div class="quick-chips-container">
+      <div class="quick-chips-header">⚡ Quick Explore Filters</div>
+      <div class="quick-filter-chips">
+        <button type="button" class="chip-btn ${state.activePreset === 'all' ? 'active' : ''}" data-preset="all">✨ All Laptops</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'top-value' ? 'active' : ''}" data-preset="top-value">🏆 Top Value Picks</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'ram-32' ? 'active' : ''}" data-preset="ram-32">⚡ 32GB RAM Deals</button>
+        <button type="button" class="chip-btn ${state.activePreset === '2in1' ? 'active' : ''}" data-preset="2in1">🔄 2-in-1 / Touch</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'modular' ? 'active' : ''}" data-preset="modular">🟢 Modular (7+)</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'budget' ? 'active' : ''}" data-preset="budget">💰 Budget Deals</button>
+      </div>
+    </div>
+  `;
 
   if (filtered.length === 0) {
     catalogContent.innerHTML = `
+      ${chipsHtml}
       <div class="empty-state">
         <h3>No laptops match your current filter and search settings.</h3>
         <p>Try resetting or relaxing your filter options.</p>
       </div>
     `;
+    bindChipButtons();
     return;
   }
 
   const cardsHtml = filtered
-    .map(
-      (laptop) => `
-      <div class="catalog-card">
-        <div class="card-header">
-          <div class="card-title-group">
-            <span class="store-tag">${escapeHtml(laptop.store)}</span>
-            <h3 class="laptop-title">${escapeHtml(laptop.title)}</h3>
+    .map((laptop) => {
+      const isTopValue = topValueIds.has(laptop.id);
+      return `
+        <div class="catalog-card ${isTopValue ? 'top-value-card' : ''}">
+          <div class="card-header">
+            <div class="card-title-group">
+              <div class="tags-row">
+                ${getBrandBadge(laptop.brand)}
+                <span class="store-tag ${getStoreClass(laptop.store)}">${escapeHtml(laptop.store)}</span>
+                ${isTopValue ? '<span class="value-pick-badge">🏆 Best Value Pick</span>' : ''}
+              </div>
+              <h3 class="laptop-title">${escapeHtml(laptop.title)}</h3>
+            </div>
+            <div class="price-box">
+              <span class="price-value">${laptop.deal_price_ils ? escapeHtml(laptop.deal_price_ils.toLocaleString()) + ' ₪' : 'Check Store'}</span>
+              ${laptop.deal_label && !laptop.deal_label.includes(laptop.deal_price_ils) ? `<span class="deal-note">${escapeHtml(laptop.deal_label)}</span>` : ''}
+              <span class="value-score-badge" title="Algorithm score based on CPU gen, RAM, SSD and Price">⭐ ${laptop.value_score}/10 Value</span>
+            </div>
           </div>
-          <div class="price-box">
-            <span class="price-value">${laptop.deal_price_ils ? escapeHtml(laptop.deal_price_ils.toLocaleString()) + ' ₪' : 'Check Store'}</span>
-            ${laptop.deal_label && !laptop.deal_label.includes(laptop.deal_price_ils) ? `<span class="deal-note">${escapeHtml(laptop.deal_label)}</span>` : ''}
-          </div>
-        </div>
 
-        <div class="specs-grid">
-          <div class="spec-item">
-            <span class="spec-label">CPU:</span>
-            <span class="spec-value">${escapeHtml(laptop.cpu)}</span>
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span class="spec-label">CPU:</span>
+              <span class="spec-value">${escapeHtml(laptop.cpu)}</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">RAM:</span>
+              <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB (${escapeHtml(laptop.ram_type)})</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Storage:</span>
+              <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB (${escapeHtml(laptop.storage_type)})</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Upgradability:</span>
+              <span class="spec-value">${getUpgradabilityBadge(laptop.upgradability_score)}</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Form Factor:</span>
+              <span class="spec-value">${laptop.is_2in1 ? '🔄 2-in-1 Convertible' : laptop.is_touch ? '💻 Touchscreen Clamshell' : '💻 Standard Clamshell'}</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Warranty:</span>
+              <span class="spec-value">${escapeHtml(laptop.warranty_months)} Months Warranty</span>
+            </div>
           </div>
-          <div class="spec-item">
-            <span class="spec-label">RAM:</span>
-            <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB (${escapeHtml(laptop.ram_type)})</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Storage:</span>
-            <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB (${escapeHtml(laptop.storage_type)})</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Upgradability:</span>
-            <span class="spec-value">${getUpgradabilityBadge(laptop.upgradability_score)}</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Form Factor:</span>
-            <span class="spec-value">${laptop.is_2in1 ? '🔄 2-in-1 Convertible' : laptop.is_touch ? '💻 Touchscreen Clamshell' : '💻 Standard Clamshell'}</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Warranty:</span>
-            <span class="spec-value">${escapeHtml(laptop.warranty_months)} Months Warranty</span>
-          </div>
-        </div>
 
-        <div class="card-footer">
-          <a href="${escapeHtml(laptop.url)}" target="_blank" rel="noopener noreferrer" class="buy-btn">
-            View on Store ↗
-          </a>
+          <div class="card-footer">
+            <a href="${escapeHtml(laptop.url)}" target="_blank" rel="noopener noreferrer" class="buy-btn">
+              View on Store ↗
+            </a>
+          </div>
         </div>
-      </div>
-    `
-    )
+      `;
+    })
     .join('');
 
   catalogContent.innerHTML = `
+    ${chipsHtml}
     <div class="catalog-summary-bar">
       <span>Showing <strong>${filtered.length}</strong> available laptops</span>
     </div>
     <div class="catalog-grid">${cardsHtml}</div>
   `;
+
+  bindChipButtons();
+}
+
+function bindChipButtons() {
+  if (typeof document === 'undefined') return;
+  document.querySelectorAll('.chip-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      setQuickPreset(btn.dataset.preset);
+    });
+  });
 }
 
 function updateViewMode() {
@@ -404,9 +572,35 @@ function bindEvents() {
     });
   }
 
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+    });
+  }
+
+  if (toggleFiltersBtn && catalogFilterFields) {
+    toggleFiltersBtn.addEventListener('click', () => {
+      const isHidden = catalogFilterFields.classList.toggle('collapsed');
+      toggleFiltersBtn.setAttribute('aria-expanded', !isHidden);
+      const arrowSpan = toggleFiltersBtn.querySelector('.toggle-arrow');
+      if (arrowSpan) {
+        arrowSpan.textContent = isHidden ? '▾' : '▴';
+      }
+    });
+  }
+
+  if (resetFiltersBtn) {
+    resetFiltersBtn.addEventListener('click', () => {
+      setQuickPreset('all');
+    });
+  }
+
   if (storeFilter) {
     storeFilter.addEventListener('change', (e) => {
       state.catalogFilters.store = e.target.value;
+      state.activePreset = '';
       renderCatalog();
     });
   }
@@ -414,6 +608,7 @@ function bindEvents() {
   if (brandFilter) {
     brandFilter.addEventListener('change', (e) => {
       state.catalogFilters.brand = e.target.value;
+      state.activePreset = '';
       renderCatalog();
     });
   }
@@ -421,6 +616,7 @@ function bindEvents() {
   if (ramFilter) {
     ramFilter.addEventListener('change', (e) => {
       state.catalogFilters.ram = Number(e.target.value);
+      state.activePreset = '';
       renderCatalog();
     });
   }
@@ -428,6 +624,7 @@ function bindEvents() {
   if (formFilter) {
     formFilter.addEventListener('change', (e) => {
       state.catalogFilters.form = e.target.value;
+      state.activePreset = '';
       renderCatalog();
     });
   }
@@ -435,6 +632,7 @@ function bindEvents() {
   if (upgradabilityFilter) {
     upgradabilityFilter.addEventListener('change', (e) => {
       state.catalogFilters.upgradability = Number(e.target.value);
+      state.activePreset = '';
       renderCatalog();
     });
   }
@@ -449,6 +647,7 @@ function bindEvents() {
 
 async function init() {
   if (typeof document === 'undefined') return;
+  initTheme();
   bindEvents();
   await Promise.all([preloadDocContents(), loadCatalogData()]);
   updateViewMode();
@@ -457,5 +656,5 @@ async function init() {
 init();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { escapeHtml };
+  module.exports = { escapeHtml, calculateValueScore };
 }

@@ -24,6 +24,10 @@
             <span>Search</span>
             <input id="searchInput" type="search" placeholder="Search guides, laptops, specs (e.g. i7, 32GB, ThinkPad)..." />
           </label>
+          <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark / light theme">
+            <span id="themeIcon">🌙</span>
+            <span class="theme-text">Dark</span>
+          </button>
         </div>
       </header>
 
@@ -44,68 +48,79 @@
           </div>
 
           <div id="catalogFiltersCard" class="sidebar-card hidden">
-            <h2>Catalog Filters</h2>
-            <div class="filter-group">
-              <label for="storeFilter">Store</label>
-              <select id="storeFilter" class="filter-select">
-                <option value="all">All Stores</option>
-                <option value="IT Outlet">IT Outlet</option>
-                <option value="Ecology Computers">Ecology Computers</option>
-                <option value="LaptopTech LTS">LaptopTech LTS</option>
-                <option value="Recomp Computers">Recomp Computers</option>
-              </select>
+            <div class="sidebar-card-header">
+              <h2>Catalog Filters</h2>
+              <button id="toggleFiltersBtn" class="mobile-filter-toggle" type="button" aria-expanded="true">
+                <span class="toggle-text">Filters</span> <span class="toggle-arrow">▴</span>
+              </button>
             </div>
 
-            <div class="filter-group">
-              <label for="brandFilter">Brand</label>
-              <select id="brandFilter" class="filter-select">
-                <option value="all">All Brands</option>
-                <option value="Lenovo">Lenovo</option>
-                <option value="Dell">Dell</option>
-                <option value="HP">HP</option>
-                <option value="Apple">Apple</option>
-                <option value="Asus">Asus</option>
-                <option value="Acer">Acer</option>
-                <option value="Microsoft">Microsoft</option>
-              </select>
-            </div>
+            <div id="catalogFilterFields" class="filter-fields-wrapper">
+              <div class="filter-group">
+                <label for="storeFilter">Store</label>
+                <select id="storeFilter" class="filter-select">
+                  <option value="all">All Stores</option>
+                  <option value="IT Outlet">IT Outlet</option>
+                  <option value="Ecology Computers">Ecology Computers</option>
+                  <option value="LaptopTech LTS">LaptopTech LTS</option>
+                  <option value="Recomp Computers">Recomp Computers</option>
+                </select>
+              </div>
 
-            <div class="filter-group">
-              <label for="ramFilter">Min RAM</label>
-              <select id="ramFilter" class="filter-select">
-                <option value="0">Any RAM</option>
-                <option value="8">8 GB+</option>
-                <option value="16">16 GB+</option>
-                <option value="32">32 GB+</option>
-              </select>
-            </div>
+              <div class="filter-group">
+                <label for="brandFilter">Brand</label>
+                <select id="brandFilter" class="filter-select">
+                  <option value="all">All Brands</option>
+                  <option value="Lenovo">Lenovo</option>
+                  <option value="Dell">Dell</option>
+                  <option value="HP">HP</option>
+                  <option value="Apple">Apple</option>
+                  <option value="Asus">Asus</option>
+                  <option value="Acer">Acer</option>
+                  <option value="Microsoft">Microsoft</option>
+                </select>
+              </div>
 
-            <div class="filter-group">
-              <label for="formFilter">Type / Screen</label>
-              <select id="formFilter" class="filter-select">
-                <option value="all">All Types</option>
-                <option value="2in1">2-in-1 / Touchscreen</option>
-                <option value="clamshell">Clamshell Standard</option>
-              </select>
-            </div>
+              <div class="filter-group">
+                <label for="ramFilter">Min RAM</label>
+                <select id="ramFilter" class="filter-select">
+                  <option value="0">Any RAM</option>
+                  <option value="8">8 GB+</option>
+                  <option value="16">16 GB+</option>
+                  <option value="32">32 GB+</option>
+                </select>
+              </div>
 
-            <div class="filter-group">
-              <label for="upgradabilityFilter">Upgradability</label>
-              <select id="upgradabilityFilter" class="filter-select">
-                <option value="0">Any Rating</option>
-                <option value="7">🟢 Highly Upgradable (7+)</option>
-                <option value="9">🟢 Fully Modular (9+)</option>
-              </select>
-            </div>
+              <div class="filter-group">
+                <label for="formFilter">Type / Screen</label>
+                <select id="formFilter" class="filter-select">
+                  <option value="all">All Types</option>
+                  <option value="2in1">2-in-1 / Touchscreen</option>
+                  <option value="clamshell">Clamshell Standard</option>
+                </select>
+              </div>
 
-            <div class="filter-group">
-              <label for="sortFilter">Sort By</label>
-              <select id="sortFilter" class="filter-select">
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="upgrade-desc">Upgradability Score</option>
-                <option value="ram-desc">RAM Capacity</option>
-              </select>
+              <div class="filter-group">
+                <label for="upgradabilityFilter">Upgradability</label>
+                <select id="upgradabilityFilter" class="filter-select">
+                  <option value="0">Any Rating</option>
+                  <option value="7">🟢 Highly Upgradable (7+)</option>
+                  <option value="9">🟢 Fully Modular (9+)</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="sortFilter">Sort By</label>
+                <select id="sortFilter" class="filter-select">
+                  <option value="value-desc" selected>🏆 Best Value (Specs per ₪)</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="upgrade-desc">Upgradability Score</option>
+                  <option value="ram-desc">RAM Capacity</option>
+                </select>
+              </div>
+
+              <button id="resetFiltersBtn" class="reset-filters-btn" type="button">🔄 Reset Filters</button>
             </div>
           </div>
 
