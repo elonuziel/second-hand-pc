@@ -72,25 +72,34 @@
                 </select>
               </div>
 
-              <div class="filter-group">
-                <label for="priceFilter">Price Range</label>
-                <select id="priceFilter" class="filter-select">
-                  <option value="0">Any Price</option>
-                  <optgroup label="Budget (& Down)">
-                    <option value="1000">💰 Under 1,000 ₪</option>
-                    <option value="1200">💰 Under 1,200 ₪</option>
-                    <option value="1600">💰 Under 1,600 ₪</option>
-                    <option value="2000">💰 Under 2,000 ₪</option>
-                    <option value="2500">💰 Under 2,500 ₪</option>
-                    <option value="3000">💰 Under 3,000 ₪</option>
-                  </optgroup>
-                  <optgroup label="Workstation / High-End (& Up)">
-                    <option value="1500-up">🌟 1,500 ₪ & Up</option>
-                    <option value="2000-up">🌟 2,000 ₪ & Up</option>
-                    <option value="2500-up">🌟 2,500 ₪ & Up</option>
-                    <option value="3000-up">🌟 3,000 ₪ & Up</option>
-                  </optgroup>
-                </select>
+              <div class="filter-group filter-group-slider">
+                <div class="slider-header-row">
+                  <div class="slider-label-with-mode">
+                    <label for="priceSlider">Price Budget</label>
+                    <div class="price-mode-pills" role="group" aria-label="Price filter mode">
+                      <button type="button" class="price-mode-btn active" data-mode="max" title="Show laptops up to this price">Up to</button>
+                      <button type="button" class="price-mode-btn" data-mode="min" title="Show laptops starting from this price">From</button>
+                    </div>
+                  </div>
+                  <span id="priceDisplay" class="slider-value-badge" title="Click to reset price filter">Any Price</span>
+                </div>
+                <div class="slider-wrapper">
+                  <input
+                    type="range"
+                    id="priceSlider"
+                    class="price-range-slider"
+                    min="800"
+                    max="5000"
+                    step="50"
+                    value="5000"
+                    aria-label="Price budget slider"
+                  />
+                </div>
+                <div class="slider-ticks">
+                  <span>800 ₪</span>
+                  <span>2,500 ₪</span>
+                  <span>5,000 ₪ (Any)</span>
+                </div>
               </div>
 
               <div class="filter-group">
