@@ -18,8 +18,7 @@ import csv
 import json
 import logging
 import argparse
-from typing import Dict, List, Tuple, Any, Optional
-from scraper import HardwareClassifier, LaptopItem, ReportGenerator
+from typing import Dict, List, Tuple, Any, Optional, Union
 from scraper import HardwareClassifier, LaptopItem, ReportGenerator, GroqSpecEnhancer
 
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -35,172 +34,26 @@ logger = logging.getLogger("SpecEnricher")
 class SpecEnricher:
     """Heuristic and AI specification enrichment engine for laptops."""
 
-    # Explicit regex patterns for Screen Size
-    _SCREEN_EXPLICIT_RE = re.compile(
-        r'(?:^|[^\d])(11\.6|12\.5|13\.3|13\.5|14\.0|14|15\.4|15\.6|15|16\.0|16|17\.3|17)\s*(?:"|\'\'|in|inch|אינץ|\'\s|\s*$)',
-        re.IGNORECASE
-    )
-
-    @classmethod
-    def detect_screen_size(cls, title: str) -> float:
-        t = title.lower()
-
-        # Check explicit mentions like 15 6, 17 3, 13 3 in title
-        if '17 3' in t or '17.3' in t: return 17.3
-        if '15 6' in t or '15.6' in t: return 15.6
-        if '15 4' in t or '15.4' in t: return 15.4
-        if '13 3' in t or '13.3' in t: return 13.3
-        if '13 5' in t or '13.5' in t: return 13.5
-        if '12 5' in t or '12.5' in t: return 12.5
-        if '11 6' in t or '11.6' in t: return 11.6
-        if ' 14 "' in t or ' 14"' in t or ' 14 ' in t or '14.0' in t: return 14.0
-
-        # Model-based heuristics
-        if any(k in t for k in ['a517', '17.3']):
-            return 17.3
-        if any(k in t for k in ['p52', 'p15', 'p15s', 'p15v', 't15', '3520', '5530', '5531', 'e1504', 'x515', '330 15ikb', 'gaming 3', 'zbook fury 15', 'zbook 15', '850', 'ay010nj', '250 g7', '255 g5', '255 g7']):
-            return 15.6
-        if any(k in t for k in ['a1707']):
-            return 15.4
-        if any(k in t for k in ['t14', 't14s', 'p14s', 'e14', 'e480', 'x1 carbon', '7410', '7420', '7430', '5410', '5420', '5430', '5431', '5480', 'e7440', '840', 'firefly 14', 'sfx14', 'x1404za', 'x442ur']):
-            return 14.0
-        if any(k in t for k in ['surface 3', 'surface 4']):
-            return 13.5
-        if any(k in t for k in ['x13', 'x30l', '830', '435', '7320', '7330', '5330', '5379', 'a2337', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251', 'l13']):
-            return 13.3
-        if any(k in t for k in ['x280']):
-            return 12.5
-        # Generative algorithmic syntax decoders (accurately parses changing/future models)
-        # Dell Latitude & Precision 4-digit formula (e.g. 7420, 5330, 3540, 5440, 7340, 5520)
-        dell_m = re.search(r'\b(?:latitude|precision)?\s*([3579])([34567])([0-9])([05])?\b', t)
-        if dell_m and ('dell' in t or 'latitude' in t or 'precision' in t):
-            s_digit = dell_m.group(2)
-            if s_digit == '3': return 13.3
-            if s_digit == '4': return 14.0
-            if s_digit == '5': return 15.6
-            if s_digit == '6': return 16.0
-            if s_digit == '7': return 17.3
-
-        # Lenovo ThinkPad formula (e.g. T14, P14s, X13, L15, E16, T16, P16)
-        tp_m = re.search(r'\b(?:thinkpad\s*)?([txple])(13|14|15|16)(s)?\b', t)
-        if tp_m:
-            tp_screen = tp_m.group(2)
-            if tp_screen == '13': return 13.3
-            if tp_screen == '14': return 14.0
-            if tp_screen == '15': return 15.6
-            if tp_screen == '16': return 16.0
-
-        # HP EliteBook & ProBook formula (e.g. 830, 840, 650, 430, 440, 450)
-        hp_m = re.search(r'\b(?:elitebook|probook)?\s*([468])([3456])([05])\b', t)
-        if hp_m and ('hp' in t or 'elitebook' in t or 'probook' in t):
-            hp_screen = hp_m.group(2)
-            if hp_screen == '3': return 13.3
-            if hp_screen == '4': return 14.0
-            if hp_screen == '5': return 15.6
-            if hp_screen == '6': return 16.0
-
-        return 14.0
-
-    @classmethod
-    def detect_weight_kg(cls, title: str, screen_size: float) -> float:
-        t = title.lower()
-
-        # Ultra-lightweight (< 1.1kg)
-        if 'x30l' in t: return 0.90
-        if 'x1 carbon' in t: return 1.10
-        if '7320' in t or '7330' in t: return 1.20
-        if any(k in t for k in ['a2337', 'surface 3', 'surface 4', 'x280', 'x13']): return 1.28
-
-        # Light Ultrabooks (1.3kg - 1.45kg)
-        if any(k in t for k in ['t14s', '830', '840 g8', '7420', '7430', '7410']): return 1.35
-        if any(k in t for k in ['840 g3', 'firefly 14', 'l13', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251']): return 1.40
-
-        # Standard 14" Business (1.45kg - 1.65kg)
-        if any(k in t for k in ['t14', 'p14s', 'e14', 'e480', '5410', '5420', '5430', '5431', '5480', 'e7440', 'sfx14', 'x1404za']): return 1.55
-
-        # 15.6" Mainstream / Light Workstation (1.7kg - 1.9kg)
-        if any(k in t for k in ['p15s', 't15', '850', '5530', '5531', '3520', 'e1504', 'x515', 'a1707']): return 1.75
-        if any(k in t for k in ['250 g7', '255 g5', '255 g7', 'ay010nj', '330 15ikb', 'x442ur']): return 1.85
-
-        # Performance Workstations / Gaming / 17.3" (2.1kg - 2.7kg)
-        if any(k in t for k in ['thinkpad p1', 'p15v']): return 2.05
-        if any(k in t for k in ['gaming 3', 'zbook 15 g6', 'zbook g7 14']): return 2.25
-        if any(k in t for k in ['p50', 'p51', 'p52', 'p53', 'p70', 'p71', 'p72', 'p73', 'p16', 'p15 gen', 'p15 g1', 'zbook fury 15']): return 2.45
-        if 'a517' in t or screen_size >= 17.0: return 2.60
-
-        # Precision Mobile Workstations (Heavy desktop replacements)
-        if 'precision' in t or 'workstation' in t:
-            if screen_size >= 17.0 or any(k in t for k in ['77', '7750', '7760', '7770', '7780']): return 3.10
-            if any(k in t for k in ['75', '76', '7550', '7560', '7540', '7530', '7520', '7510', '3571', '3581']): return 2.45
-            if any(k in t for k in ['55', '56', '5550', '5560', '5570', '35', '3540', '3550', '3560', '3570']): return 1.95
-            return 2.30
-
-        # Algorithmic syntax decoders for weight
-        dell_m = re.search(r'\b(?:latitude)?\s*([3579])([34567])([0-9])([05])?\b', t)
-        if dell_m and ('dell' in t or 'latitude' in t):
-            tier = dell_m.group(1)
-            s_digit = dell_m.group(2)
-            if tier in ('7', '9'):
-                return 1.20 if s_digit == '3' else 1.35
-            elif tier == '5':
-                return 1.35 if s_digit == '3' else (1.55 if s_digit == '4' else 1.75)
-            elif tier == '3':
-                return 1.60 if s_digit == '4' else 1.85
-
-        tp_m = re.search(r'\b(?:thinkpad\s*)?([txple])(13|14|15|16)(s)?\b', t)
-        if tp_m:
-            s_digit = tp_m.group(2)
-            if tp_m.group(3): return 1.25 if s_digit == '13' else 1.35
-            if s_digit == '13': return 1.35
-            if s_digit == '14': return 1.55
-            if s_digit == '15': return 1.75
-            if s_digit == '16': return 1.85
-
-        hp_m = re.search(r'\b(?:elitebook|probook)?\s*([468])([3456])([05])\b', t)
-        if hp_m and ('hp' in t or 'elitebook' in t or 'probook' in t):
-            tier = hp_m.group(1)
-            s_digit = hp_m.group(2)
-            if tier == '8': return 1.28 if s_digit == '3' else 1.38
-            return 1.40 if s_digit == '3' else (1.50 if s_digit == '4' else 1.78)
-
-        # Fallback by screen size
-        if screen_size <= 12.5: return 1.20
-        if screen_size <= 13.5: return 1.30
-        if screen_size <= 14.0: return 1.50
-        if screen_size <= 15.6: return 1.80
-        return 2.40
-
-    @classmethod
-    def detect_battery_wh(cls, title: str, weight_kg: float) -> int:
-        t = title.lower()
-
-        # Heavy Workstations / Long Battery beasts
-        if any(k in t for k in ['p52', 'p15 gen', 'p15 g1', 'zbook fury 15', 'p1 gen 3']): return 90
-        if any(k in t for k in ['zbook 15 g6', '5531', '5431', 'p15v']): return 68
-        if any(k in t for k in ['x1 carbon', 't14s', '7420', '7320', '7330', '7430', '5430', '5530', '5330']): return 57
-        if any(k in t for k in ['t14', 'p14s', 'e14 gen 4', '830 g8', '840 g8', 'firefly 14', 'p15s']): return 51
-        if any(k in t for k in ['a2337', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251', 'surface 3', 'surface 4']): return 49
-        if any(k in t for k in ['e480', '5410', '5480', 'x280', 'x13', '840 g3', 'e7440', '435 g7']): return 45
-        if any(k in t for k in ['e1504', 'x515', '250 g7', '255 g5', 'ay010nj', 'a517', '330 15ikb']): return 41
-
-        # Algorithmic syntax decoders for battery
-        if any(k in t for k in ['workstation', 'precision', 'fury', 'p15', 'p52', 'p53']): return 90
-        if weight_kg >= 2.3: return 83
-        if weight_kg >= 1.7: return 54
-        return 50
+    detect_screen_size = HardwareClassifier.detect_screen_size
+    detect_weight_kg = HardwareClassifier.detect_weight_kg
+    detect_battery_wh = HardwareClassifier.detect_battery_wh
 
     @classmethod
     def enrich_item_dict(cls, laptop: Dict[str, Any]) -> Dict[str, Any]:
         title = laptop.get("title") or laptop.get("model") or ""
 
         # Accurately compute screen_size_in, weight_kg, and battery_wh based on verified heuristics
-        screen_size = cls.detect_screen_size(title)
-        weight_kg = cls.detect_weight_kg(title, screen_size)
-        battery_wh = cls.detect_battery_wh(title, weight_kg)
+        screen_size, screen_src = cls.detect_screen_size(title, return_source=True)
+        weight_kg, weight_src = cls.detect_weight_kg(title, screen_size, return_source=True)
+        battery_wh, battery_src = cls.detect_battery_wh(title, weight_kg, return_source=True)
 
         laptop["screen_size_in"] = round(screen_size, 1)
         laptop["weight_kg"] = round(weight_kg, 2)
         laptop["battery_wh"] = battery_wh
+        laptop["screen_source"] = screen_src
+        laptop["weight_source"] = weight_src
+        laptop["battery_source"] = battery_src
+        laptop["confidence_level"] = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
 
         # Detect and enrich CPU generation if missing
         current_cpu = laptop.get("cpu", "")
@@ -276,6 +129,10 @@ def enrich_dataset(json_file: str = JSON_PATH, csv_file: str = CSV_PATH, use_ai:
                 raw_item["is_touch"] = audited_item.is_touch
                 raw_item["is_2in1"] = audited_item.is_2in1
                 raw_item["upgradability_score"] = audited_item.upgradability_score
+                raw_item["screen_source"] = audited_item.screen_source
+                raw_item["weight_source"] = audited_item.weight_source
+                raw_item["battery_source"] = audited_item.battery_source
+                raw_item["confidence_level"] = audited_item.confidence_level
         else:
             logger.warning("Groq API key not found. Skipping AI audit.")
 
@@ -304,7 +161,6 @@ def main():
     parser.add_argument("--ai", action="store_true", help="Enable Groq AI hardware spec audit")
     args = parser.parse_args()
 
-    enrich_dataset(args.json, args.csv)
     enrich_dataset(args.json, args.csv, use_ai=args.ai)
 
 if __name__ == "__main__":

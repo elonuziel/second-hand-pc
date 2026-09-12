@@ -1045,6 +1045,13 @@ h1 {
   border-color: rgba(59, 130, 246, 0.4);
 }
 
+.spec-est-tag {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 500;
+  opacity: 0.85;
+}
+
 .score-badge {
   font-weight: 700;
   padding: 2px 6px;

@@ -379,7 +379,11 @@ async function loadCatalogData() {
         url: laptop.url || '#',
         screen_size_in: Number(laptop.screen_size_in) || 14.0,
         weight_kg: Number(laptop.weight_kg) || 1.5,
-        battery_wh: Number(laptop.battery_wh) || 50
+        battery_wh: Number(laptop.battery_wh) || 50,
+        screen_source: laptop.screen_source || 'chassis_decoder',
+        weight_source: laptop.weight_source || 'chassis_decoder',
+        battery_source: laptop.battery_source || 'chassis_decoder',
+        confidence_level: laptop.confidence_level || 'verified'
       };
       item.value_score = calculateValueScore(item);
       return item;
@@ -768,6 +772,9 @@ function renderCatalog() {
   const cardsHtml = filtered
     .map((laptop) => {
       const isTopValue = topValueIds.has(laptop.id);
+      const screenText = `${laptop.screen_source === 'fallback_estimate' ? '~' : ''}${laptop.screen_size_in}"${laptop.screen_source === 'fallback_estimate' && laptop.weight_source !== 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+      const weightText = `⚖️ ${laptop.weight_source === 'fallback_estimate' ? '~' : ''}${laptop.weight_kg} kg${laptop.weight_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+      const batteryText = `🔋 ${laptop.battery_source === 'fallback_estimate' ? '~' : ''}${laptop.battery_wh} Wh${laptop.battery_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
       return `
         <div class="catalog-card ${isTopValue ? 'top-value-card' : ''}">
           <div class="card-header">
@@ -802,11 +809,11 @@ function renderCatalog() {
             </div>
             <div class="spec-item">
               <span class="spec-label">Screen & Weight:</span>
-              <span class="spec-value">${laptop.screen_size_in}" | ⚖️ ${laptop.weight_kg} kg</span>
+              <span class="spec-value">${screenText} | ${weightText}</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Battery Capacity:</span>
-              <span class="spec-value">🔋 ${laptop.battery_wh} Wh</span>
+              <span class="spec-value">${batteryText}</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Upgradability:</span>

@@ -84,6 +84,22 @@ class TestCatalogDataHealth(unittest.TestCase):
             self.assertNotIn("/home/elonu/", content, "full_catalog.md contains local absolute path")
             self.assertNotIn("/home/", content, "full_catalog.md contains local absolute path")
 
+    def test_spec_provenance_and_confidence_tagging(self):
+        """Every catalog laptop must be tagged with spec sources and confidence levels in raw data."""
+        valid_sources = {"listing_explicit", "chassis_decoder", "fallback_estimate", "ai_audit"}
+        valid_confidences = {"verified", "estimated"}
+        for item in self.items:
+            title = item.get("title", "")
+            sc_src = item.get("screen_source")
+            wt_src = item.get("weight_source")
+            bat_src = item.get("battery_source")
+            conf = item.get("confidence_level")
+
+            self.assertIn(sc_src, valid_sources, f"Invalid screen_source '{sc_src}' for: {title}")
+            self.assertIn(wt_src, valid_sources, f"Invalid weight_source '{wt_src}' for: {title}")
+            self.assertIn(bat_src, valid_sources, f"Invalid battery_source '{bat_src}' for: {title}")
+            self.assertIn(conf, valid_confidences, f"Invalid confidence_level '{conf}' for: {title}")
+
 
 class TestHardwareParsers(unittest.TestCase):
     """Verifies that CPU generation, RAM, Storage, and form factors are accurately parsed."""
@@ -147,6 +163,32 @@ class TestHardwareParsers(unittest.TestCase):
         # Battery Wh
         self.assertGreaterEqual(SpecEnricher.detect_battery_wh("ThinkPad P15", 2.4), 80)
         self.assertGreaterEqual(SpecEnricher.detect_battery_wh("Dell Latitude 7420", 1.35), 50)
+
+        # Spec source tags verification
+        size, src = SpecEnricher.detect_screen_size("Dell Latitude 5530 15.6", return_source=True)
+        self.assertEqual(size, 15.6)
+        self.assertEqual(src, "listing_explicit")
+
+        size, src = SpecEnricher.detect_screen_size("ThinkPad T14", return_source=True)
+        self.assertEqual(size, 14.0)
+        self.assertEqual(src, "chassis_decoder")
+
+        size, src = SpecEnricher.detect_screen_size("Mystery Generic Model", return_source=True)
+        self.assertEqual(src, "fallback_estimate")
+
+        w, src = SpecEnricher.detect_weight_kg("ThinkPad X1 Carbon", 14.0, return_source=True)
+        self.assertEqual(w, 1.10)
+        self.assertEqual(src, "chassis_decoder")
+
+        w, src = SpecEnricher.detect_weight_kg("Unknown 14 Laptop", 14.0, return_source=True)
+        self.assertEqual(src, "fallback_estimate")
+
+        b, src = SpecEnricher.detect_battery_wh("ThinkPad P15", 2.4, return_source=True)
+        self.assertEqual(b, 90)
+        self.assertEqual(src, "chassis_decoder")
+
+        b, src = SpecEnricher.detect_battery_wh("Unknown Laptop", 1.5, return_source=True)
+        self.assertEqual(src, "fallback_estimate")
 
     def test_unified_touch_and_2in1_detection(self):
         """Ensure touch and 360 convertible 2-in-1 detection is consistent across all store formats."""

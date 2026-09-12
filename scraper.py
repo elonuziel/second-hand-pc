@@ -35,7 +35,7 @@ import argparse
 import datetime
 import urllib.parse
 from dataclasses import dataclass, asdict
-from typing import List, Dict, Optional, Tuple, Any
+from typing import List, Dict, Optional, Tuple, Any, Union
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import requests
@@ -130,6 +130,10 @@ class LaptopItem:
     screen_size_in: float = 14.0
     weight_kg: float = 1.5
     battery_wh: int = 50
+    screen_source: str = "chassis_decoder"
+    weight_source: str = "chassis_decoder"
+    battery_source: str = "chassis_decoder"
+    confidence_level: str = "verified"
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -222,6 +226,10 @@ class GroqSpecEnhancer:
                                         target.upgradability_score = score
                                 except (ValueError, TypeError):
                                     pass
+                            target.screen_source = "ai_audit"
+                            target.weight_source = "ai_audit"
+                            target.battery_source = "ai_audit"
+                            target.confidence_level = "verified"
             else:
                 logger.warning(f"Groq API returned HTTP {res.status_code}: {res.text[:100]}")
         except Exception as e:
@@ -453,82 +461,193 @@ class HardwareClassifier:
             return 8.0, "🐢 2.5\" SATA SSD / Bay", "2x SODIMM Slots"
         return 7.5, "⚡ M.2 2280 PCIe NVMe (Swappable)", "Modular / Semi-Modular"
 
-    @classmethod
-    def detect_screen_size(cls, title: str) -> float:
-        t = title.lower()
-        if '17 3' in t or '17.3' in t: return 17.3
-        if '15 6' in t or '15.6' in t: return 15.6
-        if '15 4' in t or '15.4' in t: return 15.4
-        if '13 3' in t or '13.3' in t: return 13.3
-        if '13 5' in t or '13.5' in t: return 13.5
-        if '12 5' in t or '12.5' in t: return 12.5
-        if '11 6' in t or '11.6' in t: return 11.6
-        if ' 14 "' in t or ' 14"' in t or ' 14 ' in t or '14.0' in t: return 14.0
+    _SCREEN_EXPLICIT_RE = re.compile(
+        r'(?:^|[^\d])(11\.6|12\.5|13\.3|13\.5|14\.0|15\.4|15\.6|16\.0|17\.3)\b'
+        r'|(?:^|[^\d])(11\.6|12\.5|13\.3|13\.5|14\.0|14|15\.4|15\.6|15|16\.0|16|17\.3|17)\s*(?:"|\'\'|in\b|inch|אינץ|\')',
+        re.IGNORECASE
+    )
 
+    @classmethod
+    def detect_screen_size(cls, title: str, return_source: bool = False) -> Union[float, Tuple[float, str]]:
+        t = title.lower()
+
+        # Check explicit mentions like 15 6, 17 3, 13 3 in title
+        if '17 3' in t or '17.3' in t: return (17.3, "listing_explicit") if return_source else 17.3
+        if '15 6' in t or '15.6' in t: return (15.6, "listing_explicit") if return_source else 15.6
+        if '15 4' in t or '15.4' in t: return (15.4, "listing_explicit") if return_source else 15.4
+        if '13 3' in t or '13.3' in t: return (13.3, "listing_explicit") if return_source else 13.3
+        if '13 5' in t or '13.5' in t: return (13.5, "listing_explicit") if return_source else 13.5
+        if '12 5' in t or '12.5' in t: return (12.5, "listing_explicit") if return_source else 12.5
+        if '11 6' in t or '11.6' in t: return (11.6, "listing_explicit") if return_source else 11.6
+        if ' 14 "' in t or ' 14"' in t or ' 14 אינץ' in t or '14.0' in t: return (14.0, "listing_explicit") if return_source else 14.0
+
+        explicit_m = cls._SCREEN_EXPLICIT_RE.search(t)
+        if explicit_m:
+            try:
+                val_str = explicit_m.group(1) or explicit_m.group(2)
+                val = float(val_str)
+                return (val, "listing_explicit") if return_source else val
+            except (ValueError, TypeError):
+                pass
+
+        # Model-based heuristics (chassis decoder)
         if any(k in t for k in ['a517', '17.3']):
-            return 17.3
+            return (17.3, "chassis_decoder") if return_source else 17.3
         if any(k in t for k in ['p52', 'p15', 'p15s', 'p15v', 't15', '3520', '5530', '5531', 'e1504', 'x515', '330 15ikb', 'gaming 3', 'zbook fury 15', 'zbook 15', '850', 'ay010nj', '250 g7', '255 g5', '255 g7']):
-            return 15.6
+            return (15.6, "chassis_decoder") if return_source else 15.6
         if any(k in t for k in ['a1707']):
-            return 15.4
+            return (15.4, "chassis_decoder") if return_source else 15.4
         if any(k in t for k in ['t14', 't14s', 'p14s', 'e14', 'e480', 'x1 carbon', '7410', '7420', '7430', '5410', '5420', '5430', '5431', '5480', 'e7440', '840', 'firefly 14', 'sfx14', 'x1404za', 'x442ur', 't490']):
-            return 14.0
+            return (14.0, "chassis_decoder") if return_source else 14.0
         if any(k in t for k in ['surface 3', 'surface 4']):
-            return 13.5
+            return (13.5, "chassis_decoder") if return_source else 13.5
         if any(k in t for k in ['x13', 'x30l', '830', '435', '7320', '7330', '5330', '5379', 'a2337', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251', 'l13']):
-            return 13.3
+            return (13.3, "chassis_decoder") if return_source else 13.3
         if any(k in t for k in ['x280']):
-            return 12.5
-        return 14.0
+            return (12.5, "chassis_decoder") if return_source else 12.5
+
+        # Generative algorithmic syntax decoders (Dell, ThinkPad, HP)
+        dell_m = re.search(r'\b(?:latitude|precision)?\s*([3579])([34567])([0-9])([05])?\b', t)
+        if dell_m and ('dell' in t or 'latitude' in t or 'precision' in t):
+            s_digit = dell_m.group(2)
+            if s_digit == '3': return (13.3, "chassis_decoder") if return_source else 13.3
+            if s_digit == '4': return (14.0, "chassis_decoder") if return_source else 14.0
+            if s_digit == '5': return (15.6, "chassis_decoder") if return_source else 15.6
+            if s_digit == '6': return (16.0, "chassis_decoder") if return_source else 16.0
+            if s_digit == '7': return (17.3, "chassis_decoder") if return_source else 17.3
+
+        tp_m = re.search(r'\b(?:thinkpad\s*)?([txple])(13|14|15|16)(s)?\b', t)
+        if tp_m:
+            tp_screen = tp_m.group(2)
+            if tp_screen == '13': return (13.3, "chassis_decoder") if return_source else 13.3
+            if tp_screen == '14': return (14.0, "chassis_decoder") if return_source else 14.0
+            if tp_screen == '15': return (15.6, "chassis_decoder") if return_source else 15.6
+            if tp_screen == '16': return (16.0, "chassis_decoder") if return_source else 16.0
+
+        hp_m = re.search(r'\b(?:elitebook|probook)?\s*([468])([3456])([05])\b', t)
+        if hp_m and ('hp' in t or 'elitebook' in t or 'probook' in t):
+            hp_screen = hp_m.group(2)
+            if hp_screen == '3': return (13.3, "chassis_decoder") if return_source else 13.3
+            if hp_screen == '4': return (14.0, "chassis_decoder") if return_source else 14.0
+            if hp_screen == '5': return (15.6, "chassis_decoder") if return_source else 15.6
+            if hp_screen == '6': return (16.0, "chassis_decoder") if return_source else 16.0
+
+        return (14.0, "fallback_estimate") if return_source else 14.0
 
     @classmethod
-    def detect_weight_kg(cls, title: str, screen_size: float) -> float:
+    def detect_weight_kg(cls, title: str, screen_size: float, return_source: bool = False) -> Union[float, Tuple[float, str]]:
         t = title.lower()
-        if 'x30l' in t: return 0.90
-        if 'x1 carbon' in t: return 1.10
-        if '7320' in t or '7330' in t: return 1.20
-        if any(k in t for k in ['a2337', 'surface 3', 'surface 4', 'x280', 'x13']): return 1.28
 
-        if any(k in t for k in ['t14s', '830', '840 g8', '7420', '7430', '7410', 't490s']): return 1.35
-        if any(k in t for k in ['840 g3', 'firefly 14', 'l13', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251']): return 1.40
+        # Check explicit weight in title
+        wt_m = re.search(r'(\d+(?:\.\d+)?)\s*(?:kg|ק"ג|קג)\b', t)
+        if wt_m:
+            try:
+                w = float(wt_m.group(1))
+                if 0.7 <= w <= 5.0:
+                    return (w, "listing_explicit") if return_source else w
+            except (ValueError, TypeError):
+                pass
 
-        if any(k in t for k in ['t14', 'p14s', 'e14', 'e480', '5410', '5420', '5430', '5431', '5480', 'e7440', 'sfx14', 'x1404za', 't490']): return 1.55
+        # Ultra-lightweight (< 1.1kg)
+        if 'x30l' in t: return (0.90, "chassis_decoder") if return_source else 0.90
+        if 'x1 carbon' in t: return (1.10, "chassis_decoder") if return_source else 1.10
+        if '7320' in t or '7330' in t: return (1.20, "chassis_decoder") if return_source else 1.20
+        if any(k in t for k in ['a2337', 'surface 3', 'surface 4', 'x280', 'x13']): return (1.28, "chassis_decoder") if return_source else 1.28
 
-        if any(k in t for k in ['p15s', 't15', '850', '5530', '5531', '3520', 'e1504', 'x515', 'a1707']): return 1.75
-        if any(k in t for k in ['250 g7', '255 g5', '255 g7', 'ay010nj', '330 15ikb', 'x442ur']): return 1.85
+        # Light Ultrabooks (1.3kg - 1.45kg)
+        if any(k in t for k in ['t14s', '830', '840 g8', '7420', '7430', '7410', 't490s']): return (1.35, "chassis_decoder") if return_source else 1.35
+        if any(k in t for k in ['840 g3', 'firefly 14', 'l13', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251']): return (1.40, "chassis_decoder") if return_source else 1.40
 
-        if any(k in t for k in ['thinkpad p1', 'p15v']): return 2.05
-        if any(k in t for k in ['gaming 3', 'zbook 15 g6', 'zbook g7 14']): return 2.25
-        if any(k in t for k in ['p50', 'p51', 'p52', 'p53', 'p70', 'p71', 'p72', 'p73', 'p16', 'p15 gen', 'p15 g1', 'zbook fury 15']): return 2.45
-        if 'a517' in t or screen_size >= 17.0: return 2.60
+        # Standard 14" Business (1.45kg - 1.65kg)
+        if any(k in t for k in ['t14', 'p14s', 'e14', 'e480', '5410', '5420', '5430', '5431', '5480', 'e7440', 'sfx14', 'x1404za', 't490']): return (1.55, "chassis_decoder") if return_source else 1.55
+
+        # 15.6" Mainstream / Light Workstation (1.7kg - 1.9kg)
+        if any(k in t for k in ['p15s', 't15', '850', '5530', '5531', '3520', 'e1504', 'x515', 'a1707']): return (1.75, "chassis_decoder") if return_source else 1.75
+        if any(k in t for k in ['250 g7', '255 g5', '255 g7', 'ay010nj', '330 15ikb', 'x442ur']): return (1.85, "chassis_decoder") if return_source else 1.85
+
+        # Performance Workstations / Gaming / 17.3" (2.1kg - 2.7kg)
+        if any(k in t for k in ['thinkpad p1', 'p15v']): return (2.05, "chassis_decoder") if return_source else 2.05
+        if any(k in t for k in ['gaming 3', 'zbook 15 g6', 'zbook g7 14']): return (2.25, "chassis_decoder") if return_source else 2.25
+        if any(k in t for k in ['p50', 'p51', 'p52', 'p53', 'p70', 'p71', 'p72', 'p73', 'p16', 'p15 gen', 'p15 g1', 'zbook fury 15']): return (2.45, "chassis_decoder") if return_source else 2.45
+        if 'a517' in t or screen_size >= 17.0: return (2.60, "chassis_decoder") if return_source else 2.60
 
         # Precision Mobile Workstations (Heavy desktop replacements)
         if 'precision' in t or 'workstation' in t:
-            if screen_size >= 17.0 or any(k in t for k in ['77', '7750', '7760', '7770', '7780']): return 3.10
-            if any(k in t for k in ['75', '76', '7550', '7560', '7540', '7530', '7520', '7510', '3571', '3581']): return 2.45
-            if any(k in t for k in ['55', '56', '5550', '5560', '5570', '35', '3540', '3550', '3560', '3570']): return 1.95
-            return 2.30
+            if screen_size >= 17.0 or any(k in t for k in ['77', '7750', '7760', '7770', '7780']): return (3.10, "chassis_decoder") if return_source else 3.10
+            if any(k in t for k in ['75', '76', '7550', '7560', '7540', '7530', '7520', '7510', '3571', '3581']): return (2.45, "chassis_decoder") if return_source else 2.45
+            if any(k in t for k in ['55', '56', '5550', '5560', '5570', '35', '3540', '3550', '3560', '3570']): return (1.95, "chassis_decoder") if return_source else 1.95
+            return (2.30, "chassis_decoder") if return_source else 2.30
 
-        if screen_size <= 12.5: return 1.20
-        if screen_size <= 13.5: return 1.30
-        if screen_size <= 14.0: return 1.50
-        if screen_size <= 15.6: return 1.80
-        return 2.40
+        # Algorithmic syntax decoders for weight
+        dell_m = re.search(r'\b(?:latitude)?\s*([3579])([34567])([0-9])([05])?\b', t)
+        if dell_m and ('dell' in t or 'latitude' in t):
+            tier = dell_m.group(1)
+            s_digit = dell_m.group(2)
+            if tier in ('7', '9'):
+                w = 1.20 if s_digit == '3' else 1.35
+            elif tier == '5':
+                w = 1.35 if s_digit == '3' else (1.55 if s_digit == '4' else 1.75)
+            elif tier == '3':
+                w = 1.60 if s_digit == '4' else 1.85
+            else:
+                w = 1.50
+            return (w, "chassis_decoder") if return_source else w
+
+        tp_m = re.search(r'\b(?:thinkpad\s*)?([txple])(13|14|15|16)(s)?\b', t)
+        if tp_m:
+            s_digit = tp_m.group(2)
+            if tp_m.group(3): w = 1.25 if s_digit == '13' else 1.35
+            elif s_digit == '13': w = 1.35
+            elif s_digit == '14': w = 1.55
+            elif s_digit == '15': w = 1.75
+            elif s_digit == '16': w = 1.85
+            else: w = 1.50
+            return (w, "chassis_decoder") if return_source else w
+
+        hp_m = re.search(r'\b(?:elitebook|probook)?\s*([468])([3456])([05])\b', t)
+        if hp_m and ('hp' in t or 'elitebook' in t or 'probook' in t):
+            tier = hp_m.group(1)
+            s_digit = hp_m.group(2)
+            if tier == '8': w = 1.28 if s_digit == '3' else 1.38
+            else: w = 1.40 if s_digit == '3' else (1.50 if s_digit == '4' else 1.78)
+            return (w, "chassis_decoder") if return_source else w
+
+        # Fallback by screen size
+        if screen_size <= 12.5: return (1.20, "fallback_estimate") if return_source else 1.20
+        if screen_size <= 13.5: return (1.30, "fallback_estimate") if return_source else 1.30
+        if screen_size <= 14.0: return (1.50, "fallback_estimate") if return_source else 1.50
+        if screen_size <= 15.6: return (1.80, "fallback_estimate") if return_source else 1.80
+        return (2.40, "fallback_estimate") if return_source else 2.40
 
     @classmethod
-    def detect_battery_wh(cls, title: str, weight_kg: float) -> int:
+    def detect_battery_wh(cls, title: str, weight_kg: float, return_source: bool = False) -> Union[int, Tuple[int, str]]:
         t = title.lower()
-        if any(k in t for k in ['p52', 'p15 gen', 'p15 g1', 'zbook fury 15', 'p1 gen 3']): return 90
-        if any(k in t for k in ['zbook 15 g6', '5531', '5431', 'p15v']): return 68
-        if any(k in t for k in ['x1 carbon', 't14s', '7420', '7320', '7330', '7430', '5430', '5530', '5330', 't490s']): return 57
-        if any(k in t for k in ['t14', 'p14s', 'e14 gen 4', '830 g8', '840 g8', 'firefly 14', 'p15s', 't490']): return 51
-        if any(k in t for k in ['a2337', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251', 'surface 3', 'surface 4']): return 49
-        if any(k in t for k in ['e480', '5410', '5480', 'x280', 'x13', '840 g3', 'e7440', '435 g7']): return 45
-        if any(k in t for k in ['e1504', 'x515', '250 g7', '255 g5', 'ay010nj', 'a517', '330 15ikb']): return 41
 
-        if weight_kg >= 2.3: return 83
-        if weight_kg >= 1.7: return 54
-        return 50
+        # Check explicit battery in title
+        bat_m = re.search(r'(\d{2,3})\s*(?:wh|וואט)\b', t)
+        if bat_m:
+            try:
+                b = int(bat_m.group(1))
+                if 25 <= b <= 120:
+                    return (b, "listing_explicit") if return_source else b
+            except (ValueError, TypeError):
+                pass
+
+        # Heavy Workstations / Long Battery beasts
+        if any(k in t for k in ['p52', 'p15 gen', 'p15 g1', 'zbook fury 15', 'p1 gen 3']): return (90, "chassis_decoder") if return_source else 90
+        if any(k in t for k in ['zbook 15 g6', '5531', '5431', 'p15v']): return (68, "chassis_decoder") if return_source else 68
+        if any(k in t for k in ['x1 carbon', 't14s', '7420', '7320', '7330', '7430', '5430', '5530', '5330', 't490s']): return (57, "chassis_decoder") if return_source else 57
+        if any(k in t for k in ['t14', 'p14s', 'e14 gen 4', '830 g8', '840 g8', 'firefly 14', 'p15s', 't490']): return (51, "chassis_decoder") if return_source else 51
+        if any(k in t for k in ['a2337', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251', 'surface 3', 'surface 4']): return (49, "chassis_decoder") if return_source else 49
+        if any(k in t for k in ['e480', '5410', '5480', 'x280', 'x13', '840 g3', 'e7440', '435 g7']): return (45, "chassis_decoder") if return_source else 45
+        if any(k in t for k in ['e1504', 'x515', '250 g7', '255 g5', 'ay010nj', 'a517', '330 15ikb']): return (41, "chassis_decoder") if return_source else 41
+
+        if any(k in t for k in ['workstation', 'precision', 'fury', 'p15', 'p52', 'p53']): return (90, "chassis_decoder") if return_source else 90
+
+        # Fallback by weight
+        if weight_kg >= 2.3: return (83, "fallback_estimate") if return_source else 83
+        if weight_kg >= 1.7: return (54, "fallback_estimate") if return_source else 54
+        return (50, "fallback_estimate") if return_source else 50
 
     @classmethod
     def is_laptop(cls, title: str) -> bool:
@@ -648,9 +767,10 @@ class ITOutletScraper:
                         deal_label = f"{deal_price:,} ₪ (100 ₪ Coupon)"
 
                     score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
-                    screen_size = HardwareClassifier.detect_screen_size(title)
-                    weight_kg = HardwareClassifier.detect_weight_kg(title, screen_size)
-                    battery_wh = HardwareClassifier.detect_battery_wh(title, weight_kg)
+                    screen_size, screen_src = HardwareClassifier.detect_screen_size(title, return_source=True)
+                    weight_kg, weight_src = HardwareClassifier.detect_weight_kg(title, screen_size, return_source=True)
+                    battery_wh, battery_src = HardwareClassifier.detect_battery_wh(title, weight_kg, return_source=True)
+                    conf = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
 
                     # Quick GPU & Touch detection
                     gpu = "NVIDIA Quadro P520" if 'p520' in title.lower() or 'p14s' in title.lower() or 'p15s' in title.lower() else "Integrated"
@@ -680,7 +800,11 @@ class ITOutletScraper:
                         is_2in1=is_2in1,
                         screen_size_in=round(screen_size, 1),
                         weight_kg=round(weight_kg, 2),
-                        battery_wh=battery_wh
+                        battery_wh=battery_wh,
+                        screen_source=screen_src,
+                        weight_source=weight_src,
+                        battery_source=battery_src,
+                        confidence_level=conf
                     ))
             except Exception as e:
                 logger.error(f"Error scraping IT Outlet page {page}: {e}")
@@ -740,9 +864,10 @@ class EcologyScraper:
                         is_2in1 = HardwareClassifier.is_2in1(title)
 
                         score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
-                        screen_size = HardwareClassifier.detect_screen_size(title)
-                        weight_kg = HardwareClassifier.detect_weight_kg(title, screen_size)
-                        battery_wh = HardwareClassifier.detect_battery_wh(title, weight_kg)
+                        screen_size, screen_src = HardwareClassifier.detect_screen_size(title, return_source=True)
+                        weight_kg, weight_src = HardwareClassifier.detect_weight_kg(title, screen_size, return_source=True)
+                        battery_wh, battery_src = HardwareClassifier.detect_battery_wh(title, weight_kg, return_source=True)
+                        conf = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
 
                         items.append(LaptopItem(
                             store=self.STORE_NAME,
@@ -767,7 +892,11 @@ class EcologyScraper:
                             is_2in1=is_2in1,
                             screen_size_in=round(screen_size, 1),
                             weight_kg=round(weight_kg, 2),
-                            battery_wh=battery_wh
+                            battery_wh=battery_wh,
+                            screen_source=screen_src,
+                            weight_source=weight_src,
+                            battery_source=battery_src,
+                            confidence_level=conf
                         ))
         except Exception as e:
             logger.error(f"Error scraping Ecology Computers: {e}")
@@ -839,9 +968,10 @@ class LTSScraper:
                     words = slug_clean.split()
                     title = ' '.join(w.capitalize() if not any(c.isdigit() for c in w) else w.upper() for w in words)
                     score, storage_type, ram_type = HardwareClassifier.analyze_architecture(slug_clean)
-                    screen_size = HardwareClassifier.detect_screen_size(slug_clean)
-                    weight_kg = HardwareClassifier.detect_weight_kg(slug_clean, screen_size)
-                    battery_wh = HardwareClassifier.detect_battery_wh(slug_clean, weight_kg)
+                    screen_size, screen_src = HardwareClassifier.detect_screen_size(slug_clean, return_source=True)
+                    weight_kg, weight_src = HardwareClassifier.detect_weight_kg(slug_clean, screen_size, return_source=True)
+                    battery_wh, battery_src = HardwareClassifier.detect_battery_wh(slug_clean, weight_kg, return_source=True)
+                    conf = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
                     is_touch = HardwareClassifier.is_touch(title) or HardwareClassifier.is_touch(slug_clean)
                     is_2in1 = HardwareClassifier.is_2in1(title) or HardwareClassifier.is_2in1(slug_clean)
 
@@ -867,7 +997,11 @@ class LTSScraper:
                         is_2in1=is_2in1,
                         screen_size_in=round(screen_size, 1),
                         weight_kg=round(weight_kg, 2),
-                        battery_wh=battery_wh
+                        battery_wh=battery_wh,
+                        screen_source=screen_src,
+                        weight_source=weight_src,
+                        battery_source=battery_src,
+                        confidence_level=conf
                     ))
         except Exception as e:
             logger.error(f"Error scraping LTS: {e}")
@@ -930,9 +1064,10 @@ class RecompScraper:
 
                 for link, title, price in fetched_results:
                     score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
-                    screen_size = HardwareClassifier.detect_screen_size(title)
-                    weight_kg = HardwareClassifier.detect_weight_kg(title, screen_size)
-                    battery_wh = HardwareClassifier.detect_battery_wh(title, weight_kg)
+                    screen_size, screen_src = HardwareClassifier.detect_screen_size(title, return_source=True)
+                    weight_kg, weight_src = HardwareClassifier.detect_weight_kg(title, screen_size, return_source=True)
+                    battery_wh, battery_src = HardwareClassifier.detect_battery_wh(title, weight_kg, return_source=True)
+                    conf = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
                     is_touch = HardwareClassifier.is_touch(title)
                     is_2in1 = HardwareClassifier.is_2in1(title)
 
@@ -958,7 +1093,11 @@ class RecompScraper:
                         is_2in1=is_2in1,
                         screen_size_in=round(screen_size, 1),
                         weight_kg=round(weight_kg, 2),
-                        battery_wh=battery_wh
+                        battery_wh=battery_wh,
+                        screen_source=screen_src,
+                        weight_source=weight_src,
+                        battery_source=battery_src,
+                        confidence_level=conf
                     ))
         except Exception as e:
             logger.error(f"Error scraping Recomp: {e}")

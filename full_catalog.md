@@ -5,7 +5,7 @@
 3. 🏬 **LaptopTech LTS (לפטופ.טק):** [lts.co.il/מחשבים-ניידים-מחודשים-יד-2](https://lts.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%99%D7%93-2/)
 4. 🏬 **Recomp Computers (ריקומפ):** [recomp.co.il/מחשבים-מחודשים-במבצע](https://recomp.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%99%d7%9d-%d7%9e%d7%97%D7%95%D7%93%D7%a9%d7%99%d7%9d-%d7%91%d7%9e%d7%91%d7%a6%d7%a2/)
 
-*Last Automated Live Audit: September 12, 2026 (16:05)*
+*Last Automated Live Audit: September 12, 2026 (16:28)*
 
 ---
 
@@ -208,7 +208,7 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 | 1 | **Dell Latitude 7420 i5** | Core i5 (11th Gen) | 16GB / 512GB | 14.0" | ⚖️ 1.35 kg | 🔋 57 Wh | **2,450 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟠 5.0 | [View Product](https://recomp.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-%d7%9e%d7%97%d7%95%d7%93%d7%a9-dell-latitude-7420-i5/) |
 | 2 | **dell latitude 7430 i7 1270p** | Core i7 (12th Gen) | 16GB / 512GB | 14.0" | ⚖️ 1.35 kg | 🔋 57 Wh | **3,950 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟠 5.0 | [View Product](https://recomp.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-%d7%9e%d7%97%d7%95%d7%93%d7%a9-dell-latitude-7430-i7-1270p/) |
 | 3 | **HP ZBook Firefly 15 G7 i7** | Core i7 (10th Gen) | 16GB / 512GB | 14.0" | ⚖️ 1.5 kg | 🔋 50 Wh | **3,550 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://recomp.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-%d7%9e%d7%97%d7%95%d7%93%d7%a9-hp-zbook-firefly-15-g7-i7/) |
-| 4 | **lenovo laptop thinkpad t490s** | Core i5 (8th Gen) | 16GB / 512GB | 14.0" | ⚖️ 1.5 kg | 🔋 50 Wh | **2,250 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://recomp.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-%d7%9e%d7%97%d7%95%d7%93%d7%a9-lenovo-thinkpad-t490s-i5/) |
+| 4 | **lenovo laptop thinkpad t490s** | Core i5 (8th Gen) | 16GB / 512GB | 14.0" | ⚖️ 1.35 kg | 🔋 57 Wh | **2,250 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://recomp.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-%d7%9e%d7%97%d7%95%d7%93%d7%a9-lenovo-thinkpad-t490s-i5/) |
 | 5 | **Lenovo ThinkPad X1 Carbon i7-10Gen** | Core i7 (10th Gen) | 16GB / 512GB | 14.0" | ⚖️ 1.1 kg | 🔋 57 Wh | **3,550 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟠 5.0 | [View Product](https://recomp.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-%d7%9e%d7%97%d7%95%d7%93%d7%a9-lenovo-thinkpad-x1-carbon-i7-10gen/) |
 | 6 | **Lenovo ThinkPad X1 Carbon i7-10Gen** | Core i7 (10th Gen) | 16GB / 512GB | 14.0" | ⚖️ 1.1 kg | 🔋 57 Wh | **3,690 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟠 5.0 | [View Product](https://recomp.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-%d7%9e%d7%97%d7%95%d7%93%d7%a9-lenovo-thinkpad-x1-carbon-i7-11gen/) |
 
