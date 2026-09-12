@@ -1,23 +1,31 @@
 const docs = [
   {
     id: 'full-catalog',
-    title: 'Full Catalog',
+    title: 'Full Laptop Catalog',
     file: 'full_catalog.md',
     category: 'full-catalog',
+    content: ''
+  },
+  {
+    id: 'full-mobile-catalog',
+    title: 'Full Mobile Catalog',
+    file: 'full_mobile_catalog.md',
+    category: 'full-mobile-catalog',
     content: ''
   }
 ];
 
 const state = {
   activeDocId: 'full-catalog',
-  filter: 'catalog', // 'catalog' or 'full-catalog'
+  filter: 'catalog', // 'catalog', 'mobile-catalog', 'full-catalog', or 'full-mobile-catalog'
   query: '',
   activePreset: 'all',
   catalogData: [],
   catalogFilters: {
+    category: 'all',
     store: 'all',
     brand: 'all',
-    priceMin: 800,
+    priceMin: 100,
     priceMax: 5000,
     price: 0,
     priceMode: 'max',
@@ -55,6 +63,7 @@ const toggleFiltersBtn = typeof document !== 'undefined' ? document.getElementBy
 const resetFiltersBtn = typeof document !== 'undefined' ? document.getElementById('resetFiltersBtn') : null;
 const themeToggle = typeof document !== 'undefined' ? document.getElementById('themeToggle') : null;
 
+const categoryFilter = typeof document !== 'undefined' ? document.getElementById('categoryFilter') : null;
 const storeFilter = typeof document !== 'undefined' ? document.getElementById('storeFilter') : null;
 const brandFilter = typeof document !== 'undefined' ? document.getElementById('brandFilter') : null;
 const priceMinSlider = typeof document !== 'undefined' ? document.getElementById('priceMinSlider') : null;
@@ -271,6 +280,10 @@ function getBrandBadge(brand) {
   if (b.includes('dell')) return '<span class="brand-badge brand-dell">🔵 Dell</span>';
   if (b.includes('hp')) return '<span class="brand-badge brand-hp">⚪ HP</span>';
   if (b.includes('apple')) return '<span class="brand-badge brand-apple">🍏 Apple</span>';
+  if (b.includes('samsung')) return '<span class="brand-badge brand-samsung">🔵 Samsung</span>';
+  if (b.includes('xiaomi')) return '<span class="brand-badge brand-xiaomi">🟠 Xiaomi</span>';
+  if (b.includes('motorola')) return '<span class="brand-badge brand-motorola">🔴 Motorola</span>';
+  if (b.includes('google')) return '<span class="brand-badge brand-google">🔴 Google</span>';
   if (b.includes('asus')) return '<span class="brand-badge brand-asus">⚡ Asus</span>';
   if (b.includes('microsoft')) return '<span class="brand-badge brand-ms">🪟 Microsoft</span>';
   return `<span class="brand-badge brand-default">💻 ${escapeHtml(brand || 'PC')}</span>`;
@@ -333,67 +346,130 @@ async function preloadDocContents() {
 }
 
 async function loadCatalogData() {
+  let laptopsUnified = [];
   try {
     const res = await fetch('./scraped_laptops.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const rawJson = await res.json();
-
-    let unified = [];
-    if (Array.isArray(rawJson)) {
-      unified = rawJson;
-    } else if (typeof rawJson === 'object') {
-      Object.keys(rawJson).forEach((key) => {
-        if (Array.isArray(rawJson[key])) {
-          unified = unified.concat(rawJson[key]);
-        }
-      });
+    if (res.ok) {
+      const rawJson = await res.json();
+      if (Array.isArray(rawJson)) {
+        laptopsUnified = rawJson;
+      } else if (typeof rawJson === 'object') {
+        Object.keys(rawJson).forEach((key) => {
+          if (Array.isArray(rawJson[key])) {
+            laptopsUnified = laptopsUnified.concat(rawJson[key]);
+          }
+        });
+      }
     }
-
-    state.catalogData = unified.map((laptop, index) => {
-      const brand = laptop.brand || 'Other';
-      const store = laptop.store || 'Refurbished Store';
-      const deal_price_ils = Number(laptop.deal_price_ils || laptop.price_ils) || 0;
-      const price_ils = Number(laptop.price_ils || laptop.deal_price_ils) || 0;
-      const ram_gb = Number(laptop.ram_gb) || 0;
-      const storage_gb = Number(laptop.storage_gb) || 0;
-      const upgradability_score = Number(laptop.upgradability_score) || 5.0;
-      const cpu = laptop.cpu || 'N/A';
-
-      const item = {
-        id: `laptop-${index}-${store.replace(/\s+/g, '_')}`,
-        title: laptop.title || laptop.model || 'Laptop Listing',
-        brand,
-        store,
-        cpu,
-        ram_gb,
-        storage_gb,
-        price_ils,
-        deal_price_ils,
-        deal_label: laptop.deal_label || `${deal_price_ils || price_ils || ''} ₪`,
-        storage_type: laptop.storage_type || 'NVMe / SATA',
-        ram_type: laptop.ram_type || 'Standard',
-        ram_gen: laptop.ram_gen || 'DDR4',
-        ram_source: laptop.ram_source || 'chassis_decoder',
-        upgradability_score,
-        warranty_months: laptop.warranty_months || 12,
-        is_touch: Boolean(laptop.is_touch),
-        is_2in1: Boolean(laptop.is_2in1),
-        url: laptop.url || '#',
-        screen_size_in: Number(laptop.screen_size_in) || 14.0,
-        weight_kg: Number(laptop.weight_kg) || 1.5,
-        battery_wh: Number(laptop.battery_wh) || 50,
-        screen_source: laptop.screen_source || 'chassis_decoder',
-        weight_source: laptop.weight_source || 'chassis_decoder',
-        battery_source: laptop.battery_source || 'chassis_decoder',
-        confidence_level: laptop.confidence_level || 'verified'
-      };
-      item.value_score = calculateValueScore(item);
-      return item;
-    });
   } catch (err) {
     console.warn('Failed to load scraped_laptops.json', err);
-    state.catalogData = [];
   }
+
+  let mobileUnified = [];
+  try {
+    const resM = await fetch('./scraped_mobile.json', { cache: 'no-store' });
+    if (resM.ok) {
+      const rawMJson = await resM.json();
+      if (Array.isArray(rawMJson)) {
+        mobileUnified = rawMJson;
+      } else if (typeof rawMJson === 'object') {
+        Object.keys(rawMJson).forEach((key) => {
+          if (Array.isArray(rawMJson[key])) {
+            mobileUnified = mobileUnified.concat(rawMJson[key]);
+          }
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to load scraped_mobile.json', err);
+  }
+
+  const laptopItems = laptopsUnified.map((laptop, index) => {
+    const brand = laptop.brand || 'Other';
+    const store = laptop.store || 'Refurbished Store';
+    const deal_price_ils = Number(laptop.deal_price_ils || laptop.price_ils) || 0;
+    const price_ils = Number(laptop.price_ils || laptop.deal_price_ils) || 0;
+    const ram_gb = Number(laptop.ram_gb) || 0;
+    const storage_gb = Number(laptop.storage_gb) || 0;
+    const upgradability_score = Number(laptop.upgradability_score) || 5.0;
+    const cpu = laptop.cpu || 'N/A';
+
+    const item = {
+      id: `laptop-${index}-${store.replace(/\s+/g, '_')}`,
+      category: 'laptops',
+      title: laptop.title || laptop.model || 'Laptop Listing',
+      brand,
+      store,
+      cpu,
+      ram_gb,
+      storage_gb,
+      price_ils,
+      deal_price_ils,
+      deal_label: laptop.deal_label || `${deal_price_ils || price_ils || ''} ₪`,
+      storage_type: laptop.storage_type || 'NVMe / SATA',
+      ram_type: laptop.ram_type || 'Standard',
+      ram_gen: laptop.ram_gen || 'DDR4',
+      ram_source: laptop.ram_source || 'chassis_decoder',
+      upgradability_score,
+      warranty_months: laptop.warranty_months || 12,
+      is_touch: Boolean(laptop.is_touch),
+      is_2in1: Boolean(laptop.is_2in1),
+      url: laptop.url || '#',
+      screen_size_in: Number(laptop.screen_size_in) || 14.0,
+      weight_kg: Number(laptop.weight_kg) || 1.5,
+      battery_wh: Number(laptop.battery_wh) || 50,
+      screen_source: laptop.screen_source || 'chassis_decoder',
+      weight_source: laptop.weight_source || 'chassis_decoder',
+      battery_source: laptop.battery_source || 'chassis_decoder',
+      confidence_level: laptop.confidence_level || 'verified'
+    };
+    item.value_score = calculateValueScore(item);
+    return item;
+  });
+
+  const mobileItems = mobileUnified.map((dev, index) => {
+    const brand = dev.brand || 'Mobile';
+    const store = dev.store || 'Refurbished Store';
+    const deal_price_ils = Number(dev.deal_price_ils || dev.price_ils) || 0;
+    const price_ils = Number(dev.price_ils || dev.deal_price_ils) || 0;
+    const ram_gb = Number(dev.ram_gb) || 0;
+    const storage_gb = Number(dev.storage_gb) || 0;
+
+    const item = {
+      id: `mobile-${index}-${store.replace(/\s+/g, '_')}`,
+      category: 'phones',
+      device_type: dev.device_type || 'phone',
+      title: dev.title || dev.model || 'Mobile Device',
+      brand,
+      store,
+      cpu: dev.device_type === 'tablet' ? 'Tablet SoC' : 'Mobile SoC',
+      ram_gb,
+      storage_gb,
+      price_ils,
+      deal_price_ils,
+      deal_label: dev.deal_label || `${deal_price_ils || price_ils || ''} ₪`,
+      storage_type: 'Internal Storage',
+      ram_type: 'LPDDR',
+      ram_gen: 'Mobile',
+      ram_source: 'listing_explicit',
+      upgradability_score: 1.0,
+      warranty_months: dev.warranty_months || 12,
+      is_touch: true,
+      is_2in1: dev.device_type === 'tablet',
+      url: dev.url || '#',
+      screen_size_in: Number(dev.screen_size_in) || 6.1,
+      weight_kg: dev.device_type === 'tablet' ? 0.48 : 0.19,
+      battery_wh: dev.device_type === 'tablet' ? 28 : 15,
+      screen_source: 'listing_explicit',
+      weight_source: 'chassis_decoder',
+      battery_source: 'chassis_decoder',
+      confidence_level: dev.confidence_level || 'verified'
+    };
+    item.value_score = calculateValueScore(item);
+    return item;
+  });
+
+  state.catalogData = [...laptopItems, ...mobileItems];
 }
 
 function renderCatalogToc() {
@@ -457,10 +533,11 @@ function sanitizeMarkdown(rawText) {
 }
 
 async function loadDocument() {
-  if (state.filter === 'catalog') return;
+  if (state.filter === 'catalog' || state.filter === 'mobile-catalog') return;
   if (!documentContent) return;
 
-  const doc = docs[0];
+  const docId = state.filter === 'full-mobile-catalog' ? 'full-mobile-catalog' : 'full-catalog';
+  const doc = docs.find((d) => d.id === docId) || docs[0];
   if (!doc) return;
 
   setStatus(`Loading ${doc.title}…`);
@@ -600,6 +677,8 @@ function renderCatalog() {
   const q = state.query.toLowerCase();
 
   let filtered = state.catalogData.filter((item) => {
+    if (state.catalogFilters.category === 'laptops' && item.category !== 'laptops') return false;
+    if (state.catalogFilters.category === 'phones' && item.category !== 'phones') return false;
     if (store !== 'all' && item.store !== store) return false;
     if (brand !== 'all' && item.brand.toLowerCase() !== brand.toLowerCase()) return false;
 
@@ -733,13 +812,14 @@ function renderCatalog() {
       .map((l) => l.id)
   );
 
-  setStatus(`Catalog: Found ${filtered.length} laptops matching criteria`, 'success');
+  const catLabel = state.catalogFilters.category === 'phones' ? 'mobile devices' : (state.catalogFilters.category === 'laptops' ? 'laptops' : 'items');
+  setStatus(`Catalog: Found ${filtered.length} ${catLabel} matching criteria`, 'success');
 
   const chipsHtml = `
     <div class="quick-chips-container">
       <div class="quick-chips-header">⚡ Quick Explore Filters</div>
       <div class="quick-filter-chips">
-        <button type="button" class="chip-btn ${state.activePreset === 'all' ? 'active' : ''}" data-preset="all">✨ All Laptops</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'all' ? 'active' : ''}" data-preset="all">✨ All ${state.catalogFilters.category === 'phones' ? 'Devices' : 'Laptops'}</button>
         <button type="button" class="chip-btn ${state.activePreset === 'top-value' ? 'active' : ''}" data-preset="top-value">🏆 Top Value Picks</button>
         <button type="button" class="chip-btn ${state.activePreset === 'under-2000' ? 'active' : ''}" data-preset="under-2000">💰 Under 2,000 ₪</button>
         <button type="button" class="chip-btn ${state.activePreset === 'featherlight' ? 'active' : ''}" data-preset="featherlight">🪶 Featherlight (&lt; 1.3kg)</button>
@@ -845,8 +925,8 @@ function renderCatalog() {
   catalogContent.innerHTML = `
     ${chipsHtml}
     <div class="catalog-summary-bar">
-      <span>Showing <strong>${filtered.length}</strong> available laptops</span>
-      <a href="./scraped_laptops.csv" download="refurbished_laptops.csv" class="export-csv-btn">⬇️ Download CSV</a>
+      <span>Showing <strong>${filtered.length}</strong> available ${catLabel}</span>
+      <a href="./${state.catalogFilters.category === 'phones' ? 'scraped_mobile.csv' : 'scraped_laptops.csv'}" download="${state.catalogFilters.category === 'phones' ? 'refurbished_mobile.csv' : 'refurbished_laptops.csv'}" class="export-csv-btn">⬇️ Download CSV</a>
     </div>
     <div class="catalog-grid">${cardsHtml}</div>
   `;
@@ -864,11 +944,18 @@ function bindChipButtons() {
 }
 
 function updateViewMode() {
-  if (state.filter === 'catalog') {
+  if (state.filter === 'catalog' || state.filter === 'mobile-catalog') {
     if (documentSidebarCard) documentSidebarCard.classList.add('hidden');
     if (catalogFiltersCard) catalogFiltersCard.classList.remove('hidden');
     if (documentContent) documentContent.classList.add('hidden');
     if (catalogContent) catalogContent.classList.remove('hidden');
+    if (state.filter === 'mobile-catalog') {
+      state.catalogFilters.category = 'phones';
+      if (categoryFilter) categoryFilter.value = 'phones';
+    } else if (state.filter === 'catalog') {
+      state.catalogFilters.category = 'laptops';
+      if (categoryFilter) categoryFilter.value = 'laptops';
+    }
     renderCatalog();
   } else {
     if (documentSidebarCard) documentSidebarCard.classList.remove('hidden');
@@ -931,6 +1018,14 @@ function bindEvents() {
   if (resetFiltersBtn) {
     resetFiltersBtn.addEventListener('click', () => {
       setQuickPreset('all');
+    });
+  }
+
+  if (categoryFilter) {
+    categoryFilter.addEventListener('change', (e) => {
+      state.catalogFilters.category = e.target.value;
+      state.activePreset = '';
+      renderCatalog();
     });
   }
 

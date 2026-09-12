@@ -33,7 +33,9 @@
 
       <nav class="filter-bar" aria-label="View switcher">
         <button class="filter-btn active catalog-nav-btn" data-filter="catalog" type="button">💻 Laptop Catalog Finder</button>
-        <button class="filter-btn" data-filter="full-catalog" type="button">📋 Full Catalog</button>
+        <button class="filter-btn" data-filter="mobile-catalog" type="button">📱 Phones & Tablets Finder</button>
+        <button class="filter-btn" data-filter="full-catalog" type="button">📋 Full Laptop Catalog</button>
+        <button class="filter-btn" data-filter="full-mobile-catalog" type="button">📋 Full Mobile Catalog</button>
       </nav>
 
       <main class="content-layout">
@@ -59,6 +61,15 @@
               </div>
 
               <div class="filter-group">
+                <label for="categoryFilter">Category</label>
+                <select id="categoryFilter" class="filter-select">
+                  <option value="all">All Categories</option>
+                  <option value="laptops">💻 Laptops</option>
+                  <option value="phones">📱 Phones & Tablets</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
                 <label for="brandFilter">Brand</label>
                 <select id="brandFilter" class="filter-select">
                   <option value="all">All Brands</option>
@@ -66,6 +77,10 @@
                   <option value="Dell">Dell</option>
                   <option value="HP">HP</option>
                   <option value="Apple">Apple</option>
+                  <option value="Samsung">Samsung</option>
+                  <option value="Xiaomi">Xiaomi</option>
+                  <option value="Motorola">Motorola</option>
+                  <option value="Google">Google</option>
                   <option value="Asus">Asus</option>
                   <option value="Acer">Acer</option>
                   <option value="Microsoft">Microsoft</option>
