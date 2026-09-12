@@ -219,16 +219,16 @@ class HardwareClassifier:
     _HTML_TAG_RE = re.compile(r'<[^>]+>')
     _CLEAN_PHRASE_RE = re.compile(r'מחשב\s*נייד\s*(?:מחודש)?\s*(?:לעריכה\s*גרפית)?')
 
-    _GEN13_RE = re.compile(r'(?:13th|דור\s*13|13[0-9]{2}[up]|13[0-9]{2}h)', re.IGNORECASE)
-    _GEN12_RE = re.compile(r'(?:12th|דור\s*12|gen\s*4|5330|5430|5530|7330|7430|5431|5531|l13\s*gen\s*3|t14\s*gen\s*3|x1404za|e1504|12[0-9]{2}[up]|12[0-9]{2}h|1270p|1260p|1250u|1280p|1240p|1235u)', re.IGNORECASE)
-    _GEN11_RE = re.compile(r'(?:11th|דור\s*11|\bg8\b|gen\s*2|3520|3420|7420|7320|5420|5320|5520|surface\s*4|x1\s*carbon\s*gen\s*9|x1\s*yoga\s*gen\s*6|a517.*52g|x515ea|x30l\s*j|11[0-9]{2}g[47]|11[0-9]{2}[up]|11[0-9]{2}h|1185g7|1165g7|1135g7|1145g7)', re.IGNORECASE)
-    _GEN10_RE = re.compile(r'(?:10th|דור\s*10|\bg7\b|gen\s*1|\bg1\b|7410|5410|5510|surface\s*3|x1\s*carbon\s*gen\s*8|p1\s*gen\s*3|vostro\s*3591|3591|a2179|a2251|10[0-9]{2}[up]|10[0-9]{2}h|10510u|10610u|10875h|10210u|10310u|\be14\b|\bt14\b|\bt14s\b)', re.IGNORECASE)
-    _GEN9_RE = re.compile(r'(?:9th|דור\s*9|\bg6\b|9750h|9850h)', re.IGNORECASE)
-    _GEN8_RE = re.compile(r'(?:8th|דור\s*8|e480|l390|7400|5490|5400|x280|t480|p52|5379|330\s*15ikb|a1989|x1\s*carbon.*touch|8[0-9]{3}[uh]|8250u|8350u|8650u|8550u)', re.IGNORECASE)
-    _GEN7_RE = re.compile(r'(?:7th|דור\s*7|t470|5480|x442ur|a1707|a1706|a1708|7[0-9]{3}[uh]|7200u|7300u|7500u)', re.IGNORECASE)
-    _GEN6_RE = re.compile(r'(?:6th|דור\s*6|t460|650\s*g2|840\s*g3|ay010|6[0-9]{3}[uh]|6200u|6300u)', re.IGNORECASE)
-    _GEN5_RE = re.compile(r'(?:5th|דור\s*5|a1466|5[0-9]{3}[uh])', re.IGNORECASE)
-    _GEN4_RE = re.compile(r'(?:4th|דור\s*4|g-4|e7440|4[0-9]{3}[uh]|4200u|4300u)', re.IGNORECASE)
+    _GEN13_RE = re.compile(r'(?:13th|דור\s*13|13\s*gen|13[0-9]{2}[up]|13[0-9]{2}h)', re.IGNORECASE)
+    _GEN12_RE = re.compile(r'(?:12th|דור\s*12|12\s*gen|gen\s*4|5330|5430|5530|7330|7430|5431|5531|l13\s*gen\s*3|t14\s*gen\s*3|x1404za|e1504|12[0-9]{2}[up]|12[0-9]{2}h|1270p|1260p|1250u|1280p|1240p|1235u)', re.IGNORECASE)
+    _GEN11_RE = re.compile(r'(?:11th|דור\s*11|11\s*gen|\bg8\b|gen\s*2|3520|3420|7420|7320|5420|5320|5520|surface\s*4|x1\s*carbon\s*gen\s*9|x1\s*yoga\s*gen\s*6|a517.*52g|x515ea|x30l\s*j|11[0-9]{2}g[47]|11[0-9]{2}[up]|11[0-9]{2}h|1185g7|1165g7|1135g7|1145g7)', re.IGNORECASE)
+    _GEN10_RE = re.compile(r'(?:10th|דור\s*10|10\s*gen|\bg7\b|gen\s*1|\bg1\b|7410|5410|5510|surface\s*3|x1\s*carbon\s*gen\s*8|p1\s*gen\s*3|vostro\s*3591|3591|a2179|a2251|10[0-9]{2}[up]|10[0-9]{2}h|10510u|10610u|10875h|10210u|10310u|\be14\b|\bt14\b|\bt14s\b)', re.IGNORECASE)
+    _GEN9_RE = re.compile(r'(?:9th|דור\s*9|9\s*gen|\bg6\b|9750h|9850h)', re.IGNORECASE)
+    _GEN8_RE = re.compile(r'(?:8th|דור\s*8|8\s*gen|e480|l390|7400|5490|5400|x280|t480|t490|p52|5379|330\s*15ikb|a1989|x1\s*carbon.*touch|8[0-9]{3}[uh]|8250u|8350u|8650u|8550u)', re.IGNORECASE)
+    _GEN7_RE = re.compile(r'(?:7th|דור\s*7|7\s*gen|t470|5480|x442ur|a1707|a1706|a1708|7[0-9]{3}[uh]|7200u|7300u|7500u)', re.IGNORECASE)
+    _GEN6_RE = re.compile(r'(?:6th|דור\s*6|6\s*gen|t460|650\s*g2|840\s*g3|ay010|6[0-9]{3}[uh]|6200u|6300u)', re.IGNORECASE)
+    _GEN5_RE = re.compile(r'(?:5th|דור\s*5|5\s*gen|a1466|5[0-9]{3}[uh])', re.IGNORECASE)
+    _GEN4_RE = re.compile(r'(?:4th|דור\s*4|4\s*gen|g-4|e7440|4[0-9]{3}[uh]|4200u|4300u)', re.IGNORECASE)
 
     _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
     _STORAGE_GB_RE = re.compile(r'(?:^|[^\w])(128|240|250|256|480|500|512)\s*(?:gb|g|גיגה)?(?:\s*ssd|\s*nvme|\s*אחסון)?(?:[^\w]|$)')
@@ -1046,6 +1046,13 @@ def main():
     all_items: List[LaptopItem] = []
     for store_name, items in results.items():
         all_items.extend(items)
+
+    if not all_items:
+        logger.warning("⚠️ No laptops were scraped across any store (network error or sites unreachable). Preserving existing catalog.")
+        print("\n" + "=" * 65)
+        print("⚠️  SCRAPE INCOMPLETE: 0 laptops parsed. Existing files preserved.")
+        print("=" * 65)
+        return
 
     # Apply CLI Filters if specified
     filtered_items = [
