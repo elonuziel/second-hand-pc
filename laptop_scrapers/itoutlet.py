@@ -1,8 +1,10 @@
 """IT Outlet scraper."""
 from __future__ import annotations
+import html
 import logging
 import re
 import urllib.parse
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, List, Optional
 import requests
 from laptop_domain import LaptopItem
@@ -16,12 +18,37 @@ class ITOutletScraper:
     STORE_NAME = "IT Outlet"
     CATALOG_URL = "https://www.itoutlet.co.il/164920-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D?order=up_price"
 
-    def __init__(self, session: requests.Session):
-        self.session = session
+    def __init__(self, session: Optional[requests.Session] = None):
+        self.session = session or requests.Session()
+
+    def _fetch_detail_specs(self, url: str) -> str:
+        try:
+            r = self.session.get(url, timeout=8)
+            if r.status_code == 200:
+                html_page = r.text
+                sub_m = re.search(r'id=[\"\']item_current_sub_title[\"\'][^>]*>([\s\S]*?)</div>', html_page)
+                attr_m = re.search(r'id=[\"\']item_attributes[\"\'][^>]*>([\s\S]*?)</div>\s*<!--\s*show_html_in_tabs', html_page)
+                if not attr_m:
+                    attr_m = re.search(r'class=[\"\'][^\"\']*item_attributes[^\"\']*[\"\'][^>]*>([\s\S]*?)</div>', html_page)
+                desc_m = re.search(r'class=[\"\'][^\"\']*page_item_description[^\"\']*[\"\'][^>]*>([\s\S]*?)</div>', html_page)
+
+                parts = []
+                if sub_m:
+                    parts.append(sub_m.group(1))
+                if attr_m:
+                    parts.append(attr_m.group(1))
+                if desc_m:
+                    parts.append(desc_m.group(1))
+                if parts:
+                    return html.unescape(re.sub(r'<[^>]+>', ' ', ' '.join(parts))).strip()
+        except Exception:
+            pass
+        return ""
 
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping IT Outlet...")
         items: List[LaptopItem] = []
+        parsed_items = []
         seen_urls = set()
 
         for page in range(1, 4):
@@ -74,18 +101,39 @@ class ITOutletScraper:
                         src = img_m[0].strip()
                         img = f"https://www.itoutlet.co.il{src}" if src.startswith('/') else src
 
-                    items.append(HardwareClassifier.build_laptop(
-                        store=self.STORE_NAME,
-                        title=title,
-                        price_ils=raw_price,
-                        url=full_link,
-                        deal_price_ils=deal_price,
-                        deal_label=deal_label,
-                        warranty_months=12,
-                        stock_status="🟢 In Stock",
-                        image_url=img,
-                    ))
+                    parsed_items.append((title, raw_price, full_link, deal_price, deal_label, img))
             except Exception as e:
                 logger.error(f"Error scraping IT Outlet page {page}: {e}")
+
+        # Concurrently fetch detail pages for exact specs
+        urls_to_fetch = [pi[2] for pi in parsed_items]
+        details_map = {}
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            desc_results = executor.map(self._fetch_detail_specs, urls_to_fetch)
+            for url, desc in zip(urls_to_fetch, desc_results):
+                details_map[url] = desc
+
+        for title, raw_price, full_link, deal_price, deal_label, img in parsed_items:
+            detail_specs = details_map.get(full_link, "")
+            analysis = f"{title} {detail_specs}".strip()
+
+            warranty = 12
+            if any(k in analysis for k in ["3 שנות אחריות", "3 שנים", "שלוש שנים", "36 חודש"]):
+                warranty = 36
+            elif any(k in analysis for k in ["שנתיים אחריות", "שנתיים", "24 חודש"]):
+                warranty = 24
+
+            items.append(HardwareClassifier.build_laptop(
+                store=self.STORE_NAME,
+                title=title,
+                price_ils=raw_price,
+                url=full_link,
+                deal_price_ils=deal_price,
+                deal_label=deal_label,
+                analysis_text=analysis,
+                warranty_months=warranty,
+                stock_status="🟢 In Stock",
+                image_url=img,
+            ))
 
         return items

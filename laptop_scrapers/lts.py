@@ -1,5 +1,4 @@
-"""LaptopTech LTS scraper."""
-from __future__ import annotations
+import html
 import logging
 import re
 import urllib.parse
@@ -57,6 +56,20 @@ class LTSScraper:
             return img_m.group(1).strip()
         return ""
 
+    def _parse_product_page_desc(self, page_html: str) -> str:
+        short_m = re.search(r'class=[\"\'][^\"\']*woocommerce-product-details__short-description[^\"\']*[\"\'][^>]*>([\s\S]*?)</div>', page_html)
+        tab_m = re.search(r'id=[\"\']tab-description[\"\'][^>]*>([\s\S]*?)</div>', page_html)
+        if not tab_m:
+            tab_m = re.search(r'class=[\"\'][^\"\']*woocommerce-Tabs-panel--description[^\"\']*[\"\'][^>]*>([\s\S]*?)</div>', page_html)
+        parts = []
+        if short_m:
+            parts.append(short_m.group(1))
+        if tab_m:
+            parts.append(tab_m.group(1))
+        if parts:
+            return html.unescape(re.sub(r'<[^>]+>', ' ', ' '.join(parts))).strip()
+        return ""
+
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping LaptopTech LTS...")
         items: List[LaptopItem] = []
@@ -71,33 +84,42 @@ class LTSScraper:
                     if HardwareClassifier.is_laptop(slug_clean):
                         valid_links.append((link, slug_clean))
 
-                # Fetch exact prices concurrently for all laptops
-                def fetch_item_price(item_tuple):
+                # Fetch exact prices and descriptions concurrently for all laptops
+                def fetch_item_details(item_tuple):
                     link, slug_clean = item_tuple
                     try:
                         res = self.session.get(link, timeout=8)
                         p = self._parse_product_page_price(res.text)
                         img = self._parse_product_page_image(res.text)
-                        return link, slug_clean, p, img
+                        desc = self._parse_product_page_desc(res.text)
+                        return link, slug_clean, p, img, desc
                     except Exception:
-                        return link, slug_clean, None, ""
+                        return link, slug_clean, None, "", ""
 
                 with ThreadPoolExecutor(max_workers=10) as executor:
-                    fetched_results = list(executor.map(fetch_item_price, valid_links))
+                    fetched_results = list(executor.map(fetch_item_details, valid_links))
 
-                for link, slug_clean, price, img in fetched_results:
+                for link, slug_clean, price, img, desc in fetched_results:
                     if price is None:
                         logger.warning("Skipping LTS listing without a valid price: %s", link)
                         continue
                     words = slug_clean.split()
                     title = ' '.join(w.capitalize() if not any(c.isdigit() for c in w) else w.upper() for w in words)
+                    analysis = f"{title} {slug_clean} {desc}".strip()
+
+                    warranty = 12
+                    if any(k in analysis for k in ["3 שנות אחריות", "3 שנים", "שלוש שנים", "36 חודש"]):
+                        warranty = 36
+                    elif any(k in analysis for k in ["שנתיים אחריות", "שנתיים", "24 חודש"]):
+                        warranty = 24
+
                     items.append(HardwareClassifier.build_laptop(
                         store=self.STORE_NAME,
                         title=title,
                         price_ils=price,
                         url=link,
-                        analysis_text=slug_clean,
-                        warranty_months=12,
+                        analysis_text=analysis,
+                        warranty_months=warranty,
                         stock_status="🟢 In Stock",
                         image_url=img,
                     ))

@@ -30,6 +30,8 @@ from scraper import (
     LastPriceScraper,
     VoltScraper,
     OfekPCScraper,
+    ITOutletScraper,
+    EcologyScraper,
 )
 
 
@@ -398,7 +400,7 @@ class TestNewLaptopScrapers(unittest.TestCase):
                 "prices": {"price": "219000", "currency_minor_unit": 2},
                 "permalink": "https://www.cwc.co.il/product/dell-5420",
                 "images": [{"src": "https://www.cwc.co.il/img/dell5420.jpg"}],
-                "description": "מחשב נייד עסקי כולל 3 שנות אחריות VIP",
+                "description": "מעבד i7-1185G7 סוללה 63Wh משקל 1.35 ק\"ג כולל 3 שנות אחריות VIP",
                 "short_description": "מחשב מעולה"
             },
             {
@@ -419,6 +421,11 @@ class TestNewLaptopScrapers(unittest.TestCase):
         self.assertEqual(items[0].warranty_months, 36)
         self.assertEqual(items[0].ram_gb, 16)
         self.assertEqual(items[0].storage_gb, 512)
+        self.assertEqual(items[0].cpu, "Core i7 (11th Gen)")
+        self.assertEqual(items[0].battery_wh, 63)
+        self.assertEqual(items[0].battery_source, "listing_explicit")
+        self.assertEqual(items[0].weight_kg, 1.35)
+        self.assertEqual(items[0].weight_source, "listing_explicit")
 
     @patch("scraper.fetch_resilient_url")
     def test_payngo_scraper_parsing(self, mock_fetch):
@@ -665,6 +672,78 @@ class TestNewLaptopScrapers(unittest.TestCase):
         self.assertEqual(items[0].warranty_months, 24)
         self.assertEqual(items[0].url, "https://ofekpc.co.il/dell-latitude-5420-i5-11th-gen")
         self.assertEqual(items[0].image_url, "https://ofekpc.co.il/images/thumbs/dell-latitude-5420.jpg")
+
+    def test_p1000_detail_page_specs_parsing(self):
+        """P1000 detail page specs must extract exact CPU, explicit 1.18kg weight and 63Wh battery."""
+        mock_detail_html = '''
+        <li id="MainContent_Properties_productDetails">
+            סוג מעבד: 11th Generation Intel® Core™ i5-1185G7<br />
+            מסך 14 אינץ': FHD 1920 x 1080<br />
+            זכרון: 16GB DDR4<br />
+            כוננים: 256GB SSD<br />
+            משקל: 1.18 ק"ג<br />
+            סוג ספק הכוח והסוללה: 4-Cell, 63 WHr
+        </li>
+        '''
+        scraper = P1000Scraper()
+        with patch.object(scraper, "_fetch_detail_specs", return_value="11th Generation Intel Core i5-1185G7 משקל: 1.18 ק\"ג 4-Cell, 63 WHr"):
+            with patch("scraper.fetch_resilient_url") as mock_cat:
+                mock_cat.return_value = (200, '<li data-sku="216717" data-title="מחשב נייד מסך מגע 2IN1 DELL Latitude 7420 i5 מחודש"><a href="/sales/saledetails.aspx?productid=216717"></a><div class="categoryResults_itemBuy">2,390 ₪</div></li>')
+                items = scraper.scrape()
+                self.assertEqual(len(items), 1)
+                laptop = items[0]
+                self.assertEqual(laptop.cpu, "Core i5 (11th Gen)")
+                self.assertEqual(laptop.weight_kg, 1.18)
+                self.assertEqual(laptop.weight_source, "listing_explicit")
+                self.assertEqual(laptop.battery_wh, 63)
+                self.assertEqual(laptop.battery_source, "listing_explicit")
+
+    def test_itoutlet_detail_page_specs_parsing(self):
+        """IT Outlet detail page parser extracts sub-title and specs attributes."""
+        mock_detail_html = '''
+        <div id="item_current_sub_title">מחשב נייד Dell Latitude 7420 מעבד i7-1165G7 זיכרון 16GB נפח אחסון 512GB SSD</div>
+        <div id="item_attributes">
+            <ul><li><b>משקל</b> <span class="he_true">1.3 ק"ג</span></li></ul>
+        </div>
+        <!-- show_html_in_tabs -->
+        '''
+        class FakeResponse:
+            status_code = 200
+            text = mock_detail_html
+        class FakeSession:
+            def get(self, url, timeout=8):
+                return FakeResponse()
+
+        scraper = ITOutletScraper(FakeSession())
+        specs = scraper._fetch_detail_specs("https://www.itoutlet.co.il/items/12345")
+        self.assertIn("i7-1165G7", specs)
+        self.assertIn("1.3", specs)
+
+    def test_lastprice_detail_page_specs_parsing(self):
+        """LastPrice detail page parser extracts #html-description block with battery and specs."""
+        mock_html = '''
+        <div id="html-description">
+            <p>מעבד: 11th Generation Intel Core i5-1145G7<br />
+            ספק כוח וסוללה: 4-Cell, 63 WHr<br />
+            שלוש שנים אחריות</p>
+        </div>
+        '''
+        scraper = LastPriceScraper()
+        with patch("laptop_scrapers.lastprice.fetch_resilient_url", return_value=(200, mock_html)):
+            specs = scraper._fetch_detail_specs("https://www.lastprice.co.il/p/12345")
+            self.assertIn("i5-1145G7", specs)
+            self.assertIn("63 WHr", specs)
+
+    def test_lts_and_recomp_desc_parsing(self):
+        """LTS and Recomp detail page parsers extract WooCommerce short-desc and tab-desc."""
+        mock_html = '''
+        <div class="woocommerce-product-details__short-description">מעבד Intel Core i5-1135G7 זיכרון 16GB</div>
+        <div id="tab-description">סוללה 57Wh משקל 1.35 ק"ג</div>
+        '''
+        lts = LTSScraper(None)
+        recomp = RecompScraper(None)
+        self.assertIn("i5-1135G7", lts._parse_product_page_desc(mock_html))
+        self.assertIn("57Wh", recomp._parse_recomp_desc(mock_html))
 
 
 class TestFrontendCompatibility(unittest.TestCase):

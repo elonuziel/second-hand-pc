@@ -3,6 +3,7 @@ from __future__ import annotations
 import html
 import logging
 import re
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, List, Optional
 from laptop_scrapers.base import fetch_resilient_url
 from laptop_domain import LaptopItem
@@ -18,9 +19,33 @@ class VoltScraper:
     def __init__(self, session: Any = None):
         self.session = session
 
+    def _fetch_detail_specs(self, url: str) -> str:
+        try:
+            status, html_page = fetch_resilient_url(url)
+            if status == 200 and html_page:
+                sub_m = re.search(r'id=[\"\']item_current_sub_title[\"\'][^>]*>([\s\S]*?)</div>', html_page)
+                attr_m = re.search(r'id=[\"\']item_attributes[\"\'][^>]*>([\s\S]*?)</div>\s*<!--\s*show_html_in_tabs', html_page)
+                if not attr_m:
+                    attr_m = re.search(r'class=[\"\'][^\"\']*item_attributes[^\"\']*[\"\'][^>]*>([\s\S]*?)</div>', html_page)
+                desc_m = re.search(r'class=[\"\'][^\"\']*page_item_description[^\"\']*[\"\'][^>]*>([\s\S]*?)</div>', html_page)
+
+                parts = []
+                if sub_m:
+                    parts.append(sub_m.group(1))
+                if attr_m:
+                    parts.append(attr_m.group(1))
+                if desc_m:
+                    parts.append(desc_m.group(1))
+                if parts:
+                    return html.unescape(re.sub(r'<[^>]+>', ' ', ' '.join(parts))).strip()
+        except Exception:
+            pass
+        return ""
+
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping VOLT Green Computing...")
         items: List[LaptopItem] = []
+        parsed_cards = []
         page = 1
         seen_urls = set()
         try:
@@ -74,28 +99,41 @@ class VoltScraper:
                         card_body
                     )
                     desc_text = re.sub(r'<[^>]+>', ' ', desc_m.group(1)).strip() if desc_m else ""
-                    analysis = f"{raw_title} {desc_text}"
 
-                    warranty = 12
-                    if "שנתיים" in analysis or "24 חודש" in analysis:
-                        warranty = 24
-                    elif "3 שנים" in analysis or "36 חודש" in analysis:
-                        warranty = 36
-
-                    items.append(HardwareClassifier.build_laptop(
-                        store=self.STORE_NAME,
-                        title=raw_title,
-                        price_ils=price,
-                        url=full_url,
-                        analysis_text=analysis,
-                        warranty_months=warranty,
-                        stock_status="🟢 In Stock",
-                        image_url=img
-                    ))
+                    parsed_cards.append((raw_title, price, full_url, img, desc_text))
 
                 if 'class="next_page"' not in text and "class='next_page'" not in text:
                     break
                 page += 1
+
+            # Fetch detailed product specifications concurrently
+            urls_to_fetch = [c[2] for c in parsed_cards]
+            details_map = {}
+            with ThreadPoolExecutor(max_workers=6) as executor:
+                desc_results = executor.map(self._fetch_detail_specs, urls_to_fetch)
+                for u, d in zip(urls_to_fetch, desc_results):
+                    details_map[u] = d
+
+            for raw_title, price, full_url, img, desc_text in parsed_cards:
+                detail_specs = details_map.get(full_url, "")
+                analysis = f"{raw_title} {desc_text} {detail_specs}".strip()
+
+                warranty = 12
+                if any(k in analysis for k in ["3 שנות אחריות", "3 שנים", "שלוש שנים", "36 חודש"]):
+                    warranty = 36
+                elif any(k in analysis for k in ["שנתיים אחריות", "שנתיים", "24 חודש"]):
+                    warranty = 24
+
+                items.append(HardwareClassifier.build_laptop(
+                    store=self.STORE_NAME,
+                    title=raw_title,
+                    price_ils=price,
+                    url=full_url,
+                    analysis_text=analysis,
+                    warranty_months=warranty,
+                    stock_status="🟢 In Stock",
+                    image_url=img
+                ))
 
         except Exception as e:
             logger.error(f"Error scraping VOLT: {e}")

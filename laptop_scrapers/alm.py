@@ -80,8 +80,14 @@ query getCategoryProducts($urlKey: String!) {
                 url = f"https://www.alm.co.il/{ukey}.html" if ukey else "https://www.alm.co.il"
                 img = p.get("small_image", {}).get("url", "")
                 desc_html = p.get("description", {}).get("html", "")
-                clean_desc = re.sub(r'<[^>]+>', ' ', desc_html)
-                analysis = f"{name} {clean_desc}"
+                clean_desc = html.unescape(re.sub(r'<[^>]+>', ' ', desc_html)).strip()
+                analysis = f"{name} {clean_desc}".strip()
+
+                warranty = 12
+                if any(k in analysis for k in ["3 שנות אחריות", "3 שנים", "שלוש שנים", "36 חודש"]):
+                    warranty = 36
+                elif any(k in analysis for k in ["שנתיים אחריות", "שנתיים", "24 חודש"]):
+                    warranty = 24
 
                 items.append(HardwareClassifier.build_laptop(
                     store=self.STORE_NAME,
@@ -89,7 +95,7 @@ query getCategoryProducts($urlKey: String!) {
                     price_ils=price,
                     url=url,
                     analysis_text=analysis,
-                    warranty_months=12,
+                    warranty_months=warranty,
                     stock_status="🟢 In Stock",
                     image_url=img
                 ))

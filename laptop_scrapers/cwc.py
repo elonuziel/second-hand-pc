@@ -63,13 +63,21 @@ class CWCScraper:
                 img_url = images[0].get("src", "") if images else ""
 
                 desc = p.get("short_description", "") + " " + p.get("description", "")
-                warranty = 36 if ("3 שנות אחריות" in desc or "3 שנים" in desc or "שלוש שנים" in desc) else 12
+                clean_desc = html.unescape(re.sub(r'<[^>]+>', ' ', desc)).strip()
+                analysis = f"{name} {clean_desc}".strip()
+
+                warranty = 12
+                if any(k in analysis for k in ["3 שנות אחריות", "3 שנים", "שלוש שנים", "36 חודש"]):
+                    warranty = 36
+                elif any(k in analysis for k in ["שנתיים אחריות", "שנתיים", "24 חודש"]):
+                    warranty = 24
 
                 items.append(HardwareClassifier.build_laptop(
                     store=self.STORE_NAME,
                     title=name,
                     price_ils=price_val,
                     url=url,
+                    analysis_text=analysis,
                     warranty_months=warranty,
                     stock_status="🟢 In Stock",
                     image_url=img_url

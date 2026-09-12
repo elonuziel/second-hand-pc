@@ -394,8 +394,10 @@ class HardwareClassifier:
     def detect_weight_kg(cls, title: str, screen_size: float, return_source: bool = False) -> Union[float, Tuple[float, str]]:
         t = title.lower()
 
-        # Check explicit weight in title
-        wt_m = re.search(r'(\d+(?:\.\d+)?)\s*(?:kg|ק"ג|קג)\b', t)
+        # Check explicit weight in text
+        wt_m = re.search(r'(?:משקל\s*[:\-]?\s*)?(\d+(?:\.\d+)?)\s*(?:kg|ק["\'״]*ג|קג)\b', t)
+        if not wt_m:
+            wt_m = re.search(r'\bweight\s*[:\-]?\s*(\d+(?:\.\d+)?)\s*(?:kg)?\b', t)
         if wt_m:
             try:
                 w = float(wt_m.group(1))
@@ -485,8 +487,10 @@ class HardwareClassifier:
     def detect_battery_wh(cls, title: str, weight_kg: float, return_source: bool = False) -> Union[int, Tuple[int, str]]:
         t = title.lower()
 
-        # Check explicit battery in title
-        bat_m = re.search(r'(\d{2,3})\s*(?:wh|וואט)\b', t)
+        # Check explicit battery in text
+        bat_m = re.search(r'(\d{2,3})\s*(?:whr?|w/h|watt|וואט(?:-שעה)?)\b', t)
+        if not bat_m:
+            bat_m = re.search(r'\bbattery\s*[:\-]?\s*(\d{2,3})\s*(?:whr?|w/h)?\b', t)
         if bat_m:
             try:
                 b = int(bat_m.group(1))
