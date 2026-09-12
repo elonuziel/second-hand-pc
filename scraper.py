@@ -1004,12 +1004,12 @@ class ReportGenerator:
 
 ## 🏬 1. IT Outlet (איי טי אאוטלט) — Live Catalog & Stock Audit
 
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Deal Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Product Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
+| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
+| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
 """)
         for i, itm in enumerate(it_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n")
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
         md_parts.append(f"""
 ---
@@ -1018,36 +1018,37 @@ class ReportGenerator:
 
 *(All laptops include a full **24-Month (2-Year) Warranty**).*
 
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Deal Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Product Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
+| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
+| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
 """)
         for i, itm in enumerate(eco_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.price_ils:,} ₪** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n")
+            deal_price_str = f"{itm.price_ils:,} ₪ (24M Warranty)"
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{deal_price_str}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
         md_parts.append(f"""
 ---
 
 ## 🏬 3. LaptopTech LTS (לפטופ.טק) — Live Stock Audit
 
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Product Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
+| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
+| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
 """)
         for i, itm in enumerate(lts_items[:25], 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View Product]({itm.url}) |\n")
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
         md_parts.append(f"""
 ---
 
 ## 🏬 4. Recomp Computers (ריקומפ) — Live Stock Audit
 
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Price | Stock Status | Storage Interface | RAM Architecture | Score | Direct Store Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :--- | :--- | :---: | :---: |
+| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
+| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
 """)
         for i, itm in enumerate(rec_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | **{itm.deal_label}** | {itm.stock_status} | {itm.storage_type} | {itm.ram_type} | {score_badge} | [View on Recomp]({itm.url}) |\n")
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
         md_parts.append("""
 ---
