@@ -78,9 +78,24 @@ class SpecEnricher:
         current_ram_type = laptop.get("ram_type", ram_type)
 
         # Accurately compute screen_size_in, weight_kg, battery_wh, and ram_gen based on verified heuristics
-        screen_size, screen_src = cls.detect_screen_size(title, return_source=True)
-        weight_kg, weight_src = cls.detect_weight_kg(title, screen_size, return_source=True)
-        battery_wh, battery_src = cls.detect_battery_wh(title, weight_kg, return_source=True)
+        if laptop.get("screen_source") == "listing_explicit" and laptop.get("screen_size_in"):
+            screen_size = laptop["screen_size_in"]
+            screen_src = "listing_explicit"
+        else:
+            screen_size, screen_src = cls.detect_screen_size(title, return_source=True)
+
+        if laptop.get("weight_source") == "listing_explicit" and laptop.get("weight_kg"):
+            weight_kg = laptop["weight_kg"]
+            weight_src = "listing_explicit"
+        else:
+            weight_kg, weight_src = cls.detect_weight_kg(title, screen_size, return_source=True)
+
+        if laptop.get("battery_source") == "listing_explicit" and laptop.get("battery_wh"):
+            battery_wh = laptop["battery_wh"]
+            battery_src = "listing_explicit"
+        else:
+            battery_wh, battery_src = cls.detect_battery_wh(title, weight_kg, return_source=True)
+
         ram_gen, ram_src = cls.detect_ram_generation(title, cpu=laptop.get("cpu", ""), ram_type=current_ram_type, return_source=True)
 
         laptop["screen_size_in"] = round(screen_size, 1)
@@ -91,7 +106,21 @@ class SpecEnricher:
         laptop["screen_source"] = screen_src
         laptop["weight_source"] = weight_src
         laptop["battery_source"] = battery_src
-        laptop["confidence_level"] = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate" or ram_src == "fallback_estimate") else "verified"
+
+        is_2in1 = laptop.get("is_2in1") or HardwareClassifier.is_2in1(title)
+        weight_warn, battery_warn = HardwareClassifier.validate_hardware_sanity(
+            title=title,
+            screen_size=screen_size,
+            weight_kg=weight_kg,
+            battery_wh=battery_wh,
+            is_2in1=is_2in1,
+        )
+        laptop["weight_warning"] = weight_warn
+        laptop["battery_warning"] = battery_warn
+        if weight_warn or battery_warn:
+            laptop["confidence_level"] = "warning"
+        else:
+            laptop["confidence_level"] = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate" or ram_src == "fallback_estimate") else "verified"
 
         return laptop
 

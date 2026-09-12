@@ -106,7 +106,7 @@ class TestCatalogDataHealth(unittest.TestCase):
     def test_spec_provenance_and_confidence_tagging(self):
         """Every catalog laptop must be tagged with spec sources and confidence levels in raw data."""
         valid_sources = {"listing_explicit", "chassis_decoder", "fallback_estimate", "ai_audit"}
-        valid_confidences = {"verified", "estimated"}
+        valid_confidences = {"verified", "estimated", "warning"}
         for item in self.items:
             title = item.get("title", "")
             sc_src = item.get("screen_source")
@@ -341,6 +341,66 @@ class TestHardwareParsers(unittest.TestCase):
         )
         self.assertEqual(unknown.screen_source, "fallback_estimate")
         self.assertEqual(unknown.confidence_level, "estimated")
+
+    def test_hardware_sanity_validation(self):
+        """Ensure impossible/conflicting hardware claims produce warnings while preserving seller claims."""
+        # 1. Latitude 7420 2-in-1 with seller claim 1.18kg (carbon clamshell copy-paste)
+        item_2in1 = HardwareClassifier.build_laptop(
+            store="P1000",
+            title="מחשב נייד מסך מגע 2IN1 DELL Latitude 7420 i5 מחודש",
+            price_ils=1999,
+            url="https://www.p1000.co.il/sales/saledetails.aspx?productid=216717",
+            analysis_text="מחשב נייד מסך מגע 2IN1 DELL Latitude 7420 i5 משקל 1.18 ק\"ג סוללה 63Wh",
+        )
+        self.assertEqual(item_2in1.weight_kg, 1.18)
+        self.assertEqual(item_2in1.weight_source, "listing_explicit")
+        self.assertTrue(item_2in1.is_2in1)
+        self.assertIn("clamshell typo", item_2in1.weight_warning)
+        self.assertIn("1.36kg", item_2in1.weight_warning)
+        self.assertEqual(item_2in1.confidence_level, "warning")
+
+        # 2. Mainstream 15.6" laptop claiming 1.2kg
+        w_warn, b_warn = HardwareClassifier.validate_hardware_sanity(
+            title="Dell Latitude 3520 15.6",
+            screen_size=15.6,
+            weight_kg=1.2,
+            battery_wh=54,
+            is_2in1=False,
+        )
+        self.assertIn("unusually low", w_warn)
+        self.assertEqual(b_warn, "")
+
+        # 3. Workstation claiming lightweight 1.4kg
+        w_warn_ws, _ = HardwareClassifier.validate_hardware_sanity(
+            title="Dell Precision 7550 Workstation",
+            screen_size=15.6,
+            weight_kg=1.4,
+            battery_wh=68,
+            is_2in1=False,
+        )
+        self.assertIn("heavy workstation", w_warn_ws)
+
+        # 4. Charger wattage mistaken for battery capacity (>100Wh)
+        _, b_warn_charger = HardwareClassifier.validate_hardware_sanity(
+            title="HP EliteBook 840 G8",
+            screen_size=14.0,
+            weight_kg=1.35,
+            battery_wh=130,
+            is_2in1=False,
+        )
+        self.assertIn("AC adapter wattage", b_warn_charger)
+        self.assertIn("airline safety limit", b_warn_charger)
+
+        # 5. Normal verified laptop has no warnings
+        w_ok, b_ok = HardwareClassifier.validate_hardware_sanity(
+            title="Dell Latitude 5430",
+            screen_size=14.0,
+            weight_kg=1.45,
+            battery_wh=54,
+            is_2in1=False,
+        )
+        self.assertEqual(w_ok, "")
+        self.assertEqual(b_ok, "")
 
 
 class TestNewLaptopScrapers(unittest.TestCase):

@@ -618,7 +618,9 @@ async function loadCatalogData() {
       screen_source: laptop.screen_source || 'chassis_decoder',
       weight_source: laptop.weight_source || 'chassis_decoder',
       battery_source: laptop.battery_source || 'chassis_decoder',
-      confidence_level: laptop.confidence_level || 'verified'
+      confidence_level: laptop.confidence_level || 'verified',
+      weight_warning: laptop.weight_warning || '',
+      battery_warning: laptop.battery_warning || ''
     };
     item.value_score = calculateValueScore(item);
     return item;
@@ -1138,8 +1140,10 @@ function renderCatalog() {
       const isRamGenEst = laptop.ram_source !== 'listing_explicit';
 
       const screenText = `${isScreenEst ? '~' : ''}${laptop.screen_size_in}"${isScreenEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
-      const weightText = `⚖️ ${isWeightEst ? '~' : ''}${laptop.weight_kg} kg${isWeightEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
-      const batteryText = `🔋 ${isBatteryEst ? '~' : ''}${laptop.battery_wh} Wh${isBatteryEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+      const weightWarnTag = laptop.weight_warning ? ` <span class="spec-warn-tag" title="${escapeHtml(laptop.weight_warning)}">⚠️ Typo Alert</span>` : '';
+      const batteryWarnTag = laptop.battery_warning ? ` <span class="spec-warn-tag" title="${escapeHtml(laptop.battery_warning)}">⚠️ Typo Alert</span>` : '';
+      const weightText = `⚖️ ${isWeightEst ? '~' : ''}${laptop.weight_kg} kg${isWeightEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}${weightWarnTag}`;
+      const batteryText = `🔋 ${isBatteryEst ? '~' : ''}${laptop.battery_wh} Wh${isBatteryEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}${batteryWarnTag}`;
       const ramGenText = `${isRamGenEst ? '~' : ''}${escapeHtml(laptop.ram_gen)}${isRamGenEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
 
       let specsHtml = '';
@@ -1212,6 +1216,7 @@ function renderCatalog() {
                 <span class="store-tag ${getStoreClass(laptop.store)}">${escapeHtml(laptop.store)}</span>
                 ${laptop.warranty_months >= 24 ? '<span class="badge-warranty-24m">🛡️ 2-Yr Warranty</span>' : ''}
                 ${isTopValue ? '<span class="value-pick-badge">🏆 Best Value Pick</span>' : ''}
+                ${(laptop.weight_warning || laptop.battery_warning) ? `<span class="badge tag-spec-warn" title="${escapeHtml(laptop.weight_warning || laptop.battery_warning)}">⚠️ Spec Alert</span>` : ''}
               </div>
               <h3 class="laptop-title">${escapeHtml(laptop.title)}</h3>
             </div>

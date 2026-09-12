@@ -200,7 +200,9 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
             for i, itm in enumerate(items_list, 1):
                 score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
                 ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
-                md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
+                weight_warn_str = " ⚠️ *(Typo alert)*" if getattr(itm, 'weight_warning', '') else ""
+                battery_warn_str = " ⚠️ *(Typo alert)*" if getattr(itm, 'battery_warning', '') else ""
+                md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg{weight_warn_str} | 🔋 {itm.battery_wh} Wh{battery_warn_str} | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
         _append_store_section(1, "IT Outlet (איי טי אאוטלט)", it_items)
         _append_store_section(2, "Ecology Computers (אקולוגיה לקהילה מוגנת)", eco_items, "All laptops include a full 24-Month / 2-Year Warranty")

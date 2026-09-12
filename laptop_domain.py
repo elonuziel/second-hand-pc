@@ -40,6 +40,8 @@ class LaptopItem:
     weight_source: str = "chassis_decoder"
     battery_source: str = "chassis_decoder"
     confidence_level: str = "verified"
+    weight_warning: str = ""
+    battery_warning: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)

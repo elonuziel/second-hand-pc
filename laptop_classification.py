@@ -524,6 +524,43 @@ class HardwareClassifier:
         return True
 
     @classmethod
+    def validate_hardware_sanity(
+        cls,
+        title: str,
+        screen_size: float,
+        weight_kg: float,
+        battery_wh: int,
+        is_2in1: bool,
+    ) -> Tuple[str, str]:
+        """Validate physical hardware sanity and detect impossible / copy-pasted seller claims."""
+        t = title.lower()
+        weight_warning = ""
+        battery_warning = ""
+
+        # 1. 2-in-1 Touchscreen Weight Floor
+        # Dual steel 360 hinges + digitizer + front glass impose a physical floor (~1.35kg for 14"+).
+        if is_2in1 and screen_size >= 13.5 and weight_kg < 1.25:
+            weight_warning = f"Seller states {weight_kg}kg (likely clamshell typo; 14\" 2-in-1 chassis floor is ~1.36kg)"
+
+        # 2. Mainstream 15.6"+ Weight Floor
+        elif screen_size >= 15.6 and weight_kg < 1.40 and 'gram' not in t:
+            weight_warning = f"Seller states {weight_kg}kg (unusually low for {screen_size}\" screen; expected ~1.75kg)"
+
+        # 3. Heavy Workstation Weight Floor (Precision 7000, ZBook Fury, ThinkPad P-Series thick)
+        elif (
+            ('zbook fury' in t or 'thinkpad p52' in t or 'thinkpad p53' in t or ('thinkpad p15' in t and 'p15s' not in t and 'p15v' not in t))
+            or (('precision 7' in t or 'precision 35' in t) and 'precision 55' not in t)
+        ) and weight_kg < 1.85:
+            weight_warning = f"Seller states {weight_kg}kg (heavy workstation expected ~2.2kg-2.6kg)"
+
+        # 4. Battery Capacity vs AC Charger Wattage
+        # Flight carry-on legal limit is 100 Wh (99.9 Wh). Listings claiming > 100 Wh usually confuse charger watts.
+        if battery_wh > 100:
+            battery_warning = f"Seller states {battery_wh}Wh (likely AC adapter wattage; airline safety limit is 99Wh)"
+
+        return weight_warning, battery_warning
+
+    @classmethod
     def build_laptop(
         cls,
         store: str,
@@ -566,6 +603,16 @@ class HardwareClassifier:
         resolved_touch = is_touch if is_touch is not None else (cls.is_touch(title) or (cls.is_touch(analysis_text) if analysis_text else False))
         resolved_2in1 = is_2in1 if is_2in1 is not None else (cls.is_2in1(title) or (cls.is_2in1(analysis_text) if analysis_text else False))
 
+        weight_warn, battery_warn = cls.validate_hardware_sanity(
+            title=text,
+            screen_size=screen_size,
+            weight_kg=weight_kg,
+            battery_wh=battery_wh,
+            is_2in1=resolved_2in1,
+        )
+        if weight_warn or battery_warn:
+            confidence_level = "warning"
+
         if gpu is None:
             resolved_gpu = "NVIDIA Quadro P520" if any(k in text.lower() for k in ['p520', 'p14s', 'p15s']) else "Integrated"
         else:
@@ -605,5 +652,7 @@ class HardwareClassifier:
             weight_source=weight_src,
             battery_source=battery_src,
             confidence_level=confidence_level,
+            weight_warning=weight_warn,
+            battery_warning=battery_warn,
         )
 

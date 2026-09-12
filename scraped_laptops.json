@@ -30,7 +30,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -62,7 +64,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -94,7 +98,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -126,7 +132,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -158,7 +166,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -190,7 +200,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -222,7 +234,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -254,7 +268,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -286,7 +302,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -318,7 +336,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -350,7 +370,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -382,7 +404,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -414,7 +438,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -446,7 +472,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -478,7 +506,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -510,7 +540,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -542,7 +574,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -574,7 +608,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -606,7 +642,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -638,7 +676,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -670,7 +710,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -702,7 +744,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -734,7 +778,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -766,7 +812,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -798,7 +846,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -830,7 +880,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -862,7 +914,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -894,7 +948,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -926,7 +982,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -958,7 +1016,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -990,7 +1050,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -1022,7 +1084,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -1054,7 +1118,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -1086,7 +1152,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -1118,7 +1186,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "IT Outlet",
@@ -1150,7 +1220,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "ecology": [
@@ -1184,7 +1256,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1216,7 +1290,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1248,7 +1324,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1280,7 +1358,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1312,7 +1392,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1344,7 +1426,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1376,7 +1460,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1408,7 +1494,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1440,7 +1528,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1472,7 +1562,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1504,7 +1596,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ecology Computers",
@@ -1536,7 +1630,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "lts": [
@@ -1570,7 +1666,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1602,7 +1700,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1634,7 +1734,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1666,7 +1768,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1698,7 +1802,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1730,7 +1836,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1762,7 +1870,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1794,7 +1904,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1826,7 +1938,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1858,7 +1972,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1890,7 +2006,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1922,7 +2040,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1954,7 +2074,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -1986,7 +2108,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2018,7 +2142,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2050,7 +2176,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2082,7 +2210,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2114,7 +2244,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2146,7 +2278,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2178,7 +2312,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2210,7 +2346,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2242,7 +2380,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2274,7 +2414,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2306,7 +2448,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2338,7 +2482,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2370,7 +2516,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2402,7 +2550,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2434,7 +2584,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2466,7 +2618,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LaptopTech LTS",
@@ -2498,7 +2652,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "recomp": [
@@ -2532,7 +2688,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Recomp Computers",
@@ -2564,7 +2722,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Recomp Computers",
@@ -2596,7 +2756,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Recomp Computers",
@@ -2628,7 +2790,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Recomp Computers",
@@ -2660,7 +2824,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Recomp Computers",
@@ -2692,7 +2858,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "cwc": [
@@ -2726,7 +2894,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -2758,7 +2928,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -2790,7 +2962,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -2822,7 +2996,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -2854,7 +3030,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -2886,7 +3064,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -2918,7 +3098,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -2950,7 +3132,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -2982,7 +3166,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3014,7 +3200,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3046,7 +3234,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3078,7 +3268,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3110,7 +3302,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3142,7 +3336,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3174,7 +3370,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3206,7 +3404,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3238,7 +3438,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3270,7 +3472,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3302,7 +3506,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3334,7 +3540,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3366,7 +3574,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3398,7 +3608,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3430,7 +3642,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3462,7 +3676,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3494,7 +3710,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3526,7 +3744,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3558,7 +3778,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3590,7 +3812,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3622,7 +3846,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3654,7 +3880,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3686,7 +3914,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3718,7 +3948,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3750,7 +3982,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3782,7 +4016,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3814,7 +4050,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3846,7 +4084,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3878,7 +4118,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3910,7 +4152,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3942,7 +4186,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -3974,7 +4220,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4006,7 +4254,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4038,7 +4288,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4070,7 +4322,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4102,7 +4356,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4134,7 +4390,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4166,7 +4424,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4198,7 +4458,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4230,7 +4492,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4262,7 +4526,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4294,7 +4560,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4326,7 +4594,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4358,7 +4628,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4390,7 +4662,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4422,7 +4696,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4454,7 +4730,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4486,7 +4764,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4518,7 +4798,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4550,7 +4832,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Olam HaKolnoa",
@@ -4582,7 +4866,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "payngo": [
@@ -4616,7 +4902,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Payngo",
@@ -4648,7 +4936,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Payngo",
@@ -4680,7 +4970,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Payngo",
@@ -4712,7 +5004,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Payngo",
@@ -4744,7 +5038,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Payngo",
@@ -4776,7 +5072,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Payngo",
@@ -4808,7 +5106,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Payngo",
@@ -4840,7 +5140,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "alm": [
@@ -4874,7 +5176,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "ALM",
@@ -4906,7 +5210,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "ALM",
@@ -4938,7 +5244,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "ALM",
@@ -4970,7 +5278,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "ALM",
@@ -5002,7 +5312,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "ALM",
@@ -5034,7 +5346,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "shufersal": [
@@ -5068,7 +5382,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5100,7 +5416,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5132,7 +5450,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5164,7 +5484,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5196,7 +5518,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5228,7 +5552,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5260,7 +5586,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5292,7 +5620,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5324,7 +5654,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5356,7 +5688,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5388,7 +5722,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5420,7 +5756,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5452,7 +5790,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5484,7 +5824,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5516,7 +5858,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5548,7 +5892,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5580,7 +5926,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5612,7 +5960,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Shufersal",
@@ -5644,7 +5994,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "p1000": [
@@ -5678,7 +6030,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -5710,7 +6064,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -5735,14 +6091,16 @@
       "is_2in1": true,
       "image_url": "https://image.p1000.co.il/siteimages/products/216717.jpg",
       "screen_size_in": 14.0,
-      "weight_kg": 1.36,
+      "weight_kg": 1.18,
       "battery_wh": 63,
       "ram_gen": "LPDDR4x",
       "ram_source": "chassis_decoder",
       "screen_source": "chassis_decoder",
-      "weight_source": "chassis_decoder",
-      "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "weight_source": "listing_explicit",
+      "battery_source": "listing_explicit",
+      "confidence_level": "warning",
+      "weight_warning": "Seller states 1.18kg (likely clamshell typo; 14\" 2-in-1 chassis floor is ~1.36kg)",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -5774,7 +6132,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -5806,7 +6166,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -5838,7 +6200,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -5870,7 +6234,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -5902,7 +6268,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -5934,7 +6302,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -5966,7 +6336,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -5998,7 +6370,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6030,7 +6404,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6062,7 +6438,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6094,7 +6472,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6126,7 +6506,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6158,7 +6540,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6190,7 +6574,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6222,7 +6608,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6254,7 +6642,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6286,7 +6676,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6318,7 +6710,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6350,7 +6744,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6382,7 +6778,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6414,7 +6812,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6446,7 +6846,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6478,7 +6880,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6510,7 +6914,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6542,7 +6948,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "P1000",
@@ -6574,7 +6982,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "lastprice": [
@@ -6608,7 +7018,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LastPrice",
@@ -6640,7 +7052,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LastPrice",
@@ -6672,7 +7086,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LastPrice",
@@ -6704,7 +7120,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LastPrice",
@@ -6736,7 +7154,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LastPrice",
@@ -6768,7 +7188,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "LastPrice",
@@ -6800,7 +7222,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "volt": [
@@ -6834,7 +7258,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -6866,7 +7292,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -6898,7 +7326,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -6930,7 +7360,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -6962,7 +7394,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -6994,7 +7428,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7026,7 +7462,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7058,7 +7496,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7090,7 +7530,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7122,7 +7564,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7154,7 +7598,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7186,7 +7632,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7218,7 +7666,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7250,7 +7700,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7282,7 +7734,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7314,7 +7768,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7346,7 +7802,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7378,7 +7836,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7410,7 +7870,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7442,7 +7904,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7474,7 +7938,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7506,7 +7972,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7538,7 +8006,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7570,7 +8040,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7602,7 +8074,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7634,7 +8108,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7666,7 +8142,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7698,7 +8176,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7730,7 +8210,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7762,7 +8244,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7794,7 +8278,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7826,7 +8312,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7858,7 +8346,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7890,7 +8380,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7922,7 +8414,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7954,7 +8448,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -7986,7 +8482,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8018,7 +8516,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8050,7 +8550,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8082,7 +8584,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8114,7 +8618,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8146,7 +8652,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8178,7 +8686,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8210,7 +8720,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8242,7 +8754,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8274,7 +8788,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8306,7 +8822,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8338,7 +8856,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8370,7 +8890,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8402,7 +8924,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8434,7 +8958,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8466,7 +8992,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8498,7 +9026,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8530,7 +9060,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8562,7 +9094,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8594,7 +9128,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8626,7 +9162,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8658,7 +9196,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8690,7 +9230,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Volt",
@@ -8722,7 +9264,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ],
   "ofekpc": [
@@ -8756,7 +9300,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -8788,7 +9334,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -8820,7 +9368,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -8852,7 +9402,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -8884,7 +9436,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -8916,7 +9470,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -8948,7 +9504,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -8980,7 +9538,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -9012,7 +9572,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "warning",
+      "weight_warning": "Seller states 1.22kg (likely clamshell typo; 14\" 2-in-1 chassis floor is ~1.36kg)",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -9044,7 +9606,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -9076,7 +9640,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -9108,7 +9674,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     },
     {
       "store": "Ofek PC",
@@ -9140,7 +9708,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": ""
     }
   ]
 }
