@@ -88,3 +88,93 @@ def create_resilient_session(
     logger.info(f"Created standard requests resilient session (proxy={'enabled' if proxy else 'none'})")
     return session
 
+
+def fetch_resilient_url(
+    url: str,
+    post_data: Optional[str] = None,
+    headers: Optional[Dict[str, str]] = None,
+    user_agent: Optional[str] = None,
+    timeout: int = 25,
+) -> tuple[int, str]:
+    """
+    Fetches a URL using HTTP/2 and browser TLS fingerprinting (pycurl / curl_cffi).
+    Bypasses Cloudflare, WAFs, and bot challenges.
+    Returns (status_code, body_string).
+    """
+    # 1. Try pycurl with HTTP/2 (highest TLS compatibility in local Python environments)
+    try:
+        import pycurl
+        import io
+
+        buf = io.BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.HTTP_VERSION, pycurl.CURL_HTTP_VERSION_2_0)
+
+        ua = user_agent or DEFAULT_HEADERS.get('User-Agent', '')
+        c.setopt(c.USERAGENT, ua)
+
+        merged_headers = dict(DEFAULT_HEADERS)
+        if headers:
+            merged_headers.update(headers)
+        if user_agent:
+            merged_headers['User-Agent'] = user_agent
+
+        header_list = [f"{k}: {v}" for k, v in merged_headers.items()]
+        c.setopt(c.HTTPHEADER, header_list)
+
+        if post_data is not None:
+            c.setopt(c.POSTFIELDS, post_data)
+
+        proxy = get_proxy_config()
+        if proxy:
+            c.setopt(c.PROXY, proxy)
+
+        c.setopt(c.WRITEDATA, buf)
+        c.setopt(c.FOLLOWLOCATION, True)
+        c.setopt(c.SSL_VERIFYPEER, 0)
+        c.setopt(c.SSL_VERIFYHOST, 0)
+        c.setopt(c.TIMEOUT, timeout)
+
+        c.perform()
+        code = c.getinfo(pycurl.RESPONSE_CODE)
+        c.close()
+        return code, buf.getvalue().decode("utf-8", errors="ignore")
+    except ImportError:
+        pass
+    except Exception as e:
+        logger.warning(f"pycurl fetch failed for {url}: {e}, falling back...")
+
+    # 2. Try curl_cffi if installed
+    try:
+        from curl_cffi import requests as cffi_requests
+        session = create_resilient_session(impersonate="chrome124")
+        req_headers = dict(headers or {})
+        if user_agent:
+            req_headers['User-Agent'] = user_agent
+        if post_data is not None:
+            resp = session.post(url, data=post_data, headers=req_headers, timeout=timeout)
+        else:
+            resp = session.get(url, headers=req_headers, timeout=timeout)
+        return resp.status_code, resp.text
+    except ImportError:
+        pass
+    except Exception as e:
+        logger.warning(f"curl_cffi fetch failed for {url}: {e}, falling back...")
+
+    # 3. Fallback to requests
+    try:
+        session = create_resilient_session()
+        req_headers = dict(headers or {})
+        if user_agent:
+            req_headers['User-Agent'] = user_agent
+        if post_data is not None:
+            resp = session.post(url, data=post_data, headers=req_headers, timeout=timeout)
+        else:
+            resp = session.get(url, headers=req_headers, timeout=timeout)
+        return resp.status_code, resp.text
+    except Exception as e:
+        logger.error(f"Failed to fetch {url}: {e}")
+        return 0, ""
+
+

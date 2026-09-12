@@ -33,6 +33,7 @@ import time
 import logging
 import argparse
 import datetime
+import html
 import urllib.parse
 from dataclasses import dataclass, asdict
 from typing import List, Dict, Optional, Tuple, Any, Union
@@ -79,7 +80,7 @@ def get_groq_api_key() -> str:
 
 # --- HTTP Client Configuration ---
 try:
-    from http_session import create_resilient_session, DEFAULT_HEADERS
+    from http_session import create_resilient_session, fetch_resilient_url, DEFAULT_HEADERS
 except ImportError:
     DEFAULT_HEADERS = {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
@@ -280,9 +281,17 @@ class HardwareClassifier:
     _GEN4_RE = re.compile(r'(?:4th|דור\s*4|4\s*gen|g-4|e7440|4[0-9]{3}[uh]|4200u|4300u)', re.IGNORECASE)
 
     _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
-    _EXPLICIT_RAM_RE = re.compile(r'(?:(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)?\s*(?:ram|זכרון|זיכרון|memory)|(?:ram|זכרון|זיכרון|memory)\s*(?:של\s*)?(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)?)', re.IGNORECASE)
+    _EXPLICIT_RAM_RE = re.compile(
+        r'(?:(?:ram|זכרון|זיכרון|memory)\s*(?:של\s*)?(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)?'
+        r'|(?<!דור\s)(?<!דור)(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)\s*(?:ram|זכרון|זיכרון|memory)'
+        r'|(?<!דור\s)(?<!דור)(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:ram|memory))',
+        re.IGNORECASE
+    )
     _GPU_VRAM_RE = re.compile(r'(?:gtx|rtx|quadro|geforce|radeon|iris|t500|t600|t1000|t1200|t2000)\s*(?:[0-9]{3,4})?\s*(?:\d+\s*(?:gb|g))?|(?:\d+\s*(?:gb|g|גיגה)?\s*(?:graphics|vram|כרטיס מסך|כרטיס גרפי|גרפיקה))', re.IGNORECASE)
-    _STORAGE_GB_RE = re.compile(r'(?:^|[^\w])(128|240|250|256|480|500|512)\s*(?:gb|g|גיגה)?(?:\s*ssd|\s*nvme|\s*אחסון)?(?:[^\w]|$)')
+    _STORAGE_GB_RE = re.compile(
+        r'(?:^|[^\w])(128|240|250|256|480|500|512)\s*(?:gb|g|גיגה)?(?:\s*(?:ssd|nvme|m\.?2|אחסון|דיסק))?(?=[^\w]|m\.?2|ssd|nvme|$)',
+        re.IGNORECASE
+    )
     _RAM_GEN_EXPLICIT_RE = re.compile(r'\b(lpddr5x|lpddr5|ddr5|lpddr4x|lpddr4|ddr4|ddr3l|ddr3)\b', re.IGNORECASE)
 
     # Constant tuples for brand and architecture detection to avoid list allocation at runtime
@@ -360,7 +369,7 @@ class HardwareClassifier:
     @classmethod
     def is_touch(cls, text: str) -> bool:
         t = text.lower()
-        return any(k in t for k in ['touch', 'טאץ', 'טאצ', 'x360', 'yoga', '2-in-1', '2 in 1', '2in1', 'surface', 'flip'])
+        return any(k in t for k in ['touch', 'טאץ', 'טאצ', 'מסך מגע', 'מגע', 'x360', 'yoga', '2-in-1', '2 in 1', '2in1', 'surface', 'flip'])
 
     @classmethod
     def is_2in1(cls, text: str) -> bool:
@@ -414,14 +423,14 @@ class HardwareClassifier:
 
     @classmethod
     def detect_ram_gb(cls, title: str) -> int:
-        # 1. First priority: explicit RAM keyword
-        for m in cls._EXPLICIT_RAM_RE.finditer(title):
-            val = m.group(1) or m.group(2)
+        # 1. Mask out GPU VRAM and graphics memory strings so they don't corrupt system RAM
+        cleaned = cls._GPU_VRAM_RE.sub(" ", title)
+
+        # 2. First priority: explicit RAM keyword in cleaned title
+        for m in cls._EXPLICIT_RAM_RE.finditer(cleaned):
+            val = m.group(1) or m.group(2) or m.group(3)
             if val:
                 return int(val)
-
-        # 2. Mask out GPU VRAM and graphics memory strings so they don't corrupt system RAM
-        cleaned = cls._GPU_VRAM_RE.sub(" ", title)
 
         # 3. Search for RAM in cleaned title
         m = cls._RAM_GB_RE.search(cleaned)
@@ -1138,6 +1147,411 @@ class RecompScraper:
         return items
 
 
+# --- Store 5: Olam HaKolnoa (CWC) Scraper ---
+class CWCScraper:
+    STORE_NAME = "Olam HaKolnoa"
+    API_URL = "https://www.cwc.co.il/wp-json/wc/store/v1/products?category=817&per_page=100"
+    MOBILE_UA = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1"
+
+    def __init__(self, session: Any = None):
+        self.session = session
+
+    def scrape(self) -> List[LaptopItem]:
+        logger.info("Scraping Olam HaKolnoa (CWC)...")
+        items: List[LaptopItem] = []
+        try:
+            status, text = fetch_resilient_url(
+                self.API_URL,
+                user_agent=self.MOBILE_UA,
+                headers={"Accept": "application/json"}
+            )
+            if status != 200 or not text:
+                logger.warning(f"CWC API returned HTTP {status}")
+                return items
+
+            data = json.loads(text)
+            if not isinstance(data, list):
+                return items
+
+            for p in data:
+                name = html.unescape(p.get("name", "")).strip()
+                if not name:
+                    continue
+
+                name_lower = name.lower()
+                is_desktop = any(x in name_lower for x in ["נייח", "tiny", "mini", "micro", "desktop", "optiplex", "desk", "prodesk", "elitedesk", "tower", "sff", "all in one", "aio"])
+                is_laptop = "נייד" in name_lower or "laptop" in name_lower or "thinkpad" in name_lower or "latitude" in name_lower or "elitebook" in name_lower
+                if not is_laptop or is_desktop:
+                    continue
+
+                prices = p.get("prices", {})
+                raw_price = prices.get("price") or prices.get("regular_price")
+                price_val = 0
+                if raw_price:
+                    try:
+                        minor = prices.get("currency_minor_unit", 2)
+                        price_val = int(round(float(raw_price) / (10 ** minor))) if str(raw_price).isdigit() else int(round(float(raw_price)))
+                    except Exception:
+                        pass
+                if price_val <= 0:
+                    continue
+
+                url = p.get("permalink", "")
+                images = p.get("images", [])
+                img_url = images[0].get("src", "") if images else ""
+
+                desc = p.get("short_description", "") + " " + p.get("description", "")
+                warranty = 36 if ("3 שנות אחריות" in desc or "3 שנים" in desc or "שלוש שנים" in desc) else 12
+
+                items.append(HardwareClassifier.build_laptop(
+                    store=self.STORE_NAME,
+                    title=name,
+                    price_ils=price_val,
+                    url=url,
+                    warranty_months=warranty,
+                    stock_status="🟢 In Stock",
+                    image_url=img_url
+                ))
+        except Exception as e:
+            logger.error(f"Error scraping CWC: {e}")
+        return items
+
+
+# --- Store 6: Machsanei Hashmal (Payngo) Scraper ---
+class PayngoScraper:
+    STORE_NAME = "Payngo"
+    CATALOG_URL = "https://www.payngo.co.il/computers-pcs/computing-gaming/direct-imports-tech.html"
+
+    def __init__(self, session: Any = None):
+        self.session = session
+
+    def scrape(self) -> List[LaptopItem]:
+        logger.info("Scraping Machsanei Hashmal (Payngo)...")
+        items: List[LaptopItem] = []
+        try:
+            status, text = fetch_resilient_url(self.CATALOG_URL)
+            if status != 200 or not text:
+                logger.warning(f"Payngo returned HTTP {status}")
+                return items
+
+            cards = re.findall(r'<form\s+method="post"[^>]*action="[^"]*product/(\d+)/"[^>]*>([\s\S]*?)</form>', text)
+            for pid, card_body in cards:
+                title_m = re.search(r'<a\s+class="product-item-link"\s+href="([^"]+)"[^>]*>([\s\S]*?)</a>', card_body)
+                if not title_m:
+                    continue
+
+                url = title_m.group(1).strip()
+                title = html.unescape(re.sub(r'\s+', ' ', title_m.group(2)).strip())
+
+                t_lower = title.lower()
+                is_desktop = any(x in t_lower for x in ["נייח", "tiny", "mini", "micro", "desktop", "optiplex", "desk", "prodesk", "elitedesk"])
+                is_laptop = "נייד" in t_lower or "laptop" in t_lower or "thinkpad" in t_lower or "latitude" in t_lower or "elitebook" in t_lower
+                if not is_laptop or is_desktop:
+                    continue
+
+                price_m = re.search(r'data-price-amount="([0-9.]+)"', card_body)
+                if not price_m:
+                    price_m = re.search(r'<span\s+class="price">\s*‏?([0-9,]+)', card_body)
+                price = int(round(float(price_m.group(1).replace(',', '')))) if price_m else 0
+                if price <= 0:
+                    continue
+
+                img_m = re.search(r'<img[^>]*class="[^"]*product-image-photo[^"]*"[^>]*src="([^"]+)"', card_body)
+                img = img_m.group(1) if img_m else ""
+
+                warranty = 24 if ('שנתיים אחריות' in card_body or 'שנתיים' in title) else 12
+
+                items.append(HardwareClassifier.build_laptop(
+                    store=self.STORE_NAME,
+                    title=title,
+                    price_ils=price,
+                    url=url,
+                    warranty_months=warranty,
+                    stock_status="🟢 In Stock",
+                    image_url=img
+                ))
+        except Exception as e:
+            logger.error(f"Error scraping Payngo: {e}")
+        return items
+
+
+# --- Store 7: A.L.M (ALM) Scraper ---
+class ALMScraper:
+    STORE_NAME = "ALM"
+    GRAPHQL_URL = "https://www.alm.co.il/graphql"
+    QUERY = """
+query getCategoryProducts($urlKey: String!) {
+  categoryList(filters: {url_key: {eq: $urlKey}}) {
+    products(pageSize: 50) {
+      items {
+        name
+        sku
+        url_key
+        price_range {
+          minimum_price {
+            final_price {
+              value
+            }
+          }
+        }
+        small_image {
+          url
+        }
+        description {
+          html
+        }
+      }
+    }
+  }
+}
+"""
+
+    def __init__(self, session: Any = None):
+        self.session = session
+
+    def scrape(self) -> List[LaptopItem]:
+        logger.info("Scraping A.L.M (ALM)...")
+        items: List[LaptopItem] = []
+        try:
+            payload = json.dumps({"query": self.QUERY, "variables": {"urlKey": "compoutlet"}})
+            status, text = fetch_resilient_url(
+                self.GRAPHQL_URL,
+                post_data=payload,
+                headers={"Content-Type": "application/json", "Accept": "application/json"}
+            )
+            if status != 200 or not text:
+                logger.warning(f"ALM GraphQL returned HTTP {status}")
+                return items
+
+            data = json.loads(text)
+            cat_list = data.get("data", {}).get("categoryList", [])
+            if not cat_list:
+                return items
+
+            prods = cat_list[0].get("products", {}).get("items", [])
+            for p in prods:
+                name = html.unescape(p.get("name", "")).strip()
+                name_lower = name.lower()
+                is_desktop = any(x in name_lower for x in ["נייח", "tiny", "mini", "micro", "desktop", "optiplex", "desk", "prodesk", "elitedesk", "tower"])
+                is_laptop = "נייד" in name_lower or "laptop" in name_lower or "thinkpad" in name_lower or "latitude" in name_lower or "elitebook" in name_lower
+                if not is_laptop or is_desktop:
+                    continue
+
+                price_obj = p.get("price_range", {}).get("minimum_price", {}).get("final_price", {})
+                price = int(round(float(price_obj.get("value", 0))))
+                if price <= 0:
+                    continue
+
+                ukey = p.get("url_key", "")
+                url = f"https://www.alm.co.il/{ukey}.html" if ukey else "https://www.alm.co.il"
+                img = p.get("small_image", {}).get("url", "")
+                desc_html = p.get("description", {}).get("html", "")
+                clean_desc = re.sub(r'<[^>]+>', ' ', desc_html)
+                analysis = f"{name} {clean_desc}"
+
+                items.append(HardwareClassifier.build_laptop(
+                    store=self.STORE_NAME,
+                    title=name,
+                    price_ils=price,
+                    url=url,
+                    analysis_text=analysis,
+                    warranty_months=12,
+                    stock_status="🟢 In Stock",
+                    image_url=img
+                ))
+        except Exception as e:
+            logger.error(f"Error scraping ALM: {e}")
+        return items
+
+
+# --- Store 8: Shufersal Online Scraper ---
+class ShufersalScraper:
+    STORE_NAME = "Shufersal"
+    CATALOG_URL = "https://www.shufersal.co.il/online/he/%D7%A7%D7%98%D7%92%D7%95%D7%A8%D7%99%D7%95%D7%AA/%D7%94%D7%A7%D7%A0%D7%99%D7%95%D7%9F-%D7%94%D7%9B%D7%9C-%D7%9C%D7%91%D7%99%D7%AA/%D7%90%D7%9C%D7%A7%D7%98%D7%A8%D7%95%D7%A0%D7%99%D7%A7%D7%94-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%95%D7%92%D7%99%D7%99%D7%9E%D7%99%D7%A0%D7%92/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%95%D7%A0%D7%99%D7%99%D7%97%D7%99%D7%9D/c/G030401"
+
+    def __init__(self, session: Any = None):
+        self.session = session
+
+    def scrape(self) -> List[LaptopItem]:
+        logger.info("Scraping Shufersal Online...")
+        items: List[LaptopItem] = []
+        try:
+            status, text = fetch_resilient_url(self.CATALOG_URL)
+            if status != 200 or not text:
+                logger.warning(f"Shufersal returned HTTP {status}")
+                return items
+
+            tiles = re.findall(r'<li[^>]*class="[^"]*miglog-prod[^"]*"[^>]*>([\s\S]*?)</li>', text)
+            for tile in tiles:
+                link_m = re.search(r'<div\s+class="text description"[^>]*>\s*<a\s+href="([^"]+)"[^>]*>([\s\S]*?)</a>', tile)
+                if not link_m:
+                    continue
+
+                rel_url = link_m.group(1).strip()
+                full_url = f"https://www.shufersal.co.il{rel_url}" if rel_url.startswith('/') else rel_url
+                raw_title = re.sub(r'<[^>]+>', ' ', link_m.group(2))
+                title = html.unescape(re.sub(r'\s+', ' ', raw_title)).strip()
+
+                t_low = title.lower()
+                if any(k in t_low for k in ["שולחן", "מארז", "עכבר", "מקלדת", "אוזניות", "נייח", "all in one"]):
+                    continue
+                if not any(k in t_low for k in ["נייד", "laptop", "macbook", "thinkpad", "latitude"]):
+                    continue
+
+                price_m = re.search(r'<span\s+class="number">\s*([\d,]+)', tile)
+                price = int(price_m.group(1).replace(',', '')) if price_m else 0
+                if price < 400:
+                    continue
+
+                img_m = re.search(r'<img\s+src="([^"]+)"[^>]*class="pic"', tile)
+                img = img_m.group(1) if img_m else ""
+
+                small_m = re.search(r'<div\s+class="smallText">([\s\S]*?)</div>', tile)
+                extra_text = re.sub(r'<[^>]+>', ' ', small_m.group(1)).strip() if small_m else ""
+                analysis = f"{title} {extra_text}"
+
+                items.append(HardwareClassifier.build_laptop(
+                    store=self.STORE_NAME,
+                    title=title,
+                    price_ils=price,
+                    url=full_url,
+                    analysis_text=analysis,
+                    warranty_months=12,
+                    stock_status="🟢 In Stock",
+                    image_url=img
+                ))
+        except Exception as e:
+            logger.error(f"Error scraping Shufersal: {e}")
+        return items
+
+
+# --- Store 9: P1000 Scraper ---
+class P1000Scraper:
+    STORE_NAME = "P1000"
+    CATALOG_URL = "https://www.p1000.co.il/categories/category.aspx?categoryname=laptopoutlet"
+
+    def __init__(self, session: Any = None):
+        self.session = session
+
+    def scrape(self) -> List[LaptopItem]:
+        logger.info("Scraping P1000...")
+        items: List[LaptopItem] = []
+        try:
+            status, text = fetch_resilient_url(self.CATALOG_URL)
+            if status != 200 or not text:
+                logger.warning(f"P1000 returned HTTP {status}")
+                return items
+
+            cards = re.findall(r'<li[^>]*data-sku=[\"\'](\d+)[\"\'][^>]*data-title=[\"\']([^\"\']+)[\"\'][^>]*>([\s\S]*?)</li>', text)
+            for sku, raw_title, card_body in cards:
+                title = html.unescape(raw_title).strip()
+                t_low = title.lower()
+                if any(k in t_low for k in ["נייח", "mini", "tiny", "desktop"]):
+                    continue
+
+                link_m = re.search(r'href=[\"\']([^\"\']+)[\"\']', card_body)
+                rel_url = link_m.group(1) if link_m else f"/sales/saledetails.aspx?productid={sku}"
+                url = f"https://www.p1000.co.il{rel_url}" if rel_url.startswith('/') else rel_url
+
+                price_m = re.search(r'categoryResults_itemBuy[\"\']>\s*[^0-9]*([0-9,]+)', card_body)
+                if not price_m:
+                    price_m = re.search(r'([0-9,]+)\s*(?:₪|ש\"ח)', card_body)
+                price = int(price_m.group(1).replace(',', '')) if price_m else 0
+                if price <= 0:
+                    continue
+
+                img_m = re.search(r'<img\s+src=[\"\']([^\"\']+)[\"\']', card_body)
+                img = ""
+                if img_m:
+                    img_src = img_m.group(1)
+                    img = f"https://www.p1000.co.il{img_src}" if img_src.startswith('/') else img_src
+
+                spans = re.findall(r'<span>([^<]+)</span>', card_body)
+                specs_summary = ' '.join(spans)
+                analysis = f"{title} {specs_summary}"
+
+                warranty = 24 if any(k in card_body for k in ["שנתיים אחריות", "שנתיים"]) else 12
+
+                items.append(HardwareClassifier.build_laptop(
+                    store=self.STORE_NAME,
+                    title=title,
+                    price_ils=price,
+                    url=url,
+                    analysis_text=analysis,
+                    warranty_months=warranty,
+                    stock_status="🟢 In Stock",
+                    image_url=img
+                ))
+        except Exception as e:
+            logger.error(f"Error scraping P1000: {e}")
+        return items
+
+
+# --- Store 10: LastPrice Laptops Scraper ---
+class LastPriceScraper:
+    STORE_NAME = "LastPrice"
+    CATALOG_URL = "https://www.lastprice.co.il/c/85/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%95%D7%92%D7%99%D7%99%D7%9E%D7%99%D7%A0%D7%92/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%95%D7%A2%D7%95%D7%93%D7%A4%D7%99-%D7%9E%D7%9C%D7%90%D7%99"
+
+    def __init__(self, session: Any = None):
+        self.session = session
+
+    def scrape(self) -> List[LaptopItem]:
+        logger.info("Scraping LastPrice Laptops...")
+        items: List[LaptopItem] = []
+        seen = set()
+        try:
+            status, text = fetch_resilient_url(self.CATALOG_URL)
+            if status != 200 or not text:
+                logger.warning(f"LastPrice returned HTTP {status}")
+                return items
+
+            blocks = re.findall(
+                r'<div[^>]*class=[\"\'][^\"\']*infinite-item[^\"\']*[\"\'][^>]*>(.*?)(?=<div[^>]*class=[\"\'][^\"\']*infinite-item|$)',
+                text,
+                re.DOTALL
+            )
+
+            for b in blocks:
+                title_m = re.findall(r'<h3[^>]*>(.*?)</h3>', b)
+                price_m = re.findall(r'₪([0-9,]+)', b)
+                link_m = re.findall(r'href=[\"\'](https://www.lastprice.co.il/p/[^\"\']+)[\"\']', b)
+                img_m = re.findall(r'<img[^>]*class=[\"\'][^\"\']*prodimg[^\"\']*[\"\'][^>]*src=[\"\']([^\"\']+)[\"\']', b)
+                if not (title_m and price_m and link_m):
+                    continue
+
+                raw_title = html.unescape(title_m[0].strip())
+                full_link = link_m[0].strip()
+                if full_link in seen:
+                    continue
+                seen.add(full_link)
+
+                price = int(price_m[0].replace(',', ''))
+                if price <= 0:
+                    continue
+
+                img_url = ''
+                if img_m:
+                    src = img_m[0].strip()
+                    img_url = src if src.startswith('http') else f"https://www.lastprice.co.il{src}"
+
+                warranty = 12
+                if 'שנתיים' in raw_title or '36 חודשים' in raw_title or '3 שנים' in raw_title:
+                    warranty = 24 if 'שנתיים' in raw_title else 36
+
+                items.append(HardwareClassifier.build_laptop(
+                    store=self.STORE_NAME,
+                    title=raw_title,
+                    price_ils=price,
+                    url=full_link,
+                    image_url=img_url,
+                    warranty_months=warranty,
+                    stock_status="🟢 In Stock"
+                ))
+        except Exception as e:
+            logger.error(f"Error scraping LastPrice Laptops: {e}")
+        return items
+
+
 # --- Master Report Generator ---
 class ReportGenerator:
     """Exports structured datasets and generates comprehensive comparison markdown guides."""
@@ -1168,6 +1582,12 @@ class ReportGenerator:
         eco_items = all_results.get('ecology', [])
         lts_items = all_results.get('lts', [])
         rec_items = all_results.get('recomp', [])
+        cwc_items = all_results.get('cwc', [])
+        payngo_items = all_results.get('payngo', [])
+        alm_items = all_results.get('alm', [])
+        shuf_items = all_results.get('shufersal', [])
+        p1000_items = all_results.get('p1000', [])
+        lp_items = all_results.get('lastprice', [])
 
         # Flatten all items to dynamically compute Top Overall Picks
         all_laptops: List[LaptopItem] = []
@@ -1182,7 +1602,13 @@ class ReportGenerator:
 1. 🏬 **Ecology Computers (אקולוגיה לקהילה מוגנת):** [ecommunity.org.il/מחשבים-ניידים](https://www.ecommunity.org.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D)
 2. 🏬 **IT Outlet (איי טי אאוטלט):** [itoutlet.co.il/מחשבים-ניידים](https://www.itoutlet.co.il/164920-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D?order=up_price)
 3. 🏬 **LaptopTech LTS (לפטופ.טק):** [lts.co.il/מחשבים-ניידים-מחודשים-יד-2](https://lts.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%99%D7%93-2/)
-4. 🏬 **Recomp Computers (ריקומפ):** [recomp.co.il/מחשבים-מחודשים-במבצע](https://recomp.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%99%d7%9d-%d7%9e%d7%97%D7%95%D7%93%D7%a9%d7%99%d7%9d-%d7%91%d7%9e%d7%91%d7%a6%d7%a2/)
+4. 🏬 **Recomp Computers (ריקומפ):** [recomp.co.il/מחשבים-מחודשים-במבצע](https://recomp.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%99%d7%9d-%d7%9e%d7%97%D7%95%D7%93%d7%a9%d7%99%d7%9d-%d7%91%d7%9e%d7%91%d7%a6%d7%a2/)
+5. 🏬 **Olam HaKolnoa (עולם הקולנוע):** [cwc.co.il/מחשבים-מחודשים](https://www.cwc.co.il/product-category/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%95%D7%A6%D7%99%D7%95%D7%93-%D7%A0%D7%9C%D7%95%D7%95%D7%94-1/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D/)
+6. 🏬 **Machsanei Hashmal (מחסני חשמל / Payngo):** [payngo.co.il/direct-imports-tech](https://www.payngo.co.il/computers-pcs/computing-gaming/direct-imports-tech.html)
+7. 🏬 **A.L.M (א.ל.מ):** [alm.co.il/compoutlet](https://www.alm.co.il/smartphones-laptops-techproducts/compoutlet.html)
+8. 🏬 **Shufersal Online (שופרסל):** [shufersal.co.il/G030401](https://www.shufersal.co.il/online/he/%D7%A7%D7%98%D7%92%D7%95%D7%A8%D7%99%D7%95%D7%AA/%D7%94%D7%A7%D7%A0%D7%99%D7%95%D7%9F-%D7%94%D7%9B%D7%9C-%D7%9C%D7%91%D7%99%D7%AA/%D7%90%D7%9C%D7%A7%D7%98%D7%A8%D7%95%D7%A0%D7%99%D7%A7%D7%94-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%95%D7%92%D7%99%D7%99%D7%9E%D7%99%D7%A0%D7%92/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%95%D7%A0%D7%99%D7%99%D7%97%D7%99%D7%9D/c/G030401)
+9. 🏬 **P1000 (פי אלף):** [p1000.co.il/laptopoutlet](https://www.p1000.co.il/categories/category.aspx?categoryname=laptopoutlet)
+10. 🏬 **LastPrice (לאסטפרייס):** [lastprice.co.il/c/85](https://www.lastprice.co.il/c/85/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%95%D7%92%D7%99%D7%99%D7%9E%D7%99%D7%A0%D7%92/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%95%D7%A2%D7%95%D7%93%D7%A4%D7%99-%D7%9E%D7%9C%D7%90%D7%99)
 
 *Last Automated Live Audit: {now_str}*
 
@@ -1198,6 +1624,12 @@ class ReportGenerator:
 - [🏬 Ecology Computers Live Audit](#-2-ecology-computers-אקולוגיה-לקהילה-מוגנת--live-stock-audit)
 - [🏬 LaptopTech LTS Live Audit](#-3-laptoptech-lts-לפטופטק--live-stock-audit)
 - [🏬 Recomp Computers Live Audit](#-4-recomp-computers-ריקומפ--live-stock-audit)
+- [🏬 Olam HaKolnoa Live Audit](#-5-olam-hakolnoa-עולם-הקולנוע--live-stock-audit)
+- [🏬 Machsanei Hashmal Live Audit](#-6-machsanei-hashmal-מחסני-חשמל--payngo--live-stock-audit)
+- [🏬 A.L.M Live Audit](#-7-alm-אלמ--live-stock-audit)
+- [🏬 Shufersal Online Live Audit](#-8-shufersal-online-שופרסל--live-stock-audit)
+- [🏬 P1000 Live Audit](#-9-p1000-פי-אלף--live-stock-audit)
+- [🏬 LastPrice Live Audit](#-10-lastprice-לאסטפרייס--live-stock-audit)
 - [🎯 Buyer Rules of Thumb](#-quick-rules-of-thumb)
 
 ---
@@ -1276,60 +1708,35 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 > **Upgradability Score:** 🟡 **7.5/10**
 
 ![Lenovo ThinkPad P14s Deal Offer](./assets/thinkpad_p14s_offer.png)
+""")
 
+        def _append_store_section(store_num: int, store_title: str, items_list: List[LaptopItem], extra_note: str = ""):
+            md_parts.append(f"""
 ---
 
-## 🏬 1. IT Outlet (איי טי אאוטלט) — Live Catalog & Stock Audit
-
+## 🏬 {store_num}. {store_title} — Live Stock Audit
+""")
+            if extra_note:
+                md_parts.append(f"\n*({extra_note})*\n")
+            md_parts.append("""
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
 | :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
 """)
-        for i, itm in enumerate(it_items, 1):
-            score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
+            for i, itm in enumerate(items_list, 1):
+                score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
+                ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
+                md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
-        md_parts.append(f"""
----
-
-## 🏬 2. Ecology Computers (אקולוגיה לקהילה מוגנת) — Live Stock Audit
-
-*(All laptops include a full **24-Month (2-Year) Warranty**).*
-
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
-""")
-        for i, itm in enumerate(eco_items, 1):
-            score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            deal_price_str = f"{itm.price_ils:,} ₪ (24M Warranty)"
-            ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{deal_price_str}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
-
-        md_parts.append(f"""
----
-
-## 🏬 3. LaptopTech LTS (לפטופ.טק) — Live Stock Audit
-
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
-""")
-        for i, itm in enumerate(lts_items, 1):
-            score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
-
-        md_parts.append(f"""
----
-
-## 🏬 4. Recomp Computers (ריקומפ) — Live Stock Audit
-
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
-""")
-        for i, itm in enumerate(rec_items, 1):
-            score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
+        _append_store_section(1, "IT Outlet (איי טי אאוטלט)", it_items)
+        _append_store_section(2, "Ecology Computers (אקולוגיה לקהילה מוגנת)", eco_items, "All laptops include a full 24-Month / 2-Year Warranty")
+        _append_store_section(3, "LaptopTech LTS (לפטופ.טק)", lts_items)
+        _append_store_section(4, "Recomp Computers (ריקומפ)", rec_items)
+        _append_store_section(5, "Olam HaKolnoa (עולם הקולנוע)", cwc_items, "Most laptops include a full 36-Month / 3-Year Hardware Warranty")
+        _append_store_section(6, "Machsanei Hashmal (מחסני חשמל / Payngo)", payngo_items)
+        _append_store_section(7, "A.L.M (א.ל.מ)", alm_items)
+        _append_store_section(8, "Shufersal Online (שופרסל)", shuf_items)
+        _append_store_section(9, "P1000 (פי אלף)", p1000_items)
+        _append_store_section(10, "LastPrice (לאסטפרייס)", lp_items)
 
         md_parts.append("""
 ---
@@ -1359,10 +1766,16 @@ class MasterLaptopAuditor:
             'itoutlet': ITOutletScraper,
             'ecology': EcologyScraper,
             'lts': LTSScraper,
-            'recomp': RecompScraper
+            'recomp': RecompScraper,
+            'cwc': CWCScraper,
+            'payngo': PayngoScraper,
+            'alm': ALMScraper,
+            'shufersal': ShufersalScraper,
+            'p1000': P1000Scraper,
+            'lastprice': LastPriceScraper
         }
 
-    def run(self, store_filter: Optional[str] = None, max_workers: int = 4, use_ai: bool = False) -> Dict[str, List[LaptopItem]]:
+    def run(self, store_filter: Optional[str] = None, max_workers: int = 6, use_ai: bool = False) -> Dict[str, List[LaptopItem]]:
         results: Dict[str, List[LaptopItem]] = {}
         target_scrapers = {}
 
@@ -1399,7 +1812,12 @@ def main():
     parser = argparse.ArgumentParser(
         description="Master Multi-Store Refurbished Laptop Scraper & Hardware Auditor (Production Grade)"
     )
-    parser.add_argument("--store", choices=['itoutlet', 'ecology', 'lts', 'recomp', 'all'], default='all', help="Specific store to scrape")
+    parser.add_argument(
+        "--store",
+        choices=['itoutlet', 'ecology', 'lts', 'recomp', 'cwc', 'payngo', 'alm', 'shufersal', 'p1000', 'lastprice', 'all'],
+        default='all',
+        help="Specific store to scrape"
+    )
     parser.add_argument("--min-ram", type=int, default=0, help="Filter laptops with at least N GB RAM")
     parser.add_argument("--max-price", type=int, default=99999, help="Filter laptops with price <= N ILS")
     parser.add_argument("--min-score", type=float, default=0.0, help="Filter laptops with upgradability score >= N")

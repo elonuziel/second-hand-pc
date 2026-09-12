@@ -291,14 +291,19 @@ function getBrandBadge(brand) {
 
 function getStoreClass(store) {
   const s = (store || '').toLowerCase();
-  if (s.includes('outlet')) return 'store-itoutlet';
+  if (s.includes('dynamica')) return 'store-dynamica';
+  if (s.includes('it outlet') || (s.includes('outlet') && !s.includes('dynamica') && !s.includes('p1000'))) return 'store-itoutlet';
   if (s.includes('ecology') || s.includes('אקולוגיה')) return 'store-ecology';
   if (s.includes('lts') || s.includes('laptoptech') || s.includes('לפטופטק')) return 'store-lts';
   if (s.includes('recomp') || s.includes('ריקומפ')) return 'store-recomp';
+  if (s.includes('kolnoa') || s.includes('cwc') || s.includes('קולנוע')) return 'store-cwc';
+  if (s.includes('payngo') || s.includes('hashmal') || s.includes('מחסני חשמל')) return 'store-payngo';
+  if (s.includes('alm') || s.includes('א.ל.מ') || s.includes('אלמ')) return 'store-alm';
+  if (s.includes('shufersal') || s.includes('שופרסל')) return 'store-shufersal';
+  if (s.includes('p1000') || s.includes('פי אלף')) return 'store-p1000';
   if (s.includes('lastprice') || s.includes('לאסטפרייס')) return 'store-lastprice';
   if (s.includes('gomobile')) return 'store-gomobile';
   if (s.includes('partner')) return 'store-partner';
-  if (s.includes('dynamica')) return 'store-dynamica';
   if (s.includes('vmobile')) return 'store-vmobile';
   return 'store-default';
 }
@@ -1208,5 +1213,5 @@ async function init() {
 init();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen, getCpuGenRank };
+  module.exports = { escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen, getCpuGenRank, getStoreClass };
 }

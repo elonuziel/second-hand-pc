@@ -12,8 +12,17 @@ import json
 import os
 import subprocess
 import unittest
+from unittest.mock import patch
 from enrich_specs import SpecEnricher
-from scraper import HardwareClassifier
+from scraper import (
+    HardwareClassifier,
+    CWCScraper,
+    PayngoScraper,
+    ALMScraper,
+    ShufersalScraper,
+    P1000Scraper,
+    LastPriceScraper,
+)
 
 
 class TestCatalogDataHealth(unittest.TestCase):
@@ -41,10 +50,10 @@ class TestCatalogDataHealth(unittest.TestCase):
         self.assertTrue(os.path.exists(self.catalog_path), "scraped_laptops.json does not exist!")
         self.assertGreater(len(self.items), 40, f"Expected > 40 laptops, found only {len(self.items)}")
 
-    def test_all_four_stores_represented(self):
-        """Ensure scrapers for all 4 stores (Ecology, IT Outlet, LTS, Recomp) are working."""
+    def test_all_ten_stores_represented(self):
+        """Ensure scrapers for all 10 laptop stores are working."""
         stores_found = set(item.get("store", "") for item in self.items)
-        expected_stores = ["Ecology", "IT Outlet", "LTS", "Recomp"]
+        expected_stores = ["Ecology", "IT Outlet", "LTS", "Recomp", "Olam HaKolnoa", "Payngo", "ALM", "Shufersal", "P1000", "LastPrice"]
         
         for expected in expected_stores:
             matching = [s for s in stores_found if expected.lower().replace(" ", "") in s.lower().replace(" ", "")]
@@ -284,6 +293,193 @@ class TestHardwareParsers(unittest.TestCase):
         )
         self.assertEqual(unknown.screen_source, "fallback_estimate")
         self.assertEqual(unknown.confidence_level, "estimated")
+
+
+class TestNewLaptopScrapers(unittest.TestCase):
+    """Unit tests for the 6 newly integrated laptop scrapers using mock payloads."""
+
+    @patch("scraper.fetch_resilient_url")
+    def test_cwc_scraper_parsing(self, mock_fetch):
+        mock_fetch.return_value = (200, json.dumps([
+            {
+                "name": "מחשב נייד מחודש Dell Latitude 5420 i7 16GB 512GB",
+                "prices": {"price": "219000", "currency_minor_unit": 2},
+                "permalink": "https://www.cwc.co.il/product/dell-5420",
+                "images": [{"src": "https://www.cwc.co.il/img/dell5420.jpg"}],
+                "description": "מחשב נייד עסקי כולל 3 שנות אחריות VIP",
+                "short_description": "מחשב מעולה"
+            },
+            {
+                "name": "מחשב נייח מחודש Lenovo Tiny M720q",
+                "prices": {"price": "120000", "currency_minor_unit": 2},
+                "permalink": "https://www.cwc.co.il/product/lenovo-tiny",
+                "images": [],
+                "description": "מיני מחשב נייח",
+                "short_description": ""
+            }
+        ]))
+        scraper = CWCScraper()
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "Olam HaKolnoa")
+        self.assertEqual(items[0].brand, "Dell")
+        self.assertEqual(items[0].price_ils, 2190)
+        self.assertEqual(items[0].warranty_months, 36)
+        self.assertEqual(items[0].ram_gb, 16)
+        self.assertEqual(items[0].storage_gb, 512)
+
+    @patch("scraper.fetch_resilient_url")
+    def test_payngo_scraper_parsing(self, mock_fetch):
+        mock_html = '''
+        <form method="post" action="https://www.payngo.co.il/checkout/cart/add/product/12345/">
+            <a class="product-item-link" href="https://www.payngo.co.il/lenovo-thinkpad-t14.html">
+                מחשב נייד מחודש Lenovo ThinkPad T14 Gen 2 i5 16GB 512GB
+            </a>
+            <span class="price-wrapper" data-price-amount="1990">1,990 ₪</span>
+            <img class="product-image-photo" src="https://www.payngo.co.il/media/t14.jpg" />
+            <div>שנתיים אחריות יבואן</div>
+        </form>
+        <form method="post" action="https://www.payngo.co.il/checkout/cart/add/product/67890/">
+            <a class="product-item-link" href="https://www.payngo.co.il/dell-optiplex.html">
+                מחשב נייח מחודש Dell OptiPlex Micro
+            </a>
+            <span class="price-wrapper" data-price-amount="1490">1,490 ₪</span>
+        </form>
+        '''
+        mock_fetch.return_value = (200, mock_html)
+        scraper = PayngoScraper()
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "Payngo")
+        self.assertEqual(items[0].brand, "Lenovo")
+        self.assertEqual(items[0].price_ils, 1990)
+        self.assertEqual(items[0].warranty_months, 24)
+
+    @patch("scraper.fetch_resilient_url")
+    def test_alm_scraper_parsing(self, mock_fetch):
+        mock_json = {
+            "data": {
+                "categoryList": [
+                    {
+                        "products": {
+                            "items": [
+                                {
+                                    "name": "מחשב נייד HP EliteBook 840 G8 i5 16GB 256GB SSD מחודש",
+                                    "sku": "HP840G8",
+                                    "url_key": "hp-elitebook-840-g8",
+                                    "price_range": {
+                                        "minimum_price": {
+                                            "final_price": {"value": 1790.0}
+                                        }
+                                    },
+                                    "small_image": {"url": "https://www.alm.co.il/media/hp.jpg"},
+                                    "description": {"html": "<p>מחשב נייד יוקרתי לעסקים כולל 12 חודשי אחריות</p>"}
+                                },
+                                {
+                                    "name": "מחשב נייח שולחני HP ProDesk 400 Mini",
+                                    "sku": "HP400MINI",
+                                    "url_key": "hp-prodesk-mini",
+                                    "price_range": {
+                                        "minimum_price": {
+                                            "final_price": {"value": 1190.0}
+                                        }
+                                    },
+                                    "small_image": {},
+                                    "description": {"html": "<p>מחשב מיני</p>"}
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+        mock_fetch.return_value = (200, json.dumps(mock_json))
+        scraper = ALMScraper()
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "ALM")
+        self.assertEqual(items[0].brand, "HP")
+        self.assertEqual(items[0].price_ils, 1790)
+        self.assertEqual(items[0].ram_gb, 16)
+        self.assertEqual(items[0].storage_gb, 256)
+
+    @patch("scraper.fetch_resilient_url")
+    def test_shufersal_scraper_parsing(self, mock_fetch):
+        mock_html = '''
+        <li class="tile miglog-prod">
+            <div class="text description">
+                <a href="/online/he/p/P_12345/">
+                    מחשב נייד מחודש Dell Latitude 7420 i7 16GB 512GB
+                </a>
+            </div>
+            <div class="smallText">מעבד דור 11 כולל מקלדת מוארת</div>
+            <span class="number">2,490</span>
+            <img class="pic" src="https://res.cloudinary.com/shufersal/image/upload/dell7420.jpg" />
+        </li>
+        <li class="tile miglog-prod">
+            <div class="text description">
+                <a href="/online/he/p/P_99999/">
+                    שולחן כתיבה למחשב מעץ
+                </a>
+            </div>
+            <span class="number">399</span>
+        </li>
+        '''
+        mock_fetch.return_value = (200, mock_html)
+        scraper = ShufersalScraper()
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "Shufersal")
+        self.assertEqual(items[0].brand, "Dell")
+        self.assertEqual(items[0].price_ils, 2490)
+        self.assertTrue(items[0].url.startswith("https://www.shufersal.co.il"))
+
+    @patch("scraper.fetch_resilient_url")
+    def test_p1000_scraper_parsing(self, mock_fetch):
+        mock_html = '''
+        <li data-sku="284729" data-title="מחשב נייד מחודש Lenovo ThinkPad X1 Carbon 14 Gen 8 i7 16GB 512GB SSD">
+            <a href="/sales/saledetails.aspx?productid=284729">
+                <div class="categoryResults_itemBuy">מחיר: 2,890 ₪</div>
+                <img src="/images/lenovo_x1.jpg" />
+                <span>16GB RAM</span>
+                <span>512GB SSD</span>
+                <span>שנתיים אחריות</span>
+            </a>
+        </li>
+        <li data-sku="111111" data-title="מחשב נייח מיני Tiny Mini PC">
+            <div class="categoryResults_itemBuy">890 ₪</div>
+        </li>
+        '''
+        mock_fetch.return_value = (200, mock_html)
+        scraper = P1000Scraper()
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "P1000")
+        self.assertEqual(items[0].brand, "Lenovo")
+        self.assertEqual(items[0].price_ils, 2890)
+        self.assertEqual(items[0].warranty_months, 24)
+        self.assertTrue(items[0].url.startswith("https://www.p1000.co.il"))
+
+    @patch("scraper.fetch_resilient_url")
+    def test_lastprice_scraper_parsing(self, mock_fetch):
+        mock_html = '''
+        <div class="col-lg-4 col-md-4 col-sm-6 infinite-item">
+            <a href="https://www.lastprice.co.il/p/1000888/dell-latitude-5430">
+                <img class="prodimg" src="/uploadimages/dell5430.jpg" />
+                <h3>מחשב נייד עסקי Dell Latitude 5430 i5 16GB 512GB SSD כולל שנתיים אחריות מחודש</h3>
+                <div class="lprice">₪2,190</div>
+            </a>
+        </div>
+        '''
+        mock_fetch.return_value = (200, mock_html)
+        scraper = LastPriceScraper()
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "LastPrice")
+        self.assertEqual(items[0].brand, "Dell")
+        self.assertEqual(items[0].price_ils, 2190)
+        self.assertEqual(items[0].warranty_months, 24)
+        self.assertEqual(items[0].image_url, "https://www.lastprice.co.il/uploadimages/dell5430.jpg")
 
 
 class TestFrontendCompatibility(unittest.TestCase):
