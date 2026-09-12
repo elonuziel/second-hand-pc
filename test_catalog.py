@@ -23,6 +23,7 @@ from scraper import (
     P1000Scraper,
     LastPriceScraper,
     VoltScraper,
+    OfekPCScraper,
 )
 
 
@@ -52,9 +53,9 @@ class TestCatalogDataHealth(unittest.TestCase):
         self.assertGreater(len(self.items), 40, f"Expected > 40 laptops, found only {len(self.items)}")
 
     def test_all_ten_stores_represented(self):
-        """Ensure scrapers for all 11 laptop stores are working."""
+        """Ensure scrapers for all 12 laptop stores are working."""
         stores_found = set(item.get("store", "") for item in self.items)
-        expected_stores = ["Ecology", "IT Outlet", "LTS", "Recomp", "Olam HaKolnoa", "Payngo", "ALM", "Shufersal", "P1000", "LastPrice", "Volt"]
+        expected_stores = ["Ecology", "IT Outlet", "LTS", "Recomp", "Olam HaKolnoa", "Payngo", "ALM", "Shufersal", "P1000", "LastPrice", "Volt", "Ofek PC"]
         
         for expected in expected_stores:
             matching = [s for s in stores_found if expected.lower().replace(" ", "") in s.lower().replace(" ", "")]
@@ -531,6 +532,49 @@ class TestNewLaptopScrapers(unittest.TestCase):
         self.assertEqual(items[0].warranty_months, 12)
         self.assertEqual(items[0].url, "https://www.volt.co.il/items/2962959-thinkpad-t480s")
         self.assertEqual(items[0].image_url, "https://d3m9l0v76dty0.cloudfront.net/system/photos/5042885/show/t480s.jpg")
+
+    @patch("scraper.fetch_resilient_url")
+    def test_ofekpc_scraper_parsing(self, mock_fetch):
+        mock_html = '''
+        <div class="item-box">
+          <div class="product-item">
+            <div class="picture">
+              <a href="/dell-latitude-5420-i5-11th-gen"><img alt="Dell Latitude 5420" src="https://ofekpc.co.il/images/thumbs/default.jpg" data-lazyloadsrc="https://ofekpc.co.il/images/thumbs/dell-latitude-5420.jpg" /></a>
+            </div>
+            <div class="details">
+              <h2 class="product-title">
+                <a href="/dell-latitude-5420-i5-11th-gen">מחשב נייד מחודש Dell Latitude 5420 מעבד i5-1135G7 זיכרון 16GB דיסק 512GB SSD</a>
+              </h2>
+              <div class="description">מחשב נייד לעסקים במצב מצוין, אחריות שנתיים</div>
+              <div class="add-info">
+                <div class="prices">
+                  <span class="price actual-price">&#x20AA;1,790</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="item-box">
+          <div class="product-item">
+            <h2 class="product-title">
+              <a href="/dell-optiplex-mini-pc">מחשב שולחני נייח Dell OptiPlex Tiny Core i5</a>
+            </h2>
+            <span class="price actual-price">&#x20AA;1,200</span>
+          </div>
+        </div>
+        '''
+        mock_fetch.return_value = (200, mock_html)
+        scraper = OfekPCScraper()
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "Ofek PC")
+        self.assertEqual(items[0].brand, "Dell")
+        self.assertEqual(items[0].price_ils, 1790)
+        self.assertEqual(items[0].ram_gb, 16)
+        self.assertEqual(items[0].storage_gb, 512)
+        self.assertEqual(items[0].warranty_months, 24)
+        self.assertEqual(items[0].url, "https://ofekpc.co.il/dell-latitude-5420-i5-11th-gen")
+        self.assertEqual(items[0].image_url, "https://ofekpc.co.il/images/thumbs/dell-latitude-5420.jpg")
 
 
 class TestFrontendCompatibility(unittest.TestCase):

@@ -11,8 +11,9 @@
 9. 🏬 **P1000 (פי אלף):** [p1000.co.il/laptopoutlet](https://www.p1000.co.il/categories/category.aspx?categoryname=laptopoutlet)
 10. 🏬 **LastPrice (לאסטפרייס):** [lastprice.co.il/c/85](https://www.lastprice.co.il/c/85/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%95%D7%92%D7%99%D7%99%D7%9E%D7%99%D7%A0%D7%92/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%95%D7%A2%D7%95%D7%93%D7%A4%D7%99-%D7%9E%D7%9C%D7%90%D7%99)
 11. 🏬 **VOLT (וולט מחשוב ירוק):** [volt.co.il/23409-ניידים-מחודשים](https://www.volt.co.il/23409-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
+12. 🏬 **Ofek PC (אופק פי סי):** [ofekpc.co.il/מחשבים-ניידים-מחודשים](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
 
-*Last Automated Live Audit: September 12, 2026 (20:06)*
+*Last Automated Live Audit: September 12, 2026 (20:10)*
 
 ---
 
@@ -33,6 +34,7 @@
 - [🏬 P1000 Live Audit](#-9-p1000-פי-אלף--live-stock-audit)
 - [🏬 LastPrice Live Audit](#-10-lastprice-לאסטפרייס--live-stock-audit)
 - [🏬 VOLT Live Audit](#-11-volt-וולט-מחשוב-ירוק--live-stock-audit)
+- [🏬 Ofek PC Live Audit](#-12-ofek-pc-אופק-פי-סי--live-stock-audit)
 - [🎯 Buyer Rules of Thumb](#-quick-rules-of-thumb)
 
 ---
@@ -464,6 +466,26 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 | 58 | **מחשב נייד לנובו ThinkPad X301 SU9400 13.3" כולל מצלמה וביומטרי** | Core i5 | 16GB DDR4 / 512GB | 13.3" | ⚖️ 1.3 kg | 🔋 50 Wh | **1,495 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://www.volt.co.il/items/455673-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9C%D7%A0%D7%95%D7%91%D7%95-ThinkPad-X301-SU9400-13-3-%D7%9B%D7%95%D7%9C%D7%9C-%D7%9E%D7%A6%D7%9C%D7%9E%D7%94-%D7%95%D7%91%D7%99%D7%95%D7%9E%D7%98%D7%A8%D7%99) |
 | 59 | **מחשב נייד סלולארי Lenovo X60 "12.1 C2D L2400 1.83Ghz SXGA Win 7 לנובו** | Core i5 | 16GB DDR4 / 512GB | 14.0" | ⚖️ 1.5 kg | 🔋 50 Wh | **1,550 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://www.volt.co.il/items/455675-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%A1%D7%9C%D7%95%D7%9C%D7%90%D7%A8%D7%99-Lenovo-X60-12-1-C2D-L2400-1-83Ghz-SXGA-Win-7-%D7%9C%D7%A0%D7%95%D7%91%D7%95) |
 | 60 | **מחשב נייד לנובו ThinkPad X220 Intel Core i5 Windows 7 Pro כולל אופיס 2010 מלא** | Core i5 | 16GB DDR4 / 512GB | 14.0" | ⚖️ 1.5 kg | 🔋 50 Wh | **1,295 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://www.volt.co.il/items/916732-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9C%D7%A0%D7%95%D7%91%D7%95-ThinkPad-X220-Intel-Core-i5-Windows-7-Pro-%D7%9B%D7%95%D7%9C%D7%9C-%D7%90%D7%95%D7%A4%D7%99%D7%A1-2010-%D7%9E%D7%9C%D7%90) |
+
+---
+
+## 🏬 12. Ofek PC (אופק פי סי) — Live Stock Audit
+
+| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
+| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
+| 1 | **מחשב נייד מחודש Dell Inspiron n5110 i5-2410M Intel 3000 HD** | Core i5 (8th Gen) | 16GB DDR4 / 256GB | 14.0" | ⚖️ 1.5 kg | 🔋 50 Wh | **750 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://ofekpc.co.il/%D7%94%D7%93%D7%99%D7%9C-%D7%94%D7%99%D7%95%D7%9E%D7%99-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-dell-inspiron-n5110-i5-2410m-intel-3000-hd) |
+| 2 | **מחשב נייד HP EliteBook 840 G6 Business 14  (מחודש)** | Core i5 (9th Gen) | 8GB DDR4 / 256GB | 14.0" | ⚖️ 1.38 kg | 🔋 50 Wh | **1,200 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-hp-elitebook-840-g6-business-14-%D7%9E%D7%97%D7%95%D7%93%D7%A9) |
+| 3 | **מחשב נייד HP EliteBook 830 G6 Business 13.3  (מחודש)** | Core i5 (9th Gen) | 8GB DDR4 / 256GB | 13.3" | ⚖️ 1.35 kg | 🔋 50 Wh | **1,200 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-hp-elitebook-840-g6-business-14-%D7%9E%D7%97%D7%95%D7%93%D7%A9-%D7%A2%D7%95%D7%AA%D7%A7) |
+| 4 | **מחשב נייד 14" בעל מעבד Intel Core i5-6300U זיכרון 8GB וכונן SSD בנפח 256GB דגם HP 820 G3 -מוחדש** | Core i5 (6th Gen) | 8GB DDR4 / 256GB | 14.0" | ⚖️ 1.5 kg | 🔋 50 Wh | **1,300 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-14-%D7%91%D7%A2%D7%9C-%D7%9E%D7%A2%D7%91%D7%93-intel-core-i5-%D7%96%D7%99%D7%9B%D7%A8%D7%95%D7%9F-8gb-%D7%95%D7%9B%D7%95%D7%A0%D7%9F-ssd-%D7%91%D7%A0%D7%A4%D7%97-256gb-%D7%93%D7%92%D7%9D-hp-820-g3-%D7%9E%D7%95%D7%97%D7%93%D7%A9) |
+| 5 | **מחשב נייד מחודש Lenovo דגם ThinkPad T450s עם מסך 14 אינץ', זיכרון 8GB ומעבד i5-6500U** | Core i5 (6th Gen) | 8GB DDR4 / 128GB | 14.0" | ⚖️ 1.5 kg | 🔋 50 Wh | **1,450 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-lenovo-%D7%93%D7%92%D7%9D-thinkpad-t450s-%D7%A2%D7%9D-%D7%9E%D7%A1%D7%9A-14-%D7%90%D7%99%D7%A0%D7%A5-%D7%96%D7%99%D7%9B%D7%A8%D7%95%D7%9F-8gb-%D7%95%D7%9E%D7%A2%D7%91%D7%93-i5) |
+| 6 | **מחשב נייד Dell Latitude 5420 L5420-5225 דל מחודש** | Core i5 (11th Gen) | 16GB DDR4 / 256GB | 14.0" | ⚖️ 1.55 kg | 🔋 50 Wh | **1,600 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://ofekpc.co.il/dell-latitude-5420-14-fhdi5-1135g7256ssd8gbintel-iris-xewin10pro-64b3c3yos) |
+| 7 | **מחשב נייד Dell Latitude 5420 L5430-5225 דל מחודש** | Core i5 (12th Gen) | 16GB DDR4 / 512GB | 14.0" | ⚖️ 1.55 kg | 🔋 57 Wh | **2,000 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://ofekpc.co.il/dell-latitude-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-l5420-5225-%D7%A2%D7%95%D7%AA%D7%A7) |
+| 8 | **מחשב נייד מוחדש Dell Latitude 7430 2-in-1 i7 דור 12 16GB 512GB SSD מסך מגע** | Core i7 (12th Gen) | 16GB LPDDR5 / 512GB | 14.0" | ⚖️ 1.35 kg | 🔋 57 Wh | **2,490 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟠 5.0 | [View Product](https://ofekpc.co.il/dell-latitude-7430-2-in-1-i7-12th-gen-16gb-512gb-ssd-touch) |
+| 9 | **מחשב נייד מחודש Dell Latitude 7430 i7 דור 12 16GB 512GB SSD** | Core i7 (12th Gen) | 16GB LPDDR5 / 512GB | 14.0" | ⚖️ 1.35 kg | 🔋 57 Wh | **2,490 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟠 5.0 | [View Product](https://ofekpc.co.il/dell-latitude-7330-2-in-1-i7-12th-gen-16gb-512gb-ssd-touch) |
+| 10 | **מחשב נייד מחודש Dell Precision 3560 i7 דור 11 16GB 512GB SSD NVIDIA** | Core i7 (12th Gen) | 16GB DDR4 / 512GB | 15.6" | ⚖️ 1.95 kg | 🔋 90 Wh | **2,499 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-dell-precision-3560-i7-%D7%93%D7%95%D7%A8-11-16gb-512gb-ssd-nvidia) |
+| 11 | **מחשב נייד מחודש Dell Latitude 5530 i5 דור 12 16GB 256GB SSD כולל מסך טאצ** | Core i5 (12th Gen) | 16GB DDR4 / 256GB | 15.6" | ⚖️ 1.75 kg | 🔋 57 Wh | **2,499 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-dell-latitude-5530-i5-%D7%93%D7%95%D7%A8-12-16gb-256gb-ssd-%D7%9B%D7%95%D7%9C%D7%9C-%D7%9E%D7%A1%D7%9A-%D7%98%D7%90%D7%A6) |
+| 12 | **מחשב נייד Dell Precision 3570 i7 דור 12 16GB 512GB SSD NVIDIA** | Core i7 (12th Gen) | 16GB DDR4 / 512GB | 15.6" | ⚖️ 1.95 kg | 🔋 90 Wh | **2,990 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://ofekpc.co.il/dell-precision-3570-i7-12th-gen-16gb-512gb-ssd-nvidia) |
+| 13 | **מחשב נייד Dell Latitude 7330 i7 דור 12 32GB 512GB SSD מסך מגע מוחדש** | Core i7 (12th Gen) | 32GB LPDDR5 / 512GB | 13.3" | ⚖️ 1.2 kg | 🔋 57 Wh | **2,990 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://ofekpc.co.il/dell-latitude-7330-i7-12th-gen-32gb-512gb-ssd-touch) |
 
 ---
 

@@ -1000,6 +1000,11 @@ h1 {
   color: #0f766e;
 }
 
+.store-ofekpc {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+}
+
 .store-gomobile {
   background: rgba(2, 132, 199, 0.12);
   color: #0284c7;

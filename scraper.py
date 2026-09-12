@@ -1644,6 +1644,90 @@ class VoltScraper:
         return items
 
 
+# --- Store 12: Ofek PC (אופק פי סי) Scraper ---
+class OfekPCScraper:
+    STORE_NAME = "Ofek PC"
+    CATALOG_URL = "https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D"
+
+    def __init__(self, session: Any = None):
+        self.session = session
+
+    def scrape(self) -> List[LaptopItem]:
+        logger.info("Scraping Ofek PC (אופק פי סי)...")
+        items: List[LaptopItem] = []
+        page = 1
+        seen_urls = set()
+        try:
+            while page <= 10:
+                url = f"{self.CATALOG_URL}?pagesize=100&pagenumber={page}" if page > 1 else f"{self.CATALOG_URL}?pagesize=100"
+                status, text = fetch_resilient_url(url)
+                if status != 200 or not text:
+                    break
+
+                boxes = text.split('class="item-box"')[1:]
+                if not boxes:
+                    break
+
+                new_on_page = 0
+                for box in boxes:
+                    title_m = re.search(r'<h2 class=[\"\']product-title[\"\']>\s*<a href=[\"\']([^\"\']+)[\"\']>([\s\S]*?)</a>', box)
+                    if not title_m:
+                        continue
+
+                    rel_url = title_m.group(1).strip()
+                    full_url = f"https://ofekpc.co.il{rel_url}" if rel_url.startswith('/') else rel_url
+                    if full_url in seen_urls:
+                        continue
+                    seen_urls.add(full_url)
+                    new_on_page += 1
+
+                    raw_title = html.unescape(re.sub(r'<[^>]+>', ' ', title_m.group(2))).strip()
+                    t_low = raw_title.lower()
+                    if any(x in t_low for x in ['נייח', 'tiny', 'mini pc', 'desktop', 'optiplex', 'prodesk', 'elitedesk', 'tower', 'sff', 'all in one', 'aio', 'שולחני']):
+                        continue
+
+                    price_m = re.search(r'<span class=[\"\']price actual-price[\"\']>([\s\S]*?)</span>', box)
+                    price_str = html.unescape(price_m.group(1)) if price_m else ''
+                    num_m = re.search(r'([0-9,]+)', price_str)
+                    price = int(num_m.group(1).replace(',', '')) if num_m else 0
+                    if price <= 0:
+                        continue
+
+                    desc_m = re.search(r'<div class=[\"\']description[\"\'][^>]*>([\s\S]*?)</div>', box)
+                    desc = html.unescape(re.sub(r'<[^>]+>', ' ', desc_m.group(1))).strip() if desc_m else ''
+
+                    img_m = re.search(r'data-lazyloadsrc=[\"\']([^\"\']+)[\"\']', box)
+                    if not img_m:
+                        img_m = re.search(r'<img[^>]*src=[\"\']([^\"\']+)[\"\']', box)
+                    img = img_m.group(1).strip() if img_m else ''
+
+                    analysis = f"{raw_title} {desc}"
+                    warranty = 12
+                    if "שנתיים" in analysis or "24 חודש" in analysis:
+                        warranty = 24
+                    elif "3 שנים" in analysis or "36 חודש" in analysis:
+                        warranty = 36
+
+                    items.append(HardwareClassifier.build_laptop(
+                        store=self.STORE_NAME,
+                        title=raw_title,
+                        price_ils=price,
+                        url=full_url,
+                        analysis_text=analysis,
+                        warranty_months=warranty,
+                        stock_status="🟢 In Stock",
+                        image_url=img
+                    ))
+
+                if new_on_page == 0:
+                    break
+                page += 1
+
+        except Exception as e:
+            logger.error(f"Error scraping Ofek PC: {e}")
+        return items
+
+
 # --- Master Report Generator ---
 class ReportGenerator:
     """Exports structured datasets and generates comprehensive comparison markdown guides."""
@@ -1681,6 +1765,7 @@ class ReportGenerator:
         p1000_items = all_results.get('p1000', [])
         lp_items = all_results.get('lastprice', [])
         volt_items = all_results.get('volt', [])
+        ofek_items = all_results.get('ofekpc', [])
 
         # Flatten all items to dynamically compute Top Overall Picks
         all_laptops: List[LaptopItem] = []
@@ -1703,6 +1788,7 @@ class ReportGenerator:
 9. 🏬 **P1000 (פי אלף):** [p1000.co.il/laptopoutlet](https://www.p1000.co.il/categories/category.aspx?categoryname=laptopoutlet)
 10. 🏬 **LastPrice (לאסטפרייס):** [lastprice.co.il/c/85](https://www.lastprice.co.il/c/85/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%95%D7%92%D7%99%D7%99%D7%9E%D7%99%D7%A0%D7%92/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%95%D7%A2%D7%95%D7%93%D7%A4%D7%99-%D7%9E%D7%9C%D7%90%D7%99)
 11. 🏬 **VOLT (וולט מחשוב ירוק):** [volt.co.il/23409-ניידים-מחודשים](https://www.volt.co.il/23409-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
+12. 🏬 **Ofek PC (אופק פי סי):** [ofekpc.co.il/מחשבים-ניידים-מחודשים](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
 
 *Last Automated Live Audit: {now_str}*
 
@@ -1725,6 +1811,7 @@ class ReportGenerator:
 - [🏬 P1000 Live Audit](#-9-p1000-פי-אלף--live-stock-audit)
 - [🏬 LastPrice Live Audit](#-10-lastprice-לאסטפרייס--live-stock-audit)
 - [🏬 VOLT Live Audit](#-11-volt-וולט-מחשוב-ירוק--live-stock-audit)
+- [🏬 Ofek PC Live Audit](#-12-ofek-pc-אופק-פי-סי--live-stock-audit)
 - [🎯 Buyer Rules of Thumb](#-quick-rules-of-thumb)
 
 ---
@@ -1833,6 +1920,7 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
         _append_store_section(9, "P1000 (פי אלף)", p1000_items)
         _append_store_section(10, "LastPrice (לאסטפרייס)", lp_items)
         _append_store_section(11, "VOLT (וולט מחשוב ירוק)", volt_items)
+        _append_store_section(12, "Ofek PC (אופק פי סי)", ofek_items)
 
         md_parts.append("""
 ---
@@ -1869,7 +1957,8 @@ class MasterLaptopAuditor:
             'shufersal': ShufersalScraper,
             'p1000': P1000Scraper,
             'lastprice': LastPriceScraper,
-            'volt': VoltScraper
+            'volt': VoltScraper,
+            'ofekpc': OfekPCScraper
         }
 
     def run(self, store_filter: Optional[str] = None, max_workers: int = 6, use_ai: bool = False) -> Dict[str, List[LaptopItem]]:
@@ -1911,7 +2000,7 @@ def main():
     )
     parser.add_argument(
         "--store",
-        choices=['itoutlet', 'ecology', 'lts', 'recomp', 'cwc', 'payngo', 'alm', 'shufersal', 'p1000', 'lastprice', 'volt', 'all'],
+        choices=['itoutlet', 'ecology', 'lts', 'recomp', 'cwc', 'payngo', 'alm', 'shufersal', 'p1000', 'lastprice', 'volt', 'ofekpc', 'all'],
         default='all',
         help="Specific store to scrape"
     )
