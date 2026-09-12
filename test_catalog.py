@@ -137,6 +137,8 @@ class TestHardwareParsers(unittest.TestCase):
             ("Lenovo ThinkPad T14 AMD Ryzen 5 PRO", "AMD Ryzen 5 PRO"),
             ("Lenovo ThinkPad E14 Intel Core Ultra 5 125U", "Intel Core Ultra 5"),
             ("Lenovo ThinkPad P53 Intel Xeon E-2276M", "Intel Xeon"),
+            ("ThinkPad X13 Gen 2 Core i5-1145G7", "Core i5 (11th Gen)"),
+            ("Dell Latitude i7-8656U M2 256GB SSD", "Core i7 (8th Gen)"),
         ]
         for title, expected_cpu in test_cases:
             detected = HardwareClassifier.detect_cpu(title)

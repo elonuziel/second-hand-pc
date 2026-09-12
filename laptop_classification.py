@@ -19,9 +19,9 @@ class HardwareClassifier:
     _HTML_TAG_RE = re.compile(r'<[^>]+>')
     _CLEAN_PHRASE_RE = re.compile(r'מחשב\s*נייד\s*(?:מחודש)?\s*(?:לעריכה\s*גרפית)?')
 
-    _GEN13_RE = re.compile(r'(?:13th|דור\s*13|13\s*gen|13[0-9]{2}[up]|13[0-9]{2}h)', re.IGNORECASE)
-    _GEN12_RE = re.compile(r'(?:12th|דור\s*12|12\s*gen|gen\s*4|5330|5430|5530|7330|7430|5431|5531|l13\s*gen\s*3|t14\s*gen\s*3|x1404za|e1504|12[0-9]{2}[up]|12[0-9]{2}h|1270p|1260p|1250u|1280p|1240p|1235u)', re.IGNORECASE)
-    _GEN11_RE = re.compile(r'(?:11th|דור\s*11|11\s*gen|\bg8\b|gen\s*2|3520|3420|7420|7320|5420|5320|5520|surface\s*4|x1\s*carbon\s*gen\s*9|x1\s*yoga\s*gen\s*6|a517.*52g|x515ea|x30l\s*j|11[0-9]{2}g[47]|11[0-9]{2}[up]|11[0-9]{2}h|1185g7|1165g7|1135g7|1145g7)', re.IGNORECASE)
+    _GEN13_RE = re.compile(r'(?:13th|דור\s*13|(?<![a-z0-9])13\s*gen(?!\s*[0-9])|13[0-9]{2}[up]|13[0-9]{2}h)', re.IGNORECASE)
+    _GEN12_RE = re.compile(r'(?:12th|דור\s*12|(?<![a-z0-9])12\s*gen(?!\s*[0-9])|gen\s*4|5330|5430|5530|7330|7430|5431|5531|l13\s*gen\s*3|t14\s*gen\s*3|x1404za|e1504|12[0-9]{2}[up]|12[0-9]{2}h|1270p|1260p|1250u|1280p|1240p|1235u)', re.IGNORECASE)
+    _GEN11_RE = re.compile(r'(?:11th|דור\s*11|(?<![a-z0-9])11\s*gen(?!\s*[0-9])|\bg8\b|gen\s*2|3520|3420|7420|7320|5420|5320|5520|surface\s*4|x1\s*carbon\s*gen\s*9|x1\s*yoga\s*gen\s*6|a517.*52g|x515ea|x30l\s*j|11[0-9]{2}g[47]|11[0-9]{2}[up]|11[0-9]{2}h|1185g7|1165g7|1135g7|1145g7)', re.IGNORECASE)
     _GEN10_RE = re.compile(r'(?:10th|דור\s*10|10\s*gen|\bg7\b|gen\s*1|\bg1\b|7410|5410|5510|surface\s*3|x1\s*carbon\s*gen\s*8|p1\s*gen\s*3|vostro\s*3591|3591|a2179|a2251|10[0-9]{2}[up]|10[0-9]{2}h|10510u|10610u|10875h|10210u|10310u)', re.IGNORECASE)
     _GEN9_RE = re.compile(r'(?:9th|דור\s*9|9\s*gen|\bg6\b|9750h|9850h)', re.IGNORECASE)
     _GEN8_RE = re.compile(r'(?:8th|דור\s*8|8\s*gen|e480|l390|7400|5490|5400|x280|t480|t490|p52|5379|330\s*15ikb|a1989|x1\s*carbon.*touch|8[0-9]{3}[uh]|8250u|8350u|8650u|8550u)', re.IGNORECASE)
@@ -129,9 +129,11 @@ class HardwareClassifier:
     @classmethod
     def detect_cpu(cls, title: str) -> str:
         t = title.lower()
-        if 'm1' in t: return "Apple M1"
-        if 'm2' in t: return "Apple M2"
-        if 'm3' in t: return "Apple M3"
+        # Apple Silicon (must be Apple/MacBook or explicit Apple M-series, not M.2 NVMe SSD)
+        if any(k in t for k in ['apple', 'macbook', 'mac']) or re.search(r'\b(?:apple\s*m[123]|m[123]\s*(?:pro|max|ultra))\b', t):
+            if re.search(r'\bm3\b', t): return "Apple M3"
+            if re.search(r'\bm2\b', t) and not re.search(r'\bm\.?2\s*(?:ssd|nvme|pcie|דיסק)', t): return "Apple M2"
+            if re.search(r'\bm1\b', t): return "Apple M1"
         if 'ryzen 7' in t: return "AMD Ryzen 7 PRO"
         if 'ryzen 5' in t: return "AMD Ryzen 5 PRO"
         if 'amd' in t: return "AMD Ryzen"

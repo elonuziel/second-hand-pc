@@ -4,6 +4,7 @@ import html
 import json
 import logging
 import re
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, List, Optional
 from laptop_scrapers.base import fetch_resilient_url
 from laptop_domain import LaptopItem
@@ -19,6 +20,17 @@ class ShufersalScraper:
     def __init__(self, session: Any = None):
         self.session = session
 
+    def _fetch_detail_desc(self, url: str) -> str:
+        try:
+            status, html_page = fetch_resilient_url(url)
+            if status == 200 and html_page:
+                desc_m = re.search(r'<div[^>]*class=[\"\']desc[\"\'][^>]*itemprop=[\"\']description[\"\'][^>]*>([\s\S]*?)</div>', html_page)
+                if desc_m:
+                    return re.sub(r'<[^>]+>', ' ', desc_m.group(1)).strip()
+        except Exception:
+            pass
+        return ""
+
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping Shufersal Online...")
         items: List[LaptopItem] = []
@@ -29,6 +41,7 @@ class ShufersalScraper:
                 return items
 
             tiles = re.findall(r'<li[^>]*class="[^"]*miglog-prod[^"]*"[^>]*>([\s\S]*?)</li>', text)
+            parsed_tiles = []
             for tile in tiles:
                 link_m = re.search(r'<div\s+class="text description"[^>]*>\s*<a\s+href="([^"]+)"[^>]*>([\s\S]*?)</a>', tile)
                 if not link_m:
@@ -40,7 +53,7 @@ class ShufersalScraper:
                 title = html.unescape(re.sub(r'\s+', ' ', raw_title)).strip()
 
                 t_low = title.lower()
-                if any(k in t_low for k in ["שולחן", "מארז", "עכבר", "מקלדת", "אוזניות", "נייח", "all in one"]):
+                if any(k in t_low for k in ["שולחן", "מארז", "עכבר", "מקלדת", "אוזניות", "נייח", "all in one", "סטנד"]):
                     continue
                 if not any(k in t_low for k in ["נייד", "laptop", "macbook", "thinkpad", "latitude"]):
                     continue
@@ -55,7 +68,26 @@ class ShufersalScraper:
 
                 small_m = re.search(r'<div\s+class="smallText">([\s\S]*?)</div>', tile)
                 extra_text = re.sub(r'<[^>]+>', ' ', small_m.group(1)).strip() if small_m else ""
-                analysis = f"{title} {extra_text}"
+
+                parsed_tiles.append((title, price, full_url, extra_text, img))
+
+            # Fetch detailed product descriptions concurrently to extract hidden CPU models and warranties
+            urls_to_fetch = [pt[2] for pt in parsed_tiles]
+            details_map = {}
+            with ThreadPoolExecutor(max_workers=6) as executor:
+                desc_results = executor.map(self._fetch_detail_desc, urls_to_fetch)
+                for url, desc in zip(urls_to_fetch, desc_results):
+                    details_map[url] = desc
+
+            for title, price, full_url, extra_text, img in parsed_tiles:
+                detail_desc = details_map.get(full_url, "")
+                analysis = f"{title} {extra_text} {detail_desc}".strip()
+
+                warranty = 12
+                if "3 שנות אחריות" in analysis or "3 שנים" in analysis or "36 חודש" in analysis:
+                    warranty = 36
+                elif "שנתיים אחריות" in analysis or "24 חודש" in analysis:
+                    warranty = 24
 
                 items.append(HardwareClassifier.build_laptop(
                     store=self.STORE_NAME,
@@ -63,7 +95,7 @@ class ShufersalScraper:
                     price_ils=price,
                     url=full_url,
                     analysis_text=analysis,
-                    warranty_months=12,
+                    warranty_months=warranty,
                     stock_status="🟢 In Stock",
                     image_url=img
                 ))
