@@ -73,14 +73,23 @@
               </div>
 
               <div class="filter-group">
-                <label for="priceFilter">Max Price</label>
+                <label for="priceFilter">Price Range</label>
                 <select id="priceFilter" class="filter-select">
                   <option value="0">Any Price</option>
-                  <option value="1200">Under 1,200 ₪</option>
-                  <option value="1600">Under 1,600 ₪</option>
-                  <option value="2000">Under 2,000 ₪</option>
-                  <option value="2500">Under 2,500 ₪</option>
-                  <option value="3000">Under 3,000 ₪</option>
+                  <optgroup label="Budget (& Down)">
+                    <option value="1000">💰 Under 1,000 ₪</option>
+                    <option value="1200">💰 Under 1,200 ₪</option>
+                    <option value="1600">💰 Under 1,600 ₪</option>
+                    <option value="2000">💰 Under 2,000 ₪</option>
+                    <option value="2500">💰 Under 2,500 ₪</option>
+                    <option value="3000">💰 Under 3,000 ₪</option>
+                  </optgroup>
+                  <optgroup label="Workstation / High-End (& Up)">
+                    <option value="1500-up">🌟 1,500 ₪ & Up</option>
+                    <option value="2000-up">🌟 2,000 ₪ & Up</option>
+                    <option value="2500-up">🌟 2,500 ₪ & Up</option>
+                    <option value="3000-up">🌟 3,000 ₪ & Up</option>
+                  </optgroup>
                 </select>
               </div>
 
@@ -88,23 +97,68 @@
                 <label for="cpuGenFilter">CPU Gen</label>
                 <select id="cpuGenFilter" class="filter-select">
                   <option value="all">All Generations</option>
-                  <option value="12+">⚡ 12th & 13th Gen</option>
-                  <option value="11">🚀 11th Gen</option>
-                  <option value="10">💼 10th Gen</option>
-                  <option value="8">💻 8th / 9th Gen</option>
-                  <option value="older">Older (4th - 7th Gen)</option>
-                  <option value="apple">Apple Silicon (M1/M2)</option>
-                  <option value="amd">AMD Ryzen</option>
+                  <optgroup label="Generations (& Up / & Down)">
+                    <option value="12-up">⚡ 12th Gen & Up</option>
+                    <option value="11-up">🚀 11th Gen & Up</option>
+                    <option value="10-up">💼 10th Gen & Up</option>
+                    <option value="8-up">💻 8th Gen & Up (Win 11)</option>
+                    <option value="11-down">⏳ 11th Gen & Down</option>
+                    <option value="10-down">⏳ 10th Gen & Down</option>
+                    <option value="8-down">⏳ 8th Gen & Down</option>
+                  </optgroup>
+                  <optgroup label="Specific Family / Brand">
+                    <option value="12+">⚡ 12th & 13th Gen (Only)</option>
+                    <option value="11">🚀 11th Gen (Only)</option>
+                    <option value="10">💼 10th Gen (Only)</option>
+                    <option value="8">💻 8th / 9th Gen (Only)</option>
+                    <option value="older">Older (4th - 7th Gen)</option>
+                    <option value="apple">Apple Silicon (M1/M2)</option>
+                    <option value="amd">AMD Ryzen</option>
+                  </optgroup>
                 </select>
               </div>
 
               <div class="filter-group">
-                <label for="ramFilter">Min RAM</label>
+                <label for="ramFilter">RAM</label>
                 <select id="ramFilter" class="filter-select">
                   <option value="0">Any RAM</option>
-                  <option value="8">8 GB+</option>
-                  <option value="16">16 GB+</option>
-                  <option value="32">32 GB+</option>
+                  <optgroup label="Capacity (& Up)">
+                    <option value="8">8 GB & Up</option>
+                    <option value="16">16 GB & Up (Recommended)</option>
+                    <option value="32">32 GB & Up (Power User)</option>
+                    <option value="64">64 GB & Up (Workstation)</option>
+                  </optgroup>
+                  <optgroup label="Capacity (& Down)">
+                    <option value="8-down">8 GB & Down (Budget Basic)</option>
+                    <option value="16-down">16 GB & Down</option>
+                    <option value="32-down">32 GB & Down</option>
+                  </optgroup>
+                  <optgroup label="Exact Capacity">
+                    <option value="8-exact">8 GB (Exact)</option>
+                    <option value="16-exact">16 GB (Exact)</option>
+                    <option value="32-exact">32 GB (Exact)</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="storageFilter">Storage (SSD)</label>
+                <select id="storageFilter" class="filter-select">
+                  <option value="0">Any Storage</option>
+                  <optgroup label="Capacity (& Up)">
+                    <option value="256">💾 256 GB & Up</option>
+                    <option value="512">💾 512 GB & Up (Recommended)</option>
+                    <option value="1000">💾 1 TB & Up (Large Storage)</option>
+                  </optgroup>
+                  <optgroup label="Capacity (& Down)">
+                    <option value="256-down">💾 256 GB & Down (Budget Basic)</option>
+                    <option value="512-down">💾 512 GB & Down</option>
+                  </optgroup>
+                  <optgroup label="Exact Capacity">
+                    <option value="256-exact">256 GB (Exact)</option>
+                    <option value="512-exact">512 GB (Exact)</option>
+                    <option value="1000-exact">1 TB (Exact)</option>
+                  </optgroup>
                 </select>
               </div>
 
@@ -121,29 +175,55 @@
                 <label for="screenFilter">Screen Size</label>
                 <select id="screenFilter" class="filter-select">
                   <option value="all">All Sizes</option>
-                  <option value="compact">13.5" & Under (Compact)</option>
-                  <option value="14.0">14.0" (Standard Ultra)</option>
-                  <option value="large">15.0"+ (Large Display)</option>
+                  <optgroup label="Size Range (& Up / & Down)">
+                    <option value="14-up">📏 14.0" & Up (Medium to Large)</option>
+                    <option value="14-down">📏 14.0" & Down (Compact to Medium)</option>
+                    <option value="15-up">🖥️ 15.0" & Up (Large Display)</option>
+                    <option value="13.5-down">📱 13.5" & Down (Ultra-Portable)</option>
+                    <option value="15.6-down">🖥️ 15.6" & Down</option>
+                    <option value="13.3-up">💻 13.3" & Up</option>
+                  </optgroup>
+                  <optgroup label="Exact Formats">
+                    <option value="14.0">💻 14.0" (Standard Ultra)</option>
+                    <option value="13.3">💻 13.3" (Compact)</option>
+                    <option value="15.6">🖥️ 15.6" (Large Productivity)</option>
+                  </optgroup>
                 </select>
               </div>
 
               <div class="filter-group">
-                <label for="weightFilter">Max Weight</label>
+                <label for="weightFilter">Weight</label>
                 <select id="weightFilter" class="filter-select">
                   <option value="0">Any Weight</option>
-                  <option value="1.3">⚡ Under 1.3 kg (Featherlight)</option>
-                  <option value="1.6">💻 Under 1.6 kg (Portable)</option>
-                  <option value="2.0">🏋️ Under 2.0 kg</option>
+                  <optgroup label="Portable (& Down)">
+                    <option value="1.3">🪶 1.3 kg & Down (Featherlight)</option>
+                    <option value="1.5">💻 1.5 kg & Down (Portable Ultra)</option>
+                    <option value="1.8">⚖️ 1.8 kg & Down (Everyday Carry)</option>
+                    <option value="2.0">🏋️ 2.0 kg & Down</option>
+                  </optgroup>
+                  <optgroup label="Workstation / Heavier (& Up)">
+                    <option value="1.5-up">🏢 1.5 kg & Up</option>
+                    <option value="1.8-up">🏢 1.8 kg & Up (Workstation / Heavy)</option>
+                    <option value="2.0-up">🏢 2.0 kg & Up (Heavy Workstation)</option>
+                  </optgroup>
                 </select>
               </div>
 
               <div class="filter-group">
-                <label for="batteryFilter">Min Battery</label>
+                <label for="batteryFilter">Battery</label>
                 <select id="batteryFilter" class="filter-select">
                   <option value="0">Any Battery</option>
-                  <option value="45">45 Wh+</option>
-                  <option value="55">🔋 55 Wh+ (Long Battery)</option>
-                  <option value="70">⚡ 70 Wh+ (High Capacity)</option>
+                  <optgroup label="Capacity (& Up)">
+                    <option value="45">🔋 45 Wh & Up</option>
+                    <option value="50">🔋 50 Wh & Up (Standard Business+)</option>
+                    <option value="55">🔋 55 Wh & Up (Long Battery)</option>
+                    <option value="65">⚡ 65 Wh & Up (High Capacity)</option>
+                  </optgroup>
+                  <optgroup label="Capacity (& Down)">
+                    <option value="45-down">🪶 45 Wh & Down</option>
+                    <option value="50-down">🪶 50 Wh & Down (Standard / Ultralight)</option>
+                    <option value="55-down">🔋 55 Wh & Down</option>
+                  </optgroup>
                 </select>
               </div>
 
@@ -151,8 +231,15 @@
                 <label for="upgradabilityFilter">Upgradability</label>
                 <select id="upgradabilityFilter" class="filter-select">
                   <option value="0">Any Rating</option>
-                  <option value="7">🟢 Highly Upgradable (7+)</option>
-                  <option value="9">🟢 Fully Modular (9+)</option>
+                  <optgroup label="Modular (& Up)">
+                    <option value="7">🟢 Highly Upgradable (7+ & Up)</option>
+                    <option value="8">🟢 Excellent Upgradability (8+ & Up)</option>
+                    <option value="9">🟢 Fully Modular (9+ & Up)</option>
+                  </optgroup>
+                  <optgroup label="Thin Ultrabook (& Down)">
+                    <option value="5-down">🟠 Soldered RAM / Ultrabook (5 & Down)</option>
+                    <option value="7-down">🟡 Semi-Modular & Down (7 & Down)</option>
+                  </optgroup>
                 </select>
               </div>
 

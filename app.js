@@ -20,6 +20,7 @@ const state = {
     price: 0,
     cpuGen: 'all',
     ram: 0,
+    storage: 0,
     form: 'all',
     screen: 'all',
     weight: 0,
@@ -47,6 +48,7 @@ const brandFilter = typeof document !== 'undefined' ? document.getElementById('b
 const priceFilter = typeof document !== 'undefined' ? document.getElementById('priceFilter') : null;
 const cpuGenFilter = typeof document !== 'undefined' ? document.getElementById('cpuGenFilter') : null;
 const ramFilter = typeof document !== 'undefined' ? document.getElementById('ramFilter') : null;
+const storageFilter = typeof document !== 'undefined' ? document.getElementById('storageFilter') : null;
 const formFilter = typeof document !== 'undefined' ? document.getElementById('formFilter') : null;
 const screenFilter = typeof document !== 'undefined' ? document.getElementById('screenFilter') : null;
 const weightFilter = typeof document !== 'undefined' ? document.getElementById('weightFilter') : null;
@@ -74,9 +76,42 @@ function formatCpuHtml(cpuStr) {
   return escapeHtml(cpuStr);
 }
 
+function getCpuGenRank(cpuStr) {
+  const cpuL = String(cpuStr || '').toLowerCase();
+  const m = cpuL.match(/(\d+)th\s*gen/i);
+  if (m) return parseInt(m[1], 10);
+  if (cpuL.includes('ultra') || cpuL.includes('14th')) return 14;
+  if (cpuL.includes('13th')) return 13;
+  if (cpuL.includes('12th')) return 12;
+  if (cpuL.includes('11th')) return 11;
+  if (cpuL.includes('10th')) return 10;
+  if (cpuL.includes('9th')) return 9;
+  if (cpuL.includes('8th')) return 8;
+  if (cpuL.includes('7th')) return 7;
+  if (cpuL.includes('6th')) return 6;
+  if (cpuL.includes('5th')) return 5;
+  if (cpuL.includes('4th')) return 4;
+  if (cpuL.includes('m1') || cpuL.includes('m2') || cpuL.includes('m3') || cpuL.includes('apple')) return 11;
+  if (cpuL.includes('ryzen') || cpuL.includes('amd')) return 11;
+  return 0;
+}
+
 function matchesCpuGen(cpuStr, cpuGen) {
   if (!cpuGen || cpuGen === 'all') return true;
   const cpuL = String(cpuStr || '').toLowerCase();
+  const rank = getCpuGenRank(cpuL);
+
+  // Range options (& Up / & Down)
+  if (cpuGen.endsWith('-up')) {
+    const minGen = parseInt(cpuGen, 10);
+    return rank >= minGen;
+  }
+  if (cpuGen.endsWith('-down')) {
+    const maxGen = parseInt(cpuGen, 10);
+    return rank > 0 && rank <= maxGen && !cpuL.includes('apple') && !cpuL.includes('amd');
+  }
+
+  // Exact family / brand options
   if (cpuGen === '12+') {
     return cpuL.includes('12th') || cpuL.includes('13th') || cpuL.includes('14th') || cpuL.includes('ultra');
   }
@@ -408,6 +443,7 @@ function setQuickPreset(preset) {
       price: 0,
       cpuGen: 'all',
       ram: 0,
+      storage: 0,
       form: 'all',
       screen: 'all',
       weight: 0,
@@ -420,6 +456,7 @@ function setQuickPreset(preset) {
     if (priceFilter) priceFilter.value = '0';
     if (cpuGenFilter) cpuGenFilter.value = 'all';
     if (ramFilter) ramFilter.value = '0';
+    if (storageFilter) storageFilter.value = '0';
     if (formFilter) formFilter.value = 'all';
     if (screenFilter) screenFilter.value = 'all';
     if (weightFilter) weightFilter.value = '0';
@@ -433,31 +470,121 @@ function setQuickPreset(preset) {
 
 function renderCatalog() {
   if (!catalogContent) return;
-  const { store, brand, price, cpuGen, ram, form, screen, weight, battery, upgradability, sort } = state.catalogFilters;
+  const { store, brand, price, cpuGen, ram, storage, form, screen, weight, battery, upgradability, sort } = state.catalogFilters;
   const q = state.query.toLowerCase();
 
   let filtered = state.catalogData.filter((item) => {
     if (store !== 'all' && item.store !== store) return false;
     if (brand !== 'all' && item.brand.toLowerCase() !== brand.toLowerCase()) return false;
-    if (price > 0 && (item.deal_price_ils || item.price_ils) > price) return false;
+
+    // Price Range (& Down / & Up)
+    if (price && price !== '0' && price !== 0) {
+      const pVal = item.deal_price_ils || item.price_ils || 0;
+      const pStr = String(price);
+      if (pStr.endsWith('-up')) {
+        const minP = parseFloat(pStr);
+        if (pVal < minP) return false;
+      } else {
+        const maxP = parseFloat(pStr);
+        if (maxP > 0 && pVal > maxP) return false;
+      }
+    }
+
     if (!matchesCpuGen(item.cpu, cpuGen)) return false;
-    if (ram > 0 && item.ram_gb < ram) return false;
-    if (upgradability > 0 && item.upgradability_score < upgradability) return false;
+
+    // RAM Range (& Up / & Down / Exact)
+    if (ram && ram !== '0' && ram !== 0) {
+      const rStr = String(ram);
+      if (rStr.endsWith('-down')) {
+        const maxR = parseFloat(rStr);
+        if (item.ram_gb > maxR) return false;
+      } else if (rStr.endsWith('-exact')) {
+        const exactR = parseFloat(rStr);
+        if (item.ram_gb !== exactR) return false;
+      } else {
+        const minR = parseFloat(rStr);
+        if (minR > 0 && item.ram_gb < minR) return false;
+      }
+    }
+
+    // Storage Range (& Up / & Down / Exact)
+    if (storage && storage !== '0' && storage !== 0) {
+      const sStr = String(storage);
+      if (sStr.endsWith('-down')) {
+        const maxS = parseFloat(sStr);
+        if (item.storage_gb > (maxS + 30)) return false;
+      } else if (sStr.endsWith('-exact')) {
+        const exactS = parseFloat(sStr);
+        if (Math.abs(item.storage_gb - exactS) > 30) return false;
+      } else {
+        const minS = parseFloat(sStr);
+        if (minS > 0 && item.storage_gb < (minS - 30)) return false;
+      }
+    }
+
+    // Upgradability (& Up / & Down)
+    if (upgradability && upgradability !== '0' && upgradability !== 0) {
+      const uStr = String(upgradability);
+      if (uStr.endsWith('-down')) {
+        const maxU = parseFloat(uStr);
+        if (item.upgradability_score > (maxU + 0.5)) return false;
+      } else {
+        const minU = parseFloat(uStr);
+        if (minU > 0 && item.upgradability_score < minU) return false;
+      }
+    }
 
     if (form === '2in1' && (!item.is_2in1 && !item.is_touch)) return false;
     if (form === 'clamshell' && (item.is_2in1 || item.is_touch)) return false;
 
-    if (screen === 'compact' && item.screen_size_in > 13.5) return false;
-    if (screen === '14.0' && Math.abs(item.screen_size_in - 14.0) > 0.3) return false;
-    if (screen === 'large' && item.screen_size_in < 15.0) return false;
+    // Screen Size Range (& Up / & Down / Exact)
+    if (screen !== 'all') {
+      const scStr = String(screen);
+      if (scStr.endsWith('-up')) {
+        const minS = parseFloat(scStr);
+        if (item.screen_size_in < (minS - 0.15)) return false;
+      } else if (scStr.endsWith('-down')) {
+        const maxS = parseFloat(scStr);
+        if (item.screen_size_in > (maxS + 0.15)) return false;
+      } else if (scStr === 'large') {
+        if (item.screen_size_in < 15.0) return false;
+      } else if (scStr === 'compact') {
+        if (item.screen_size_in > 13.6) return false;
+      } else {
+        const exactS = parseFloat(scStr);
+        if (exactS > 0 && Math.abs(item.screen_size_in - exactS) > 0.3) return false;
+      }
+    }
 
-    if (weight > 0 && item.weight_kg > weight) return false;
-    if (battery > 0 && item.battery_wh < battery) return false;
+    // Weight Range (& Down / & Up)
+    if (weight && weight !== '0' && weight !== 0) {
+      const wStr = String(weight);
+      if (wStr.endsWith('-up')) {
+        const minW = parseFloat(wStr);
+        if (item.weight_kg < (minW - 0.05)) return false;
+      } else {
+        const maxW = parseFloat(wStr);
+        if (maxW > 0 && item.weight_kg > (maxW + 0.05)) return false;
+      }
+    }
+
+    // Battery Range (& Up / & Down)
+    if (battery && battery !== '0' && battery !== 0) {
+      const bStr = String(battery);
+      if (bStr.endsWith('-down')) {
+        const maxB = parseFloat(bStr);
+        if (item.battery_wh > maxB) return false;
+      } else {
+        const minB = parseFloat(bStr);
+        if (minB > 0 && item.battery_wh < minB) return false;
+      }
+    }
 
     if (q) {
       const touchKeywords = item.is_touch || item.is_2in1 ? 'touch touchscreen טאץ טאצ' : '';
       const formKeywords = item.is_2in1 ? '2in1 2-in-1 convertible 360' : 'clamshell';
-      const searchHaystack = `${item.title} ${item.brand} ${item.store} ${item.cpu} ${item.ram_gb}GB ${item.storage_gb}GB ${item.screen_size_in}inch ${item.weight_kg}kg ${item.battery_wh}wh ${item.storage_type} ${touchKeywords} ${formKeywords} ${item.warranty_months}months`.toLowerCase();
+      const storageStr = item.storage_gb ? `${item.storage_gb}gb ${item.storage_gb} ssd` : '';
+      const searchHaystack = `${item.title} ${item.brand} ${item.store} ${item.cpu} ${item.ram_gb}GB ${storageStr} ${item.screen_size_in}inch ${item.weight_kg}kg ${item.battery_wh}wh ${item.storage_type} ${touchKeywords} ${formKeywords} ${item.warranty_months}months`.toLowerCase();
       if (!searchHaystack.includes(q)) return false;
     }
 
@@ -701,7 +828,7 @@ function bindEvents() {
 
   if (priceFilter) {
     priceFilter.addEventListener('change', (e) => {
-      state.catalogFilters.price = Number(e.target.value);
+      state.catalogFilters.price = e.target.value;
       state.activePreset = '';
       renderCatalog();
     });
@@ -717,7 +844,15 @@ function bindEvents() {
 
   if (ramFilter) {
     ramFilter.addEventListener('change', (e) => {
-      state.catalogFilters.ram = Number(e.target.value);
+      state.catalogFilters.ram = e.target.value;
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (storageFilter) {
+    storageFilter.addEventListener('change', (e) => {
+      state.catalogFilters.storage = e.target.value;
       state.activePreset = '';
       renderCatalog();
     });
@@ -741,7 +876,7 @@ function bindEvents() {
 
   if (weightFilter) {
     weightFilter.addEventListener('change', (e) => {
-      state.catalogFilters.weight = Number(e.target.value);
+      state.catalogFilters.weight = e.target.value;
       state.activePreset = '';
       renderCatalog();
     });
@@ -749,7 +884,7 @@ function bindEvents() {
 
   if (batteryFilter) {
     batteryFilter.addEventListener('change', (e) => {
-      state.catalogFilters.battery = Number(e.target.value);
+      state.catalogFilters.battery = e.target.value;
       state.activePreset = '';
       renderCatalog();
     });
@@ -757,7 +892,7 @@ function bindEvents() {
 
   if (upgradabilityFilter) {
     upgradabilityFilter.addEventListener('change', (e) => {
-      state.catalogFilters.upgradability = Number(e.target.value);
+      state.catalogFilters.upgradability = e.target.value;
       state.activePreset = '';
       renderCatalog();
     });
@@ -782,5 +917,5 @@ async function init() {
 init();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen };
+  module.exports = { escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen, getCpuGenRank };
 }
