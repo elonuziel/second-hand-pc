@@ -1132,10 +1132,15 @@ function renderCatalog() {
     .map((laptop) => {
       const isTopValue = topValueIds.has(laptop.id);
       const isMobileItem = laptop.category === 'phones';
-      const screenText = `${laptop.screen_source === 'fallback_estimate' ? '~' : ''}${laptop.screen_size_in}"${laptop.screen_source === 'fallback_estimate' && laptop.weight_source !== 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
-      const weightText = `⚖️ ${laptop.weight_source === 'fallback_estimate' ? '~' : ''}${laptop.weight_kg} kg${laptop.weight_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
-      const batteryText = `🔋 ${laptop.battery_source === 'fallback_estimate' ? '~' : ''}${laptop.battery_wh} Wh${laptop.battery_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
-      const ramGenText = `${laptop.ram_source === 'fallback_estimate' ? '~' : ''}${escapeHtml(laptop.ram_gen)}${laptop.ram_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+      const isScreenEst = laptop.screen_source !== 'listing_explicit';
+      const isWeightEst = laptop.weight_source !== 'listing_explicit';
+      const isBatteryEst = laptop.battery_source !== 'listing_explicit';
+      const isRamGenEst = laptop.ram_source !== 'listing_explicit';
+
+      const screenText = `${isScreenEst ? '~' : ''}${laptop.screen_size_in}"${isScreenEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+      const weightText = `⚖️ ${isWeightEst ? '~' : ''}${laptop.weight_kg} kg${isWeightEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+      const batteryText = `🔋 ${isBatteryEst ? '~' : ''}${laptop.battery_wh} Wh${isBatteryEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+      const ramGenText = `${isRamGenEst ? '~' : ''}${escapeHtml(laptop.ram_gen)}${isRamGenEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
 
       let specsHtml = '';
       if (isMobileItem) {

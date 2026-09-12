@@ -410,8 +410,14 @@ class HardwareClassifier:
         if '7320' in t or '7330' in t: return (1.20, "chassis_decoder") if return_source else 1.20
         if any(k in t for k in ['a2337', 'surface 3', 'surface 4', 'x280', 'x13']): return (1.28, "chassis_decoder") if return_source else 1.28
 
+        # Dell Latitude 7420 / 7430 (2-in-1 is ~1.36kg with touch glass & 360 hinges; Clamshell is ~1.22kg)
+        if '7420' in t or '7430' in t:
+            is_convertible = any(k in t for k in ['2in1', '2-in-1', '2 in 1', 'מגע', 'touch', 'convertible', 'flip'])
+            w = 1.36 if is_convertible else 1.22
+            return (w, "chassis_decoder") if return_source else w
+
         # Light Ultrabooks (1.3kg - 1.45kg)
-        if any(k in t for k in ['t14s', '830', '840 g8', '7420', '7430', '7410', 't490s']): return (1.35, "chassis_decoder") if return_source else 1.35
+        if any(k in t for k in ['t14s', '830', '840 g8', '7410', 't490s']): return (1.35, "chassis_decoder") if return_source else 1.35
         if any(k in t for k in ['840 g3', 'firefly 14', 'l13', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251']): return (1.40, "chassis_decoder") if return_source else 1.40
 
         # Standard 14" Business (1.45kg - 1.65kg)
@@ -492,7 +498,8 @@ class HardwareClassifier:
         # Heavy Workstations / Long Battery beasts
         if any(k in t for k in ['p52', 'p15 gen', 'p15 g1', 'zbook fury 15', 'p1 gen 3']): return (90, "chassis_decoder") if return_source else 90
         if any(k in t for k in ['zbook 15 g6', '5531', '5431', 'p15v']): return (68, "chassis_decoder") if return_source else 68
-        if any(k in t for k in ['x1 carbon', 't14s', '7420', '7320', '7330', '7430', '5430', '5530', '5330', 't490s']): return (57, "chassis_decoder") if return_source else 57
+        if any(k in t for k in ['7420', '7430', '5420', '5421', '5520', '5521']): return (63, "chassis_decoder") if return_source else 63
+        if any(k in t for k in ['x1 carbon', 't14s', '7320', '7330', '5430', '5530', '5330', 't490s']): return (57, "chassis_decoder") if return_source else 57
         if any(k in t for k in ['t14', 'p14s', 'e14 gen 4', '830 g8', '840 g8', 'firefly 14', 'p15s', 't490']): return (51, "chassis_decoder") if return_source else 51
         if any(k in t for k in ['a2337', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251', 'surface 3', 'surface 4']): return (49, "chassis_decoder") if return_source else 49
         if any(k in t for k in ['e480', '5410', '5480', 'x280', 'x13', '840 g3', 'e7440', '435 g7']): return (45, "chassis_decoder") if return_source else 45
