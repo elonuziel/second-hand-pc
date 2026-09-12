@@ -15,3 +15,4 @@ def fetch_resilient_url(url: str, **kwargs) -> Tuple[int, str]:
         pass
     from http_session import fetch_resilient_url as _fetch
     return _fetch(url, **kwargs)
+
