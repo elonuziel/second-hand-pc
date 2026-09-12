@@ -230,6 +230,20 @@ class HardwareClassifier:
     _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
     _STORAGE_GB_RE = re.compile(r'(?:^|[^\w])(128|240|250|256|480|500|512)\s*(?:gb|g|גיגה)?(?:\s*ssd|\s*nvme|\s*אחסון)?(?:[^\w]|$)')
 
+    # Constant tuples for brand and architecture detection to avoid list allocation at runtime
+    _LENOVO_KEYWORDS = ('thinkpad', 'lenovo', 'ideapad', 'legion', 'לנובו')
+    _DELL_KEYWORDS = ('dell', 'latitude', 'precision', 'xps', 'דל', 'vostro', 'inspiron')
+    _HP_KEYWORDS = ('hp', 'elitebook', 'zbook', 'probook')
+    _MICROSOFT_KEYWORDS = ('surface', 'microsoft')
+    _APPLE_KEYWORDS = ('macbook', 'apple', 'אפל', 'mac')
+
+    _SOLDERED_RAM_KEYWORDS = ('x360', '7320', '7410', '7420', '7430', 'x1 carbon', 'x13', 't14s', 'x280')
+    _SEMI_MODULAR_KEYWORDS = ('t14', 'p14s', 'p15s', 't480s', 't470s', 't490s')
+    _FULL_MODULAR_KEYWORDS = ('840', '850', '855', 'firefly', '5410', '5420', '5430', '5431', '5530', '5531', 'l14', 'l390', '430', 'e480', 'a517', 'vostro', 'inspiron', '435')
+    _LEGACY_BAY_KEYWORDS = ('t460', '650 g2', 'g-4', 'e7440', '5480', '255 g5')
+
+    _NON_LAPTOP_KEYWORDS = ('mini pc', 'desktop', 'prodesk', 'elitedesk', 'optiplex', 'שולחני', 'מחשב שולחני', 'מקלדת', 'סוללה', 'מטען', 'מסך ', 'זכרון ')
+
     @classmethod
     def clean_text(cls, text: str) -> str:
         if not text:
@@ -254,15 +268,15 @@ class HardwareClassifier:
     @classmethod
     def detect_brand(cls, title: str) -> str:
         t = title.lower()
-        if any(k in t for k in ['thinkpad', 'lenovo', 'ideapad', 'legion', 'לנובו']):
+        if any(k in t for k in cls._LENOVO_KEYWORDS):
             return "Lenovo"
-        if any(k in t for k in ['dell', 'latitude', 'precision', 'xps', 'דל', 'vostro', 'inspiron']):
+        if any(k in t for k in cls._DELL_KEYWORDS):
             return "Dell"
-        if any(k in t for k in ['hp', 'elitebook', 'zbook', 'probook']):
+        if any(k in t for k in cls._HP_KEYWORDS):
             return "HP"
-        if any(k in t for k in ['surface', 'microsoft']):
+        if any(k in t for k in cls._MICROSOFT_KEYWORDS):
             return "Microsoft"
-        if any(k in t for k in ['macbook', 'apple', 'אפל', 'mac']):
+        if any(k in t for k in cls._APPLE_KEYWORDS):
             return "Apple"
         if 'acer' in t:
             return "Acer"
@@ -352,23 +366,23 @@ class HardwareClassifier:
         if 'surface' in t or 'macbook' in t:
             return 1.0, "🔒 Soldered BGA NVMe / Unified", "Soldered (Non-upgradeable)"
         # Soldered RAM Ultrabooks with Standard NVMe M.2 SSD
-        if any(k in t for k in ['x360', '7320', '7410', '7420', '7430', 'x1 carbon', 'x13', 't14s', 'x280']):
+        if any(k in t for k in cls._SOLDERED_RAM_KEYWORDS):
             return 5.0, "⚡ M.2 2280 PCIe NVMe (Swappable)", "Soldered LPDDR4x/5 (Fixed)"
         # Semi-Modular Business Laptops
-        if any(k in t for k in ['t14', 'p14s', 'p15s', 't480s', 't470s', 't490s']):
+        if any(k in t for k in cls._SEMI_MODULAR_KEYWORDS):
             return 7.5, "⚡ M.2 2280 PCIe NVMe (Swappable)", "1x Soldered + 1x SODIMM Slot (max 48GB)"
         # Full Modular SODIMM Dual Slot NVMe
-        if any(k in t for k in ['840', '850', '855', 'firefly', '5410', '5420', '5430', '5431', '5530', '5531', 'l14', 'l390', '430', 'e480', 'a517', 'vostro', 'inspiron', '435']):
+        if any(k in t for k in cls._FULL_MODULAR_KEYWORDS):
             return 9.0, "⚡ M.2 2280 PCIe NVMe (Swappable)", "2x SODIMM Slots (up to 64GB)"
         # Legacy 2.5" SATA Bay
-        if any(k in t for k in ['t460', '650 g2', 'g-4', 'e7440', '5480', '255 g5']):
+        if any(k in t for k in cls._LEGACY_BAY_KEYWORDS):
             return 8.0, "🐢 2.5\" SATA SSD / Bay", "2x SODIMM Slots"
         return 7.5, "⚡ M.2 2280 PCIe NVMe (Swappable)", "Modular / Semi-Modular"
 
     @classmethod
     def is_laptop(cls, title: str) -> bool:
         t = title.lower()
-        if any(k in t for k in ['mini pc', 'desktop', 'prodesk', 'elitedesk', 'optiplex', 'שולחני', 'מחשב שולחני', 'מקלדת', 'סוללה', 'מטען', 'מסך ', 'זכרון ']):
+        if any(k in t for k in cls._NON_LAPTOP_KEYWORDS):
             return False
         return True
 
@@ -377,8 +391,11 @@ class HardwareClassifier:
 class TopPicksEngine:
     """Algorithmically analyzes the entire live inventory and selects the best top picks."""
 
-    @staticmethod
-    def select_top_picks(all_items: List[LaptopItem]) -> List[Tuple[str, str, LaptopItem]]:
+    _TOUCH_KEYWORDS = ('touch', 'x360', '2-in-1', 'טאצ')
+    _ULTRABOOK_KEYWORDS = ('7320', '7330', 'x13', 'carbon', 'x30l')
+
+    @classmethod
+    def select_top_picks(cls, all_items: List[LaptopItem]) -> List[Tuple[str, str, LaptopItem]]:
         picks: List[Tuple[str, str, LaptopItem]] = []
         valid_items = [i for i in all_items if i.deal_price_ils > 0 and i.stock_status.startswith("🟢")]
 
@@ -401,7 +418,7 @@ class TopPicksEngine:
             picks.append(("⚡ Best Modern CPU Power (12th Gen)", "Latest Architecture Performance", gen12[0]))
 
         # 4. 🥈 Best 2-in-1 / Touchscreen
-        touch = [i for i in valid_items if any(k in i.title.lower() for k in ['touch', 'x360', '2-in-1', 'טאצ']) or i.is_2in1 or i.is_touch]
+        touch = [i for i in valid_items if any(k in i.title.lower() for k in cls._TOUCH_KEYWORDS) or i.is_2in1 or i.is_touch]
         if touch:
             touch.sort(key=lambda x: (-x.warranty_months, x.deal_price_ils))
             picks.append(("🥈 Best 2-in-1 / Touchscreen", "Versatile 360° / Touch Display", touch[0]))
@@ -413,7 +430,7 @@ class TopPicksEngine:
             picks.append(("🏗️ Best Heavy Workstation", "4x RAM Slots + Multi-NVMe Bays", workstations[0]))
 
         # 6. 🪶 Best Featherlight / Portable (< 1.3kg)
-        ultrabooks = [i for i in valid_items if any(k in i.title.lower() for k in ['7320', '7330', 'x13', 'carbon', 'x30l'])]
+        ultrabooks = [i for i in valid_items if any(k in i.title.lower() for k in cls._ULTRABOOK_KEYWORDS)]
         if ultrabooks:
             ultrabooks.sort(key=lambda x: (-x.warranty_months, x.deal_price_ils))
             picks.append(("🪶 Best Featherlight (< 1.3kg)", "Maximum Portability & Battery Life", ultrabooks[0]))
