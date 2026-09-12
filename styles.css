@@ -995,6 +995,11 @@ h1 {
   color: #ea580c;
 }
 
+.store-volt {
+  background: rgba(13, 148, 136, 0.12);
+  color: #0f766e;
+}
+
 .store-gomobile {
   background: rgba(2, 132, 199, 0.12);
   color: #0284c7;

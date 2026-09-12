@@ -484,6 +484,7 @@ function getStoreClass(store) {
   if (s.includes('shufersal') || s.includes('שופרסל')) return 'store-shufersal';
   if (s.includes('p1000') || s.includes('פי אלף')) return 'store-p1000';
   if (s.includes('lastprice') || s.includes('לאסטפרייס')) return 'store-lastprice';
+  if (s.includes('volt') || s.includes('וולט')) return 'store-volt';
   if (s.includes('gomobile')) return 'store-gomobile';
   if (s.includes('partner')) return 'store-partner';
   if (s.includes('vmobile')) return 'store-vmobile';

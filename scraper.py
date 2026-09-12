@@ -280,7 +280,7 @@ class HardwareClassifier:
     _GEN5_RE = re.compile(r'(?:5th|דור\s*5|5\s*gen|a1466|5[0-9]{3}[uh])', re.IGNORECASE)
     _GEN4_RE = re.compile(r'(?:4th|דור\s*4|4\s*gen|g-4|e7440|4[0-9]{3}[uh]|4200u|4300u)', re.IGNORECASE)
 
-    _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
+    _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
     _EXPLICIT_RAM_RE = re.compile(
         r'(?:(?:ram|זכרון|זיכרון|memory)\s*(?:של\s*)?(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)?'
         r'|(?<!דור\s)(?<!דור)(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)\s*(?:ram|זכרון|זיכרון|memory)'
@@ -1552,6 +1552,98 @@ class LastPriceScraper:
         return items
 
 
+# --- Store 11: VOLT (וולט מחשוב ירוק) Scraper ---
+class VoltScraper:
+    STORE_NAME = "Volt"
+    CATALOG_URL = "https://www.volt.co.il/23409-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D"
+
+    def __init__(self, session: Any = None):
+        self.session = session
+
+    def scrape(self) -> List[LaptopItem]:
+        logger.info("Scraping VOLT Green Computing...")
+        items: List[LaptopItem] = []
+        page = 1
+        seen_urls = set()
+        try:
+            while page <= 15:
+                url = f"{self.CATALOG_URL}?page={page}" if page > 1 else self.CATALOG_URL
+                status, text = fetch_resilient_url(url)
+                if status != 200 or not text:
+                    break
+
+                cards = re.findall(
+                    r'<div id=[\"\']item_id_(\d+)[\"\'][^>]*class=[\"\'][^\"\']*layout_list_item[^\"\']*[\"\'][^>]*>([\s\S]*?)<!-- end layout_list_item -->',
+                    text
+                )
+                if not cards:
+                    break
+
+                for item_id, card_body in cards:
+                    title_m = re.search(
+                        r'<div class=[\"\']list_item_title_with_brand[\"\']>\s*<h3><a href=[\"\']([^\"\']+)[\"\']>([\s\S]*?)</a></h3>',
+                        card_body
+                    )
+                    if not title_m:
+                        continue
+
+                    rel_url = title_m.group(1).strip()
+                    full_url = f"https://www.volt.co.il{rel_url}" if rel_url.startswith('/') else rel_url
+                    if full_url in seen_urls:
+                        continue
+                    seen_urls.add(full_url)
+
+                    raw_title = html.unescape(re.sub(r'<[^>]+>', ' ', title_m.group(2))).strip()
+                    t_low = raw_title.lower()
+                    if any(x in t_low for x in ['נייח', 'tiny', 'mini pc', 'desktop', 'optiplex', 'prodesk', 'elitedesk', 'tower', 'sff', 'all in one', 'aio', 'שולחני']):
+                        continue
+
+                    price_m = re.search(r'<strong>\s*([0-9,]+)\s*₪\s*</strong>', card_body)
+                    if not price_m:
+                        price_m = re.search(r'([0-9,]+)\s*₪', card_body)
+                    price = int(price_m.group(1).replace(',', '')) if price_m else 0
+                    if price <= 0:
+                        continue
+
+                    img_m = re.search(
+                        r'<div class=[\"\']list_item_image[\"\']>[\s\S]*?<img[^>]*src=[\"\']([^\"\']+)[\"\']',
+                        card_body
+                    )
+                    img = img_m.group(1).strip() if img_m else ""
+
+                    desc_m = re.search(
+                        r'<div class=[\"\']list_item_current_list_item_content[\"\']>[\s\S]*?<p>([\s\S]*?)</p>',
+                        card_body
+                    )
+                    desc_text = re.sub(r'<[^>]+>', ' ', desc_m.group(1)).strip() if desc_m else ""
+                    analysis = f"{raw_title} {desc_text}"
+
+                    warranty = 12
+                    if "שנתיים" in analysis or "24 חודש" in analysis:
+                        warranty = 24
+                    elif "3 שנים" in analysis or "36 חודש" in analysis:
+                        warranty = 36
+
+                    items.append(HardwareClassifier.build_laptop(
+                        store=self.STORE_NAME,
+                        title=raw_title,
+                        price_ils=price,
+                        url=full_url,
+                        analysis_text=analysis,
+                        warranty_months=warranty,
+                        stock_status="🟢 In Stock",
+                        image_url=img
+                    ))
+
+                if 'class="next_page"' not in text and "class='next_page'" not in text:
+                    break
+                page += 1
+
+        except Exception as e:
+            logger.error(f"Error scraping VOLT: {e}")
+        return items
+
+
 # --- Master Report Generator ---
 class ReportGenerator:
     """Exports structured datasets and generates comprehensive comparison markdown guides."""
@@ -1588,6 +1680,7 @@ class ReportGenerator:
         shuf_items = all_results.get('shufersal', [])
         p1000_items = all_results.get('p1000', [])
         lp_items = all_results.get('lastprice', [])
+        volt_items = all_results.get('volt', [])
 
         # Flatten all items to dynamically compute Top Overall Picks
         all_laptops: List[LaptopItem] = []
@@ -1609,6 +1702,7 @@ class ReportGenerator:
 8. 🏬 **Shufersal Online (שופרסל):** [shufersal.co.il/G030401](https://www.shufersal.co.il/online/he/%D7%A7%D7%98%D7%92%D7%95%D7%A8%D7%99%D7%95%D7%AA/%D7%94%D7%A7%D7%A0%D7%99%D7%95%D7%9F-%D7%94%D7%9B%D7%9C-%D7%9C%D7%91%D7%99%D7%AA/%D7%90%D7%9C%D7%A7%D7%98%D7%A8%D7%95%D7%A0%D7%99%D7%A7%D7%94-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%95%D7%92%D7%99%D7%99%D7%9E%D7%99%D7%A0%D7%92/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%95%D7%A0%D7%99%D7%99%D7%97%D7%99%D7%9D/c/G030401)
 9. 🏬 **P1000 (פי אלף):** [p1000.co.il/laptopoutlet](https://www.p1000.co.il/categories/category.aspx?categoryname=laptopoutlet)
 10. 🏬 **LastPrice (לאסטפרייס):** [lastprice.co.il/c/85](https://www.lastprice.co.il/c/85/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%95%D7%92%D7%99%D7%99%D7%9E%D7%99%D7%A0%D7%92/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%95%D7%A2%D7%95%D7%93%D7%A4%D7%99-%D7%9E%D7%9C%D7%90%D7%99)
+11. 🏬 **VOLT (וולט מחשוב ירוק):** [volt.co.il/23409-ניידים-מחודשים](https://www.volt.co.il/23409-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
 
 *Last Automated Live Audit: {now_str}*
 
@@ -1630,6 +1724,7 @@ class ReportGenerator:
 - [🏬 Shufersal Online Live Audit](#-8-shufersal-online-שופרסל--live-stock-audit)
 - [🏬 P1000 Live Audit](#-9-p1000-פי-אלף--live-stock-audit)
 - [🏬 LastPrice Live Audit](#-10-lastprice-לאסטפרייס--live-stock-audit)
+- [🏬 VOLT Live Audit](#-11-volt-וולט-מחשוב-ירוק--live-stock-audit)
 - [🎯 Buyer Rules of Thumb](#-quick-rules-of-thumb)
 
 ---
@@ -1737,6 +1832,7 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
         _append_store_section(8, "Shufersal Online (שופרסל)", shuf_items)
         _append_store_section(9, "P1000 (פי אלף)", p1000_items)
         _append_store_section(10, "LastPrice (לאסטפרייס)", lp_items)
+        _append_store_section(11, "VOLT (וולט מחשוב ירוק)", volt_items)
 
         md_parts.append("""
 ---
@@ -1772,7 +1868,8 @@ class MasterLaptopAuditor:
             'alm': ALMScraper,
             'shufersal': ShufersalScraper,
             'p1000': P1000Scraper,
-            'lastprice': LastPriceScraper
+            'lastprice': LastPriceScraper,
+            'volt': VoltScraper
         }
 
     def run(self, store_filter: Optional[str] = None, max_workers: int = 6, use_ai: bool = False) -> Dict[str, List[LaptopItem]]:
@@ -1814,7 +1911,7 @@ def main():
     )
     parser.add_argument(
         "--store",
-        choices=['itoutlet', 'ecology', 'lts', 'recomp', 'cwc', 'payngo', 'alm', 'shufersal', 'p1000', 'lastprice', 'all'],
+        choices=['itoutlet', 'ecology', 'lts', 'recomp', 'cwc', 'payngo', 'alm', 'shufersal', 'p1000', 'lastprice', 'volt', 'all'],
         default='all',
         help="Specific store to scrape"
     )

@@ -22,6 +22,7 @@ from scraper import (
     ShufersalScraper,
     P1000Scraper,
     LastPriceScraper,
+    VoltScraper,
 )
 
 
@@ -51,9 +52,9 @@ class TestCatalogDataHealth(unittest.TestCase):
         self.assertGreater(len(self.items), 40, f"Expected > 40 laptops, found only {len(self.items)}")
 
     def test_all_ten_stores_represented(self):
-        """Ensure scrapers for all 10 laptop stores are working."""
+        """Ensure scrapers for all 11 laptop stores are working."""
         stores_found = set(item.get("store", "") for item in self.items)
-        expected_stores = ["Ecology", "IT Outlet", "LTS", "Recomp", "Olam HaKolnoa", "Payngo", "ALM", "Shufersal", "P1000", "LastPrice"]
+        expected_stores = ["Ecology", "IT Outlet", "LTS", "Recomp", "Olam HaKolnoa", "Payngo", "ALM", "Shufersal", "P1000", "LastPrice", "Volt"]
         
         for expected in expected_stores:
             matching = [s for s in stores_found if expected.lower().replace(" ", "") in s.lower().replace(" ", "")]
@@ -480,6 +481,56 @@ class TestNewLaptopScrapers(unittest.TestCase):
         self.assertEqual(items[0].price_ils, 2190)
         self.assertEqual(items[0].warranty_months, 24)
         self.assertEqual(items[0].image_url, "https://www.lastprice.co.il/uploadimages/dell5430.jpg")
+
+    @patch("scraper.fetch_resilient_url")
+    def test_volt_scraper_parsing(self, mock_fetch):
+        mock_html = '''
+        <div id="item_id_2962959" class="layout_list_item css_class_23409 ">
+          <div class="list_item_title_with_brand">
+            <h3><a href="/items/2962959-thinkpad-t480s">נייד אולטרבוק מסך 14" ThinkPad T480s Core i5-8250U 16GB 512GB SSD Windows 10 PRO לנובו</a></h3>
+          </div>
+          <div class="list_item_current_list_item_content">
+            <p>מחשב נייד מחודש אולטרבוק לנובו מסדרה T דיסק SSD מהיר</p>
+          </div>
+          <div class="list_item_show_price">
+            <a class="price" href="/items/2962959"><span>מחיר</span><strong>1,950 ₪</strong></a>
+          </div>
+          <div class="list_item_image">
+            <img alt="ThinkPad T480s" src="https://d3m9l0v76dty0.cloudfront.net/system/photos/5042885/show/t480s.jpg" />
+          </div>
+        </div>
+        <!-- end layout_list_item -->
+        <div id="item_id_9999999" class="layout_list_item css_class_23409 ">
+          <div class="list_item_title_with_brand">
+            <h3><a href="/items/9999999">מחשב שולחני נייח דל אופטיפלקס OptiPlex</a></h3>
+          </div>
+          <div class="list_item_show_price">
+            <strong>1,200 ₪</strong>
+          </div>
+        </div>
+        <!-- end layout_list_item -->
+        <div id="item_id_8888888" class="layout_list_item css_class_23409 ">
+          <div class="list_item_title_with_brand">
+            <h3><a href="/items/8888888">מחשב נייד ישן ללא מחיר</a></h3>
+          </div>
+          <div class="list_item_show_price">
+            <a class="zero_price_link" href="/items/8888888"></a>
+          </div>
+        </div>
+        <!-- end layout_list_item -->
+        '''
+        mock_fetch.return_value = (200, mock_html)
+        scraper = VoltScraper()
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "Volt")
+        self.assertEqual(items[0].brand, "Lenovo")
+        self.assertEqual(items[0].price_ils, 1950)
+        self.assertEqual(items[0].ram_gb, 16)
+        self.assertEqual(items[0].storage_gb, 512)
+        self.assertEqual(items[0].warranty_months, 12)
+        self.assertEqual(items[0].url, "https://www.volt.co.il/items/2962959-thinkpad-t480s")
+        self.assertEqual(items[0].image_url, "https://d3m9l0v76dty0.cloudfront.net/system/photos/5042885/show/t480s.jpg")
 
 
 class TestFrontendCompatibility(unittest.TestCase):
