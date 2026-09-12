@@ -80,21 +80,10 @@
               </div>
 
               <div class="filter-group">
-                <label for="brandFilter">Brand</label>
-                <select id="brandFilter" class="filter-select">
-                  <option value="all">All Brands</option>
-                  <option value="Lenovo">Lenovo</option>
-                  <option value="Dell">Dell</option>
-                  <option value="HP">HP</option>
-                  <option value="Apple">Apple</option>
-                  <option value="Samsung">Samsung</option>
-                  <option value="Xiaomi">Xiaomi</option>
-                  <option value="Motorola">Motorola</option>
-                  <option value="Google">Google</option>
-                  <option value="Asus">Asus</option>
-                  <option value="Acer">Acer</option>
-                  <option value="Microsoft">Microsoft</option>
-                </select>
+                <label>Brand <small>(Multi-Select)</small></label>
+                <div id="brandFilterContainer" class="brand-pills-wrapper">
+                  <!-- Dynamically populated brand pills -->
+                </div>
               </div>
 
               <div class="filter-group filter-group-slider">
@@ -126,14 +115,14 @@
                     aria-label="Maximum price budget"
                   />
                 </div>
-                <div class="slider-ticks">
-                  <span>800 ₪</span>
-                  <span>2,500 ₪</span>
-                  <span>5,000 ₪</span>
+                <div id="sliderTicks" class="slider-ticks">
+                  <span id="tickMin">800 ₪</span>
+                  <span id="tickMid">2,500 ₪</span>
+                  <span id="tickMax">5,000 ₪</span>
                 </div>
               </div>
 
-              <div class="filter-group">
+              <div id="cpuGenFilterGroup" class="filter-group">
                 <label for="cpuGenFilter">CPU Gen</label>
                 <div class="filter-control-row">
                   <select id="cpuGenFilter" class="filter-select">
@@ -188,7 +177,7 @@
               </div>
 
               <div class="filter-group">
-                <label for="formFilter">Type / Screen</label>
+                <label id="formFilterLabel" for="formFilter">Type / Screen</label>
                 <select id="formFilter" class="filter-select">
                   <option value="all">All Types</option>
                   <option value="2in1">2-in-1 / Touchscreen</option>
@@ -212,7 +201,7 @@
                 </div>
               </div>
 
-              <div class="filter-group">
+              <div id="weightFilterGroup" class="filter-group">
                 <label for="weightFilter">Weight</label>
                 <div class="filter-control-row">
                   <select id="weightFilter" class="filter-select">
@@ -229,7 +218,7 @@
                 </div>
               </div>
 
-              <div class="filter-group">
+              <div id="batteryFilterGroup" class="filter-group">
                 <label for="batteryFilter">Battery</label>
                 <div class="filter-control-row">
                   <select id="batteryFilter" class="filter-select">
@@ -246,7 +235,7 @@
                 </div>
               </div>
 
-              <div class="filter-group">
+              <div id="upgradabilityFilterGroup" class="filter-group">
                 <label for="upgradabilityFilter">Upgradability</label>
                 <div class="filter-control-row">
                   <select id="upgradabilityFilter" class="filter-select">

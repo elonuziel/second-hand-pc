@@ -114,6 +114,40 @@ h1 {
   border-color: var(--primary);
 }
 
+.brand-pills-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+
+.brand-pill-btn {
+  border: 1px solid var(--border);
+  background: var(--panel-alt);
+  color: var(--ink);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.brand-pill-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.brand-pill-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
 .theme-toggle-btn {
   display: inline-flex;
   align-items: center;
