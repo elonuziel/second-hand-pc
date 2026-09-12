@@ -47,7 +47,7 @@ logging.basicConfig(
 logger = logging.getLogger("MobileScraper")
 
 try:
-    from http_session import create_resilient_session, DEFAULT_HEADERS
+    from http_session import create_resilient_session, fetch_resilient_url, DEFAULT_HEADERS
 except ImportError:
     DEFAULT_HEADERS = {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
@@ -71,6 +71,15 @@ except ImportError:
         session.mount("https://", adapter)
         session.mount("http://", adapter)
         return session
+
+    def fetch_resilient_url(url: str, timeout: int = 25, **_) -> tuple:
+        """Fallback when http_session is unavailable — plain requests."""
+        try:
+            r = requests.get(url, headers=DEFAULT_HEADERS, timeout=timeout, verify=False)
+            return r.status_code, r.text
+        except Exception:
+            return 0, ""
+
 
 
 @dataclass
@@ -570,67 +579,106 @@ class VMobileScraper:
 
 class LastPriceMobileScraper:
     STORE_NAME = "LastPrice"
-    CATALOG_URL = "https://www.lastprice.co.il/c/531/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%98%D7%9C%D7%A4%D7%95%D7%A0%D7%99%D7%9D-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D?filter1=20710526,20670485"
+    # Try the filtered URL first, then without filters, then the broader category
+    CATALOG_URLS = [
+        "https://www.lastprice.co.il/c/531/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%98%D7%9C%D7%A4%D7%95%D7%A0%D7%99%D7%9D-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D?filter1=20710526,20670485",
+        "https://www.lastprice.co.il/c/531/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%98%D7%9C%D7%A4%D7%95%D7%A0%D7%99%D7%9D-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D",
+        "https://www.lastprice.co.il/c/531/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%A1%D7%9C%D7%95%D7%9C%D7%A8",
+    ]
 
     def __init__(self, session: Any):
         self.session = session
 
+    def _fetch(self, url: str, timeout: int = 20) -> str:
+        """Try session.get() first; if it returns non-200 or fails, try resilient engine."""
+        try:
+            r = self.session.get(url, timeout=timeout)
+            if r.status_code == 200 and r.text:
+                return r.text
+            logger.debug("Session returned %s for %s, trying resilient engine.", r.status_code, url)
+        except Exception as ex:
+            logger.debug("Session.get failed for %s: %s", url, ex)
+        # Fallback: pycurl → curl_cffi → requests engine chain
+        try:
+            status, text = fetch_resilient_url(url, timeout=timeout)
+            if status == 200 and text:
+                return text
+        except Exception as ex:
+            logger.debug("Resilient fetch also failed for %s: %s", url, ex)
+        return ""
+
     def scrape(self) -> List[MobileItem]:
         logger.info("Scraping LastPrice Mobile...")
         items: List[MobileItem] = []
-        seen = set()
+        seen: set = set()
 
-        try:
-            r = self.session.get(self.CATALOG_URL, timeout=15)
-            if r.status_code != 200:
-                logger.warning(f"LastPrice returned HTTP {r.status_code}")
-                return items
-
-            blocks = re.findall(
-                r'<div[^>]*class=[\"\'][^\"\']*infinite-item[^\"\']*[\"\'][^>]*>(.*?)(?=<div[^>]*class=[\"\'][^\"\']*infinite-item|$)',
-                r.text,
-                re.DOTALL
-            )
-
-            for b in blocks:
-                title_m = re.findall(r'<h3[^>]*>(.*?)</h3>', b)
-                if not title_m:
-                    continue
-                raw_title = title_m[0].strip()
-                if not MobileClassifier.is_mobile_device(raw_title):
+        for catalog_url in self.CATALOG_URLS:
+            try:
+                html_text = self._fetch(catalog_url)
+                if not html_text:
+                    logger.warning("LastPrice: empty response for %s", catalog_url)
                     continue
 
-                link_m = re.findall(r'href=[\"\'](https://www.lastprice.co.il/p/[^\"\']+)[\"\']', b)
-                if not link_m:
-                    continue
-                full_link = link_m[0].strip()
-                if full_link in seen:
-                    continue
-                seen.add(full_link)
+                blocks = re.findall(
+                    r'<div[^>]*class=[\"\'][^\"\']*infinite-item[^\"\']*[\"\'][^>]*>(.*?)(?=<div[^>]*class=[\"\'][^\"\']*infinite-item|$)',
+                    html_text,
+                    re.DOTALL
+                )
 
-                price_m = re.findall(r'₪([0-9,]+)', b)
-                price = int(price_m[0].replace(',', '')) if price_m else 0
-                if price <= 0:
+                if not blocks:
+                    logger.warning("LastPrice: no infinite-item blocks found in %s", catalog_url)
                     continue
 
-                img_m = re.findall(r'<img[^>]*class=[\"\'][^\"\']*prodimg[^\"\']*[\"\'][^>]*src=[\"\']([^\"\']+)[\"\']', b)
-                img_url = ''
-                if img_m:
-                    src = img_m[0].strip()
-                    img_url = src if src.startswith('http') else f"https://www.lastprice.co.il{src}"
+                logger.info("LastPrice: found %d blocks in %s", len(blocks), catalog_url)
 
-                items.append(MobileClassifier.build_item(
-                    store=self.STORE_NAME,
-                    title=raw_title,
-                    price_ils=price,
-                    url=full_link,
-                    image_url=img_url,
-                    warranty_months=12
-                ))
-        except Exception as e:
-            logger.error(f"Error scraping LastPrice: {e}")
+                for b in blocks:
+                    title_m = re.findall(r'<h3[^>]*>(.*?)</h3>', b)
+                    if not title_m:
+                        continue
+                    raw_title = title_m[0].strip()
+                    if not MobileClassifier.is_mobile_device(raw_title):
+                        continue
 
+                    link_m = re.findall(r'href=["\']([^"\']*lastprice\.co\.il/p/[^"\']+)["\']', b)
+                    if not link_m:
+                        continue
+                    full_link = link_m[0].strip()
+                    if full_link in seen:
+                        continue
+                    seen.add(full_link)
+
+                    price_m = re.findall(r'₪([0-9,]+)', b)
+                    price = int(price_m[0].replace(',', '')) if price_m else 0
+                    if price <= 0:
+                        continue
+
+                    img_m = re.findall(r'<img[^>]*class=[\"\'][^\"\']*prodimg[^\"\']*[\"\'][^>]*src=[\"\']([^\"\']+)[\"\']', b)
+                    img_url = ''
+                    if img_m:
+                        src = img_m[0].strip()
+                        img_url = src if src.startswith('http') else f"https://www.lastprice.co.il{src}"
+
+                    items.append(MobileClassifier.build_item(
+                        store=self.STORE_NAME,
+                        title=raw_title,
+                        price_ils=price,
+                        url=full_link,
+                        image_url=img_url,
+                        warranty_months=12
+                    ))
+
+                if items:
+                    logger.info("LastPrice: scraped %d mobile items.", len(items))
+                    return items  # success — no need to try more URLs
+
+            except Exception as e:
+                logger.error("Error scraping LastPrice from %s: %s", catalog_url, e)
+
+        if not items:
+            logger.warning("LastPrice: all catalog URLs exhausted, returning 0 items.")
         return items
+
+
 
 
 class MasterMobileAuditor:
@@ -691,8 +739,34 @@ def main():
     for store_name, items in results.items():
         all_items.extend(items)
 
+    # --- Preserve previously scraped data for any stores that returned 0 items ---
+    # This prevents blocked/timeout stores from wiping their section from the JSON.
+    if os.path.exists(JSON_PATH):
+        try:
+            with open(JSON_PATH, encoding="utf-8") as _f:
+                _prev_raw = json.load(_f)
+            _fields = set(MobileItem.__dataclass_fields__.keys())
+            for _key in list(results.keys()):
+                if len(results[_key]) == 0 and _key in _prev_raw and isinstance(_prev_raw[_key], list) and _prev_raw[_key]:
+                    logger.warning(
+                        "⚠️  Mobile store '%s' returned 0 items — preserving %d previously scraped items.",
+                        _key, len(_prev_raw[_key])
+                    )
+                    results[_key] = [
+                        MobileItem(**{k: v for k, v in _d.items() if k in _fields})
+                        for _d in _prev_raw[_key]
+                        if isinstance(_d, dict)
+                    ]
+                    # Rebuild all_items to include re-instated items
+            all_items = []
+            for store_name, items in results.items():
+                all_items.extend(items)
+        except Exception as _e:
+            logger.warning("Could not load previous mobile catalog for fallback: %s", _e)
+
     ReportGenerator_export = MobileReportGenerator
     ReportGenerator_export.export_json(results, JSON_PATH)
+
 
     if args.csv:
         ReportGenerator_export.export_csv(all_items, CSV_PATH)
