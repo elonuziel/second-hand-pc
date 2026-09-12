@@ -233,7 +233,6 @@ def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = FULL_CATA
     logger.info(f"Summary markdown updated at {md_file}")
 
 
-def enrich_dataset(json_file: str = JSON_PATH, csv_file: str = CSV_PATH):
 def enrich_dataset(json_file: str = JSON_PATH, csv_file: str = CSV_PATH, use_ai: bool = False):
     if not os.path.exists(json_file):
         logger.warning(f"File {json_file} does not exist. Skipping enrichment.")
