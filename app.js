@@ -24,6 +24,7 @@ const state = {
   catalogFilters: {
     category: 'all',
     store: 'all',
+    brands: [], // Array of selected brand strings (empty = all)
     brand: 'all',
     priceMin: 100,
     priceMax: 5000,
@@ -65,12 +66,22 @@ const themeToggle = typeof document !== 'undefined' ? document.getElementById('t
 
 const categoryFilter = typeof document !== 'undefined' ? document.getElementById('categoryFilter') : null;
 const storeFilter = typeof document !== 'undefined' ? document.getElementById('storeFilter') : null;
-const brandFilter = typeof document !== 'undefined' ? document.getElementById('brandFilter') : null;
+const brandFilterContainer = typeof document !== 'undefined' ? document.getElementById('brandFilterContainer') : null;
 const priceMinSlider = typeof document !== 'undefined' ? document.getElementById('priceMinSlider') : null;
 const priceMaxSlider = typeof document !== 'undefined' ? document.getElementById('priceMaxSlider') : null;
 const priceSliderRange = typeof document !== 'undefined' ? document.getElementById('priceSliderRange') : null;
 const priceSlider = typeof document !== 'undefined' ? (document.getElementById('priceMaxSlider') || document.getElementById('priceSlider')) : null;
 const priceDisplay = typeof document !== 'undefined' ? document.getElementById('priceDisplay') : null;
+const tickMin = typeof document !== 'undefined' ? document.getElementById('tickMin') : null;
+const tickMid = typeof document !== 'undefined' ? document.getElementById('tickMid') : null;
+const tickMax = typeof document !== 'undefined' ? document.getElementById('tickMax') : null;
+
+const cpuGenFilterGroup = typeof document !== 'undefined' ? document.getElementById('cpuGenFilterGroup') : null;
+const weightFilterGroup = typeof document !== 'undefined' ? document.getElementById('weightFilterGroup') : null;
+const batteryFilterGroup = typeof document !== 'undefined' ? document.getElementById('batteryFilterGroup') : null;
+const upgradabilityFilterGroup = typeof document !== 'undefined' ? document.getElementById('upgradabilityFilterGroup') : null;
+const formFilterLabel = typeof document !== 'undefined' ? document.getElementById('formFilterLabel') : null;
+
 const cpuGenFilter = typeof document !== 'undefined' ? document.getElementById('cpuGenFilter') : null;
 const ramFilter = typeof document !== 'undefined' ? document.getElementById('ramFilter') : null;
 const storageFilter = typeof document !== 'undefined' ? document.getElementById('storageFilter') : null;
@@ -81,10 +92,181 @@ const batteryFilter = typeof document !== 'undefined' ? document.getElementById(
 const upgradabilityFilter = typeof document !== 'undefined' ? document.getElementById('upgradabilityFilter') : null;
 const sortFilter = typeof document !== 'undefined' ? document.getElementById('sortFilter') : null;
 
+function adaptFilterControlsForMode(isMobile) {
+  if (typeof document === 'undefined') return;
+
+  const minLimit = isMobile ? 100 : 800;
+  const maxLimit = isMobile ? 4500 : 5000;
+  const step = isMobile ? 50 : 50;
+
+  if (priceMinSlider) {
+    priceMinSlider.min = minLimit;
+    priceMinSlider.max = maxLimit;
+    priceMinSlider.step = step;
+  }
+  if (priceMaxSlider) {
+    priceMaxSlider.min = minLimit;
+    priceMaxSlider.max = maxLimit;
+    priceMaxSlider.step = step;
+  }
+
+  if (tickMin) tickMin.textContent = `${minLimit.toLocaleString('en-US')} ₪`;
+  if (tickMid) tickMid.textContent = `${Math.round((minLimit + maxLimit) / 2).toLocaleString('en-US')} ₪`;
+  if (tickMax) tickMax.textContent = `${maxLimit.toLocaleString('en-US')} ₪`;
+
+  if (cpuGenFilterGroup) cpuGenFilterGroup.classList.toggle('hidden', isMobile);
+  if (weightFilterGroup) weightFilterGroup.classList.toggle('hidden', isMobile);
+  if (batteryFilterGroup) batteryFilterGroup.classList.toggle('hidden', isMobile);
+  if (upgradabilityFilterGroup) upgradabilityFilterGroup.classList.toggle('hidden', isMobile);
+
+  if (formFilterLabel) {
+    formFilterLabel.textContent = isMobile ? 'Device Type' : 'Type / Screen';
+  }
+
+  if (ramFilter) {
+    const currentRam = ramFilter.value;
+    if (isMobile) {
+      ramFilter.innerHTML = `
+        <option value="0">Any RAM</option>
+        <option value="4">4 GB</option>
+        <option value="6">6 GB</option>
+        <option value="8">8 GB</option>
+        <option value="12">12 GB</option>
+        <option value="16">16 GB</option>
+      `;
+    } else {
+      ramFilter.innerHTML = `
+        <option value="0">Any RAM</option>
+        <option value="8">8 GB</option>
+        <option value="16">16 GB</option>
+        <option value="32">32 GB</option>
+        <option value="64">64 GB</option>
+      `;
+    }
+    if ([...ramFilter.options].some((o) => o.value === currentRam)) {
+      ramFilter.value = currentRam;
+    } else {
+      ramFilter.value = '0';
+      state.catalogFilters.ram = 0;
+    }
+  }
+
+  if (storageFilter) {
+    const currentStorage = storageFilter.value;
+    if (isMobile) {
+      storageFilter.innerHTML = `
+        <option value="0">Any Storage</option>
+        <option value="64">64 GB</option>
+        <option value="128">128 GB</option>
+        <option value="256">256 GB</option>
+        <option value="512">512 GB</option>
+        <option value="1000">1 TB</option>
+      `;
+    } else {
+      storageFilter.innerHTML = `
+        <option value="0">Any Storage</option>
+        <option value="256">256 GB</option>
+        <option value="512">512 GB</option>
+        <option value="1000">1 TB</option>
+      `;
+    }
+    if ([...storageFilter.options].some((o) => o.value === currentStorage)) {
+      storageFilter.value = currentStorage;
+    } else {
+      storageFilter.value = '0';
+      state.catalogFilters.storage = 0;
+    }
+  }
+
+  if (formFilter) {
+    const currentForm = formFilter.value;
+    if (isMobile) {
+      formFilter.innerHTML = `
+        <option value="all">All Devices</option>
+        <option value="phone">📱 Smartphone</option>
+        <option value="tablet">📱 Tablet</option>
+      `;
+    } else {
+      formFilter.innerHTML = `
+        <option value="all">All Types</option>
+        <option value="2in1">2-in-1 / Touchscreen</option>
+        <option value="clamshell">Clamshell Standard</option>
+      `;
+    }
+    if ([...formFilter.options].some((o) => o.value === currentForm)) {
+      formFilter.value = currentForm;
+    } else {
+      formFilter.value = 'all';
+      state.catalogFilters.form = 'all';
+    }
+  }
+
+  if (screenFilter) {
+    const currentScreen = screenFilter.value;
+    if (isMobile) {
+      screenFilter.innerHTML = `
+        <option value="all">All Sizes</option>
+        <option value="compact">Compact (&lt; 6.0")</option>
+        <option value="6.1">Standard (~6.1")</option>
+        <option value="6.7">Large (~6.7")</option>
+        <option value="10.0">Tablet (10"+)</option>
+      `;
+    } else {
+      screenFilter.innerHTML = `
+        <option value="all">All Sizes</option>
+        <option value="13.3">13.3" (Compact)</option>
+        <option value="14.0">14.0" (Standard Ultra)</option>
+        <option value="15.6">15.6" (Large Productivity)</option>
+      `;
+    }
+    if ([...screenFilter.options].some((o) => o.value === currentScreen)) {
+      screenFilter.value = currentScreen;
+    } else {
+      screenFilter.value = 'all';
+      state.catalogFilters.screen = 'all';
+    }
+  }
+
+  if (sortFilter) {
+    const currentSort = sortFilter.value;
+    if (isMobile) {
+      sortFilter.innerHTML = `
+        <option value="value-desc" selected>🏆 Best Value (Specs per ₪)</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="screen-desc">Screen Size: Large to Small</option>
+        <option value="ram-desc">RAM Capacity</option>
+      `;
+    } else {
+      sortFilter.innerHTML = `
+        <option value="value-desc" selected>🏆 Best Value (Specs per ₪)</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="weight-asc">Weight: Light to Heavy</option>
+        <option value="battery-desc">Battery: High to Low</option>
+        <option value="screen-desc">Screen Size: Large to Small</option>
+        <option value="upgrade-desc">Upgradability Score</option>
+        <option value="ram-desc">RAM Capacity</option>
+      `;
+    }
+    if ([...sortFilter.options].some((o) => o.value === currentSort)) {
+      sortFilter.value = currentSort;
+    } else {
+      sortFilter.value = 'value-desc';
+      state.catalogFilters.sort = 'value-desc';
+    }
+  }
+
+  // Ensure catalog filters min/max price state is bounded
+  if (state.catalogFilters.priceMin < minLimit) state.catalogFilters.priceMin = minLimit;
+  if (state.catalogFilters.priceMax > maxLimit) state.catalogFilters.priceMax = maxLimit;
+}
+
 function updateDualPriceSliderUI(minVal, maxVal) {
   if (!priceMinSlider || !priceMaxSlider || !priceDisplay) return;
-  const sliderMin = Number(priceMinSlider.min) || 800;
-  const sliderMax = Number(priceMaxSlider.max) || 5000;
+  const isMobile = state.catalogFilters.category === 'phones';
+  const sliderMin = Number(priceMinSlider.min) || (isMobile ? 100 : 800);
+  const sliderMax = Number(priceMaxSlider.max) || (isMobile ? 4500 : 5000);
 
   let min = Math.max(sliderMin, Math.min(Number(minVal !== undefined ? minVal : priceMinSlider.value) || sliderMin, sliderMax));
   let max = Math.max(sliderMin, Math.min(Number(maxVal !== undefined ? maxVal : priceMaxSlider.value) || sliderMax, sliderMax));
@@ -583,16 +765,80 @@ function getUpgradabilityBadge(score) {
   return `<span class="score-badge score-locked">🔴 ${score}/10</span>`;
 }
 
+function renderBrandPills() {
+  if (!brandFilterContainer) return;
+
+  const currentCategory = state.catalogFilters.category;
+  // Dynamic brand list based on category
+  const brandSet = new Set();
+  state.catalogData.forEach((item) => {
+    if (currentCategory === 'all' || item.category === currentCategory) {
+      if (item.brand) brandSet.add(item.brand);
+    }
+  });
+
+  const availableBrands = Array.from(brandSet).sort();
+  const selectedBrands = state.catalogFilters.brands || [];
+
+  let html = `<button type="button" class="brand-pill-btn ${selectedBrands.length === 0 ? 'active' : ''}" data-brand="all">All</button>`;
+  availableBrands.forEach((b) => {
+    const isSel = selectedBrands.includes(b);
+    html += `<button type="button" class="brand-pill-btn ${isSel ? 'active' : ''}" data-brand="${escapeHtml(b)}">${escapeHtml(b)}</button>`;
+  });
+
+  brandFilterContainer.innerHTML = html;
+
+  brandFilterContainer.querySelectorAll('.brand-pill-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const b = btn.dataset.brand;
+      if (b === 'all') {
+        state.catalogFilters.brands = [];
+      } else {
+        const idx = state.catalogFilters.brands.indexOf(b);
+        if (idx >= 0) {
+          state.catalogFilters.brands.splice(idx, 1);
+        } else {
+          state.catalogFilters.brands.push(b);
+        }
+      }
+      state.activePreset = '';
+      renderBrandPills();
+      renderCatalog();
+    });
+  });
+}
+
 function setQuickPreset(preset) {
   state.activePreset = preset;
+  const isMobile = state.catalogFilters.category === 'phones';
+  const minLimit = isMobile ? 100 : 800;
+  const maxLimit = isMobile ? 4500 : 5000;
 
   if (preset === 'top-value') {
     state.catalogFilters.sort = 'value-desc';
     if (sortFilter) sortFilter.value = 'value-desc';
+  } else if (preset === 'under-1000') {
+    state.catalogFilters.priceMin = 100;
+    state.catalogFilters.priceMax = 1000;
+    updateDualPriceSliderUI(100, 1000);
   } else if (preset === 'under-2000') {
-    state.catalogFilters.priceMin = 800;
+    state.catalogFilters.priceMin = minLimit;
     state.catalogFilters.priceMax = 2000;
-    updateDualPriceSliderUI(800, 2000);
+    updateDualPriceSliderUI(minLimit, 2000);
+  } else if (preset === 'ram-12') {
+    state.catalogFilters.ram = 12;
+    state.catalogFilters.filterDirs.ram = 'up';
+    if (ramFilter) ramFilter.value = '12';
+    updateDirButtonsUI();
+  } else if (preset === 'brand-apple') {
+    state.catalogFilters.brands = ['Apple'];
+    renderBrandPills();
+  } else if (preset === 'brand-samsung') {
+    state.catalogFilters.brands = ['Samsung'];
+    renderBrandPills();
+  } else if (preset === 'tablets') {
+    state.catalogFilters.form = 'tablet';
+    if (formFilter) formFilter.value = 'tablet';
   } else if (preset === 'ram-32') {
     state.catalogFilters.ram = 32;
     state.catalogFilters.filterDirs.ram = 'up';
@@ -609,21 +855,15 @@ function setQuickPreset(preset) {
     state.catalogFilters.filterDirs.upgradability = 'up';
     if (upgradabilityFilter) upgradabilityFilter.value = '7';
     updateDirButtonsUI();
-  } else if (preset === 'budget') {
-    state.catalogFilters.priceMin = 800;
-    state.catalogFilters.priceMax = 1600;
-    updateDualPriceSliderUI(800, 1600);
-    state.catalogFilters.sort = 'price-asc';
-    if (sortFilter) sortFilter.value = 'price-asc';
   } else if (preset === 'featherlight') {
     state.catalogFilters.weight = 1.3;
     state.catalogFilters.filterDirs.weight = 'down';
     if (weightFilter) weightFilter.value = '1.3';
     updateDirButtonsUI();
   } else if (preset === 'large-screen') {
-    state.catalogFilters.screen = 15.6;
+    state.catalogFilters.screen = isMobile ? '6.7' : '15.6';
     state.catalogFilters.filterDirs.screen = 'up';
-    if (screenFilter) screenFilter.value = '15.6';
+    if (screenFilter) screenFilter.value = isMobile ? '6.7' : '15.6';
     updateDirButtonsUI();
   } else if (preset === 'long-battery') {
     state.catalogFilters.battery = 55;
@@ -632,10 +872,12 @@ function setQuickPreset(preset) {
     updateDirButtonsUI();
   } else if (preset === 'all') {
     state.catalogFilters = {
+      category: state.catalogFilters.category,
       store: 'all',
+      brands: [],
       brand: 'all',
-      priceMin: 800,
-      priceMax: 5000,
+      priceMin: minLimit,
+      priceMax: maxLimit,
       price: 0,
       priceMode: 'max',
       cpuGen: 'all',
@@ -658,8 +900,8 @@ function setQuickPreset(preset) {
       }
     };
     if (storeFilter) storeFilter.value = 'all';
-    if (brandFilter) brandFilter.value = 'all';
-    updateDualPriceSliderUI(800, 5000);
+    renderBrandPills();
+    updateDualPriceSliderUI(minLimit, maxLimit);
     if (cpuGenFilter) cpuGenFilter.value = 'all';
     if (ramFilter) ramFilter.value = '0';
     if (storageFilter) storageFilter.value = '0';
@@ -677,7 +919,7 @@ function setQuickPreset(preset) {
 
 function renderCatalog() {
   if (!catalogContent) return;
-  const { store, brand, priceMin, priceMax, cpuGen, ram, storage, form, screen, weight, battery, upgradability, sort, filterDirs } = state.catalogFilters;
+  const { store, brand, brands, priceMin, priceMax, cpuGen, ram, storage, form, screen, weight, battery, upgradability, sort, filterDirs } = state.catalogFilters;
   const dirs = filterDirs || {};
   const q = state.query.toLowerCase();
 
@@ -685,7 +927,12 @@ function renderCatalog() {
     if (state.catalogFilters.category === 'laptops' && item.category !== 'laptops') return false;
     if (state.catalogFilters.category === 'phones' && item.category !== 'phones') return false;
     if (store !== 'all' && item.store !== store) return false;
-    if (brand !== 'all' && item.brand.toLowerCase() !== brand.toLowerCase()) return false;
+
+    if (brands && brands.length > 0) {
+      if (!brands.some((b) => b.toLowerCase() === item.brand.toLowerCase())) return false;
+    } else if (brand !== 'all' && item.brand.toLowerCase() !== brand.toLowerCase()) {
+      return false;
+    }
 
     // Dual Price Range Slider (arbitrary range between 2 sliding buttons)
     const minBudget = Number(priceMin) || 800;
@@ -739,6 +986,8 @@ function renderCatalog() {
 
     if (form === '2in1' && (!item.is_2in1 && !item.is_touch)) return false;
     if (form === 'clamshell' && (item.is_2in1 || item.is_touch)) return false;
+    if (form === 'phone' && item.device_type !== 'phone') return false;
+    if (form === 'tablet' && item.device_type !== 'tablet') return false;
 
     // Screen Size (Button-controlled: ≥ Up, ≤ Down, or Exact)
     if (screen !== 'all') {
@@ -746,7 +995,7 @@ function renderCatalog() {
       const scDir = dirs.screen || 'up';
       if (isNaN(targetSc)) {
         if (screen === 'large' && item.screen_size_in < 15.0) return false;
-        if (screen === 'compact' && item.screen_size_in > 13.6) return false;
+        if (screen === 'compact' && item.screen_size_in >= 6.0) return false;
       } else {
         if (scDir === 'up') {
           if (item.screen_size_in < (targetSc - 0.15)) return false;
@@ -820,20 +1069,33 @@ function renderCatalog() {
   const catLabel = state.catalogFilters.category === 'phones' ? 'mobile devices' : (state.catalogFilters.category === 'laptops' ? 'laptops' : 'items');
   setStatus(`Catalog: Found ${filtered.length} ${catLabel} matching criteria`, 'success');
 
+  const isMobile = state.catalogFilters.category === 'phones';
   const chipsHtml = `
     <div class="quick-chips-container">
       <div class="quick-chips-header">⚡ Quick Explore Filters</div>
       <div class="quick-filter-chips">
-        <button type="button" class="chip-btn ${state.activePreset === 'all' ? 'active' : ''}" data-preset="all">✨ All ${state.catalogFilters.category === 'phones' ? 'Devices' : 'Laptops'}</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'all' ? 'active' : ''}" data-preset="all">✨ All ${isMobile ? 'Devices' : 'Laptops'}</button>
         <button type="button" class="chip-btn ${state.activePreset === 'top-value' ? 'active' : ''}" data-preset="top-value">🏆 Top Value Picks</button>
-        <button type="button" class="chip-btn ${state.activePreset === 'under-2000' ? 'active' : ''}" data-preset="under-2000">💰 Under 2,000 ₪</button>
-        <button type="button" class="chip-btn ${state.activePreset === 'featherlight' ? 'active' : ''}" data-preset="featherlight">🪶 Featherlight (&lt; 1.3kg)</button>
-        <button type="button" class="chip-btn ${state.activePreset === 'long-battery' ? 'active' : ''}" data-preset="long-battery">🔋 Long Battery (55Wh+)</button>
-        <button type="button" class="chip-btn ${state.activePreset === 'large-screen' ? 'active' : ''}" data-preset="large-screen">🖥️ Large Display (15"+)</button>
-        <button type="button" class="chip-btn ${state.activePreset === 'ram-32' ? 'active' : ''}" data-preset="ram-32">⚡ 32GB RAM Deals</button>
-        <button type="button" class="chip-btn ${state.activePreset === '2in1' ? 'active' : ''}" data-preset="2in1">🔄 2-in-1 / Touch</button>
-        <button type="button" class="chip-btn ${state.activePreset === 'warranty-24' ? 'active' : ''}" data-preset="warranty-24">🛡️ 2-Year Warranty</button>
-        <button type="button" class="chip-btn ${state.activePreset === 'modular' ? 'active' : ''}" data-preset="modular">🟢 Modular (7+)</button>
+        ${
+          isMobile
+            ? `
+          <button type="button" class="chip-btn ${state.activePreset === 'brand-apple' ? 'active' : ''}" data-preset="brand-apple">🍏 Apple iPhones</button>
+          <button type="button" class="chip-btn ${state.activePreset === 'brand-samsung' ? 'active' : ''}" data-preset="brand-samsung">🔵 Samsung Galaxy</button>
+          <button type="button" class="chip-btn ${state.activePreset === 'under-1000' ? 'active' : ''}" data-preset="under-1000">💰 Under 1,000 ₪</button>
+          <button type="button" class="chip-btn ${state.activePreset === 'tablets' ? 'active' : ''}" data-preset="tablets">📱 Tablets</button>
+          <button type="button" class="chip-btn ${state.activePreset === 'ram-12' ? 'active' : ''}" data-preset="ram-12">⚡ 12GB+ RAM</button>
+        `
+            : `
+          <button type="button" class="chip-btn ${state.activePreset === 'under-2000' ? 'active' : ''}" data-preset="under-2000">💰 Under 2,000 ₪</button>
+          <button type="button" class="chip-btn ${state.activePreset === 'featherlight' ? 'active' : ''}" data-preset="featherlight">🪶 Featherlight (&lt; 1.3kg)</button>
+          <button type="button" class="chip-btn ${state.activePreset === 'long-battery' ? 'active' : ''}" data-preset="long-battery">🔋 Long Battery (55Wh+)</button>
+          <button type="button" class="chip-btn ${state.activePreset === 'large-screen' ? 'active' : ''}" data-preset="large-screen">🖥️ Large Display (15"+)</button>
+          <button type="button" class="chip-btn ${state.activePreset === 'ram-32' ? 'active' : ''}" data-preset="ram-32">⚡ 32GB RAM Deals</button>
+          <button type="button" class="chip-btn ${state.activePreset === '2in1' ? 'active' : ''}" data-preset="2in1">🔄 2-in-1 / Touch</button>
+          <button type="button" class="chip-btn ${state.activePreset === 'warranty-24' ? 'active' : ''}" data-preset="warranty-24">🛡️ 2-Year Warranty</button>
+          <button type="button" class="chip-btn ${state.activePreset === 'modular' ? 'active' : ''}" data-preset="modular">🟢 Modular (7+)</button>
+        `
+        }
       </div>
     </div>
   `;
@@ -859,10 +1121,73 @@ function renderCatalog() {
   const cardsHtml = filtered
     .map((laptop) => {
       const isTopValue = topValueIds.has(laptop.id);
+      const isMobileItem = laptop.category === 'phones';
       const screenText = `${laptop.screen_source === 'fallback_estimate' ? '~' : ''}${laptop.screen_size_in}"${laptop.screen_source === 'fallback_estimate' && laptop.weight_source !== 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
       const weightText = `⚖️ ${laptop.weight_source === 'fallback_estimate' ? '~' : ''}${laptop.weight_kg} kg${laptop.weight_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
       const batteryText = `🔋 ${laptop.battery_source === 'fallback_estimate' ? '~' : ''}${laptop.battery_wh} Wh${laptop.battery_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
       const ramGenText = `${laptop.ram_source === 'fallback_estimate' ? '~' : ''}${escapeHtml(laptop.ram_gen)}${laptop.ram_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+
+      let specsHtml = '';
+      if (isMobileItem) {
+        specsHtml = `
+          <div class="spec-item">
+            <span class="spec-label">Device Type:</span>
+            <span class="spec-value">${laptop.device_type === 'tablet' ? '📱 Tablet' : '📱 Smartphone'}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">RAM:</span>
+            <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Storage:</span>
+            <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Screen Size:</span>
+            <span class="spec-value">${screenText}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Warranty:</span>
+            <span class="spec-value">${escapeHtml(laptop.warranty_months)} Months Warranty</span>
+          </div>
+        `;
+      } else {
+        specsHtml = `
+          <div class="spec-item">
+            <span class="spec-label">CPU:</span>
+            <span class="spec-value">${formatCpuHtml(laptop.cpu)}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">RAM:</span>
+            <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB ${ramGenText} (${escapeHtml(laptop.ram_type)})</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Storage:</span>
+            <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB (${escapeHtml(laptop.storage_type)})</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Screen & Weight:</span>
+            <span class="spec-value">${screenText} | ${weightText}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Battery Capacity:</span>
+            <span class="spec-value">${batteryText}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Upgradability:</span>
+            <span class="spec-value">${getUpgradabilityBadge(laptop.upgradability_score)}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Form Factor:</span>
+            <span class="spec-value">${laptop.is_2in1 ? '🔄 2-in-1 Convertible' : laptop.is_touch ? '💻 Touchscreen Clamshell' : '💻 Standard Clamshell'}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Warranty:</span>
+            <span class="spec-value">${escapeHtml(laptop.warranty_months)} Months Warranty</span>
+          </div>
+        `;
+      }
+
       return `
         <div class="catalog-card ${isTopValue ? 'top-value-card' : ''}">
           <div class="card-header">
@@ -878,43 +1203,12 @@ function renderCatalog() {
             <div class="price-box">
               <span class="price-value">${laptop.deal_price_ils ? escapeHtml(laptop.deal_price_ils.toLocaleString()) + ' ₪' : 'Check Store'}</span>
               ${laptop.deal_label && !laptop.deal_label.includes(laptop.deal_price_ils) ? `<span class="deal-note">${escapeHtml(laptop.deal_label)}</span>` : ''}
-              <span class="value-score-badge" title="Algorithm score based on CPU gen, RAM, SSD and Price">⭐ ${laptop.value_score}/10 Value</span>
+              <span class="value-score-badge" title="Algorithm score based on Specs and Price">⭐ ${laptop.value_score}/10 Value</span>
             </div>
           </div>
 
           <div class="specs-grid">
-            <div class="spec-item">
-              <span class="spec-label">CPU:</span>
-              <span class="spec-value">${formatCpuHtml(laptop.cpu)}</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">RAM:</span>
-              <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB ${ramGenText} (${escapeHtml(laptop.ram_type)})</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Storage:</span>
-              <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB (${escapeHtml(laptop.storage_type)})</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Screen & Weight:</span>
-              <span class="spec-value">${screenText} | ${weightText}</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Battery Capacity:</span>
-              <span class="spec-value">${batteryText}</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Upgradability:</span>
-              <span class="spec-value">${getUpgradabilityBadge(laptop.upgradability_score)}</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Form Factor:</span>
-              <span class="spec-value">${laptop.is_2in1 ? '🔄 2-in-1 Convertible' : laptop.is_touch ? '💻 Touchscreen Clamshell' : '💻 Standard Clamshell'}</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Warranty:</span>
-              <span class="spec-value">${escapeHtml(laptop.warranty_months)} Months Warranty</span>
-            </div>
+            ${specsHtml}
           </div>
 
           <div class="card-footer">
@@ -954,13 +1248,27 @@ function updateViewMode() {
     if (catalogFiltersCard) catalogFiltersCard.classList.remove('hidden');
     if (documentContent) documentContent.classList.add('hidden');
     if (catalogContent) catalogContent.classList.remove('hidden');
-    if (state.filter === 'mobile-catalog') {
+
+    const isMobile = state.filter === 'mobile-catalog';
+    const prevCat = state.catalogFilters.category;
+    if (isMobile) {
       state.catalogFilters.category = 'phones';
       if (categoryFilter) categoryFilter.value = 'phones';
-    } else if (state.filter === 'catalog') {
+    } else {
       state.catalogFilters.category = 'laptops';
       if (categoryFilter) categoryFilter.value = 'laptops';
     }
+
+    if (prevCat !== state.catalogFilters.category) {
+      state.catalogFilters.priceMin = isMobile ? 100 : 800;
+      state.catalogFilters.priceMax = isMobile ? 4500 : 5000;
+    }
+
+    adaptFilterControlsForMode(isMobile);
+    const minP = isMobile ? 100 : 800;
+    const maxP = isMobile ? 4500 : 5000;
+    updateDualPriceSliderUI(state.catalogFilters.priceMin || minP, state.catalogFilters.priceMax || maxP);
+    renderBrandPills();
     renderCatalog();
   } else {
     if (documentSidebarCard) documentSidebarCard.classList.remove('hidden');
@@ -1028,8 +1336,17 @@ function bindEvents() {
 
   if (categoryFilter) {
     categoryFilter.addEventListener('change', (e) => {
-      state.catalogFilters.category = e.target.value;
+      const cat = e.target.value;
+      state.catalogFilters.category = cat;
+      const isMobile = cat === 'phones';
+      adaptFilterControlsForMode(isMobile);
+      const minP = isMobile ? 100 : 800;
+      const maxP = isMobile ? 4500 : 5000;
+      state.catalogFilters.priceMin = minP;
+      state.catalogFilters.priceMax = maxP;
+      updateDualPriceSliderUI(minP, maxP);
       state.activePreset = '';
+      renderBrandPills();
       renderCatalog();
     });
   }
@@ -1042,13 +1359,6 @@ function bindEvents() {
     });
   }
 
-  if (brandFilter) {
-    brandFilter.addEventListener('change', (e) => {
-      state.catalogFilters.brand = e.target.value;
-      state.activePreset = '';
-      renderCatalog();
-    });
-  }
 
   if (priceMinSlider && priceMaxSlider) {
     const onDualPriceInput = (e) => {
