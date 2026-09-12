@@ -37,23 +37,11 @@ class SpecEnricher:
     detect_screen_size = HardwareClassifier.detect_screen_size
     detect_weight_kg = HardwareClassifier.detect_weight_kg
     detect_battery_wh = HardwareClassifier.detect_battery_wh
+    detect_ram_generation = HardwareClassifier.detect_ram_generation
 
     @classmethod
     def enrich_item_dict(cls, laptop: Dict[str, Any]) -> Dict[str, Any]:
         title = laptop.get("title") or laptop.get("model") or ""
-
-        # Accurately compute screen_size_in, weight_kg, and battery_wh based on verified heuristics
-        screen_size, screen_src = cls.detect_screen_size(title, return_source=True)
-        weight_kg, weight_src = cls.detect_weight_kg(title, screen_size, return_source=True)
-        battery_wh, battery_src = cls.detect_battery_wh(title, weight_kg, return_source=True)
-
-        laptop["screen_size_in"] = round(screen_size, 1)
-        laptop["weight_kg"] = round(weight_kg, 2)
-        laptop["battery_wh"] = battery_wh
-        laptop["screen_source"] = screen_src
-        laptop["weight_source"] = weight_src
-        laptop["battery_source"] = battery_src
-        laptop["confidence_level"] = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
 
         # Detect and enrich CPU generation if missing
         current_cpu = laptop.get("cpu", "")
@@ -62,6 +50,30 @@ class SpecEnricher:
             laptop["cpu"] = detected_cpu
         elif current_cpu:
             laptop["cpu"] = current_cpu
+
+        # Architectural analysis for ram_type if missing or needs update
+        score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
+        if not laptop.get("ram_type") or "LPDDR4x/5" in laptop.get("ram_type", "") or "435" in title:
+            laptop["ram_type"] = ram_type
+            laptop["upgradability_score"] = score
+            laptop["storage_type"] = storage_type
+        current_ram_type = laptop.get("ram_type", ram_type)
+
+        # Accurately compute screen_size_in, weight_kg, battery_wh, and ram_gen based on verified heuristics
+        screen_size, screen_src = cls.detect_screen_size(title, return_source=True)
+        weight_kg, weight_src = cls.detect_weight_kg(title, screen_size, return_source=True)
+        battery_wh, battery_src = cls.detect_battery_wh(title, weight_kg, return_source=True)
+        ram_gen, ram_src = cls.detect_ram_generation(title, cpu=laptop.get("cpu", ""), ram_type=current_ram_type, return_source=True)
+
+        laptop["screen_size_in"] = round(screen_size, 1)
+        laptop["weight_kg"] = round(weight_kg, 2)
+        laptop["battery_wh"] = battery_wh
+        laptop["ram_gen"] = ram_gen
+        laptop["ram_source"] = ram_src
+        laptop["screen_source"] = screen_src
+        laptop["weight_source"] = weight_src
+        laptop["battery_source"] = battery_src
+        laptop["confidence_level"] = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate" or ram_src == "fallback_estimate") else "verified"
 
         return laptop
 
@@ -129,6 +141,8 @@ def enrich_dataset(json_file: str = JSON_PATH, csv_file: str = CSV_PATH, use_ai:
                 raw_item["is_touch"] = audited_item.is_touch
                 raw_item["is_2in1"] = audited_item.is_2in1
                 raw_item["upgradability_score"] = audited_item.upgradability_score
+                raw_item["ram_gen"] = audited_item.ram_gen
+                raw_item["ram_source"] = audited_item.ram_source
                 raw_item["screen_source"] = audited_item.screen_source
                 raw_item["weight_source"] = audited_item.weight_source
                 raw_item["battery_source"] = audited_item.battery_source

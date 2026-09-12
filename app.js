@@ -372,6 +372,8 @@ async function loadCatalogData() {
         deal_label: laptop.deal_label || `${deal_price_ils || price_ils || ''} ₪`,
         storage_type: laptop.storage_type || 'NVMe / SATA',
         ram_type: laptop.ram_type || 'Standard',
+        ram_gen: laptop.ram_gen || 'DDR4',
+        ram_source: laptop.ram_source || 'chassis_decoder',
         upgradability_score,
         warranty_months: laptop.warranty_months || 12,
         is_touch: Boolean(laptop.is_touch),
@@ -702,7 +704,7 @@ function renderCatalog() {
       const touchKeywords = item.is_touch || item.is_2in1 ? 'touch touchscreen טאץ טאצ' : '';
       const formKeywords = item.is_2in1 ? '2in1 2-in-1 convertible 360' : 'clamshell';
       const storageStr = item.storage_gb ? `${item.storage_gb}gb ${item.storage_gb} ssd` : '';
-      const searchHaystack = `${item.title} ${item.brand} ${item.store} ${item.cpu} ${item.ram_gb}GB ${storageStr} ${item.screen_size_in}inch ${item.weight_kg}kg ${item.battery_wh}wh ${item.storage_type} ${touchKeywords} ${formKeywords} ${item.warranty_months}months`.toLowerCase();
+      const searchHaystack = `${item.title} ${item.brand} ${item.store} ${item.cpu} ${item.ram_gb}GB ${item.ram_gen} ${storageStr} ${item.screen_size_in}inch ${item.weight_kg}kg ${item.battery_wh}wh ${item.storage_type} ${touchKeywords} ${formKeywords} ${item.warranty_months}months`.toLowerCase();
       if (!searchHaystack.includes(q)) return false;
     }
 
@@ -775,6 +777,7 @@ function renderCatalog() {
       const screenText = `${laptop.screen_source === 'fallback_estimate' ? '~' : ''}${laptop.screen_size_in}"${laptop.screen_source === 'fallback_estimate' && laptop.weight_source !== 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
       const weightText = `⚖️ ${laptop.weight_source === 'fallback_estimate' ? '~' : ''}${laptop.weight_kg} kg${laptop.weight_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
       const batteryText = `🔋 ${laptop.battery_source === 'fallback_estimate' ? '~' : ''}${laptop.battery_wh} Wh${laptop.battery_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+      const ramGenText = `${laptop.ram_source === 'fallback_estimate' ? '~' : ''}${escapeHtml(laptop.ram_gen)}${laptop.ram_source === 'fallback_estimate' ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
       return `
         <div class="catalog-card ${isTopValue ? 'top-value-card' : ''}">
           <div class="card-header">
@@ -801,7 +804,7 @@ function renderCatalog() {
             </div>
             <div class="spec-item">
               <span class="spec-label">RAM:</span>
-              <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB (${escapeHtml(laptop.ram_type)})</span>
+              <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB ${ramGenText} (${escapeHtml(laptop.ram_type)})</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Storage:</span>

@@ -28,7 +28,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -43,7 +45,7 @@
       "deal_price_ils": 2199,
       "deal_label": "2,199 ₪ (24M Warranty)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 24,
       "stock_status": "🟢 In Stock (24M Warranty)",
@@ -58,7 +60,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -88,7 +92,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -118,7 +124,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -133,7 +141,7 @@
       "deal_price_ils": 999,
       "deal_label": "999 ₪ (24M Warranty)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 24,
       "stock_status": "🟢 In Stock (24M Warranty)",
@@ -148,7 +156,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -178,7 +188,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -208,7 +220,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -238,7 +252,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -268,7 +284,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -298,7 +316,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -328,7 +348,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "ram_gen": "DDR3L",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Ecology Computers",
@@ -358,7 +380,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     }
   ],
   "lts": [
@@ -390,7 +414,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -420,7 +446,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -450,7 +478,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -480,7 +510,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -510,7 +542,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -540,7 +574,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -570,7 +606,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -600,7 +638,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR3L",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -630,7 +670,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -660,7 +702,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -690,7 +734,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -720,7 +766,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -750,7 +798,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -780,7 +830,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -810,7 +862,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -840,7 +894,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -870,7 +926,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -885,7 +943,7 @@
       "deal_price_ils": 3000,
       "deal_label": "3,000 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -900,7 +958,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -930,7 +990,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "ram_gen": "DDR3L",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -960,7 +1022,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "Unified LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -990,7 +1054,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -1020,7 +1086,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -1050,7 +1118,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -1080,7 +1150,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -1110,7 +1182,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -1140,7 +1214,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -1170,7 +1246,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -1200,7 +1278,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -1230,7 +1310,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "LaptopTech LTS",
@@ -1260,7 +1342,9 @@
       "screen_source": "listing_explicit",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     }
   ],
   "itoutlet": [
@@ -1277,7 +1361,7 @@
       "deal_price_ils": 1700,
       "deal_label": "1,700 ₪ (100 ₪ Coupon)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -1292,7 +1376,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1322,7 +1408,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1337,7 +1425,7 @@
       "deal_price_ils": 1900,
       "deal_label": "1,900 ₪ (100 ₪ Coupon)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -1352,7 +1440,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1382,7 +1472,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1397,7 +1489,7 @@
       "deal_price_ils": 2100,
       "deal_label": "2,100 ₪ (100 ₪ Coupon)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -1412,7 +1504,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1442,7 +1536,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1457,7 +1553,7 @@
       "deal_price_ils": 2200,
       "deal_label": "2,200 ₪ (100 ₪ Coupon)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -1472,7 +1568,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1487,7 +1585,7 @@
       "deal_price_ils": 2200,
       "deal_label": "2,200 ₪ (100 ₪ Coupon)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -1502,7 +1600,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1532,7 +1632,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1562,7 +1664,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1592,7 +1696,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1622,7 +1728,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1652,7 +1760,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1667,7 +1777,7 @@
       "deal_price_ils": 2400,
       "deal_label": "2,400 ₪ (4% Card Disc.)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -1682,7 +1792,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1712,7 +1824,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1742,7 +1856,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR5",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1772,7 +1888,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1787,7 +1905,7 @@
       "deal_price_ils": 2688,
       "deal_label": "2,688 ₪ (4% Card Disc.)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -1802,7 +1920,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1832,7 +1952,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1847,7 +1969,7 @@
       "deal_price_ils": 2784,
       "deal_label": "2,784 ₪ (4% Card Disc.)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -1862,7 +1984,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1892,7 +2016,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1922,7 +2048,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1937,8 +2065,8 @@
       "deal_price_ils": 2880,
       "deal_label": "2,880 ₪ (4% Card Disc.)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
-      "upgradability_score": 5.0,
+      "ram_type": "2x SODIMM Slots (up to 64GB)",
+      "upgradability_score": 9.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
       "url": "https://www.itoutlet.co.il/items/9538702-HP-ProBook-x360-435-G7-Ryzen-7-32GB-512GB-SSD",
@@ -1952,7 +2080,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -1982,7 +2112,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2012,7 +2144,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2042,7 +2176,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2072,7 +2208,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2102,7 +2240,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR5",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2132,7 +2272,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2147,7 +2289,7 @@
       "deal_price_ils": 3264,
       "deal_label": "3,264 ₪ (4% Card Disc.)",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -2162,7 +2304,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2192,7 +2336,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2222,7 +2368,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2252,7 +2400,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2282,7 +2432,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2312,7 +2464,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "fallback_estimate",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "IT Outlet",
@@ -2342,7 +2496,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     }
   ],
   "recomp": [
@@ -2359,7 +2515,7 @@
       "deal_price_ils": 2450,
       "deal_label": "2,450 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -2374,7 +2530,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Recomp Computers",
@@ -2389,7 +2547,7 @@
       "deal_price_ils": 3950,
       "deal_label": "3,950 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -2404,7 +2562,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR5",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Recomp Computers",
@@ -2434,7 +2594,9 @@
       "screen_source": "fallback_estimate",
       "weight_source": "fallback_estimate",
       "battery_source": "fallback_estimate",
-      "confidence_level": "estimated"
+      "confidence_level": "estimated",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Recomp Computers",
@@ -2464,7 +2626,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Recomp Computers",
@@ -2479,7 +2643,7 @@
       "deal_price_ils": 3550,
       "deal_label": "3,550 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -2494,7 +2658,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     },
     {
       "store": "Recomp Computers",
@@ -2509,7 +2675,7 @@
       "deal_price_ils": 3690,
       "deal_label": "3,690 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered LPDDR4x/5 (Fixed)",
+      "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
@@ -2524,7 +2690,9 @@
       "screen_source": "chassis_decoder",
       "weight_source": "chassis_decoder",
       "battery_source": "chassis_decoder",
-      "confidence_level": "verified"
+      "confidence_level": "verified",
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder"
     }
   ]
 }

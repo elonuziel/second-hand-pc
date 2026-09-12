@@ -130,6 +130,8 @@ class LaptopItem:
     screen_size_in: float = 14.0
     weight_kg: float = 1.5
     battery_wh: int = 50
+    ram_gen: str = "DDR4"
+    ram_source: str = "chassis_decoder"
     screen_source: str = "chassis_decoder"
     weight_source: str = "chassis_decoder"
     battery_source: str = "chassis_decoder"
@@ -229,6 +231,7 @@ class GroqSpecEnhancer:
                             target.screen_source = "ai_audit"
                             target.weight_source = "ai_audit"
                             target.battery_source = "ai_audit"
+                            target.ram_source = "ai_audit"
                             target.confidence_level = "verified"
             else:
                 logger.warning(f"Groq API returned HTTP {res.status_code}: {res.text[:100]}")
@@ -277,6 +280,7 @@ class HardwareClassifier:
     _EXPLICIT_RAM_RE = re.compile(r'(?:(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)?\s*(?:ram|זכרון|זיכרון|memory)|(?:ram|זכרון|זיכרון|memory)\s*(?:של\s*)?(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)?)', re.IGNORECASE)
     _GPU_VRAM_RE = re.compile(r'(?:gtx|rtx|quadro|geforce|radeon|iris|t500|t600|t1000|t1200|t2000)\s*(?:[0-9]{3,4})?\s*(?:\d+\s*(?:gb|g))?|(?:\d+\s*(?:gb|g|גיגה)?\s*(?:graphics|vram|כרטיס מסך|כרטיס גרפי|גרפיקה))', re.IGNORECASE)
     _STORAGE_GB_RE = re.compile(r'(?:^|[^\w])(128|240|250|256|480|500|512)\s*(?:gb|g|גיגה)?(?:\s*ssd|\s*nvme|\s*אחסון)?(?:[^\w]|$)')
+    _RAM_GEN_EXPLICIT_RE = re.compile(r'\b(lpddr5x|lpddr5|ddr5|lpddr4x|lpddr4|ddr4|ddr3l|ddr3)\b', re.IGNORECASE)
 
     # Constant tuples for brand and architecture detection to avoid list allocation at runtime
     _LENOVO_KEYWORDS = ('thinkpad', 'lenovo', 'ideapad', 'legion', 'לנובו')
@@ -447,9 +451,12 @@ class HardwareClassifier:
         # Glued / Locked Down
         if 'surface' in t or 'macbook' in t:
             return 1.0, "🔒 Soldered BGA NVMe / Unified", "Soldered (Non-upgradeable)"
+        # Full Modular override for specific models like ProBook 435 x360 before checking soldered x360
+        if '435' in t:
+            return 9.0, "⚡ M.2 2280 PCIe NVMe (Swappable)", "2x SODIMM Slots (up to 64GB)"
         # Soldered RAM Ultrabooks with Standard NVMe M.2 SSD
         if any(k in t for k in cls._SOLDERED_RAM_KEYWORDS):
-            return 5.0, "⚡ M.2 2280 PCIe NVMe (Swappable)", "Soldered LPDDR4x/5 (Fixed)"
+            return 5.0, "⚡ M.2 2280 PCIe NVMe (Swappable)", "Soldered (Fixed)"
         # Semi-Modular Business Laptops
         if any(k in t for k in cls._SEMI_MODULAR_KEYWORDS):
             return 7.5, "⚡ M.2 2280 PCIe NVMe (Swappable)", "1x Soldered + 1x SODIMM Slot (max 48GB)"
@@ -460,6 +467,61 @@ class HardwareClassifier:
         if any(k in t for k in cls._LEGACY_BAY_KEYWORDS):
             return 8.0, "🐢 2.5\" SATA SSD / Bay", "2x SODIMM Slots"
         return 7.5, "⚡ M.2 2280 PCIe NVMe (Swappable)", "Modular / Semi-Modular"
+
+    @classmethod
+    def detect_ram_generation(cls, title: str, cpu: str = "", ram_type: str = "", return_source: bool = False) -> Union[str, Tuple[str, str]]:
+        """Detects RAM generation (DDR3L, DDR4, LPDDR4x, DDR5, LPDDR5, Unified LPDDR4x) with provenance tag."""
+        t = title.lower()
+        cpu_low = (cpu or "").lower()
+
+        # 1. Check explicit mention first
+        m = cls._RAM_GEN_EXPLICIT_RE.search(t)
+        if m:
+            raw_val = m.group(1).upper()
+            if raw_val == "DDR3" and (any(k in cpu_low for k in ["4th gen", "5th gen", "3rd gen", "2nd gen"]) or any(k in t for k in ["e7440", "t440", "840 g1", "840 g2"])):
+                val = "DDR3L"
+            elif raw_val == "LPDDR4X":
+                val = "LPDDR4x"
+            elif raw_val == "LPDDR5X":
+                val = "LPDDR5x"
+            else:
+                val = raw_val
+            return (val, "listing_explicit") if return_source else val
+
+        is_soldered = "soldered" in ram_type.lower() and "sodimm" not in ram_type.lower()
+        if "435" in t:
+            is_soldered = False
+
+        # 2. Apple Silicon
+        if "apple" in cpu_low or "m1" in cpu_low or "a2337" in t:
+            return ("Unified LPDDR4x", "chassis_decoder") if return_source else "Unified LPDDR4x"
+        if any(k in cpu_low for k in ["m2", "m3"]):
+            return ("Unified LPDDR5", "chassis_decoder") if return_source else "Unified LPDDR5"
+
+        # 3. Modern DDR5 era (Core Ultra, 13th Gen, Ryzen 6000+)
+        ryzen_6k_plus = bool(re.search(r'ryzen\s*[3579]?\s*(?:pro\s*)?[678]\d{3}', t + " " + cpu_low))
+        if "core ultra" in cpu_low or "13th gen" in cpu_low or ryzen_6k_plus:
+            val = "LPDDR5" if is_soldered else "DDR5"
+            return (val, "chassis_decoder") if return_source else val
+
+        # 4. Intel 12th Gen Alder Lake transition
+        if "12th gen" in cpu_low:
+            if is_soldered or any(k in t for k in ["7430", "7330", "x1 carbon"]):
+                return ("LPDDR5", "chassis_decoder") if return_source else "LPDDR5"
+            return ("DDR4", "chassis_decoder") if return_source else "DDR4"
+
+        # 5. Legacy DDR3L era (4th & 5th Gen)
+        if any(k in cpu_low for k in ["4th gen", "5th gen", "3rd gen", "2nd gen"]) or any(k in t for k in ["e7440", "t440", "a1466", "840 g1", "840 g2"]):
+            return ("DDR3L", "chassis_decoder") if return_source else "DDR3L"
+
+        # 6. Intel 6th - 11th Gen, AMD 3000-5000
+        if is_soldered:
+            if any(k in cpu_low for k in ["11th gen", "10th gen"]) or any(k in t for k in ["7420", "7320", "x1 carbon"]):
+                return ("LPDDR4x", "chassis_decoder") if return_source else "LPDDR4x"
+            return ("LPDDR4", "chassis_decoder") if return_source else "LPDDR4"
+
+        return ("DDR4", "chassis_decoder") if return_source else "DDR4"
+
 
     _SCREEN_EXPLICIT_RE = re.compile(
         r'(?:^|[^\d])(11\.6|12\.5|13\.3|13\.5|14\.0|15\.4|15\.6|16\.0|17\.3)\b'
@@ -685,10 +747,11 @@ class HardwareClassifier:
         storage_gb = cls.detect_storage_gb(text)
 
         score, storage_type, ram_type = cls.analyze_architecture(text)
+        ram_gen, ram_src = cls.detect_ram_generation(text, cpu=cpu, ram_type=ram_type, return_source=True)
         screen_size, screen_src = cls.detect_screen_size(text, return_source=True)
         weight_kg, weight_src = cls.detect_weight_kg(text, screen_size, return_source=True)
         battery_wh, battery_src = cls.detect_battery_wh(text, weight_kg, return_source=True)
-        confidence_level = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
+        confidence_level = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate" or ram_src == "fallback_estimate") else "verified"
 
         resolved_touch = is_touch if is_touch is not None else (cls.is_touch(title) or (cls.is_touch(analysis_text) if analysis_text else False))
         resolved_2in1 = is_2in1 if is_2in1 is not None else (cls.is_2in1(title) or (cls.is_2in1(analysis_text) if analysis_text else False))
@@ -726,6 +789,8 @@ class HardwareClassifier:
             screen_size_in=round(screen_size, 1),
             weight_kg=round(weight_kg, 2),
             battery_wh=battery_wh,
+            ram_gen=ram_gen,
+            ram_source=ram_src,
             screen_source=screen_src,
             weight_source=weight_src,
             battery_source=battery_src,
@@ -1189,7 +1254,8 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 """)
         for cat_emoji, cat_desc, p in top_picks:
             score_badge = f"🟢 {p.upgradability_score}" if p.upgradability_score >= 8.5 else (f"🟡 {p.upgradability_score}" if p.upgradability_score >= 7.0 else f"🟠 {p.upgradability_score}")
-            specs_summary = f"{p.cpu} • **{p.ram_gb}GB RAM** • {p.storage_gb}GB SSD"
+            ram_gen_str = f" {p.ram_gen}" if getattr(p, 'ram_gen', '') else ""
+            specs_summary = f"{p.cpu} • **{p.ram_gb}GB{ram_gen_str} RAM** • {p.storage_gb}GB SSD"
             md_parts.append(f"| **{cat_emoji}** | **{p.title}** | {specs_summary} | **{p.deal_label}** | {p.store} | {p.storage_type} | {p.ram_type} | {score_badge} | [View Product]({p.url}) |\n")
 
         md_parts.append("""
@@ -1217,7 +1283,8 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 """)
         for i, itm in enumerate(it_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
+            ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
         md_parts.append(f"""
 ---
@@ -1232,7 +1299,8 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
         for i, itm in enumerate(eco_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
             deal_price_str = f"{itm.price_ils:,} ₪ (24M Warranty)"
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{deal_price_str}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
+            ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{deal_price_str}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
         md_parts.append(f"""
 ---
@@ -1244,7 +1312,8 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 """)
         for i, itm in enumerate(lts_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
+            ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
         md_parts.append(f"""
 ---
@@ -1256,7 +1325,8 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 """)
         for i, itm in enumerate(rec_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
-            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
+            ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
+            md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 
         md_parts.append("""
 ---

@@ -93,11 +93,15 @@ class TestCatalogDataHealth(unittest.TestCase):
             sc_src = item.get("screen_source")
             wt_src = item.get("weight_source")
             bat_src = item.get("battery_source")
+            ram_src = item.get("ram_source")
+            ram_gen = item.get("ram_gen")
             conf = item.get("confidence_level")
 
             self.assertIn(sc_src, valid_sources, f"Invalid screen_source '{sc_src}' for: {title}")
             self.assertIn(wt_src, valid_sources, f"Invalid weight_source '{wt_src}' for: {title}")
             self.assertIn(bat_src, valid_sources, f"Invalid battery_source '{bat_src}' for: {title}")
+            self.assertIn(ram_src, valid_sources, f"Invalid ram_source '{ram_src}' for: {title}")
+            self.assertTrue(bool(ram_gen), f"Missing ram_gen for: {title}")
             self.assertIn(conf, valid_confidences, f"Invalid confidence_level '{conf}' for: {title}")
 
 
@@ -138,6 +142,29 @@ class TestHardwareParsers(unittest.TestCase):
         self.assertEqual(HardwareClassifier.detect_storage_gb("HP 512GB SSD NVMe"), 512)
         self.assertEqual(HardwareClassifier.detect_storage_gb("Lenovo 1TB SSD"), 1000)
         self.assertEqual(HardwareClassifier.detect_storage_gb("מחשב נייד 1 טרה אחסון"), 1000)
+
+    def test_ram_generation_detection(self):
+        """Ensure RAM generation (DDR3L, DDR4, LPDDR4x, DDR5, LPDDR5, Unified LPDDR4x) is detected accurately."""
+        test_cases = [
+            # Title, CPU, RAM Architecture -> Expected RAM Generation, Expected Source
+            ("Dell Latitude 5420 i5 11th Gen", "Core i5 (11th Gen)", "2x SODIMM Slots (up to 64GB)", "DDR4", "chassis_decoder"),
+            ("Dell Latitude 7420 i7 11th Gen", "Core i7 (11th Gen)", "Soldered (Fixed)", "LPDDR4x", "chassis_decoder"),
+            ("Dell Latitude 7430 i7 12th Gen", "Core i7 (12th Gen)", "Soldered (Fixed)", "LPDDR5", "chassis_decoder"),
+            ("Dell Latitude 5430 i5 12th Gen", "Core i5 (12th Gen)", "2x SODIMM Slots (up to 64GB)", "DDR4", "chassis_decoder"),
+            ("Lenovo ThinkPad T14 Gen 2", "Core i5 (11th Gen)", "1x Soldered + 1x SODIMM Slot", "DDR4", "chassis_decoder"),
+            ("Lenovo ThinkPad L13 Gen 3", "Core i5 (13th Gen)", "2x SODIMM Slots", "DDR5", "chassis_decoder"),
+            ("Dell Latitude E7440 i5 4th Gen", "Core i5 (4th Gen)", "2x SODIMM Slots", "DDR3L", "chassis_decoder"),
+            ("MacBook Air M1", "Apple M1", "Soldered (Non-upgradeable)", "Unified LPDDR4x", "chassis_decoder"),
+            ("HP ProBook x360 435 G7 Ryzen 7", "AMD Ryzen 7 PRO", "2x SODIMM Slots (up to 64GB)", "DDR4", "chassis_decoder"),
+            ("Asus Vivobook DDR4 16GB", "Core i5 (10th Gen)", "Modular / Semi-Modular", "DDR4", "listing_explicit"),
+            ("Laptop DDR5 32GB", "Core i7 (12th Gen)", "2x SODIMM Slots", "DDR5", "listing_explicit"),
+            ("Lenovo ThinkPad X1 Carbon Gen 9", "Core i7 (11th Gen)", "Soldered (Fixed)", "LPDDR4x", "chassis_decoder"),
+        ]
+
+        for title, cpu, ram_type, expected_gen, expected_src in test_cases:
+            gen, src = HardwareClassifier.detect_ram_generation(title, cpu=cpu, ram_type=ram_type, return_source=True)
+            self.assertEqual(gen, expected_gen, f"Failed ram_gen for {title} (got {gen}, expected {expected_gen})")
+            self.assertEqual(src, expected_src, f"Failed ram_source for {title} (got {src}, expected {expected_src})")
 
     def test_physical_specs_enrichment(self):
         """Ensure screen size, weight, and battery Wh are estimated accurately."""
@@ -230,6 +257,8 @@ class TestHardwareParsers(unittest.TestCase):
         self.assertFalse(laptop.is_touch)
         self.assertFalse(laptop.is_2in1)
         self.assertEqual(laptop.deal_price_ils, 2200)
+        self.assertEqual(laptop.ram_gen, "DDR4")
+        self.assertEqual(laptop.ram_source, "chassis_decoder")
 
         # 2. Touch 2-in-1 with analysis_text (LTS style)
         lts_laptop = HardwareClassifier.build_laptop(
