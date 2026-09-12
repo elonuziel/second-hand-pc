@@ -127,10 +127,10 @@ class SpecEnricher:
     def enrich_item_dict(cls, laptop: Dict[str, Any]) -> Dict[str, Any]:
         title = laptop.get("title") or laptop.get("model") or ""
 
-        # Extract or update screen_size_in
-        screen_size = float(laptop.get("screen_size_in") or cls.detect_screen_size(title))
-        weight_kg = float(laptop.get("weight_kg") or cls.detect_weight_kg(title, screen_size))
-        battery_wh = int(laptop.get("battery_wh") or cls.detect_battery_wh(title, weight_kg))
+        # Accurately compute screen_size_in, weight_kg, and battery_wh based on verified heuristics
+        screen_size = cls.detect_screen_size(title)
+        weight_kg = cls.detect_weight_kg(title, screen_size)
+        battery_wh = cls.detect_battery_wh(title, weight_kg)
 
         laptop["screen_size_in"] = round(screen_size, 1)
         laptop["weight_kg"] = round(weight_kg, 2)

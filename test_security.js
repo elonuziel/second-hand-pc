@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { escapeHtml, calculateValueScore, formatCpuHtml } = require('./app.js');
+const { escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen } = require('./app.js');
 
 console.log('Running security tests for escapeHtml...');
 
@@ -58,5 +58,35 @@ assert.strictEqual(
 );
 assert.strictEqual(formatCpuHtml('Apple M1'), 'Apple M1');
 assert.strictEqual(formatCpuHtml(null), 'N/A');
+
+// Test 7: CPU Gen filtering
+console.log('Running tests for matchesCpuGen...');
+assert.strictEqual(matchesCpuGen('Core i7 (12th Gen)', '12+'), true);
+assert.strictEqual(matchesCpuGen('Core i5 (13th Gen)', '12+'), true);
+assert.strictEqual(matchesCpuGen('Core i7 (11th Gen)', '12+'), false);
+
+assert.strictEqual(matchesCpuGen('Core i5 (11th Gen)', '11'), true);
+assert.strictEqual(matchesCpuGen('Core i5 (10th Gen)', '11'), false);
+
+assert.strictEqual(matchesCpuGen('Core i7 (10th Gen)', '10'), true);
+assert.strictEqual(matchesCpuGen('Core i7 (8th Gen)', '10'), false);
+
+assert.strictEqual(matchesCpuGen('Core i5 (8th Gen)', '8'), true);
+assert.strictEqual(matchesCpuGen('Core i7 (9th Gen)', '8'), true);
+assert.strictEqual(matchesCpuGen('Core i5 (7th Gen)', '8'), false);
+
+assert.strictEqual(matchesCpuGen('Core i5 (7th Gen)', 'older'), true);
+assert.strictEqual(matchesCpuGen('Core i5 (4th Gen)', 'older'), true);
+assert.strictEqual(matchesCpuGen('Core i5 (8th Gen)', 'older'), false);
+
+assert.strictEqual(matchesCpuGen('Apple M1', 'apple'), true);
+assert.strictEqual(matchesCpuGen('Apple M2', 'apple'), true);
+assert.strictEqual(matchesCpuGen('Core i7 (11th Gen)', 'apple'), false);
+
+assert.strictEqual(matchesCpuGen('AMD Ryzen 5 PRO', 'amd'), true);
+assert.strictEqual(matchesCpuGen('Core i5 (11th Gen)', 'amd'), false);
+
+assert.strictEqual(matchesCpuGen('Core i7 (11th Gen)', 'all'), true);
+assert.strictEqual(matchesCpuGen(null, 'all'), true);
 
 console.log('All tests passed successfully!');

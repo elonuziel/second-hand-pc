@@ -17,6 +17,7 @@ const state = {
   catalogFilters: {
     store: 'all',
     brand: 'all',
+    cpuGen: 'all',
     ram: 0,
     form: 'all',
     screen: 'all',
@@ -42,6 +43,7 @@ const themeToggle = typeof document !== 'undefined' ? document.getElementById('t
 
 const storeFilter = typeof document !== 'undefined' ? document.getElementById('storeFilter') : null;
 const brandFilter = typeof document !== 'undefined' ? document.getElementById('brandFilter') : null;
+const cpuGenFilter = typeof document !== 'undefined' ? document.getElementById('cpuGenFilter') : null;
 const ramFilter = typeof document !== 'undefined' ? document.getElementById('ramFilter') : null;
 const formFilter = typeof document !== 'undefined' ? document.getElementById('formFilter') : null;
 const screenFilter = typeof document !== 'undefined' ? document.getElementById('screenFilter') : null;
@@ -68,6 +70,40 @@ function formatCpuHtml(cpuStr) {
     return `<span class="cpu-name">${escapeHtml(mainCpu)}</span><span class="cpu-gen-badge">${escapeHtml(genTag)}</span>`;
   }
   return escapeHtml(cpuStr);
+}
+
+function matchesCpuGen(cpuStr, cpuGen) {
+  if (!cpuGen || cpuGen === 'all') return true;
+  const cpuL = String(cpuStr || '').toLowerCase();
+  if (cpuGen === '12+') {
+    return cpuL.includes('12th') || cpuL.includes('13th') || cpuL.includes('14th') || cpuL.includes('ultra');
+  }
+  if (cpuGen === '11') {
+    return cpuL.includes('11th');
+  }
+  if (cpuGen === '10') {
+    return cpuL.includes('10th');
+  }
+  if (cpuGen === '8') {
+    return cpuL.includes('8th') || cpuL.includes('9th');
+  }
+  if (cpuGen === 'older') {
+    return (
+      cpuL.includes('7th') ||
+      cpuL.includes('6th') ||
+      cpuL.includes('5th') ||
+      cpuL.includes('4th') ||
+      cpuL.includes('3rd') ||
+      cpuL.includes('2nd')
+    );
+  }
+  if (cpuGen === 'apple') {
+    return cpuL.includes('m1') || cpuL.includes('m2') || cpuL.includes('m3') || cpuL.includes('apple');
+  }
+  if (cpuGen === 'amd') {
+    return cpuL.includes('ryzen') || cpuL.includes('amd');
+  }
+  return true;
 }
 
 function calculateValueScore(laptop) {
@@ -359,6 +395,7 @@ function setQuickPreset(preset) {
     state.catalogFilters = {
       store: 'all',
       brand: 'all',
+      cpuGen: 'all',
       ram: 0,
       form: 'all',
       screen: 'all',
@@ -369,6 +406,7 @@ function setQuickPreset(preset) {
     };
     if (storeFilter) storeFilter.value = 'all';
     if (brandFilter) brandFilter.value = 'all';
+    if (cpuGenFilter) cpuGenFilter.value = 'all';
     if (ramFilter) ramFilter.value = '0';
     if (formFilter) formFilter.value = 'all';
     if (screenFilter) screenFilter.value = 'all';
@@ -383,12 +421,13 @@ function setQuickPreset(preset) {
 
 function renderCatalog() {
   if (!catalogContent) return;
-  const { store, brand, ram, form, screen, weight, battery, upgradability, sort } = state.catalogFilters;
+  const { store, brand, cpuGen, ram, form, screen, weight, battery, upgradability, sort } = state.catalogFilters;
   const q = state.query.toLowerCase();
 
   let filtered = state.catalogData.filter((item) => {
     if (store !== 'all' && item.store !== store) return false;
     if (brand !== 'all' && item.brand.toLowerCase() !== brand.toLowerCase()) return false;
+    if (!matchesCpuGen(item.cpu, cpuGen)) return false;
     if (ram > 0 && item.ram_gb < ram) return false;
     if (upgradability > 0 && item.upgradability_score < upgradability) return false;
 
@@ -636,6 +675,14 @@ function bindEvents() {
     });
   }
 
+  if (cpuGenFilter) {
+    cpuGenFilter.addEventListener('change', (e) => {
+      state.catalogFilters.cpuGen = e.target.value;
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
   if (ramFilter) {
     ramFilter.addEventListener('change', (e) => {
       state.catalogFilters.ram = Number(e.target.value);
@@ -703,5 +750,5 @@ async function init() {
 init();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { escapeHtml, calculateValueScore, formatCpuHtml };
+  module.exports = { escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen };
 }
