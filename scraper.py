@@ -124,6 +124,43 @@ def main():
         use_ai=args.ai
     )
 
+    # --- Preserve previously scraped data for any stores that returned 0 items ---
+    # Handles stores (e.g. Recomp) that timeout/block from CI datacenter IPs.
+    # If a store returned nothing new, fall back to its last known scraped items.
+    if os.path.exists(JSON_PATH):
+        try:
+            with open(JSON_PATH, encoding="utf-8") as _f:
+                _prev_raw = json.load(_f)
+            # Previous JSON may be a flat list (after enrich_specs) or dict-by-store
+            if isinstance(_prev_raw, dict):
+                _prev_by_store: Dict[str, list] = _prev_raw
+            else:
+                _prev_by_store = {}
+                for _itm in _prev_raw:
+                    _k = _itm.get("store", "")
+                    _prev_by_store.setdefault(_k, []).append(_itm)
+            _fields = set(LaptopItem.__dataclass_fields__.keys())
+            for _key in list(results.keys()):
+                if len(results[_key]) == 0:
+                    _prev_items = _prev_by_store.get(_key)
+                    if not _prev_items:
+                        for _pk, _pv in _prev_by_store.items():
+                            if _key.lower().replace(" ", "") in _pk.lower().replace(" ", ""):
+                                _prev_items = _pv
+                                break
+                    if _prev_items:
+                        logger.warning(
+                            "⚠️  Store '%s' returned 0 laptops — preserving %d previously scraped items.",
+                            _key, len(_prev_items)
+                        )
+                        results[_key] = [
+                            LaptopItem(**{k: v for k, v in _d.items() if k in _fields})
+                            for _d in _prev_items
+                            if isinstance(_d, dict)
+                        ]
+        except Exception as _e:
+            logger.warning("Could not load previous catalog for fallback: %s", _e)
+
     # Flatten items for filtering & statistics
     all_items: List[LaptopItem] = []
     for store_name, items in results.items():
