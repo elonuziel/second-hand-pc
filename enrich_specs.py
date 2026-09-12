@@ -19,7 +19,6 @@ import json
 import logging
 import argparse
 from typing import Dict, List, Tuple, Any, Optional
-from scraper import HardwareClassifier
 from scraper import HardwareClassifier, LaptopItem, ReportGenerator
 
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -155,13 +154,9 @@ def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = FULL_CATA
     with open(json_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    all_laptops = []
-    store_map = {"itoutlet": [], "ecology": [], "lts": [], "recomp": []}
     store_map: Dict[str, List[LaptopItem]] = {"itoutlet": [], "ecology": [], "lts": [], "recomp": []}
     if isinstance(data, dict):
         for k, v in data.items():
-            store_map[k] = v
-            all_laptops.extend(v)
             laptop_items = []
             for itm in v:
                 fields = {f: itm[f] for f in itm if f in LaptopItem.__dataclass_fields__}
@@ -175,69 +170,6 @@ def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = FULL_CATA
             if key in store_map:
                 store_map[key].append(LaptopItem(**fields))
 
-    now_str = "Recent Live Audit"
-
-    md_parts = []
-    md_parts.append(f"""# 💻 Refurbished Laptops Market Research & Multi-Store Comparison Guide
-**Stores Audited & Researched:**
-1. 🏬 **Ecology Computers (אקולוגיה לקהילה מוגנת):** [ecommunity.org.il/מחשבים-ניידים](https://www.ecommunity.org.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D)
-2. 🏬 **IT Outlet (איי טי אאוטלט):** [itoutlet.co.il/מחשבים-ניידים](https://www.itoutlet.co.il/164920-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D?order=up_price)
-3. 🏬 **LaptopTech LTS (לפטופ.טק):** [lts.co.il/מחשבים-ניידים-מחודשים-יד-2](https://lts.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%99%D7%93-2/)
-4. 🏬 **Recomp Computers (ריקומפ):** [recomp.co.il/מחשבים-מחודשים-במבצע](https://recomp.co.il/%d7%9e%d7%97%d7%a9%d7%91%d7%99%d7%9d-%d7%9e%d7%97%D7%95%D7%93%D7%a9%d7%99%D7%9D-%D7%91%D7%9e%d7%91%d7%a6%d7%a2/)
-
----
-
-## 🏬 1. IT Outlet (איי טי אאוטלט) — Live Catalog & Stock Audit
-
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
-""")
-    for i, itm in enumerate(store_map.get("itoutlet", []), 1):
-        score = itm.get("upgradability_score", 7.5)
-        badge = f"🟢 {score}" if score >= 8.5 else (f"🟡 {score}" if score >= 7.0 else f"🟠 {score}")
-        md_parts.append(f"| {i} | **{itm.get('title')}** | {itm.get('cpu')} | {itm.get('ram_gb')}GB / {itm.get('storage_gb')}GB | {itm.get('screen_size_in')}\" | {itm.get('weight_kg')} kg | {itm.get('battery_wh')} Wh | **{itm.get('deal_label')}** | {itm.get('storage_type')} | {badge} | [View Product]({itm.get('url')}) |\n")
-
-    md_parts.append(f"""
----
-
-## 🏬 2. Ecology Computers (אקולוגיה לקהילה מוגנת) — Live Stock Audit
-
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
-""")
-    for i, itm in enumerate(store_map.get("ecology", []), 1):
-        score = itm.get("upgradability_score", 7.5)
-        badge = f"🟢 {score}" if score >= 8.5 else (f"🟡 {score}" if score >= 7.0 else f"🟠 {score}")
-        md_parts.append(f"| {i} | **{itm.get('title')}** | {itm.get('cpu')} | {itm.get('ram_gb')}GB / {itm.get('storage_gb')}GB | {itm.get('screen_size_in')}\" | {itm.get('weight_kg')} kg | {itm.get('battery_wh')} Wh | **{itm.get('deal_label')}** | {itm.get('storage_type')} | {badge} | [View Product]({itm.get('url')}) |\n")
-
-    md_parts.append(f"""
----
-
-## 🏬 3. LaptopTech LTS (לפטופ.טק) — Live Stock Audit
-
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Price | Storage Interface | Upgradability | Direct Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
-""")
-    for i, itm in enumerate(store_map.get("lts", []), 1):
-        score = itm.get("upgradability_score", 7.5)
-        badge = f"🟢 {score}" if score >= 8.5 else (f"🟡 {score}" if score >= 7.0 else f"🟠 {score}")
-        md_parts.append(f"| {i} | **{itm.get('title')}** | {itm.get('cpu')} | {itm.get('ram_gb')}GB / {itm.get('storage_gb')}GB | {itm.get('screen_size_in')}\" | {itm.get('weight_kg')} kg | {itm.get('battery_wh')} Wh | **{itm.get('deal_label')}** | {itm.get('storage_type')} | {badge} | [View Product]({itm.get('url')}) |\n")
-
-    md_parts.append(f"""
----
-
-## 🏬 4. Recomp Computers (ריקומפ) — Live Stock Audit
-
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Price | Storage Interface | Upgradability | Direct Store Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
-""")
-    for i, itm in enumerate(store_map.get("recomp", []), 1):
-        score = itm.get("upgradability_score", 7.5)
-        badge = f"🟢 {score}" if score >= 8.5 else (f"🟡 {score}" if score >= 7.0 else f"🟠 {score}")
-        md_parts.append(f"| {i} | **{itm.get('title')}** | {itm.get('cpu')} | {itm.get('ram_gb')}GB / {itm.get('storage_gb')}GB | {itm.get('screen_size_in')}\" | {itm.get('weight_kg')} kg | {itm.get('battery_wh')} Wh | **{itm.get('deal_label')}** | {itm.get('storage_type')} | {badge} | [View on Recomp]({itm.get('url')}) |\n")
-
-    with open(md_file, "w", encoding="utf-8") as f:
-        f.write("".join(md_parts).strip() + "\n")
     ReportGenerator.update_summary_markdown(store_map, md_file)
     logger.info(f"Summary markdown updated at {md_file}")
 

@@ -979,12 +979,8 @@ class ReportGenerator:
 
 ## 🏷️ IT Outlet Discounts & Coupon Optimization
 
-* **📧 100 ₪ Newsletter Coupon:** Sign up on the site to get 100 ₪ off on purchases **over 1,500 ₪**. Best for items under 2,500 ₪.
-* **💳 4% Credit Card Discount (Phone Orders Only):** For non-bank cards & clubs (MAX, Isracard, Amex, LifeStyle, Hot, Tov, ביחד בשבילך, אשמורת, בהצדעה). Best for items over 2,500 ₪.
-* **Promo Code `IT14`:** Drops the **ThinkPad P14s (32GB/1TB)** from 2,800 ₪ to **2,500 ₪** with free bag & mouse.
 IT Outlet features multiple discount programs. Note that coupons and club discounts **do not stack** (*אין כפל מבצעים / קופונים*): only **one** discount method can be applied to an order.
 
-| 100 ₪ Email Discount | 4% Credit Card Discount |
 ### 💡 How the Discounts & Sales Work:
 
 1. **📧 100 ₪ Newsletter Sign-Up Coupon:**
@@ -1024,8 +1020,6 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 
 > **Direct Link:** [Lenovo ThinkPad P14s Gen 1 Product Page](https://www.itoutlet.co.il/items/8733190-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-%D7%9C%D7%A2%D7%A8%D7%99%D7%9B%D7%94-%D7%92%D7%A8%D7%A4%D7%99%D7%AA-Lenovo-ThinkPad-P14s-Gen-1-i7-32GB-1TB-SSD)  
 > **Status:** 🟢 **AVAILABLE & IN STOCK**  
-> **Offer Price:** **2,500 ₪** *(Original 2,800 ₪, with coupon `IT14`)*  
-> **Includes:** Free laptop bag and wireless mouse  
 > **Offer Price:** **2,500 ₪** *(Original 2,800 ₪, with coupon `IT14` — saves 300 ₪)*  
 > **Includes:** Free laptop carry bag and wireless optical mouse  
 > **Storage:** ⚡ **1 TB M.2 2280 PCIe 3.0 NVMe SSD** *(Fully swappable up to 2TB/4TB)*  
