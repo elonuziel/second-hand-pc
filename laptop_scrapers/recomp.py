@@ -10,6 +10,7 @@ import requests
 from laptop_domain import LaptopItem
 from laptop_classification import HardwareClassifier
 from laptop_parsing import last_valid_price
+from laptop_pipeline import report_store_block
 
 logger = logging.getLogger("RecompScraper")
 
@@ -129,6 +130,9 @@ class RecompScraper:
             catalog_html = self._fetch_catalog()
             if not catalog_html:
                 logger.error("Recomp: could not fetch any catalog URL — giving up.")
+                report_store_block(
+                    self.STORE_NAME, "catalog unreachable from this IP (every URL attempt failed)"
+                )
                 return items
 
             # Extract all recomp.co.il/product/ links with their anchor text

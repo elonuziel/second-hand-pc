@@ -21,8 +21,10 @@ logger = logging.getLogger(__name__)
 from enrich_specs import SpecEnricher
 from laptop_parsing import is_desktop_title, is_laptop_title, last_valid_price
 from http_session import is_bot_challenge
+from laptop_pipeline import get_store_blocks, report_store_block, run_store_scrapers
 from scraper import (
     HardwareClassifier,
+    ReportGenerator,
     CWCScraper,
     GroqSpecEnhancer,
     LTSScraper,
@@ -447,6 +449,86 @@ class TestNewLaptopScrapers(unittest.TestCase):
         auditor = MasterLaptopAuditor(session=object())
         auditor.scraper_classes = {"first": FakeScraper, "second": FakeScraper, "third": FakeScraper}
         self.assertEqual(list(auditor.run(max_workers=3)), ["first", "second", "third"])
+
+    def test_pipeline_resolves_reported_block_to_scraper_key(self):
+        """A scraper reporting under its display name must surface under its scraper key."""
+        class BlockedScraper:
+            STORE_NAME = "Olam HaKolnoa"
+
+            def __init__(self, session):
+                self.session = session
+
+            def scrape(self):
+                report_store_block(self.STORE_NAME, "SiteGround/Sucuri robot challenge")
+                return []
+
+        class HealthyScraper:
+            STORE_NAME = "Payngo"
+
+            def __init__(self, session):
+                self.session = session
+
+            def scrape(self):
+                return []
+
+        results = run_store_scrapers(
+            {"cwc": BlockedScraper, "payngo": HealthyScraper}, session=object()
+        )
+        self.assertEqual(list(results), ["cwc", "payngo"])
+        self.assertEqual(get_store_blocks(), {"cwc": "SiteGround/Sucuri robot challenge"})
+
+    def test_store_status_report_names_blocks_and_preserved_data(self):
+        """The run summary must name blocked stores, the reason, and preserved data."""
+        lines = ReportGenerator.build_store_status_lines(
+            store_order=["volt", "cwc", "recomp"],
+            fresh_counts={"volt": 60, "cwc": 0, "recomp": 0},
+            preserved_counts={"cwc": 59},
+            block_reasons={"cwc": "SiteGround/Sucuri robot challenge; browser fallback could not clear it"},
+        )
+        self.assertEqual(len(lines), 2)  # healthy 'volt' is skipped entirely
+        self.assertIn("cwc", lines[0])
+        self.assertIn("robot challenge", lines[0])
+        self.assertIn("59 preserved items", lines[0])
+        self.assertIn("recomp", lines[1])
+        self.assertIn("no block detected", lines[1])  # unreported zero is still flagged
+        self.assertIn("nothing preserved", lines[1])
+
+    def test_cli_status_section_reports_blocked_store(self):
+        """The CLI section names a blocked store, its reason, and its preserved data."""
+        import contextlib
+        import io
+        from scraper import _print_store_status
+
+        class BlockedScraper:
+            STORE_NAME = "Olam HaKolnoa"
+
+            def __init__(self, session):
+                self.session = session
+
+            def scrape(self):
+                report_store_block(self.STORE_NAME, "SiteGround/Sucuri robot challenge")
+                return []
+
+        run_store_scrapers({"cwc": BlockedScraper}, session=object())
+
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            _print_store_status({"cwc": []}, {"cwc": 0}, {"cwc": 59})
+
+        printed = out.getvalue()
+        self.assertIn("STORES WITH NO FRESH DATA", printed)
+        self.assertIn("robot challenge", printed)
+        self.assertIn("using 59 preserved items", printed)
+
+    def test_store_status_report_is_silent_when_all_stores_are_healthy(self):
+        """A fully successful run must not print a 'no fresh data' section."""
+        lines = ReportGenerator.build_store_status_lines(
+            store_order=["volt", "cwc"],
+            fresh_counts={"volt": 60, "cwc": 59},
+            preserved_counts={},
+            block_reasons={},
+        )
+        self.assertEqual(lines, [])
 
     @patch("scraper.requests.post")
     def test_ai_provenance_only_marks_returned_fields(self, mock_post):

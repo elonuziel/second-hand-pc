@@ -45,6 +45,27 @@ class ReportGenerator:
         logger.info(f"CSV export saved to: {filepath}")
 
     @staticmethod
+    def build_store_status_lines(
+        store_order: List[str],
+        fresh_counts: Dict[str, int],
+        preserved_counts: Dict[str, int],
+        block_reasons: Dict[str, str],
+    ) -> List[str]:
+        """Renders one line per store that produced no fresh data, explaining why.
+
+        Healthy stores are skipped, so a fully successful run prints nothing here.
+        """
+        lines: List[str] = []
+        for name in store_order:
+            if fresh_counts.get(name, 0):
+                continue
+            reason = block_reasons.get(name) or "no block detected — 0 items parsed (site layout change?)"
+            preserved = preserved_counts.get(name, 0)
+            state = f"using {preserved} preserved items" if preserved else "nothing preserved"
+            lines.append(f"  • {name:18}: {reason} — {state}")
+        return lines
+
+    @staticmethod
     def update_summary_markdown(all_results: Dict[str, List[LaptopItem]], filepath: str):
         now_str = datetime.datetime.now().strftime("%B %d, %Y (%H:%M)")
         it_items = all_results.get('itoutlet', [])

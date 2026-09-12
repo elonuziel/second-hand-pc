@@ -39,7 +39,7 @@ from laptop_reports import (
     CSV_PATH,
     ENV_FILE_PATH,
 )
-from laptop_pipeline import run_store_scrapers
+from laptop_pipeline import get_store_blocks, run_store_scrapers
 from http_session import create_resilient_session, fetch_rendered_url, fetch_resilient_url, DEFAULT_HEADERS
 
 # --- Store Scrapers ---
@@ -95,6 +95,18 @@ class MasterLaptopAuditor:
         return results
 
 
+def _print_store_status(results, fresh_counts, preserved_counts) -> None:
+    """Prints which stores produced nothing fresh, why, and whether preserved data covered it."""
+    status_lines = ReportGenerator.build_store_status_lines(
+        list(results.keys()), fresh_counts, preserved_counts, get_store_blocks()
+    )
+    if status_lines:
+        print("-" * 65)
+        print("⚠️  STORES WITH NO FRESH DATA (blocked or empty):")
+        for line in status_lines:
+            print(line)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Master Multi-Store Refurbished Laptop Scraper & Hardware Auditor (Production Grade)"
@@ -123,6 +135,11 @@ def main():
         max_workers=args.workers,
         use_ai=args.ai
     )
+
+    # Snapshot who produced fresh data before any fallback replaces empty results, so the
+    # summary can tell a healthy store apart from a blocked one running on preserved data.
+    fresh_counts: Dict[str, int] = {_name: len(_items) for _name, _items in results.items()}
+    preserved_counts: Dict[str, int] = {}
 
     # --- Preserve previously scraped data for any stores that returned 0 items ---
     # Handles stores (e.g. Recomp) that timeout/block from CI datacenter IPs.
@@ -153,6 +170,7 @@ def main():
                             "⚠️  Store '%s' returned 0 laptops — preserving %d previously scraped items.",
                             _key, len(_prev_items)
                         )
+                        preserved_counts[_key] = len(_prev_items)
                         results[_key] = [
                             LaptopItem(**{k: v for k, v in _d.items() if k in _fields})
                             for _d in _prev_items
@@ -171,6 +189,7 @@ def main():
         print("\n" + "=" * 65)
         print("⚠️  SCRAPE INCOMPLETE: 0 laptops parsed. Existing files preserved.")
         print("=" * 65)
+        _print_store_status(results, fresh_counts, preserved_counts)
         return
 
     # Apply CLI Filters if specified
@@ -198,6 +217,9 @@ def main():
     print("=" * 65)
     for name, items in results.items():
         print(f"  • {name:18}: {len(items):2d} laptops found")
+
+    # Name the stores that produced nothing fresh, why, and whether preserved data covered it.
+    _print_store_status(results, fresh_counts, preserved_counts)
 
     if args.min_ram > 0 or args.max_price < 99999 or args.min_score > 0.0:
         print("\n" + "-" * 65)

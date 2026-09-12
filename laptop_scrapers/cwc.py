@@ -6,6 +6,7 @@ import logging
 import re
 from typing import Any, List, Optional, Set
 from http_session import is_bot_challenge
+from laptop_pipeline import report_store_block
 from laptop_scrapers.base import fetch_rendered_url, fetch_resilient_url
 from laptop_domain import LaptopItem
 from laptop_classification import HardwareClassifier
@@ -190,10 +191,16 @@ class CWCScraper:
                     "Previously scraped data will be preserved by the pipeline.",
                     challenged, len(self.CATEGORY_URLS),
                 )
+                report_store_block(
+                    self.STORE_NAME,
+                    f"SiteGround/Sucuri robot challenge on all {len(self.CATEGORY_URLS)} category pages "
+                    "and the REST API; browser fallback could not clear it",
+                )
             else:
                 logger.error(
                     "CWC: collected 0 laptops from the REST API and %d category pages.",
                     len(self.CATEGORY_URLS),
                 )
+                report_store_block(self.STORE_NAME, "REST API and category pages returned no laptops")
 
         return items

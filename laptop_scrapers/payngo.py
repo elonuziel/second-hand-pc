@@ -6,6 +6,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, List, Optional
 from http_session import is_bot_challenge
+from laptop_pipeline import report_store_block
 from laptop_scrapers.base import fetch_rendered_url, fetch_resilient_url
 from laptop_domain import LaptopItem
 from laptop_classification import HardwareClassifier
@@ -59,6 +60,10 @@ class PayngoScraper:
                         "Payngo: no usable catalog content (HTTP %s, browser fallback unavailable or blocked). "
                         "Previously scraped data will be preserved by the pipeline.",
                         status,
+                    )
+                    report_store_block(
+                        self.STORE_NAME,
+                        f"catalog blocked (HTTP {status}) and the browser fallback could not clear it",
                     )
                     return items
 
