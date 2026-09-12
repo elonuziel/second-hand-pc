@@ -104,71 +104,56 @@
 
               <div class="filter-group">
                 <label for="cpuGenFilter">CPU Gen</label>
-                <select id="cpuGenFilter" class="filter-select">
-                  <option value="all">All Generations</option>
-                  <optgroup label="Generations (& Up / & Down)">
-                    <option value="12-up">⚡ 12th Gen & Up</option>
-                    <option value="11-up">🚀 11th Gen & Up</option>
-                    <option value="10-up">💼 10th Gen & Up</option>
-                    <option value="8-up">💻 8th Gen & Up (Win 11)</option>
-                    <option value="11-down">⏳ 11th Gen & Down</option>
-                    <option value="10-down">⏳ 10th Gen & Down</option>
-                    <option value="8-down">⏳ 8th Gen & Down</option>
-                  </optgroup>
-                  <optgroup label="Specific Family / Brand">
-                    <option value="12+">⚡ 12th & 13th Gen (Only)</option>
-                    <option value="11">🚀 11th Gen (Only)</option>
-                    <option value="10">💼 10th Gen (Only)</option>
-                    <option value="8">💻 8th / 9th Gen (Only)</option>
+                <div class="filter-control-row">
+                  <select id="cpuGenFilter" class="filter-select">
+                    <option value="all">All Generations</option>
+                    <option value="13">13th Gen</option>
+                    <option value="12">12th Gen</option>
+                    <option value="11">11th Gen</option>
+                    <option value="10">10th Gen</option>
+                    <option value="8">8th / 9th Gen</option>
                     <option value="older">Older (4th - 7th Gen)</option>
                     <option value="apple">Apple Silicon (M1/M2)</option>
                     <option value="amd">AMD Ryzen</option>
-                  </optgroup>
-                </select>
+                  </select>
+                  <div class="filter-dir-pills" data-filter="cpuGen" role="group" aria-label="CPU generation filter direction">
+                    <button type="button" class="dir-btn active" data-dir="up" title="This generation & up">≥ Up</button>
+                    <button type="button" class="dir-btn" data-dir="down" title="This generation & down">≤ Down</button>
+                  </div>
+                </div>
               </div>
 
               <div class="filter-group">
                 <label for="ramFilter">RAM</label>
-                <select id="ramFilter" class="filter-select">
-                  <option value="0">Any RAM</option>
-                  <optgroup label="Capacity (& Up)">
-                    <option value="8">8 GB & Up</option>
-                    <option value="16">16 GB & Up (Recommended)</option>
-                    <option value="32">32 GB & Up (Power User)</option>
-                    <option value="64">64 GB & Up (Workstation)</option>
-                  </optgroup>
-                  <optgroup label="Capacity (& Down)">
-                    <option value="8-down">8 GB & Down (Budget Basic)</option>
-                    <option value="16-down">16 GB & Down</option>
-                    <option value="32-down">32 GB & Down</option>
-                  </optgroup>
-                  <optgroup label="Exact Capacity">
-                    <option value="8-exact">8 GB (Exact)</option>
-                    <option value="16-exact">16 GB (Exact)</option>
-                    <option value="32-exact">32 GB (Exact)</option>
-                  </optgroup>
-                </select>
+                <div class="filter-control-row">
+                  <select id="ramFilter" class="filter-select">
+                    <option value="0">Any RAM</option>
+                    <option value="8">8 GB</option>
+                    <option value="16">16 GB</option>
+                    <option value="32">32 GB</option>
+                    <option value="64">64 GB</option>
+                  </select>
+                  <div class="filter-dir-pills" data-filter="ram" role="group" aria-label="RAM filter direction">
+                    <button type="button" class="dir-btn active" data-dir="up" title="This RAM & up">≥ Up</button>
+                    <button type="button" class="dir-btn" data-dir="down" title="This RAM & down">≤ Down</button>
+                  </div>
+                </div>
               </div>
 
               <div class="filter-group">
                 <label for="storageFilter">Storage (SSD)</label>
-                <select id="storageFilter" class="filter-select">
-                  <option value="0">Any Storage</option>
-                  <optgroup label="Capacity (& Up)">
-                    <option value="256">💾 256 GB & Up</option>
-                    <option value="512">💾 512 GB & Up (Recommended)</option>
-                    <option value="1000">💾 1 TB & Up (Large Storage)</option>
-                  </optgroup>
-                  <optgroup label="Capacity (& Down)">
-                    <option value="256-down">💾 256 GB & Down (Budget Basic)</option>
-                    <option value="512-down">💾 512 GB & Down</option>
-                  </optgroup>
-                  <optgroup label="Exact Capacity">
-                    <option value="256-exact">256 GB (Exact)</option>
-                    <option value="512-exact">512 GB (Exact)</option>
-                    <option value="1000-exact">1 TB (Exact)</option>
-                  </optgroup>
-                </select>
+                <div class="filter-control-row">
+                  <select id="storageFilter" class="filter-select">
+                    <option value="0">Any Storage</option>
+                    <option value="256">256 GB</option>
+                    <option value="512">512 GB</option>
+                    <option value="1000">1 TB</option>
+                  </select>
+                  <div class="filter-dir-pills" data-filter="storage" role="group" aria-label="Storage filter direction">
+                    <button type="button" class="dir-btn active" data-dir="up" title="This storage & up">≥ Up</button>
+                    <button type="button" class="dir-btn" data-dir="down" title="This storage & down">≤ Down</button>
+                  </div>
+                </div>
               </div>
 
               <div class="filter-group">
@@ -182,74 +167,69 @@
 
               <div class="filter-group">
                 <label for="screenFilter">Screen Size</label>
-                <select id="screenFilter" class="filter-select">
-                  <option value="all">All Sizes</option>
-                  <optgroup label="Size Range (& Up / & Down)">
-                    <option value="14-up">📏 14.0" & Up (Medium to Large)</option>
-                    <option value="14-down">📏 14.0" & Down (Compact to Medium)</option>
-                    <option value="15-up">🖥️ 15.0" & Up (Large Display)</option>
-                    <option value="13.5-down">📱 13.5" & Down (Ultra-Portable)</option>
-                    <option value="15.6-down">🖥️ 15.6" & Down</option>
-                    <option value="13.3-up">💻 13.3" & Up</option>
-                  </optgroup>
-                  <optgroup label="Exact Formats">
-                    <option value="14.0">💻 14.0" (Standard Ultra)</option>
-                    <option value="13.3">💻 13.3" (Compact)</option>
-                    <option value="15.6">🖥️ 15.6" (Large Productivity)</option>
-                  </optgroup>
-                </select>
+                <div class="filter-control-row">
+                  <select id="screenFilter" class="filter-select">
+                    <option value="all">All Sizes</option>
+                    <option value="13.3">13.3" (Compact)</option>
+                    <option value="14.0">14.0" (Standard Ultra)</option>
+                    <option value="15.6">15.6" (Large Productivity)</option>
+                  </select>
+                  <div class="filter-dir-pills" data-filter="screen" role="group" aria-label="Screen size filter direction">
+                    <button type="button" class="dir-btn active" data-dir="up" title="This screen size & up">≥ Up</button>
+                    <button type="button" class="dir-btn" data-dir="down" title="This screen size & down">≤ Down</button>
+                  </div>
+                </div>
               </div>
 
               <div class="filter-group">
                 <label for="weightFilter">Weight</label>
-                <select id="weightFilter" class="filter-select">
-                  <option value="0">Any Weight</option>
-                  <optgroup label="Portable (& Down)">
-                    <option value="1.3">🪶 1.3 kg & Down (Featherlight)</option>
-                    <option value="1.5">💻 1.5 kg & Down (Portable Ultra)</option>
-                    <option value="1.8">⚖️ 1.8 kg & Down (Everyday Carry)</option>
-                    <option value="2.0">🏋️ 2.0 kg & Down</option>
-                  </optgroup>
-                  <optgroup label="Workstation / Heavier (& Up)">
-                    <option value="1.5-up">🏢 1.5 kg & Up</option>
-                    <option value="1.8-up">🏢 1.8 kg & Up (Workstation / Heavy)</option>
-                    <option value="2.0-up">🏢 2.0 kg & Up (Heavy Workstation)</option>
-                  </optgroup>
-                </select>
+                <div class="filter-control-row">
+                  <select id="weightFilter" class="filter-select">
+                    <option value="0">Any Weight</option>
+                    <option value="1.3">1.3 kg (Featherlight)</option>
+                    <option value="1.5">1.5 kg (Portable)</option>
+                    <option value="1.8">1.8 kg (Everyday Carry)</option>
+                    <option value="2.0">2.0 kg (Workstation)</option>
+                  </select>
+                  <div class="filter-dir-pills" data-filter="weight" role="group" aria-label="Weight filter direction">
+                    <button type="button" class="dir-btn" data-dir="up" title="This weight & up">≥ Up</button>
+                    <button type="button" class="dir-btn active" data-dir="down" title="This weight & down (lighter)">≤ Down</button>
+                  </div>
+                </div>
               </div>
 
               <div class="filter-group">
                 <label for="batteryFilter">Battery</label>
-                <select id="batteryFilter" class="filter-select">
-                  <option value="0">Any Battery</option>
-                  <optgroup label="Capacity (& Up)">
-                    <option value="45">🔋 45 Wh & Up</option>
-                    <option value="50">🔋 50 Wh & Up (Standard Business+)</option>
-                    <option value="55">🔋 55 Wh & Up (Long Battery)</option>
-                    <option value="65">⚡ 65 Wh & Up (High Capacity)</option>
-                  </optgroup>
-                  <optgroup label="Capacity (& Down)">
-                    <option value="45-down">🪶 45 Wh & Down</option>
-                    <option value="50-down">🪶 50 Wh & Down (Standard / Ultralight)</option>
-                    <option value="55-down">🔋 55 Wh & Down</option>
-                  </optgroup>
-                </select>
+                <div class="filter-control-row">
+                  <select id="batteryFilter" class="filter-select">
+                    <option value="0">Any Battery</option>
+                    <option value="45">45 Wh</option>
+                    <option value="50">50 Wh (Standard Business)</option>
+                    <option value="55">55 Wh (Long Battery)</option>
+                    <option value="65">65 Wh (High Capacity)</option>
+                  </select>
+                  <div class="filter-dir-pills" data-filter="battery" role="group" aria-label="Battery capacity filter direction">
+                    <button type="button" class="dir-btn active" data-dir="up" title="This battery & up">≥ Up</button>
+                    <button type="button" class="dir-btn" data-dir="down" title="This battery & down">≤ Down</button>
+                  </div>
+                </div>
               </div>
 
               <div class="filter-group">
                 <label for="upgradabilityFilter">Upgradability</label>
-                <select id="upgradabilityFilter" class="filter-select">
-                  <option value="0">Any Rating</option>
-                  <optgroup label="Modular (& Up)">
-                    <option value="7">🟢 Highly Upgradable (7+ & Up)</option>
-                    <option value="8">🟢 Excellent Upgradability (8+ & Up)</option>
-                    <option value="9">🟢 Fully Modular (9+ & Up)</option>
-                  </optgroup>
-                  <optgroup label="Thin Ultrabook (& Down)">
-                    <option value="5-down">🟠 Soldered RAM / Ultrabook (5 & Down)</option>
-                    <option value="7-down">🟡 Semi-Modular & Down (7 & Down)</option>
-                  </optgroup>
-                </select>
+                <div class="filter-control-row">
+                  <select id="upgradabilityFilter" class="filter-select">
+                    <option value="0">Any Rating</option>
+                    <option value="5">5 (Soldered Ultrabook)</option>
+                    <option value="7">7 (Semi-Modular)</option>
+                    <option value="8">8 (Highly Upgradable)</option>
+                    <option value="9">9 (Fully Modular)</option>
+                  </select>
+                  <div class="filter-dir-pills" data-filter="upgradability" role="group" aria-label="Upgradability filter direction">
+                    <button type="button" class="dir-btn active" data-dir="up" title="This rating & up">≥ Up</button>
+                    <button type="button" class="dir-btn" data-dir="down" title="This rating & down">≤ Down</button>
+                  </div>
+                </div>
               </div>
 
               <div class="filter-group">

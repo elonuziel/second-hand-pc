@@ -27,7 +27,16 @@ const state = {
     weight: 0,
     battery: 0,
     upgradability: 0,
-    sort: 'value-desc'
+    sort: 'value-desc',
+    filterDirs: {
+      cpuGen: 'up',
+      ram: 'up',
+      storage: 'up',
+      screen: 'up',
+      weight: 'down',
+      battery: 'up',
+      upgradability: 'up'
+    }
   }
 };
 
@@ -94,6 +103,29 @@ function updatePriceSliderUI(value, mode = (state.catalogFilters && state.catalo
   }
 }
 
+function updateDirButtonsUI() {
+  if (typeof document === 'undefined') return;
+  const pillsContainers = document.querySelectorAll('.filter-dir-pills');
+  pillsContainers.forEach((container) => {
+    const filterName = container.dataset.filter;
+    const currentDir = (state.catalogFilters.filterDirs && state.catalogFilters.filterDirs[filterName]) || (filterName === 'weight' ? 'down' : 'up');
+    container.querySelectorAll('.dir-btn').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.dir === currentDir);
+    });
+  });
+}
+
+function applySmartDefaultDir(filterName) {
+  if (!state.catalogFilters.filterDirs) {
+    state.catalogFilters.filterDirs = {};
+  }
+  // If previously exact (i.e. neither was active), turn back to smart default on new selection
+  if (state.catalogFilters.filterDirs[filterName] === 'exact') {
+    state.catalogFilters.filterDirs[filterName] = filterName === 'weight' ? 'down' : 'up';
+    updateDirButtonsUI();
+  }
+}
+
 function escapeHtml(str) {
   return String(str || '')
     .replace(/&/g, '&amp;')
@@ -134,17 +166,17 @@ function getCpuGenRank(cpuStr) {
   return 0;
 }
 
-function matchesCpuGen(cpuStr, cpuGen) {
+function matchesCpuGen(cpuStr, cpuGen, dir = 'up') {
   if (!cpuGen || cpuGen === 'all') return true;
   const cpuL = String(cpuStr || '').toLowerCase();
   const rank = getCpuGenRank(cpuL);
 
-  // Range options (& Up / & Down)
-  if (cpuGen.endsWith('-up')) {
+  // Range options (& Up / & Down) - backward compatibility
+  if (typeof cpuGen === 'string' && cpuGen.endsWith('-up')) {
     const minGen = parseInt(cpuGen, 10);
     return rank >= minGen;
   }
-  if (cpuGen.endsWith('-down')) {
+  if (typeof cpuGen === 'string' && cpuGen.endsWith('-down')) {
     const maxGen = parseInt(cpuGen, 10);
     return rank > 0 && rank <= maxGen && !cpuL.includes('apple') && !cpuL.includes('amd');
   }
@@ -153,15 +185,6 @@ function matchesCpuGen(cpuStr, cpuGen) {
   if (cpuGen === '12+') {
     return cpuL.includes('12th') || cpuL.includes('13th') || cpuL.includes('14th') || cpuL.includes('ultra');
   }
-  if (cpuGen === '11') {
-    return cpuL.includes('11th');
-  }
-  if (cpuGen === '10') {
-    return cpuL.includes('10th');
-  }
-  if (cpuGen === '8') {
-    return cpuL.includes('8th') || cpuL.includes('9th');
-  }
   if (cpuGen === 'older') {
     return (
       cpuL.includes('7th') ||
@@ -169,7 +192,8 @@ function matchesCpuGen(cpuStr, cpuGen) {
       cpuL.includes('5th') ||
       cpuL.includes('4th') ||
       cpuL.includes('3rd') ||
-      cpuL.includes('2nd')
+      cpuL.includes('2nd') ||
+      (rank > 0 && rank <= 7)
     );
   }
   if (cpuGen === 'apple') {
@@ -178,7 +202,19 @@ function matchesCpuGen(cpuStr, cpuGen) {
   if (cpuGen === 'amd') {
     return cpuL.includes('ryzen') || cpuL.includes('amd');
   }
-  return true;
+
+  const targetGen = parseInt(cpuGen, 10);
+  if (isNaN(targetGen)) return true;
+
+  if (dir === 'up') {
+    return rank >= targetGen;
+  } else if (dir === 'down') {
+    return rank > 0 && rank <= targetGen && !cpuL.includes('apple') && !cpuL.includes('amd');
+  } else {
+    // exact
+    if (targetGen === 8) return rank === 8 || rank === 9;
+    return rank === targetGen;
+  }
 }
 
 function calculateValueScore(laptop) {
@@ -451,7 +487,9 @@ function setQuickPreset(preset) {
     updatePriceSliderUI(2000, 'max');
   } else if (preset === 'ram-32') {
     state.catalogFilters.ram = 32;
+    state.catalogFilters.filterDirs.ram = 'up';
     if (ramFilter) ramFilter.value = '32';
+    updateDirButtonsUI();
   } else if (preset === '2in1') {
     state.catalogFilters.form = '2in1';
     if (formFilter) formFilter.value = '2in1';
@@ -460,7 +498,9 @@ function setQuickPreset(preset) {
     if (storeFilter) storeFilter.value = 'Ecology Computers';
   } else if (preset === 'modular') {
     state.catalogFilters.upgradability = 7;
+    state.catalogFilters.filterDirs.upgradability = 'up';
     if (upgradabilityFilter) upgradabilityFilter.value = '7';
+    updateDirButtonsUI();
   } else if (preset === 'budget') {
     state.catalogFilters.price = 1600;
     state.catalogFilters.priceMode = 'max';
@@ -469,13 +509,19 @@ function setQuickPreset(preset) {
     if (sortFilter) sortFilter.value = 'price-asc';
   } else if (preset === 'featherlight') {
     state.catalogFilters.weight = 1.3;
+    state.catalogFilters.filterDirs.weight = 'down';
     if (weightFilter) weightFilter.value = '1.3';
+    updateDirButtonsUI();
   } else if (preset === 'large-screen') {
-    state.catalogFilters.screen = 'large';
-    if (screenFilter) screenFilter.value = 'large';
+    state.catalogFilters.screen = 15.6;
+    state.catalogFilters.filterDirs.screen = 'up';
+    if (screenFilter) screenFilter.value = '15.6';
+    updateDirButtonsUI();
   } else if (preset === 'long-battery') {
     state.catalogFilters.battery = 55;
+    state.catalogFilters.filterDirs.battery = 'up';
     if (batteryFilter) batteryFilter.value = '55';
+    updateDirButtonsUI();
   } else if (preset === 'all') {
     state.catalogFilters = {
       store: 'all',
@@ -490,7 +536,16 @@ function setQuickPreset(preset) {
       weight: 0,
       battery: 0,
       upgradability: 0,
-      sort: 'value-desc'
+      sort: 'value-desc',
+      filterDirs: {
+        cpuGen: 'up',
+        ram: 'up',
+        storage: 'up',
+        screen: 'up',
+        weight: 'down',
+        battery: 'up',
+        upgradability: 'up'
+      }
     };
     if (storeFilter) storeFilter.value = 'all';
     if (brandFilter) brandFilter.value = 'all';
@@ -504,6 +559,7 @@ function setQuickPreset(preset) {
     if (batteryFilter) batteryFilter.value = '0';
     if (upgradabilityFilter) upgradabilityFilter.value = '0';
     if (sortFilter) sortFilter.value = 'value-desc';
+    updateDirButtonsUI();
   }
 
   renderCatalog();
@@ -511,7 +567,8 @@ function setQuickPreset(preset) {
 
 function renderCatalog() {
   if (!catalogContent) return;
-  const { store, brand, price, cpuGen, ram, storage, form, screen, weight, battery, upgradability, sort } = state.catalogFilters;
+  const { store, brand, price, cpuGen, ram, storage, form, screen, weight, battery, upgradability, sort, filterDirs } = state.catalogFilters;
+  const dirs = filterDirs || {};
   const q = state.query.toLowerCase();
 
   let filtered = state.catalogData.filter((item) => {
@@ -529,93 +586,91 @@ function renderCatalog() {
       }
     }
 
-    if (!matchesCpuGen(item.cpu, cpuGen)) return false;
+    if (!matchesCpuGen(item.cpu, cpuGen, dirs.cpuGen || 'up')) return false;
 
-    // RAM Range (& Up / & Down / Exact)
+    // RAM (Button-controlled: ≥ Up, ≤ Down, or Exact)
     if (ram && ram !== '0' && ram !== 0) {
-      const rStr = String(ram);
-      if (rStr.endsWith('-down')) {
-        const maxR = parseFloat(rStr);
-        if (item.ram_gb > maxR) return false;
-      } else if (rStr.endsWith('-exact')) {
-        const exactR = parseFloat(rStr);
-        if (item.ram_gb !== exactR) return false;
+      const targetR = parseFloat(ram);
+      const rDir = dirs.ram || 'up';
+      if (rDir === 'up') {
+        if (item.ram_gb < targetR) return false;
+      } else if (rDir === 'down') {
+        if (item.ram_gb > targetR) return false;
       } else {
-        const minR = parseFloat(rStr);
-        if (minR > 0 && item.ram_gb < minR) return false;
+        if (item.ram_gb !== targetR) return false;
       }
     }
 
-    // Storage Range (& Up / & Down / Exact)
+    // Storage (Button-controlled: ≥ Up, ≤ Down, or Exact)
     if (storage && storage !== '0' && storage !== 0) {
-      const sStr = String(storage);
-      if (sStr.endsWith('-down')) {
-        const maxS = parseFloat(sStr);
-        if (item.storage_gb > (maxS + 30)) return false;
-      } else if (sStr.endsWith('-exact')) {
-        const exactS = parseFloat(sStr);
-        if (Math.abs(item.storage_gb - exactS) > 30) return false;
+      const targetS = parseFloat(storage);
+      const sDir = dirs.storage || 'up';
+      if (sDir === 'up') {
+        if (item.storage_gb < (targetS - 30)) return false;
+      } else if (sDir === 'down') {
+        if (item.storage_gb > (targetS + 30)) return false;
       } else {
-        const minS = parseFloat(sStr);
-        if (minS > 0 && item.storage_gb < (minS - 30)) return false;
+        if (Math.abs(item.storage_gb - targetS) > 30) return false;
       }
     }
 
-    // Upgradability (& Up / & Down)
+    // Upgradability (Button-controlled: ≥ Up, ≤ Down, or Exact)
     if (upgradability && upgradability !== '0' && upgradability !== 0) {
-      const uStr = String(upgradability);
-      if (uStr.endsWith('-down')) {
-        const maxU = parseFloat(uStr);
-        if (item.upgradability_score > (maxU + 0.5)) return false;
+      const targetU = parseFloat(upgradability);
+      const uDir = dirs.upgradability || 'up';
+      if (uDir === 'up') {
+        if (item.upgradability_score < (targetU - 0.2)) return false;
+      } else if (uDir === 'down') {
+        if (item.upgradability_score > (targetU + 0.5)) return false;
       } else {
-        const minU = parseFloat(uStr);
-        if (minU > 0 && item.upgradability_score < minU) return false;
+        if (Math.abs(item.upgradability_score - targetU) > 0.5) return false;
       }
     }
 
     if (form === '2in1' && (!item.is_2in1 && !item.is_touch)) return false;
     if (form === 'clamshell' && (item.is_2in1 || item.is_touch)) return false;
 
-    // Screen Size Range (& Up / & Down / Exact)
+    // Screen Size (Button-controlled: ≥ Up, ≤ Down, or Exact)
     if (screen !== 'all') {
-      const scStr = String(screen);
-      if (scStr.endsWith('-up')) {
-        const minS = parseFloat(scStr);
-        if (item.screen_size_in < (minS - 0.15)) return false;
-      } else if (scStr.endsWith('-down')) {
-        const maxS = parseFloat(scStr);
-        if (item.screen_size_in > (maxS + 0.15)) return false;
-      } else if (scStr === 'large') {
-        if (item.screen_size_in < 15.0) return false;
-      } else if (scStr === 'compact') {
-        if (item.screen_size_in > 13.6) return false;
+      const targetSc = parseFloat(screen);
+      const scDir = dirs.screen || 'up';
+      if (isNaN(targetSc)) {
+        if (screen === 'large' && item.screen_size_in < 15.0) return false;
+        if (screen === 'compact' && item.screen_size_in > 13.6) return false;
       } else {
-        const exactS = parseFloat(scStr);
-        if (exactS > 0 && Math.abs(item.screen_size_in - exactS) > 0.3) return false;
+        if (scDir === 'up') {
+          if (item.screen_size_in < (targetSc - 0.15)) return false;
+        } else if (scDir === 'down') {
+          if (item.screen_size_in > (targetSc + 0.15)) return false;
+        } else {
+          if (Math.abs(item.screen_size_in - targetSc) > 0.2) return false;
+        }
       }
     }
 
-    // Weight Range (& Down / & Up)
+    // Weight (Button-controlled: ≤ Down [default], ≥ Up, or Exact)
     if (weight && weight !== '0' && weight !== 0) {
-      const wStr = String(weight);
-      if (wStr.endsWith('-up')) {
-        const minW = parseFloat(wStr);
-        if (item.weight_kg < (minW - 0.05)) return false;
+      const targetW = parseFloat(weight);
+      const wDir = dirs.weight || 'down';
+      if (wDir === 'down') {
+        if (item.weight_kg > (targetW + 0.05)) return false;
+      } else if (wDir === 'up') {
+        if (item.weight_kg < (targetW - 0.05)) return false;
       } else {
-        const maxW = parseFloat(wStr);
-        if (maxW > 0 && item.weight_kg > (maxW + 0.05)) return false;
+        if (Math.abs(item.weight_kg - targetW) > 0.1) return false;
       }
     }
 
-    // Battery Range (& Up / & Down)
+    // Battery (Button-controlled: ≥ Up, ≤ Down, or Exact)
     if (battery && battery !== '0' && battery !== 0) {
-      const bStr = String(battery);
-      if (bStr.endsWith('-down')) {
-        const maxB = parseFloat(bStr);
-        if (item.battery_wh > maxB) return false;
+      const targetB = parseFloat(battery);
+      const bDir = dirs.battery || 'up';
+      if (bDir === 'up') {
+        if (item.battery_wh < (targetB - 1)) return false;
+      } else if (bDir === 'down') {
+        if (item.battery_wh > (targetB + 1)) return false;
       } else {
-        const minB = parseFloat(bStr);
-        if (minB > 0 && item.battery_wh < minB) return false;
+        if (Math.abs(item.battery_wh - targetB) > 3) return false;
       }
     }
 
@@ -898,9 +953,35 @@ function bindEvents() {
     });
   }
 
+  const dirBtns = document.querySelectorAll('.dir-btn');
+  dirBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const container = btn.closest('.filter-dir-pills');
+      if (!container) return;
+      const filterName = container.dataset.filter;
+      const clickedDir = btn.dataset.dir;
+
+      if (!state.catalogFilters.filterDirs) {
+        state.catalogFilters.filterDirs = {};
+      }
+
+      // If clicked the already active button, toggle to exact (unselect both)
+      if (state.catalogFilters.filterDirs[filterName] === clickedDir) {
+        state.catalogFilters.filterDirs[filterName] = 'exact';
+      } else {
+        state.catalogFilters.filterDirs[filterName] = clickedDir;
+      }
+
+      state.activePreset = '';
+      updateDirButtonsUI();
+      renderCatalog();
+    });
+  });
+
   if (cpuGenFilter) {
     cpuGenFilter.addEventListener('change', (e) => {
       state.catalogFilters.cpuGen = e.target.value;
+      if (e.target.value !== 'all') applySmartDefaultDir('cpuGen');
       state.activePreset = '';
       renderCatalog();
     });
@@ -909,6 +990,7 @@ function bindEvents() {
   if (ramFilter) {
     ramFilter.addEventListener('change', (e) => {
       state.catalogFilters.ram = e.target.value;
+      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('ram');
       state.activePreset = '';
       renderCatalog();
     });
@@ -917,6 +999,7 @@ function bindEvents() {
   if (storageFilter) {
     storageFilter.addEventListener('change', (e) => {
       state.catalogFilters.storage = e.target.value;
+      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('storage');
       state.activePreset = '';
       renderCatalog();
     });
@@ -933,6 +1016,7 @@ function bindEvents() {
   if (screenFilter) {
     screenFilter.addEventListener('change', (e) => {
       state.catalogFilters.screen = e.target.value;
+      if (e.target.value !== 'all') applySmartDefaultDir('screen');
       state.activePreset = '';
       renderCatalog();
     });
@@ -941,6 +1025,7 @@ function bindEvents() {
   if (weightFilter) {
     weightFilter.addEventListener('change', (e) => {
       state.catalogFilters.weight = e.target.value;
+      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('weight');
       state.activePreset = '';
       renderCatalog();
     });
@@ -949,6 +1034,7 @@ function bindEvents() {
   if (batteryFilter) {
     batteryFilter.addEventListener('change', (e) => {
       state.catalogFilters.battery = e.target.value;
+      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('battery');
       state.activePreset = '';
       renderCatalog();
     });
@@ -957,6 +1043,7 @@ function bindEvents() {
   if (upgradabilityFilter) {
     upgradabilityFilter.addEventListener('change', (e) => {
       state.catalogFilters.upgradability = e.target.value;
+      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('upgradability');
       state.activePreset = '';
       renderCatalog();
     });
@@ -974,6 +1061,7 @@ async function init() {
   if (typeof document === 'undefined') return;
   initTheme();
   updatePriceSliderUI(5000, 'max');
+  updateDirButtonsUI();
   bindEvents();
   await Promise.all([preloadDocContents(), loadCatalogData()]);
   updateViewMode();

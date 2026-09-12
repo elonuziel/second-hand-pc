@@ -266,6 +266,58 @@ h1 {
   border-color: var(--primary);
 }
 
+.filter-control-row {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.filter-control-row .filter-select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.filter-dir-pills {
+  display: inline-flex;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2px;
+  gap: 2px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.dir-btn {
+  background: transparent;
+  border: none;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 6px 7px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.dir-btn:hover:not(.active) {
+  background: var(--panel);
+  color: var(--primary);
+}
+
+.dir-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(42, 93, 215, 0.3);
+}
+
 /* Price Range Slider */
 .filter-group-slider {
   background: var(--panel-alt);
