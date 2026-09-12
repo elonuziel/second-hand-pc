@@ -57,8 +57,18 @@ class RecompScraper:
         logger.info("Scraping Recomp Computers...")
         items: List[LaptopItem] = []
         try:
-            r = self.session.get(self.CATALOG_URL, timeout=12)
-            if r.status_code == 200:
+            r = None
+            for attempt in range(3):
+                try:
+                    r = self.session.get(self.CATALOG_URL, timeout=30)
+                    if r.status_code == 200:
+                        break
+                except Exception as ex:
+                    logger.warning("Recomp catalog fetch attempt %d failed: %s", attempt + 1, ex)
+                    if attempt == 2:
+                        raise
+
+            if r and r.status_code == 200:
                 links = re.findall(r'<a[^>]+href=[\"\']\s*(https://recomp\.co\.il/(?:product/|מוצר/|פריט/)[^\"\']+)[\"\'][^>]*>(.*?)</a>', r.text, re.DOTALL)
                 seen = set()
                 valid_links = []
@@ -78,14 +88,16 @@ class RecompScraper:
                 # Fetch exact prices and descriptions concurrently for Recomp
                 def fetch_recomp_item(item_tuple):
                     link, title = item_tuple
-                    try:
-                        res = self.session.get(link, timeout=8)
-                        p = self._parse_recomp_price(res.text)
-                        img = self._parse_recomp_image(res.text)
-                        desc = self._parse_recomp_desc(res.text)
-                        return link, title, p, img, desc
-                    except Exception:
-                        return link, title, None, "", ""
+                    for attempt in range(2):
+                        try:
+                            res = self.session.get(link, timeout=15)
+                            p = self._parse_recomp_price(res.text)
+                            img = self._parse_recomp_image(res.text)
+                            desc = self._parse_recomp_desc(res.text)
+                            return link, title, p, img, desc
+                        except Exception:
+                            if attempt == 1:
+                                return link, title, None, "", ""
 
                 with ThreadPoolExecutor(max_workers=6) as executor:
                     fetched_results = list(executor.map(fetch_recomp_item, valid_links))
