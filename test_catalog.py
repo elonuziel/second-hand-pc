@@ -210,6 +210,52 @@ class TestHardwareParsers(unittest.TestCase):
         self.assertEqual(enhancer.enhance_batch([]), [])
         self.assertEqual(enhancer.enhance_batch_chunk([]), [])
 
+    def test_hardware_classifier_build_laptop_factory(self):
+        """Ensure HardwareClassifier.build_laptop normalizes specs and sets provenance consistently."""
+        # 1. Standard verified business laptop
+        laptop = HardwareClassifier.build_laptop(
+            store="IT Outlet",
+            title="Dell Latitude 5430 i7 16GB 512GB SSD",
+            price_ils=2200,
+            url="https://itoutlet.co.il/product/123",
+        )
+        self.assertEqual(laptop.brand, "Dell")
+        self.assertEqual(laptop.series, "Latitude")
+        self.assertEqual(laptop.ram_gb, 16)
+        self.assertEqual(laptop.storage_gb, 512)
+        self.assertEqual(laptop.screen_size_in, 14.0)
+        self.assertLessEqual(laptop.weight_kg, 1.6)
+        self.assertEqual(laptop.screen_source, "chassis_decoder")
+        self.assertEqual(laptop.confidence_level, "verified")
+        self.assertFalse(laptop.is_touch)
+        self.assertFalse(laptop.is_2in1)
+        self.assertEqual(laptop.deal_price_ils, 2200)
+
+        # 2. Touch 2-in-1 with analysis_text (LTS style)
+        lts_laptop = HardwareClassifier.build_laptop(
+            store="LaptopTech LTS",
+            title="Lenovo ThinkPad X13 Yoga Touch",
+            price_ils=1850,
+            url="https://lts.co.il/item",
+            analysis_text="thinkpad x13 yoga touch i5 16gb 256gb",
+            warranty_months=12,
+        )
+        self.assertEqual(lts_laptop.brand, "Lenovo")
+        self.assertTrue(lts_laptop.is_touch)
+        self.assertTrue(lts_laptop.is_2in1)
+        self.assertEqual(lts_laptop.screen_size_in, 13.3)
+        self.assertEqual(lts_laptop.confidence_level, "verified")
+
+        # 3. Unidentifiable laptop triggering fallback estimate
+        unknown = HardwareClassifier.build_laptop(
+            store="Recomp Computers",
+            title="Generic Laptop With No Identifiers",
+            price_ils=1000,
+            url="https://recomp.co.il/item",
+        )
+        self.assertEqual(unknown.screen_source, "fallback_estimate")
+        self.assertEqual(unknown.confidence_level, "estimated")
+
 
 class TestFrontendCompatibility(unittest.TestCase):
     """Verifies that the catalog data works cleanly with app.js without crashing the browser."""

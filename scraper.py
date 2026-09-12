@@ -656,6 +656,82 @@ class HardwareClassifier:
             return False
         return True
 
+    @classmethod
+    def build_laptop(
+        cls,
+        store: str,
+        title: str,
+        price_ils: int,
+        url: str,
+        deal_price_ils: Optional[int] = None,
+        deal_label: Optional[str] = None,
+        warranty_months: int = 12,
+        stock_status: str = "🟢 In Stock",
+        model: Optional[str] = None,
+        gpu: Optional[str] = None,
+        is_touch: Optional[bool] = None,
+        is_2in1: Optional[bool] = None,
+        analysis_text: Optional[str] = None,
+        image_url: str = "",
+    ) -> LaptopItem:
+        """Factory that constructs a fully normalized LaptopItem with hardware analysis and provenance tags."""
+        text = analysis_text or title
+
+        brand = cls.detect_brand(text)
+        series = cls.detect_series(text)
+        resolved_model = model or (title.split('/')[0].strip() if '/' in title else title)
+        cpu = cls.detect_cpu(text)
+        ram_gb = cls.detect_ram_gb(text)
+        storage_gb = cls.detect_storage_gb(text)
+
+        score, storage_type, ram_type = cls.analyze_architecture(text)
+        screen_size, screen_src = cls.detect_screen_size(text, return_source=True)
+        weight_kg, weight_src = cls.detect_weight_kg(text, screen_size, return_source=True)
+        battery_wh, battery_src = cls.detect_battery_wh(text, weight_kg, return_source=True)
+        confidence_level = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
+
+        resolved_touch = is_touch if is_touch is not None else (cls.is_touch(title) or (cls.is_touch(analysis_text) if analysis_text else False))
+        resolved_2in1 = is_2in1 if is_2in1 is not None else (cls.is_2in1(title) or (cls.is_2in1(analysis_text) if analysis_text else False))
+
+        if gpu is None:
+            resolved_gpu = "NVIDIA Quadro P520" if any(k in text.lower() for k in ['p520', 'p14s', 'p15s']) else "Integrated"
+        else:
+            resolved_gpu = gpu
+
+        resolved_deal_price = deal_price_ils if deal_price_ils is not None else price_ils
+        resolved_deal_label = deal_label or f"{resolved_deal_price:,} ₪"
+
+        return LaptopItem(
+            store=store,
+            title=title,
+            brand=brand,
+            series=series,
+            model=resolved_model,
+            cpu=cpu,
+            ram_gb=ram_gb,
+            storage_gb=storage_gb,
+            price_ils=price_ils,
+            deal_price_ils=resolved_deal_price,
+            deal_label=resolved_deal_label,
+            storage_type=storage_type,
+            ram_type=ram_type,
+            upgradability_score=score,
+            warranty_months=warranty_months,
+            stock_status=stock_status,
+            url=url,
+            gpu=resolved_gpu,
+            is_touch=resolved_touch,
+            is_2in1=resolved_2in1,
+            image_url=image_url,
+            screen_size_in=round(screen_size, 1),
+            weight_kg=round(weight_kg, 2),
+            battery_wh=battery_wh,
+            screen_source=screen_src,
+            weight_source=weight_src,
+            battery_source=battery_src,
+            confidence_level=confidence_level,
+        )
+
 
 # --- Dynamic Top Picks Selector Engine ---
 class TopPicksEngine:
@@ -766,45 +842,15 @@ class ITOutletScraper:
                         deal_price = max(0, raw_price - 100)
                         deal_label = f"{deal_price:,} ₪ (100 ₪ Coupon)"
 
-                    score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
-                    screen_size, screen_src = HardwareClassifier.detect_screen_size(title, return_source=True)
-                    weight_kg, weight_src = HardwareClassifier.detect_weight_kg(title, screen_size, return_source=True)
-                    battery_wh, battery_src = HardwareClassifier.detect_battery_wh(title, weight_kg, return_source=True)
-                    conf = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
-
-                    # Quick GPU & Touch detection
-                    gpu = "NVIDIA Quadro P520" if 'p520' in title.lower() or 'p14s' in title.lower() or 'p15s' in title.lower() else "Integrated"
-                    is_touch = HardwareClassifier.is_touch(title)
-                    is_2in1 = HardwareClassifier.is_2in1(title)
-
-                    items.append(LaptopItem(
+                    items.append(HardwareClassifier.build_laptop(
                         store=self.STORE_NAME,
                         title=title,
-                        brand=HardwareClassifier.detect_brand(title),
-                        series=HardwareClassifier.detect_series(title),
-                        model=title.split('/')[0].strip(),
-                        cpu=HardwareClassifier.detect_cpu(title),
-                        ram_gb=HardwareClassifier.detect_ram_gb(title),
-                        storage_gb=HardwareClassifier.detect_storage_gb(title),
                         price_ils=raw_price,
+                        url=full_link,
                         deal_price_ils=deal_price,
                         deal_label=deal_label,
-                        storage_type=storage_type,
-                        ram_type=ram_type,
-                        upgradability_score=score,
                         warranty_months=12,
                         stock_status="🟢 In Stock",
-                        url=full_link,
-                        gpu=gpu,
-                        is_touch=is_touch,
-                        is_2in1=is_2in1,
-                        screen_size_in=round(screen_size, 1),
-                        weight_kg=round(weight_kg, 2),
-                        battery_wh=battery_wh,
-                        screen_source=screen_src,
-                        weight_source=weight_src,
-                        battery_source=battery_src,
-                        confidence_level=conf
                     ))
             except Exception as e:
                 logger.error(f"Error scraping IT Outlet page {page}: {e}")
@@ -863,40 +909,15 @@ class EcologyScraper:
                         is_touch = HardwareClassifier.is_touch(title)
                         is_2in1 = HardwareClassifier.is_2in1(title)
 
-                        score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
-                        screen_size, screen_src = HardwareClassifier.detect_screen_size(title, return_source=True)
-                        weight_kg, weight_src = HardwareClassifier.detect_weight_kg(title, screen_size, return_source=True)
-                        battery_wh, battery_src = HardwareClassifier.detect_battery_wh(title, weight_kg, return_source=True)
-                        conf = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
-
-                        items.append(LaptopItem(
+                        items.append(HardwareClassifier.build_laptop(
                             store=self.STORE_NAME,
                             title=title,
-                            brand=HardwareClassifier.detect_brand(title),
-                            series=HardwareClassifier.detect_series(title),
-                            model=title,
-                            cpu=HardwareClassifier.detect_cpu(title),
-                            ram_gb=HardwareClassifier.detect_ram_gb(title),
-                            storage_gb=HardwareClassifier.detect_storage_gb(title),
                             price_ils=price,
-                            deal_price_ils=price,
+                            url=full_url,
                             deal_label=f"{price:,} ₪ (24M Warranty)",
-                            storage_type=storage_type,
-                            ram_type=ram_type,
-                            upgradability_score=score,
                             warranty_months=24,
                             stock_status="🟢 In Stock (24M Warranty)",
-                            url=full_url,
                             gpu=gpu,
-                            is_touch=is_touch,
-                            is_2in1=is_2in1,
-                            screen_size_in=round(screen_size, 1),
-                            weight_kg=round(weight_kg, 2),
-                            battery_wh=battery_wh,
-                            screen_source=screen_src,
-                            weight_source=weight_src,
-                            battery_source=battery_src,
-                            confidence_level=conf
                         ))
         except Exception as e:
             logger.error(f"Error scraping Ecology Computers: {e}")
@@ -967,41 +988,14 @@ class LTSScraper:
                 for link, slug_clean, price in fetched_results:
                     words = slug_clean.split()
                     title = ' '.join(w.capitalize() if not any(c.isdigit() for c in w) else w.upper() for w in words)
-                    score, storage_type, ram_type = HardwareClassifier.analyze_architecture(slug_clean)
-                    screen_size, screen_src = HardwareClassifier.detect_screen_size(slug_clean, return_source=True)
-                    weight_kg, weight_src = HardwareClassifier.detect_weight_kg(slug_clean, screen_size, return_source=True)
-                    battery_wh, battery_src = HardwareClassifier.detect_battery_wh(slug_clean, weight_kg, return_source=True)
-                    conf = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
-                    is_touch = HardwareClassifier.is_touch(title) or HardwareClassifier.is_touch(slug_clean)
-                    is_2in1 = HardwareClassifier.is_2in1(title) or HardwareClassifier.is_2in1(slug_clean)
-
-                    items.append(LaptopItem(
+                    items.append(HardwareClassifier.build_laptop(
                         store=self.STORE_NAME,
                         title=title,
-                        brand=HardwareClassifier.detect_brand(slug_clean),
-                        series=HardwareClassifier.detect_series(slug_clean),
-                        model=title,
-                        cpu=HardwareClassifier.detect_cpu(slug_clean),
-                        ram_gb=HardwareClassifier.detect_ram_gb(slug_clean),
-                        storage_gb=HardwareClassifier.detect_storage_gb(slug_clean),
                         price_ils=price,
-                        deal_price_ils=price,
-                        deal_label=f"{price:,} ₪",
-                        storage_type=storage_type,
-                        ram_type=ram_type,
-                        upgradability_score=score,
+                        url=link,
+                        analysis_text=slug_clean,
                         warranty_months=12,
                         stock_status="🟢 In Stock",
-                        url=link,
-                        is_touch=is_touch,
-                        is_2in1=is_2in1,
-                        screen_size_in=round(screen_size, 1),
-                        weight_kg=round(weight_kg, 2),
-                        battery_wh=battery_wh,
-                        screen_source=screen_src,
-                        weight_source=weight_src,
-                        battery_source=battery_src,
-                        confidence_level=conf
                     ))
         except Exception as e:
             logger.error(f"Error scraping LTS: {e}")
@@ -1063,41 +1057,13 @@ class RecompScraper:
                     fetched_results = list(executor.map(fetch_recomp_item, valid_links))
 
                 for link, title, price in fetched_results:
-                    score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
-                    screen_size, screen_src = HardwareClassifier.detect_screen_size(title, return_source=True)
-                    weight_kg, weight_src = HardwareClassifier.detect_weight_kg(title, screen_size, return_source=True)
-                    battery_wh, battery_src = HardwareClassifier.detect_battery_wh(title, weight_kg, return_source=True)
-                    conf = "estimated" if (screen_src == "fallback_estimate" or weight_src == "fallback_estimate") else "verified"
-                    is_touch = HardwareClassifier.is_touch(title)
-                    is_2in1 = HardwareClassifier.is_2in1(title)
-
-                    items.append(LaptopItem(
+                    items.append(HardwareClassifier.build_laptop(
                         store=self.STORE_NAME,
                         title=title,
-                        brand=HardwareClassifier.detect_brand(title),
-                        series=HardwareClassifier.detect_series(title),
-                        model=title,
-                        cpu=HardwareClassifier.detect_cpu(title),
-                        ram_gb=HardwareClassifier.detect_ram_gb(title),
-                        storage_gb=HardwareClassifier.detect_storage_gb(title),
                         price_ils=price,
-                        deal_price_ils=price,
-                        deal_label=f"{price:,} ₪",
-                        storage_type=storage_type,
-                        ram_type=ram_type,
-                        upgradability_score=score,
+                        url=link,
                         warranty_months=12,
                         stock_status="🟢 In Stock",
-                        url=link,
-                        is_touch=is_touch,
-                        is_2in1=is_2in1,
-                        screen_size_in=round(screen_size, 1),
-                        weight_kg=round(weight_kg, 2),
-                        battery_wh=battery_wh,
-                        screen_source=screen_src,
-                        weight_source=weight_src,
-                        battery_source=battery_src,
-                        confidence_level=conf
                     ))
         except Exception as e:
             logger.error(f"Error scraping Recomp: {e}")
