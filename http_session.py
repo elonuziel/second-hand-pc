@@ -13,6 +13,7 @@ from __future__ import annotations
 import os
 import time
 import logging
+import threading
 import urllib.parse
 from typing import Any, Dict, Optional
 
@@ -38,6 +39,58 @@ DEFAULT_HEADERS = {
 def get_proxy_config() -> Optional[str]:
     """Returns proxy URL if configured via environment variables."""
     return os.environ.get("SCRAPER_PROXY") or os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY") or None
+
+
+# --- Per-host politeness -------------------------------------------------------
+# WAFs escalate on request bursts, so keep a minimum gap between requests to the same
+# host.  Serialising per host also caps its effective concurrency at one, which is what
+# the Cloudflare/Sucuri walls actually react to.  Set SCRAPER_HOST_DELAY=0 to disable.
+DEFAULT_HOST_DELAY = 1.0
+_host_delay_lock = threading.Lock()
+_host_locks: Dict[str, threading.Lock] = {}
+_last_request_at: Dict[str, float] = {}
+
+
+def get_host_delay() -> float:
+    """Seconds to wait between requests to the same host (SCRAPER_HOST_DELAY, default 1.0)."""
+    raw = os.environ.get("SCRAPER_HOST_DELAY")
+    if raw is None:
+        return DEFAULT_HOST_DELAY
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        logger.warning(f"Invalid SCRAPER_HOST_DELAY={raw!r}; using {DEFAULT_HOST_DELAY}s")
+        return DEFAULT_HOST_DELAY
+
+
+def respect_host_delay(url: str) -> float:
+    """Blocks until `url`'s host may be contacted again; returns the seconds waited."""
+    delay = get_host_delay()
+    if delay <= 0:
+        return 0.0
+    host = urllib.parse.urlsplit(url).netloc
+    if not host:
+        return 0.0
+
+    with _host_delay_lock:
+        host_lock = _host_locks.setdefault(host, threading.Lock())
+
+    with host_lock:
+        waited = 0.0
+        last = _last_request_at.get(host)
+        if last is not None:
+            remaining = delay - (time.monotonic() - last)
+            if remaining > 0:
+                time.sleep(remaining)
+                waited = remaining
+        _last_request_at[host] = time.monotonic()
+    return waited
+
+
+def reset_host_delay_state() -> None:
+    """Clears the throttle bookkeeping (used by tests and explicit rate-limit resets)."""
+    with _host_delay_lock:
+        _last_request_at.clear()
 
 
 def create_resilient_session(
@@ -103,6 +156,8 @@ def fetch_resilient_url(
     Bypasses Cloudflare, WAFs, and bot challenges.
     Returns (status_code, body_string).
     """
+    respect_host_delay(url)
+
     # 1. Try pycurl with HTTP/2 (highest TLS compatibility in local Python environments)
     try:
         import pycurl
@@ -261,6 +316,8 @@ def fetch_rendered_url(
     if os.environ.get("SCRAPER_DISABLE_BROWSER"):
         logger.info(f"Browser fallback disabled via SCRAPER_DISABLE_BROWSER for {url}")
         return None
+
+    respect_host_delay(url)
 
     try:
         from playwright.sync_api import sync_playwright

@@ -683,6 +683,48 @@ class TestNewLaptopScrapers(unittest.TestCase):
         mock_browser.assert_not_called()
         self.assertEqual(mock_fetch.call_count, 1)
 
+    def test_host_delay_throttles_same_host_only(self):
+        """Politeness: requests to one host are spaced out, different hosts are unaffected."""
+        import time as _time
+        import http_session as hs
+
+        with patch.dict(os.environ, {"SCRAPER_HOST_DELAY": "0.3"}):
+            hs.reset_host_delay_state()
+            start = _time.monotonic()
+            hs.respect_host_delay("https://www.payngo.co.il/a.html")
+            hs.respect_host_delay("https://www.payngo.co.il/b.html")  # same host -> waits
+            same_host = _time.monotonic() - start
+
+            start = _time.monotonic()
+            hs.respect_host_delay("https://recomp.co.il/x")  # different host -> no wait
+            other_host = _time.monotonic() - start
+
+        self.assertGreaterEqual(same_host, 0.3)
+        self.assertLess(other_host, 0.2)
+
+    def test_host_delay_env_is_validated_and_can_be_disabled(self):
+        """A zero delay disables throttling; junk values fall back to the default."""
+        import http_session as hs
+
+        with patch.dict(os.environ, {"SCRAPER_HOST_DELAY": "0"}):
+            self.assertEqual(hs.get_host_delay(), 0.0)
+            self.assertEqual(hs.respect_host_delay("https://example.com/"), 0.0)
+        with patch.dict(os.environ, {"SCRAPER_HOST_DELAY": "not-a-number"}):
+            self.assertEqual(hs.get_host_delay(), hs.DEFAULT_HOST_DELAY)
+        with patch.dict(os.environ, {}):
+            os.environ.pop("SCRAPER_HOST_DELAY", None)
+            self.assertEqual(hs.get_host_delay(), hs.DEFAULT_HOST_DELAY)
+
+    def test_fetch_resilient_url_consults_host_delay(self):
+        """Every resilient fetch must pass through the throttle."""
+        import http_session as hs
+
+        seen = []
+        with patch.object(hs, "respect_host_delay", side_effect=lambda url: seen.append(url)):
+            hs.fetch_resilient_url("https://invalid.invalid.example.invalid/", timeout=3)
+
+        self.assertEqual(seen, ["https://invalid.invalid.example.invalid/"])
+
     def test_browser_fallback_is_optional_and_degrades_gracefully(self):
         """fetch_rendered_url returns None (never raises) when Playwright is unavailable/disabled."""
         import http_session

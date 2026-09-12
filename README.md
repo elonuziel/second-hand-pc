@@ -113,6 +113,20 @@ pipeline preserves its previously scraped data.
 | `SCRAPER_BROWSER_HEADLESS=0` | Run the browser headed, for debugging |
 | `PLAYWRIGHT_BROWSERS_PATH` | Where Chromium lives (default `~/.cache/ms-playwright`) |
 
+### Request pacing (per-host politeness)
+
+WAFs escalate on bursts, so every resilient fetch keeps a minimum gap between requests to
+the same host, which also serialises that host's concurrency to one. Defaults to 1s:
+
+| Env var | Effect |
+| --- | --- |
+| `SCRAPER_HOST_DELAY` | Seconds between requests to the same host (default `1.0`; `0` disables) |
+
+Pacing bounds the damage but is not a cure: these WAFs also apply short-lived per-IP
+penalty windows (Cloudflare `429`/`403`) that a slower fixed pace does not avoid, because
+the first request of each run always fires immediately. When a store is throttled it is
+reported as blocked and its previously scraped data is preserved.
+
 **Known limitation:** the fallback clears the JavaScript challenge, but it cannot beat an
 IP-level WAF block. When CWC answers a *cleared* challenge with a Cloudflare `403 - Forbidden`
 on every path (as it does for flagged datacenter IPs), the store is reported as blocked rather

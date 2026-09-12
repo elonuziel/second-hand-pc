@@ -18,6 +18,9 @@ logger = logging.getLogger("PayngoScraper")
 class PayngoScraper:
     STORE_NAME = "Payngo"
     CATALOG_URL = "https://www.payngo.co.il/computers-pcs/computing-gaming/direct-imports-tech.html"
+    # Payngo's Cloudflare escalated to a hard 403 after request bursts, so keep detail
+    # fetching gentle — the per-host throttle in http_session serialises it regardless.
+    DETAIL_FETCH_WORKERS = 2
 
     def __init__(self, session: Any = None):
         self.session = session
@@ -94,7 +97,7 @@ class PayngoScraper:
             # Fetch detailed product specifications concurrently
             urls_to_fetch = [c[2] for c in parsed_cards]
             details_map = {}
-            with ThreadPoolExecutor(max_workers=4) as executor:
+            with ThreadPoolExecutor(max_workers=self.DETAIL_FETCH_WORKERS) as executor:
                 desc_results = executor.map(self._fetch_detail_specs, urls_to_fetch)
                 for url, desc in zip(urls_to_fetch, desc_results):
                     details_map[url] = desc
