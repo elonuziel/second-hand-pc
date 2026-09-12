@@ -17,6 +17,7 @@ const state = {
   catalogFilters: {
     store: 'all',
     brand: 'all',
+    price: 0,
     cpuGen: 'all',
     ram: 0,
     form: 'all',
@@ -43,6 +44,7 @@ const themeToggle = typeof document !== 'undefined' ? document.getElementById('t
 
 const storeFilter = typeof document !== 'undefined' ? document.getElementById('storeFilter') : null;
 const brandFilter = typeof document !== 'undefined' ? document.getElementById('brandFilter') : null;
+const priceFilter = typeof document !== 'undefined' ? document.getElementById('priceFilter') : null;
 const cpuGenFilter = typeof document !== 'undefined' ? document.getElementById('cpuGenFilter') : null;
 const ramFilter = typeof document !== 'undefined' ? document.getElementById('ramFilter') : null;
 const formFilter = typeof document !== 'undefined' ? document.getElementById('formFilter') : null;
@@ -370,16 +372,24 @@ function setQuickPreset(preset) {
   if (preset === 'top-value') {
     state.catalogFilters.sort = 'value-desc';
     if (sortFilter) sortFilter.value = 'value-desc';
+  } else if (preset === 'under-2000') {
+    state.catalogFilters.price = 2000;
+    if (priceFilter) priceFilter.value = '2000';
   } else if (preset === 'ram-32') {
     state.catalogFilters.ram = 32;
     if (ramFilter) ramFilter.value = '32';
   } else if (preset === '2in1') {
     state.catalogFilters.form = '2in1';
     if (formFilter) formFilter.value = '2in1';
+  } else if (preset === 'warranty-24') {
+    state.catalogFilters.store = 'Ecology Computers';
+    if (storeFilter) storeFilter.value = 'Ecology Computers';
   } else if (preset === 'modular') {
     state.catalogFilters.upgradability = 7;
     if (upgradabilityFilter) upgradabilityFilter.value = '7';
   } else if (preset === 'budget') {
+    state.catalogFilters.price = 1600;
+    if (priceFilter) priceFilter.value = '1600';
     state.catalogFilters.sort = 'price-asc';
     if (sortFilter) sortFilter.value = 'price-asc';
   } else if (preset === 'featherlight') {
@@ -395,6 +405,7 @@ function setQuickPreset(preset) {
     state.catalogFilters = {
       store: 'all',
       brand: 'all',
+      price: 0,
       cpuGen: 'all',
       ram: 0,
       form: 'all',
@@ -406,6 +417,7 @@ function setQuickPreset(preset) {
     };
     if (storeFilter) storeFilter.value = 'all';
     if (brandFilter) brandFilter.value = 'all';
+    if (priceFilter) priceFilter.value = '0';
     if (cpuGenFilter) cpuGenFilter.value = 'all';
     if (ramFilter) ramFilter.value = '0';
     if (formFilter) formFilter.value = 'all';
@@ -421,12 +433,13 @@ function setQuickPreset(preset) {
 
 function renderCatalog() {
   if (!catalogContent) return;
-  const { store, brand, cpuGen, ram, form, screen, weight, battery, upgradability, sort } = state.catalogFilters;
+  const { store, brand, price, cpuGen, ram, form, screen, weight, battery, upgradability, sort } = state.catalogFilters;
   const q = state.query.toLowerCase();
 
   let filtered = state.catalogData.filter((item) => {
     if (store !== 'all' && item.store !== store) return false;
     if (brand !== 'all' && item.brand.toLowerCase() !== brand.toLowerCase()) return false;
+    if (price > 0 && (item.deal_price_ils || item.price_ils) > price) return false;
     if (!matchesCpuGen(item.cpu, cpuGen)) return false;
     if (ram > 0 && item.ram_gb < ram) return false;
     if (upgradability > 0 && item.upgradability_score < upgradability) return false;
@@ -442,7 +455,9 @@ function renderCatalog() {
     if (battery > 0 && item.battery_wh < battery) return false;
 
     if (q) {
-      const searchHaystack = `${item.title} ${item.brand} ${item.store} ${item.cpu} ${item.ram_gb}GB ${item.storage_gb}GB ${item.screen_size_in}inch ${item.weight_kg}kg ${item.battery_wh}wh ${item.storage_type}`.toLowerCase();
+      const touchKeywords = item.is_touch || item.is_2in1 ? 'touch touchscreen טאץ טאצ' : '';
+      const formKeywords = item.is_2in1 ? '2in1 2-in-1 convertible 360' : 'clamshell';
+      const searchHaystack = `${item.title} ${item.brand} ${item.store} ${item.cpu} ${item.ram_gb}GB ${item.storage_gb}GB ${item.screen_size_in}inch ${item.weight_kg}kg ${item.battery_wh}wh ${item.storage_type} ${touchKeywords} ${formKeywords} ${item.warranty_months}months`.toLowerCase();
       if (!searchHaystack.includes(q)) return false;
     }
 
@@ -479,13 +494,14 @@ function renderCatalog() {
       <div class="quick-filter-chips">
         <button type="button" class="chip-btn ${state.activePreset === 'all' ? 'active' : ''}" data-preset="all">✨ All Laptops</button>
         <button type="button" class="chip-btn ${state.activePreset === 'top-value' ? 'active' : ''}" data-preset="top-value">🏆 Top Value Picks</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'under-2000' ? 'active' : ''}" data-preset="under-2000">💰 Under 2,000 ₪</button>
         <button type="button" class="chip-btn ${state.activePreset === 'featherlight' ? 'active' : ''}" data-preset="featherlight">🪶 Featherlight (&lt; 1.3kg)</button>
         <button type="button" class="chip-btn ${state.activePreset === 'long-battery' ? 'active' : ''}" data-preset="long-battery">🔋 Long Battery (55Wh+)</button>
         <button type="button" class="chip-btn ${state.activePreset === 'large-screen' ? 'active' : ''}" data-preset="large-screen">🖥️ Large Display (15"+)</button>
         <button type="button" class="chip-btn ${state.activePreset === 'ram-32' ? 'active' : ''}" data-preset="ram-32">⚡ 32GB RAM Deals</button>
         <button type="button" class="chip-btn ${state.activePreset === '2in1' ? 'active' : ''}" data-preset="2in1">🔄 2-in-1 / Touch</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'warranty-24' ? 'active' : ''}" data-preset="warranty-24">🛡️ 2-Year Warranty</button>
         <button type="button" class="chip-btn ${state.activePreset === 'modular' ? 'active' : ''}" data-preset="modular">🟢 Modular (7+)</button>
-        <button type="button" class="chip-btn ${state.activePreset === 'budget' ? 'active' : ''}" data-preset="budget">💰 Budget Deals</button>
       </div>
     </div>
   `;
@@ -494,11 +510,17 @@ function renderCatalog() {
     catalogContent.innerHTML = `
       ${chipsHtml}
       <div class="empty-state">
-        <h3>No laptops match your current filter and search settings.</h3>
-        <p>Try resetting or relaxing your filter options.</p>
+        <div style="font-size: 2.2rem; margin-bottom: 8px;">🔍</div>
+        <h3>No laptops match your selected filters.</h3>
+        <p>Try widening your search terms, raising the budget, or clearing filter criteria.</p>
+        <button type="button" class="filter-btn active reset-empty-btn" style="margin-top: 14px; display: inline-flex;">🔄 Reset All Filters</button>
       </div>
     `;
     bindChipButtons();
+    const resetBtn = catalogContent.querySelector('.reset-empty-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => setQuickPreset('all'));
+    }
     return;
   }
 
@@ -512,6 +534,7 @@ function renderCatalog() {
               <div class="tags-row">
                 ${getBrandBadge(laptop.brand)}
                 <span class="store-tag ${getStoreClass(laptop.store)}">${escapeHtml(laptop.store)}</span>
+                ${laptop.warranty_months >= 24 ? '<span class="badge-warranty-24m">🛡️ 2-Yr Warranty</span>' : ''}
                 ${isTopValue ? '<span class="value-pick-badge">🏆 Best Value Pick</span>' : ''}
               </div>
               <h3 class="laptop-title">${escapeHtml(laptop.title)}</h3>
@@ -572,6 +595,7 @@ function renderCatalog() {
     ${chipsHtml}
     <div class="catalog-summary-bar">
       <span>Showing <strong>${filtered.length}</strong> available laptops</span>
+      <a href="./scraped_laptops.csv" download="refurbished_laptops.csv" class="export-csv-btn">⬇️ Download CSV</a>
     </div>
     <div class="catalog-grid">${cardsHtml}</div>
   `;
@@ -670,6 +694,14 @@ function bindEvents() {
   if (brandFilter) {
     brandFilter.addEventListener('change', (e) => {
       state.catalogFilters.brand = e.target.value;
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (priceFilter) {
+    priceFilter.addEventListener('change', (e) => {
+      state.catalogFilters.price = Number(e.target.value);
       state.activePreset = '';
       renderCatalog();
     });

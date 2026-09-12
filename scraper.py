@@ -971,7 +971,7 @@ class ReportGenerator:
 
 | 100 ₪ Email Discount | 4% Credit Card Discount |
 | :---: | :---: |
-| ![100 NIS Newsletter Discount](/home/elonu/github/scrap/assets/itoutlet_100nis_discount.png) | ![4 Percent Credit Card Discount](/home/elonu/github/scrap/assets/itoutlet_4percent_discount.png) |
+| ![100 NIS Newsletter Discount](./assets/itoutlet_100nis_discount.png) | ![4 Percent Credit Card Discount](./assets/itoutlet_4percent_discount.png) |
 
 ---
 
@@ -998,7 +998,7 @@ class ReportGenerator:
 > **Memory:** 16 GB Soldered + 16 GB SODIMM Slot = **32 GB RAM** *(Expandable up to 48 GB)*  
 > **Upgradability Score:** 🟡 **7.5/10**
 
-![Lenovo ThinkPad P14s Deal Offer](/home/elonu/github/scrap/assets/thinkpad_p14s_offer.png)
+![Lenovo ThinkPad P14s Deal Offer](./assets/thinkpad_p14s_offer.png)
 
 ---
 
@@ -1034,7 +1034,7 @@ class ReportGenerator:
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
 | :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
 """)
-        for i, itm in enumerate(lts_items[:25], 1):
+        for i, itm in enumerate(lts_items, 1):
             score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
             md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg | 🔋 {itm.battery_wh} Wh | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
 

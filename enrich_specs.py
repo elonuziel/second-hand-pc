@@ -204,7 +204,7 @@ def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = FULL_CATA
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Price | Storage Interface | Upgradability | Direct Link |
 | :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
 """)
-    for i, itm in enumerate(store_map.get("lts", [])[:25], 1):
+    for i, itm in enumerate(store_map.get("lts", []), 1):
         score = itm.get("upgradability_score", 7.5)
         badge = f"🟢 {score}" if score >= 8.5 else (f"🟡 {score}" if score >= 7.0 else f"🟠 {score}")
         md_parts.append(f"| {i} | **{itm.get('title')}** | {itm.get('cpu')} | {itm.get('ram_gb')}GB / {itm.get('storage_gb')}GB | {itm.get('screen_size_in')}\" | {itm.get('weight_kg')} kg | {itm.get('battery_wh')} Wh | **{itm.get('deal_label')}** | {itm.get('storage_type')} | {badge} | [View Product]({itm.get('url')}) |\n")

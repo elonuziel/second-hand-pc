@@ -32,6 +32,17 @@ jobs:
           python3 scraper.py --ai --csv
           python3 enrich_specs.py
 
+      - name: Upload Catalog Artifacts Backup
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-catalog-backup
+          path: |
+            full_catalog.md
+            scraped_laptops.json
+            scraped_laptops.csv
+          if-no-files-found: warn
+
       - name: Commit and push updated catalog
         run: |
           git config --global user.name "github-actions[bot]"

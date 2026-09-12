@@ -98,6 +98,11 @@
 | 23 | **Macbook Pro A1707 15 4 I7 16G 250G** | Core i7 (7th Gen) | 16GB / 250GB | 15.4" | 1.75 kg | 54 Wh | **3,100 ₪** | 🔒 Soldered BGA NVMe / Unified | 🟠 1.0 | [View Product](https://lts.co.il/פריט/macbook-pro-a1707-15-4-i7-16g-250g/) |
 | 24 | **Macbook Pro A1708 13 3 I5 8G 250G 2** | Core i5 (7th Gen) | 8GB / 250GB | 13.3" | 1.4 kg | 49 Wh | **2,600 ₪** | 🔒 Soldered BGA NVMe / Unified | 🟠 1.0 | [View Product](https://lts.co.il/פריט/macbook-pro-a1708-13-3-i5-8g-250g-2/) |
 | 25 | **Macbook Pro A1708 13 3 I5 8G 250G** | Core i5 (7th Gen) | 8GB / 250GB | 13.3" | 1.4 kg | 49 Wh | **2,600 ₪** | 🔒 Soldered BGA NVMe / Unified | 🟠 1.0 | [View Product](https://lts.co.il/פריט/macbook-pro-a1708-13-3-i5-8g-250g/) |
+| 26 | **Macbook Pro A1989 13 3 I5 16G 250G 2** | Core i5 (8th Gen) | 16GB / 250GB | 13.3" | 1.4 kg | 49 Wh | **3,300 ₪** | 🔒 Soldered BGA NVMe / Unified | 🟠 1.0 | [View Product](https://lts.co.il/פריט/macbook-pro-a1989-13-3-i5-16g-250g-2/) |
+| 27 | **Macbook Pro A1989 13 3 I7 16G 500G 3** | Core i7 (8th Gen) | 16GB / 500GB | 13.3" | 1.4 kg | 49 Wh | **3,500 ₪** | 🔒 Soldered BGA NVMe / Unified | 🟠 1.0 | [View Product](https://lts.co.il/פריט/macbook-pro-a1989-13-3-i7-16g-500g-3/) |
+| 28 | **Macbook Pro A2179 13 3 I5 8G 250G** | Core i5 (10th Gen) | 8GB / 250GB | 13.3" | 1.4 kg | 49 Wh | **2,700 ₪** | 🔒 Soldered BGA NVMe / Unified | 🟠 1.0 | [View Product](https://lts.co.il/פריט/macbook-pro-a2179-13-3-i5-8g-250g/) |
+| 29 | **Macbook Pro A2251 13 3 I7 32G 1TB** | Core i7 (10th Gen) | 32GB / 1000GB | 13.3" | 1.4 kg | 49 Wh | **4,700 ₪** | 🔒 Soldered BGA NVMe / Unified | 🟠 1.0 | [View Product](https://lts.co.il/פריט/macbook-pro-a2251-13-3-i7-32g-1tb/) |
+| 30 | **Toshiba Protege X30L J 130 13 3 I5 16G 250G** | Core i5 (11th Gen) | 16GB / 250GB | 13.3" | 0.9 kg | 50 Wh | **2,100 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://lts.co.il/פריט/toshiba-protege-x30l-j-130-13-3-i5-16g-250g/) |
 
 ---
 
