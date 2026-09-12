@@ -101,6 +101,36 @@
               </div>
 
               <div class="filter-group">
+                <label for="screenFilter">Screen Size</label>
+                <select id="screenFilter" class="filter-select">
+                  <option value="all">All Sizes</option>
+                  <option value="compact">13.5" & Under (Compact)</option>
+                  <option value="14.0">14.0" (Standard Ultra)</option>
+                  <option value="large">15.0"+ (Large Display)</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="weightFilter">Max Weight</label>
+                <select id="weightFilter" class="filter-select">
+                  <option value="0">Any Weight</option>
+                  <option value="1.3">⚡ Under 1.3 kg (Featherlight)</option>
+                  <option value="1.6">💻 Under 1.6 kg (Portable)</option>
+                  <option value="2.0">🏋️ Under 2.0 kg</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="batteryFilter">Min Battery</label>
+                <select id="batteryFilter" class="filter-select">
+                  <option value="0">Any Battery</option>
+                  <option value="45">45 Wh+</option>
+                  <option value="55">🔋 55 Wh+ (Long Battery)</option>
+                  <option value="70">⚡ 70 Wh+ (High Capacity)</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
                 <label for="upgradabilityFilter">Upgradability</label>
                 <select id="upgradabilityFilter" class="filter-select">
                   <option value="0">Any Rating</option>
@@ -115,6 +145,9 @@
                   <option value="value-desc" selected>🏆 Best Value (Specs per ₪)</option>
                   <option value="price-asc">Price: Low to High</option>
                   <option value="price-desc">Price: High to Low</option>
+                  <option value="weight-asc">Weight: Light to Heavy</option>
+                  <option value="battery-desc">Battery: High to Low</option>
+                  <option value="screen-desc">Screen Size: Large to Small</option>
                   <option value="upgrade-desc">Upgradability Score</option>
                   <option value="ram-desc">RAM Capacity</option>
                 </select>

@@ -47,6 +47,9 @@ const state = {
     brand: 'all',
     ram: 0,
     form: 'all',
+    screen: 'all',
+    weight: 0,
+    battery: 0,
     upgradability: 0,
     sort: 'value-desc'
   }
@@ -69,6 +72,9 @@ const storeFilter = typeof document !== 'undefined' ? document.getElementById('s
 const brandFilter = typeof document !== 'undefined' ? document.getElementById('brandFilter') : null;
 const ramFilter = typeof document !== 'undefined' ? document.getElementById('ramFilter') : null;
 const formFilter = typeof document !== 'undefined' ? document.getElementById('formFilter') : null;
+const screenFilter = typeof document !== 'undefined' ? document.getElementById('screenFilter') : null;
+const weightFilter = typeof document !== 'undefined' ? document.getElementById('weightFilter') : null;
+const batteryFilter = typeof document !== 'undefined' ? document.getElementById('batteryFilter') : null;
 const upgradabilityFilter = typeof document !== 'undefined' ? document.getElementById('upgradabilityFilter') : null;
 const sortFilter = typeof document !== 'undefined' ? document.getElementById('sortFilter') : null;
 
@@ -97,7 +103,13 @@ function calculateValueScore(laptop) {
   else if (cpuLower.includes('10th')) cpuBonus = 25;
   else if (cpuLower.includes('8th') || cpuLower.includes('9th')) cpuBonus = 10;
 
-  const totalPoints = ramPts + storagePts + upgradePts + cpuBonus;
+  // Battery capacity points (e.g. 50Wh -> 25 pts)
+  const batteryPts = ((laptop.battery_wh || 50) - 30) * 1.5;
+
+  // Weight penalty (lighter is better: 1.2kg bonus vs 2.5kg)
+  const weightPts = Math.max(0, (2.5 - (laptop.weight_kg || 1.5)) * 25);
+
+  const totalPoints = ramPts + storagePts + upgradePts + cpuBonus + batteryPts + weightPts;
   const rawRatio = (totalPoints / price) * 1000;
   const normalized = Math.min(9.9, Math.max(5.0, ((rawRatio - 80) / 190) * 4.9 + 5.0));
   return Number(normalized.toFixed(1));
@@ -214,7 +226,10 @@ async function loadCatalogData() {
         warranty_months: laptop.warranty_months || 12,
         is_touch: Boolean(laptop.is_touch),
         is_2in1: Boolean(laptop.is_2in1),
-        url: laptop.url || '#'
+        url: laptop.url || '#',
+        screen_size_in: Number(laptop.screen_size_in) || 14.0,
+        weight_kg: Number(laptop.weight_kg) || 1.5,
+        battery_wh: Number(laptop.battery_wh) || 50
       };
       item.value_score = calculateValueScore(item);
       return item;
@@ -357,12 +372,24 @@ function setQuickPreset(preset) {
   } else if (preset === 'budget') {
     state.catalogFilters.sort = 'price-asc';
     if (sortFilter) sortFilter.value = 'price-asc';
+  } else if (preset === 'featherlight') {
+    state.catalogFilters.weight = 1.3;
+    if (weightFilter) weightFilter.value = '1.3';
+  } else if (preset === 'large-screen') {
+    state.catalogFilters.screen = 'large';
+    if (screenFilter) screenFilter.value = 'large';
+  } else if (preset === 'long-battery') {
+    state.catalogFilters.battery = 55;
+    if (batteryFilter) batteryFilter.value = '55';
   } else if (preset === 'all') {
     state.catalogFilters = {
       store: 'all',
       brand: 'all',
       ram: 0,
       form: 'all',
+      screen: 'all',
+      weight: 0,
+      battery: 0,
       upgradability: 0,
       sort: 'value-desc'
     };
@@ -370,6 +397,9 @@ function setQuickPreset(preset) {
     if (brandFilter) brandFilter.value = 'all';
     if (ramFilter) ramFilter.value = '0';
     if (formFilter) formFilter.value = 'all';
+    if (screenFilter) screenFilter.value = 'all';
+    if (weightFilter) weightFilter.value = '0';
+    if (batteryFilter) batteryFilter.value = '0';
     if (upgradabilityFilter) upgradabilityFilter.value = '0';
     if (sortFilter) sortFilter.value = 'value-desc';
   }
@@ -379,7 +409,7 @@ function setQuickPreset(preset) {
 
 function renderCatalog() {
   if (!catalogContent) return;
-  const { store, brand, ram, form, upgradability, sort } = state.catalogFilters;
+  const { store, brand, ram, form, screen, weight, battery, upgradability, sort } = state.catalogFilters;
   const q = state.query.toLowerCase();
 
   let filtered = state.catalogData.filter((item) => {
@@ -391,8 +421,15 @@ function renderCatalog() {
     if (form === '2in1' && (!item.is_2in1 && !item.is_touch)) return false;
     if (form === 'clamshell' && (item.is_2in1 || item.is_touch)) return false;
 
+    if (screen === 'compact' && item.screen_size_in > 13.5) return false;
+    if (screen === '14.0' && Math.abs(item.screen_size_in - 14.0) > 0.3) return false;
+    if (screen === 'large' && item.screen_size_in < 15.0) return false;
+
+    if (weight > 0 && item.weight_kg > weight) return false;
+    if (battery > 0 && item.battery_wh < battery) return false;
+
     if (q) {
-      const searchHaystack = `${item.title} ${item.brand} ${item.store} ${item.cpu} ${item.ram_gb}GB ${item.storage_gb}GB ${item.storage_type}`.toLowerCase();
+      const searchHaystack = `${item.title} ${item.brand} ${item.store} ${item.cpu} ${item.ram_gb}GB ${item.storage_gb}GB ${item.screen_size_in}inch ${item.weight_kg}kg ${item.battery_wh}wh ${item.storage_type}`.toLowerCase();
       if (!searchHaystack.includes(q)) return false;
     }
 
@@ -404,6 +441,9 @@ function renderCatalog() {
     if (sort === 'value-desc') return (b.value_score || 0) - (a.value_score || 0);
     if (sort === 'price-asc') return a.deal_price_ils - b.deal_price_ils;
     if (sort === 'price-desc') return b.deal_price_ils - a.deal_price_ils;
+    if (sort === 'weight-asc') return a.weight_kg - b.weight_kg;
+    if (sort === 'battery-desc') return b.battery_wh - a.battery_wh;
+    if (sort === 'screen-desc') return b.screen_size_in - a.screen_size_in;
     if (sort === 'upgrade-desc') return b.upgradability_score - a.upgradability_score;
     if (sort === 'ram-desc') return b.ram_gb - a.ram_gb;
     return 0;
@@ -426,6 +466,9 @@ function renderCatalog() {
       <div class="quick-filter-chips">
         <button type="button" class="chip-btn ${state.activePreset === 'all' ? 'active' : ''}" data-preset="all">✨ All Laptops</button>
         <button type="button" class="chip-btn ${state.activePreset === 'top-value' ? 'active' : ''}" data-preset="top-value">🏆 Top Value Picks</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'featherlight' ? 'active' : ''}" data-preset="featherlight">🪶 Featherlight (&lt; 1.3kg)</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'long-battery' ? 'active' : ''}" data-preset="long-battery">🔋 Long Battery (55Wh+)</button>
+        <button type="button" class="chip-btn ${state.activePreset === 'large-screen' ? 'active' : ''}" data-preset="large-screen">🖥️ Large Display (15"+)</button>
         <button type="button" class="chip-btn ${state.activePreset === 'ram-32' ? 'active' : ''}" data-preset="ram-32">⚡ 32GB RAM Deals</button>
         <button type="button" class="chip-btn ${state.activePreset === '2in1' ? 'active' : ''}" data-preset="2in1">🔄 2-in-1 / Touch</button>
         <button type="button" class="chip-btn ${state.activePreset === 'modular' ? 'active' : ''}" data-preset="modular">🟢 Modular (7+)</button>
@@ -479,6 +522,14 @@ function renderCatalog() {
             <div class="spec-item">
               <span class="spec-label">Storage:</span>
               <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB (${escapeHtml(laptop.storage_type)})</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Screen & Weight:</span>
+              <span class="spec-value">${laptop.screen_size_in}" | ⚖️ ${laptop.weight_kg} kg</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Battery Capacity:</span>
+              <span class="spec-value">🔋 ${laptop.battery_wh} Wh</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Upgradability:</span>
@@ -624,6 +675,30 @@ function bindEvents() {
   if (formFilter) {
     formFilter.addEventListener('change', (e) => {
       state.catalogFilters.form = e.target.value;
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (screenFilter) {
+    screenFilter.addEventListener('change', (e) => {
+      state.catalogFilters.screen = e.target.value;
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (weightFilter) {
+    weightFilter.addEventListener('change', (e) => {
+      state.catalogFilters.weight = Number(e.target.value);
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (batteryFilter) {
+    batteryFilter.addEventListener('change', (e) => {
+      state.catalogFilters.battery = Number(e.target.value);
       state.activePreset = '';
       renderCatalog();
     });

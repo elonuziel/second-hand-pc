@@ -30,6 +30,7 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
           python3 scraper.py --ai --csv
+          python3 enrich_specs.py
 
       - name: Commit and push updated catalog
         run: |

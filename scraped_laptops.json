@@ -21,7 +21,10 @@
       "gpu": "Intel UHD 620",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 45
     },
     {
       "store": "Ecology Computers",
@@ -44,7 +47,10 @@
       "gpu": "NVIDIA Quadro T1000",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 2.25,
+      "battery_wh": 54
     },
     {
       "store": "Ecology Computers",
@@ -67,7 +73,10 @@
       "gpu": "Intel UHD 620",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 50
     },
     {
       "store": "Ecology Computers",
@@ -90,7 +99,10 @@
       "gpu": "Intel UHD",
       "is_touch": true,
       "is_2in1": true,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 12.5,
+      "weight_kg": 1.28,
+      "battery_wh": 45
     },
     {
       "store": "Ecology Computers",
@@ -113,7 +125,10 @@
       "gpu": "Intel Iris Xe",
       "is_touch": true,
       "is_2in1": true,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.35,
+      "battery_wh": 51
     },
     {
       "store": "Ecology Computers",
@@ -136,7 +151,10 @@
       "gpu": "Intel UHD",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 45
     },
     {
       "store": "Ecology Computers",
@@ -159,7 +177,10 @@
       "gpu": "NVIDIA Quadro T1000",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 2.45,
+      "battery_wh": 90
     },
     {
       "store": "Ecology Computers",
@@ -182,7 +203,10 @@
       "gpu": "Intel Iris Xe",
       "is_touch": true,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 51
     },
     {
       "store": "Ecology Computers",
@@ -205,7 +229,10 @@
       "gpu": "Intel UHD 620",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.75,
+      "battery_wh": 54
     },
     {
       "store": "Ecology Computers",
@@ -228,7 +255,10 @@
       "gpu": "Intel UHD 620",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 45
     },
     {
       "store": "Ecology Computers",
@@ -251,7 +281,10 @@
       "gpu": "NVIDIA Quadro P5200",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 2.25,
+      "battery_wh": 68
     },
     {
       "store": "Ecology Computers",
@@ -274,7 +307,10 @@
       "gpu": "NVIDIA GeForce MX130",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50
     }
   ],
   "itoutlet": [
@@ -299,7 +335,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.28,
+      "battery_wh": 45
     },
     {
       "store": "IT Outlet",
@@ -322,7 +361,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 2.45,
+      "battery_wh": 90
     },
     {
       "store": "IT Outlet",
@@ -345,7 +387,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 51
     },
     {
       "store": "IT Outlet",
@@ -368,7 +413,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.75,
+      "battery_wh": 54
     },
     {
       "store": "IT Outlet",
@@ -391,7 +439,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.35,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -414,7 +465,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.35,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -437,7 +491,10 @@
       "gpu": "NVIDIA Quadro P520",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.75,
+      "battery_wh": 51
     },
     {
       "store": "IT Outlet",
@@ -460,7 +517,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.35,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -483,7 +543,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.75,
+      "battery_wh": 54
     },
     {
       "store": "IT Outlet",
@@ -506,7 +569,10 @@
       "gpu": "Integrated",
       "is_touch": true,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.5,
+      "weight_kg": 1.28,
+      "battery_wh": 49
     },
     {
       "store": "IT Outlet",
@@ -529,7 +595,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 51
     },
     {
       "store": "IT Outlet",
@@ -552,7 +621,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 2.05,
+      "battery_wh": 90
     },
     {
       "store": "IT Outlet",
@@ -575,7 +647,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 2.05,
+      "battery_wh": 90
     },
     {
       "store": "IT Outlet",
@@ -598,7 +673,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.35,
+      "battery_wh": 50
     },
     {
       "store": "IT Outlet",
@@ -621,7 +699,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.1,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -644,7 +725,10 @@
       "gpu": "NVIDIA Quadro P520",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.75,
+      "battery_wh": 51
     },
     {
       "store": "IT Outlet",
@@ -667,7 +751,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 51
     },
     {
       "store": "IT Outlet",
@@ -690,7 +777,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.4,
+      "battery_wh": 50
     },
     {
       "store": "IT Outlet",
@@ -713,7 +803,10 @@
       "gpu": "NVIDIA Quadro P520",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 51
     },
     {
       "store": "IT Outlet",
@@ -736,7 +829,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.35,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -759,7 +855,10 @@
       "gpu": "Integrated",
       "is_touch": true,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.5,
+      "weight_kg": 1.28,
+      "battery_wh": 49
     },
     {
       "store": "IT Outlet",
@@ -782,7 +881,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.35,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -805,7 +907,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.3,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -828,7 +933,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -851,7 +959,10 @@
       "gpu": "Integrated",
       "is_touch": true,
       "is_2in1": true,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.3,
+      "battery_wh": 45
     },
     {
       "store": "IT Outlet",
@@ -874,7 +985,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.75,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -897,7 +1011,10 @@
       "gpu": "NVIDIA Quadro P520",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 51
     },
     {
       "store": "IT Outlet",
@@ -920,7 +1037,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.4,
+      "battery_wh": 51
     },
     {
       "store": "IT Outlet",
@@ -943,7 +1063,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 2.05,
+      "battery_wh": 90
     },
     {
       "store": "IT Outlet",
@@ -966,7 +1089,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.2,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -989,7 +1115,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.1,
+      "battery_wh": 57
     },
     {
       "store": "IT Outlet",
@@ -1012,7 +1141,10 @@
       "gpu": "Integrated",
       "is_touch": true,
       "is_2in1": true,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50
     },
     {
       "store": "IT Outlet",
@@ -1035,7 +1167,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 68
     },
     {
       "store": "IT Outlet",
@@ -1058,7 +1193,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.75,
+      "battery_wh": 68
     },
     {
       "store": "IT Outlet",
@@ -1081,7 +1219,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 51
     },
     {
       "store": "IT Outlet",
@@ -1104,7 +1245,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 2.05,
+      "battery_wh": 68
     }
   ],
   "lts": [
@@ -1129,7 +1273,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.75,
+      "battery_wh": 41
     },
     {
       "store": "LaptopTech LTS",
@@ -1152,7 +1299,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 17.3,
+      "weight_kg": 2.6,
+      "battery_wh": 41
     },
     {
       "store": "LaptopTech LTS",
@@ -1175,7 +1325,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 50
     },
     {
       "store": "LaptopTech LTS",
@@ -1198,7 +1351,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 50
     },
     {
       "store": "LaptopTech LTS",
@@ -1221,7 +1377,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.85,
+      "battery_wh": 54
     },
     {
       "store": "LaptopTech LTS",
@@ -1244,7 +1403,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.75,
+      "battery_wh": 41
     },
     {
       "store": "LaptopTech LTS",
@@ -1267,7 +1429,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.85,
+      "battery_wh": 41
     },
     {
       "store": "LaptopTech LTS",
@@ -1290,7 +1455,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.8,
+      "battery_wh": 54
     },
     {
       "store": "LaptopTech LTS",
@@ -1313,7 +1481,10 @@
       "gpu": "Integrated",
       "is_touch": true,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.55,
+      "battery_wh": 45
     },
     {
       "store": "LaptopTech LTS",
@@ -1336,7 +1507,10 @@
       "gpu": "Integrated",
       "is_touch": true,
       "is_2in1": true,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.3,
+      "battery_wh": 50
     },
     {
       "store": "LaptopTech LTS",
@@ -1359,7 +1533,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.85,
+      "battery_wh": 41
     },
     {
       "store": "LaptopTech LTS",
@@ -1382,7 +1559,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.85,
+      "battery_wh": 41
     },
     {
       "store": "LaptopTech LTS",
@@ -1405,7 +1585,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.4,
+      "battery_wh": 45
     },
     {
       "store": "LaptopTech LTS",
@@ -1428,7 +1611,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.85,
+      "battery_wh": 54
     },
     {
       "store": "LaptopTech LTS",
@@ -1451,7 +1637,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.85,
+      "battery_wh": 41
     },
     {
       "store": "LaptopTech LTS",
@@ -1474,7 +1663,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 2.25,
+      "battery_wh": 54
     },
     {
       "store": "LaptopTech LTS",
@@ -1497,7 +1689,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.75,
+      "battery_wh": 51
     },
     {
       "store": "LaptopTech LTS",
@@ -1520,7 +1715,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.4,
+      "weight_kg": 1.8,
+      "battery_wh": 54
     },
     {
       "store": "LaptopTech LTS",
@@ -1543,7 +1741,10 @@
       "gpu": "Integrated",
       "is_touch": true,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.1,
+      "battery_wh": 57
     },
     {
       "store": "LaptopTech LTS",
@@ -1566,7 +1767,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.28,
+      "battery_wh": 49
     },
     {
       "store": "LaptopTech LTS",
@@ -1589,7 +1793,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.4,
+      "battery_wh": 49
     },
     {
       "store": "LaptopTech LTS",
@@ -1612,7 +1819,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.4,
+      "battery_wh": 49
     },
     {
       "store": "LaptopTech LTS",
@@ -1635,7 +1845,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 15.4,
+      "weight_kg": 1.75,
+      "battery_wh": 54
     },
     {
       "store": "LaptopTech LTS",
@@ -1658,7 +1871,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.4,
+      "battery_wh": 49
     },
     {
       "store": "LaptopTech LTS",
@@ -1681,7 +1897,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.4,
+      "battery_wh": 49
     },
     {
       "store": "LaptopTech LTS",
@@ -1704,7 +1923,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.4,
+      "battery_wh": 49
     },
     {
       "store": "LaptopTech LTS",
@@ -1727,7 +1949,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.4,
+      "battery_wh": 49
     },
     {
       "store": "LaptopTech LTS",
@@ -1750,7 +1975,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.4,
+      "battery_wh": 49
     },
     {
       "store": "LaptopTech LTS",
@@ -1773,7 +2001,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.4,
+      "battery_wh": 49
     },
     {
       "store": "LaptopTech LTS",
@@ -1796,7 +2027,10 @@
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": ""
+      "image_url": "",
+      "screen_size_in": 13.3,
+      "weight_kg": 0.9,
+      "battery_wh": 50
     }
   ],
   "recomp": []
