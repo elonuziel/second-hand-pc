@@ -35,14 +35,18 @@ import argparse
 import datetime
 import html
 import urllib.parse
-from dataclasses import dataclass, asdict
 from typing import List, Dict, Optional, Tuple, Any, Union
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 import urllib3
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+
+from laptop_domain import LaptopItem
+from laptop_parsing import is_laptop_title, last_valid_price
+from laptop_pipeline import run_store_scrapers
+from laptop_recommendations import TopPicksEngine
 
 # Suppress insecure SSL warnings caused by mock/skewed system dates
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -107,44 +111,6 @@ except ImportError:
         return session
 
 
-# --- Data Model ---
-@dataclass
-class LaptopItem:
-    store: str
-    title: str
-    brand: str
-    series: str
-    model: str
-    cpu: str
-    ram_gb: int
-    storage_gb: int
-    price_ils: int
-    deal_price_ils: int
-    deal_label: str
-    storage_type: str
-    ram_type: str
-    upgradability_score: float
-    warranty_months: int
-    stock_status: str
-    url: str
-    gpu: str = "Integrated"
-    is_touch: bool = False
-    is_2in1: bool = False
-    image_url: str = ""
-    screen_size_in: float = 14.0
-    weight_kg: float = 1.5
-    battery_wh: int = 50
-    ram_gen: str = "DDR4"
-    ram_source: str = "chassis_decoder"
-    screen_source: str = "chassis_decoder"
-    weight_source: str = "chassis_decoder"
-    battery_source: str = "chassis_decoder"
-    confidence_level: str = "verified"
-
-    def to_dict(self) -> Dict[str, Any]:
-        return asdict(self)
-
-
 # --- Groq AI Assistant Engine ---
 class GroqSpecEnhancer:
     """Uses Groq's high-speed LLM inference to perform deep hardware spec audits."""
@@ -201,27 +167,34 @@ class GroqSpecEnhancer:
                         idx = obj.get("id")
                         if idx is not None and 0 <= idx < len(chunk):
                             target = chunk[idx]
+                            updated_fields = set()
                             if obj.get("screen_size_in"):
                                 try:
                                     target.screen_size_in = round(float(obj["screen_size_in"]), 1)
+                                    updated_fields.add("screen")
                                 except (ValueError, TypeError):
                                     pass
                             if obj.get("weight_kg"):
                                 try:
                                     target.weight_kg = round(float(obj["weight_kg"]), 2)
+                                    updated_fields.add("weight")
                                 except (ValueError, TypeError):
                                     pass
                             if obj.get("battery_wh"):
                                 try:
                                     target.battery_wh = int(obj["battery_wh"])
+                                    updated_fields.add("battery")
                                 except (ValueError, TypeError):
                                     pass
                             if obj.get("gpu"):
                                 target.gpu = str(obj["gpu"])
+                                updated_fields.add("gpu")
                             if "is_touch" in obj:
                                 target.is_touch = bool(obj["is_touch"])
+                                updated_fields.add("touch")
                             if "is_2in1" in obj:
                                 target.is_2in1 = bool(obj["is_2in1"])
+                                updated_fields.add("form_factor")
                             if obj.get("upgradability_score") is not None:
                                 try:
                                     score = float(obj["upgradability_score"])
@@ -230,13 +203,17 @@ class GroqSpecEnhancer:
                                         score = min(score, 2.0)
                                     if 1.0 <= score <= 10.0:
                                         target.upgradability_score = score
+                                        updated_fields.add("upgradability")
                                 except (ValueError, TypeError):
                                     pass
-                            target.screen_source = "ai_audit"
-                            target.weight_source = "ai_audit"
-                            target.battery_source = "ai_audit"
-                            target.ram_source = "ai_audit"
-                            target.confidence_level = "verified"
+                            if "screen" in updated_fields:
+                                target.screen_source = "ai_audit"
+                            if "weight" in updated_fields:
+                                target.weight_source = "ai_audit"
+                            if "battery" in updated_fields:
+                                target.battery_source = "ai_audit"
+                            if updated_fields:
+                                target.confidence_level = "verified"
             else:
                 logger.warning(f"Groq API returned HTTP {res.status_code}: {res.text[:100]}")
         except Exception as e:
@@ -810,63 +787,6 @@ class HardwareClassifier:
         )
 
 
-# --- Dynamic Top Picks Selector Engine ---
-class TopPicksEngine:
-    """Algorithmically analyzes the entire live inventory and selects the best top picks."""
-
-    _TOUCH_KEYWORDS = ('touch', 'x360', '2-in-1', 'טאצ')
-    _ULTRABOOK_KEYWORDS = ('7320', '7330', 'x13', 'carbon', 'x30l')
-
-    @classmethod
-    def select_top_picks(cls, all_items: List[LaptopItem]) -> List[Tuple[str, str, LaptopItem]]:
-        picks: List[Tuple[str, str, LaptopItem]] = []
-        valid_items = [i for i in all_items if i.deal_price_ils > 0 and i.stock_status.startswith("🟢")]
-
-        # 1. 👑 Best Value RAM Champion (>= 32GB RAM)
-        ram_32 = [i for i in valid_items if i.ram_gb >= 32]
-        if ram_32:
-            ram_32.sort(key=lambda x: (x.deal_price_ils, -x.upgradability_score))
-            picks.append(("👑 Best Value RAM Champion", "Highest RAM per Shekel (>= 32GB)", ram_32[0]))
-
-        # 2. 🚀 Best 32GB + 1TB Workhorse
-        workhorse = [i for i in valid_items if i.ram_gb >= 32 and i.storage_gb >= 1000]
-        if workhorse:
-            workhorse.sort(key=lambda x: (x.deal_price_ils, -x.upgradability_score))
-            picks.append(("🚀 Best 32GB + 1TB Workhorse", "32GB RAM + 1TB NVMe Powerhouse", workhorse[0]))
-
-        # 3. ⚡ Best Modern CPU Power (12th Gen)
-        gen12 = [i for i in valid_items if '12th Gen' in i.cpu or 'ultra' in i.cpu.lower()]
-        if gen12:
-            gen12.sort(key=lambda x: (x.deal_price_ils, -x.ram_gb))
-            picks.append(("⚡ Best Modern CPU Power (12th Gen)", "Latest Architecture Performance", gen12[0]))
-
-        # 4. 🥈 Best 2-in-1 / Touchscreen
-        touch = [i for i in valid_items if any(k in i.title.lower() for k in cls._TOUCH_KEYWORDS) or i.is_2in1 or i.is_touch]
-        if touch:
-            touch.sort(key=lambda x: (-x.warranty_months, x.deal_price_ils))
-            picks.append(("🥈 Best 2-in-1 / Touchscreen", "Versatile 360° / Touch Display", touch[0]))
-
-        # 5. 🏗️ Best Heavy Workstation (10/10)
-        workstations = [i for i in valid_items if i.upgradability_score >= 10.0]
-        if workstations:
-            workstations.sort(key=lambda x: (-x.warranty_months, x.deal_price_ils))
-            picks.append(("🏗️ Best Heavy Workstation", "4x RAM Slots + Multi-NVMe Bays", workstations[0]))
-
-        # 6. 🪶 Best Featherlight / Portable (< 1.3kg)
-        ultrabooks = [i for i in valid_items if any(k in i.title.lower() for k in cls._ULTRABOOK_KEYWORDS)]
-        if ultrabooks:
-            ultrabooks.sort(key=lambda x: (-x.warranty_months, x.deal_price_ils))
-            picks.append(("🪶 Best Featherlight (< 1.3kg)", "Maximum Portability & Battery Life", ultrabooks[0]))
-
-        # 7. 🛡️ Best Long Warranty Deal (24-Month Warranty)
-        warranty_24 = [i for i in valid_items if i.warranty_months >= 24]
-        if warranty_24:
-            warranty_24.sort(key=lambda x: x.deal_price_ils)
-            picks.append(("🛡️ Best Peace of Mind", "Full 24-Month Official Warranty", warranty_24[0]))
-
-        return picks
-
-
 # --- Store 1: IT Outlet Scraper ---
 class ITOutletScraper:
     STORE_NAME = "IT Outlet"
@@ -905,8 +825,13 @@ class ITOutletScraper:
 
                     # Exact price extraction (excluding newsletter coupon thresholds)
                     raw_prices = [int(p.replace(',', '')) for p in re.findall(r'(\d[\d,]*)\s*₪', b)]
-                    valid_prices = [p for p in raw_prices if 600 < p and p != 1500]
-                    raw_price = valid_prices[-1] if valid_prices else 2000
+                    raw_price = last_valid_price(
+                        (price for price in raw_prices if price != 1500),
+                        minimum=601,
+                    )
+                    if raw_price is None:
+                        logger.warning("Skipping IT Outlet listing without a valid price: %s", title)
+                        continue
 
                     # Smart Discount & Deal Price Logic
                     if 'p14s' in title.lower():
@@ -1009,31 +934,33 @@ class LTSScraper:
     def __init__(self, session: requests.Session):
         self.session = session
 
-    def _parse_product_page_price(self, html: str) -> int:
+    def _parse_product_page_price(self, html: str) -> Optional[int]:
         cleaned = html.replace('&#8362;', '₪').replace('&nbsp;', ' ')
         widget = re.findall(r'elementor-widget-woocommerce-product-price(.*?)</div>\s*</div>', cleaned, re.DOTALL)
         if widget:
             ins = re.findall(r'<ins[^>]*>.*?([0-9]{1,2},[0-9]{3}|[0-9]{3,5}).*?</ins>', widget[0], re.DOTALL)
             if ins:
-                return int(ins[0].replace(',', ''))
-            nums = [int(n.replace(',', '')) for n in re.findall(r'([0-9]{1,2},[0-9]{3}|[0-9]{3,5})', widget[0]) if int(n.replace(',', '')) != 8362]
-            if nums:
-                return nums[-1]
+                return last_valid_price(ins)
+            nums = re.findall(r'([0-9]{1,2},[0-9]{3}|[0-9]{3,5})', widget[0])
+            price = last_valid_price((n for n in nums if n.replace(',', '') != '8362'))
+            if price is not None:
+                return price
 
         cur_match = re.findall(r'המחיר הנוכחי הוא:[^\d]*([\d,]+)', cleaned)
         if cur_match:
-            return int(cur_match[-1].replace(',', ''))
+            return last_valid_price(cur_match)
 
         single = re.findall(r'<p class=\"price\">(.*?)</p>', cleaned, re.DOTALL)
         if single:
-            nums = [int(n.replace(',', '')) for n in re.findall(r'([0-9]{1,2},[0-9]{3}|[0-9]{3,5})', single[-1]) if int(n.replace(',', '')) != 8362]
-            if nums:
-                return nums[-1]
+            nums = re.findall(r'([0-9]{1,2},[0-9]{3}|[0-9]{3,5})', single[-1])
+            price = last_valid_price((n for n in nums if n.replace(',', '') != '8362'))
+            if price is not None:
+                return price
 
         schema = re.findall(r'\"price\"\s*:\s*\"?(\d+)\"?', cleaned)
         if schema:
             return int(schema[-1])
-        return 2000
+        return None
 
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping LaptopTech LTS...")
@@ -1057,12 +984,15 @@ class LTSScraper:
                         p = self._parse_product_page_price(res.text)
                         return link, slug_clean, p
                     except Exception:
-                        return link, slug_clean, 2000
+                        return link, slug_clean, None
 
                 with ThreadPoolExecutor(max_workers=10) as executor:
                     fetched_results = list(executor.map(fetch_item_price, valid_links))
 
                 for link, slug_clean, price in fetched_results:
+                    if price is None:
+                        logger.warning("Skipping LTS listing without a valid price: %s", link)
+                        continue
                     words = slug_clean.split()
                     title = ' '.join(w.capitalize() if not any(c.isdigit() for c in w) else w.upper() for w in words)
                     items.append(HardwareClassifier.build_laptop(
@@ -1087,16 +1017,14 @@ class RecompScraper:
     def __init__(self, session: requests.Session):
         self.session = session
 
-    def _parse_recomp_price(self, html: str) -> int:
+    def _parse_recomp_price(self, html: str) -> Optional[int]:
         cleaned = html.replace('&#8362;', '₪').replace('&nbsp;', ' ')
         ins = re.findall(r'<ins[^>]*>.*?([0-9]{1,2},[0-9]{3}|[0-9]{3,5}).*?</ins>', cleaned, re.DOTALL)
         if ins:
-            return int(ins[0].replace(',', ''))
-        nums = [int(n.replace(',', '')) for n in re.findall(r'₪\s*([\d,]+)|([\d,]+)\s*₪', cleaned)]
-        valid = [n for n in nums if 500 < n < 30000 and n != 8362]
-        if valid:
-            return valid[-1]
-        return 2500
+            return last_valid_price(ins)
+        nums = re.findall(r'₪\s*([\d,]+)|([\d,]+)\s*₪', cleaned)
+        values = [value for pair in nums for value in pair if value]
+        return last_valid_price((value for value in values if value.replace(',', '') != '8362'), minimum=501)
 
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping Recomp Computers...")
@@ -1128,12 +1056,15 @@ class RecompScraper:
                         p = self._parse_recomp_price(res.text)
                         return link, title, p
                     except Exception:
-                        return link, title, 2500
+                        return link, title, None
 
                 with ThreadPoolExecutor(max_workers=6) as executor:
                     fetched_results = list(executor.map(fetch_recomp_item, valid_links))
 
                 for link, title, price in fetched_results:
+                    if price is None:
+                        logger.warning("Skipping Recomp listing without a valid price: %s", link)
+                        continue
                     items.append(HardwareClassifier.build_laptop(
                         store=self.STORE_NAME,
                         title=title,
@@ -1178,10 +1109,7 @@ class CWCScraper:
                 if not name:
                     continue
 
-                name_lower = name.lower()
-                is_desktop = any(x in name_lower for x in ["נייח", "tiny", "mini", "micro", "desktop", "optiplex", "desk", "prodesk", "elitedesk", "tower", "sff", "all in one", "aio"])
-                is_laptop = "נייד" in name_lower or "laptop" in name_lower or "thinkpad" in name_lower or "latitude" in name_lower or "elitebook" in name_lower
-                if not is_laptop or is_desktop:
+                if not is_laptop_title(name):
                     continue
 
                 prices = p.get("prices", {})
@@ -1243,10 +1171,7 @@ class PayngoScraper:
                 url = title_m.group(1).strip()
                 title = html.unescape(re.sub(r'\s+', ' ', title_m.group(2)).strip())
 
-                t_lower = title.lower()
-                is_desktop = any(x in t_lower for x in ["נייח", "tiny", "mini", "micro", "desktop", "optiplex", "desk", "prodesk", "elitedesk"])
-                is_laptop = "נייד" in t_lower or "laptop" in t_lower or "thinkpad" in t_lower or "latitude" in t_lower or "elitebook" in t_lower
-                if not is_laptop or is_desktop:
+                if not is_laptop_title(title):
                     continue
 
                 price_m = re.search(r'data-price-amount="([0-9.]+)"', card_body)
@@ -1331,10 +1256,7 @@ query getCategoryProducts($urlKey: String!) {
             prods = cat_list[0].get("products", {}).get("items", [])
             for p in prods:
                 name = html.unescape(p.get("name", "")).strip()
-                name_lower = name.lower()
-                is_desktop = any(x in name_lower for x in ["נייח", "tiny", "mini", "micro", "desktop", "optiplex", "desk", "prodesk", "elitedesk", "tower"])
-                is_laptop = "נייד" in name_lower or "laptop" in name_lower or "thinkpad" in name_lower or "latitude" in name_lower or "elitebook" in name_lower
-                if not is_laptop or is_desktop:
+                if not is_laptop_title(name):
                     continue
 
                 price_obj = p.get("price_range", {}).get("minimum_price", {}).get("final_price", {})
@@ -1962,27 +1884,13 @@ class MasterLaptopAuditor:
         }
 
     def run(self, store_filter: Optional[str] = None, max_workers: int = 6, use_ai: bool = False) -> Dict[str, List[LaptopItem]]:
-        results: Dict[str, List[LaptopItem]] = {}
-        target_scrapers = {}
-
-        if store_filter and store_filter.lower() in self.scraper_classes:
-            target_scrapers[store_filter.lower()] = self.scraper_classes[store_filter.lower()]
-        else:
-            target_scrapers = self.scraper_classes
-
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            futures = {
-                executor.submit(cls(self.session).scrape): name
-                for name, cls in target_scrapers.items()
-            }
-            for future in as_completed(futures):
-                name = futures[future]
-                try:
-                    items = future.result()
-                    results[name] = items
-                except Exception as e:
-                    logger.error(f"Scraper '{name}' encountered a critical error: {e}")
-                    results[name] = []
+        results = run_store_scrapers(
+            scraper_classes=self.scraper_classes,
+            session=self.session,
+            store_filter=store_filter,
+            max_workers=max_workers,
+            logger=logger,
+        )
 
         # Optional Groq AI Enhancement
         if use_ai:

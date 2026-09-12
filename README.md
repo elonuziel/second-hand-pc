@@ -32,6 +32,10 @@ This project provides:
 second-hand-pc/
 │
 ├── scraper.py                     # Main scraping script
+├── laptop_domain.py               # Shared LaptopItem domain model
+├── laptop_parsing.py              # Pure price and listing validation helpers
+├── laptop_pipeline.py             # Concurrent store execution and isolation
+├── laptop_recommendations.py      # Deterministic top-pick selection
 ├── scraped_laptops.csv            # Cleaned dataset of scraped listings
 ├── scraped_laptops.json           # JSON version of the dataset
 │
@@ -57,6 +61,9 @@ second-hand-pc/
 - Extracts laptop listings from supported marketplaces.
 - Normalizes specs such as CPU, RAM, storage, screen type, battery, and price.
 - Outputs both CSV and JSON formats for analysis.
+- Store adapters must provide a valid source price; listings with missing or invalid prices are skipped and logged rather than receiving an estimated price.
+- `LaptopItem` is defined in `laptop_domain.py`; `scraper.py` continues to re-export it for compatibility.
+- Pure listing and price validation lives in `laptop_parsing.py`, while recommendation ranking lives in `laptop_recommendations.py`.
 
 ### 📝 Expert Reviews & Guides
 - In‑depth EliteBook x360 G8 review with repairability and port redundancy notes.

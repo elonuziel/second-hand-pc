@@ -13,7 +13,7 @@
 11. 🏬 **VOLT (וולט מחשוב ירוק):** [volt.co.il/23409-ניידים-מחודשים](https://www.volt.co.il/23409-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
 12. 🏬 **Ofek PC (אופק פי סי):** [ofekpc.co.il/מחשבים-ניידים-מחודשים](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
 
-*Last Automated Live Audit: September 12, 2026 (20:10)*
+*Last Automated Live Audit: September 12, 2026 (20:24)*
 
 ---
 
@@ -360,9 +360,9 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 | 2 | **מחשב מסך מגע "14 Lenovo Thinkpad T480 i5 מחודש** | Core i5 (8th Gen) | 32GB DDR4 / 512GB | 14.0" | ⚖️ 1.5 kg | 🔋 50 Wh | **2,100 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=224148) |
 | 3 | **מחשב נייד מסך מגע 2IN1 DELL Latitude 7420 i5 מחודש** | Core i5 (11th Gen) | 16GB LPDDR4x / 256GB | 14.0" | ⚖️ 1.35 kg | 🔋 57 Wh | **1,999 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟠 5.0 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=216717) |
 | 4 | **מחשב נייד DELL Latitude 7430 256GB מחודש** | Core i7 (12th Gen) | 32GB LPDDR5 / 256GB | 14.0" | ⚖️ 1.35 kg | 🔋 57 Wh | **2,590 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟠 5.0 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=256526) |
-| 5 | **מחשב נייד מסך מגע "14 DELL Latitude 5420 מחודש** | Core i5 (11th Gen) | 16GB DDR4 / 256GB | 14.0" | ⚖️ 1.55 kg | 🔋 50 Wh | **1,590 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=268051) |
-| 6 | **מחשב נייד מסך מגע "14 DELL Latitude 5420 מחודש** | Core i7 (11th Gen) | 16GB DDR4 / 512GB | 14.0" | ⚖️ 1.55 kg | 🔋 50 Wh | **1,990 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=292799) |
-| 7 | **מחשב נייד "14 256GB דגם Lenovo T490 מחודש** | Core i5 (8th Gen) | 8GB DDR4 / 256GB | 14.0" | ⚖️ 1.55 kg | 🔋 51 Wh | **1,499 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=212338) |
+| 5 | **מחשב נייד "14 256GB דגם Lenovo T490 מחודש** | Core i5 (8th Gen) | 8GB DDR4 / 256GB | 14.0" | ⚖️ 1.55 kg | 🔋 51 Wh | **1,499 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=212338) |
+| 6 | **מחשב נייד מסך מגע "14 DELL Latitude 5420 מחודש** | Core i5 (11th Gen) | 16GB DDR4 / 256GB | 14.0" | ⚖️ 1.55 kg | 🔋 50 Wh | **1,590 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=268051) |
+| 7 | **מחשב נייד מסך מגע "14 DELL Latitude 5420 מחודש** | Core i7 (11th Gen) | 16GB DDR4 / 512GB | 14.0" | ⚖️ 1.55 kg | 🔋 50 Wh | **1,990 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=292799) |
 | 8 | **מחשב נייד Latitude 7420 i7 256GB מבית DELL מחודש** | Core i7 (11th Gen) | 16GB LPDDR4x / 256GB | 14.0" | ⚖️ 1.35 kg | 🔋 57 Wh | **2,090 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟠 5.0 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=196090) |
 | 9 | **מחשב נייד DELL LATITUDE 7000 i5-GEN8 256GB מחודש** | Core i5 (8th Gen) | 8GB DDR4 / 256GB | 14.0" | ⚖️ 1.5 kg | 🔋 50 Wh | **1,399 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟡 7.5 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=211308) |
 | 10 | **מחשב נייד Dell Latitude 5410 i5-10610U 512GB מחודש** | Core i5 (10th Gen) | 16GB DDR4 / 512GB | 14.0" | ⚖️ 1.55 kg | 🔋 45 Wh | **1,999 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | [View Product](https://www.p1000.co.il/sales/saledetails.aspx?productid=213501) |

@@ -14,9 +14,15 @@ import subprocess
 import unittest
 from unittest.mock import patch
 from enrich_specs import SpecEnricher
+from laptop_parsing import is_desktop_title, is_laptop_title, last_valid_price
 from scraper import (
     HardwareClassifier,
     CWCScraper,
+    GroqSpecEnhancer,
+    LTSScraper,
+    LaptopItem,
+    MasterLaptopAuditor,
+    RecompScraper,
     PayngoScraper,
     ALMScraper,
     ShufersalScraper,
@@ -135,6 +141,14 @@ class TestHardwareParsers(unittest.TestCase):
         for title, expected_cpu in test_cases:
             detected = HardwareClassifier.detect_cpu(title)
             self.assertEqual(detected, expected_cpu, f"Failed CPU detection on: {title}")
+
+    def test_shared_listing_parsers(self):
+        self.assertTrue(is_laptop_title("מחשב נייד Dell Latitude 5420"))
+        self.assertFalse(is_laptop_title("מחשב נייח Dell OptiPlex Micro"))
+        self.assertTrue(is_desktop_title("Lenovo ThinkCentre Tiny"))
+        self.assertEqual(last_valid_price(["newsletter", "2,490 ₪"]), 2490)
+        self.assertIsNone(last_valid_price(["no price"], minimum=601))
+        self.assertIsNone(last_valid_price(["300 ₪"], minimum=601))
 
     def test_ram_and_storage_extraction(self):
         """Ensure RAM and SSD sizes are extracted and VRAM is isolated."""
@@ -299,6 +313,52 @@ class TestHardwareParsers(unittest.TestCase):
 
 class TestNewLaptopScrapers(unittest.TestCase):
     """Unit tests for the 6 newly integrated laptop scrapers using mock payloads."""
+
+    def test_missing_detail_page_prices_do_not_use_synthetic_fallbacks(self):
+        self.assertIsNone(LTSScraper(None)._parse_product_page_price("<html>No price</html>"))
+        self.assertIsNone(RecompScraper(None)._parse_recomp_price("<html>No price</html>"))
+
+    def test_master_auditor_returns_configured_store_order(self):
+        class FakeScraper:
+            def __init__(self, session):
+                self.session = session
+
+            def scrape(self):
+                return []
+
+        auditor = MasterLaptopAuditor(session=object())
+        auditor.scraper_classes = {"first": FakeScraper, "second": FakeScraper, "third": FakeScraper}
+        self.assertEqual(list(auditor.run(max_workers=3)), ["first", "second", "third"])
+
+    @patch("scraper.requests.post")
+    def test_ai_provenance_only_marks_returned_fields(self, mock_post):
+        item = LaptopItem(
+            store="Test",
+            title="Test Laptop",
+            brand="Test",
+            series="Test",
+            model="Test",
+            cpu="Core i5",
+            ram_gb=16,
+            storage_gb=512,
+            price_ils=1000,
+            deal_price_ils=1000,
+            deal_label="1,000 NIS",
+            storage_type="NVMe",
+            ram_type="DDR4",
+            upgradability_score=5.0,
+            warranty_months=12,
+            stock_status="In Stock",
+            url="https://example.com/test",
+        )
+        mock_post.return_value.status_code = 200
+        mock_post.return_value.json.return_value = {
+            "choices": [{"message": {"content": '[{"id": 0, "battery_wh": 60}]'}}]
+        }
+
+        enhanced = GroqSpecEnhancer(api_key="test").enhance_batch([item])
+        self.assertEqual(enhanced[0].battery_source, "ai_audit")
+        self.assertEqual(enhanced[0].ram_source, "chassis_decoder")
 
     @patch("scraper.fetch_resilient_url")
     def test_cwc_scraper_parsing(self, mock_fetch):
