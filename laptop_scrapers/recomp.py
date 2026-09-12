@@ -111,17 +111,20 @@ class RecompScraper:
                 logger.error("Recomp: could not fetch any catalog URL — giving up.")
                 return items
 
+            # Extract all recomp.co.il/product/ links with their anchor text
             links = re.findall(
-                r'<a[^>]+href=[\"\']\\s*(https://recomp\\.co\\.il/(?:product/|מוצר/|פריט/)[^\"\']+)[\"\'][^>]*>(.*?)</a>',
-                catalog_html, re.DOTALL
+                r'<a[^>]+href=["\']( https?://recomp\.co\.il/product/[^"\']+)["\'][^>]*>(.*?)</a>',
+                catalog_html, re.DOTALL | re.IGNORECASE
             )
-            # Also try percent-encoded product paths
             if not links:
-                links = re.findall(
-                    r'href=["\']( https?://recomp\.co\.il/[^"\']*(?:product|%d7%9e%d7%95%d7%a6%d7%a8)[^"\']+)["\']',
-                    catalog_html, re.IGNORECASE | re.DOTALL
+                # Fallback: simpler href-only extraction, then we fetch each page for the title
+                raw_hrefs = re.findall(
+                    r'href=["\']( https?://recomp\.co\.il/product/[^"\']+)["\']',
+                    catalog_html, re.IGNORECASE
                 )
-                links = [(l.strip(), "") for l in links]
+                links = [(h, "") for h in raw_hrefs]
+            # Strip accidental leading spaces from URLs
+            links = [(url.strip(), text) for url, text in links]
 
             seen = set()
             valid_links = []
