@@ -875,6 +875,30 @@ h1 {
   color: #475569;
 }
 
+.brand-badge.brand-samsung {
+  border-color: rgba(20, 40, 160, 0.25);
+  background: rgba(20, 40, 160, 0.08);
+  color: #1428a0;
+}
+
+.brand-badge.brand-xiaomi {
+  border-color: rgba(255, 105, 0, 0.25);
+  background: rgba(255, 105, 0, 0.08);
+  color: #ff6900;
+}
+
+.brand-badge.brand-motorola {
+  border-color: rgba(92, 107, 115, 0.25);
+  background: rgba(92, 107, 115, 0.08);
+  color: #5c6b73;
+}
+
+.brand-badge.brand-google {
+  border-color: rgba(234, 67, 53, 0.25);
+  background: rgba(234, 67, 53, 0.08);
+  color: #ea4335;
+}
+
 [data-theme="dark"] .brand-badge.brand-apple {
   color: #cbd5e1;
 }
