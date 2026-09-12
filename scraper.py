@@ -941,6 +941,20 @@ class ReportGenerator:
 
 ---
 
+## 📌 Quick Navigation
+- [💾 Storage Interfaces Explained](#-storage-interfaces-explained-nvme-vs-sata-vs-soldered)
+- [🔧 Upgradability Scoring Guide](#-upgradability-scoring-guide)
+- [🏷️ Store Discounts & Coupons](#️-it-outlet-discounts--coupon-optimization)
+- [🏆 Top Recommended Picks](#-top-overall-available-picks-dynamically-auto-ranked-from-live-inventory)
+- [📸 Featured Deal: ThinkPad P14s](#-featured-deal-lenovo-thinkpad-p14s-gen-1-it-outlet)
+- [🏬 IT Outlet Live Audit](#-1-it-outlet-איי-טי-אאוטלט--live-catalog--stock-audit)
+- [🏬 Ecology Computers Live Audit](#-2-ecology-computers-אקולוגיה-לקהילה-מוגנת--live-stock-audit)
+- [🏬 LaptopTech LTS Live Audit](#-3-laptoptech-lts-לפטופטק--live-stock-audit)
+- [🏬 Recomp Computers Live Audit](#-4-recomp-computers-ריקומפ--live-stock-audit)
+- [🎯 Buyer Rules of Thumb](#-quick-rules-of-thumb)
+
+---
+
 ## 💾 Storage Interfaces Explained (NVMe vs SATA vs Soldered)
 
 | Storage Type | Speed & Bus | Form Factor | Upgradability |
@@ -968,8 +982,26 @@ class ReportGenerator:
 * **📧 100 ₪ Newsletter Coupon:** Sign up on the site to get 100 ₪ off on purchases **over 1,500 ₪**. Best for items under 2,500 ₪.
 * **💳 4% Credit Card Discount (Phone Orders Only):** For non-bank cards & clubs (MAX, Isracard, Amex, LifeStyle, Hot, Tov, ביחד בשבילך, אשמורת, בהצדעה). Best for items over 2,500 ₪.
 * **Promo Code `IT14`:** Drops the **ThinkPad P14s (32GB/1TB)** from 2,800 ₪ to **2,500 ₪** with free bag & mouse.
+IT Outlet features multiple discount programs. Note that coupons and club discounts **do not stack** (*אין כפל מבצעים / קופונים*): only **one** discount method can be applied to an order.
 
 | 100 ₪ Email Discount | 4% Credit Card Discount |
+### 💡 How the Discounts & Sales Work:
+
+1. **📧 100 ₪ Newsletter Sign-Up Coupon:**
+   * **How to claim:** Visit [itoutlet.co.il](https://www.itoutlet.co.il), wait for the customer club pop-up modal, and enter your email address. You will receive an instant 100 ₪ discount coupon code.
+   * **Conditions:** Valid on purchases **over 1,500 ₪**.
+   * **Optimal range:** Best for laptops priced **between 1,500 ₪ and 2,500 ₪** (saving ~4% to 6.6% off the base price).
+
+2. **💳 4% Credit Card & Consumer Club Discount:**
+   * **How to claim:** Valid **strictly via phone orders** (*הזמנות טלפוניות בלבד*).
+   * **Supported cards & clubs:** Non-bank credit cards including MAX, Isracard, Amex, LifeStyle, Hot, Tov, ביחד בשבילך, אשמורת, בהצדעה.
+   * **Optimal range:** Best for laptops priced **above 2,500 ₪** (since 4% of 2,500 ₪ is 100 ₪, and at 3,000 ₪ you save 120 ₪, at 3,500 ₪ you save 140 ₪).
+
+3. **🏷️ Special Promo Code `IT14` (ThinkPad P14s Deal):**
+   * Drops the flagship **Lenovo ThinkPad P14s Gen 1** (Core i7, 32GB RAM, 1TB SSD, Dedicated GPU) from 2,800 ₪ down to **2,500 ₪** (saving 300 ₪!).
+   * Also includes a complimentary laptop carrying bag and wireless optical mouse.
+
+| 📧 100 ₪ Email Newsletter Coupon | 💳 4% Credit Card / Club Discount |
 | :---: | :---: |
 | ![100 NIS Newsletter Discount](./assets/itoutlet_100nis_discount.png) | ![4 Percent Credit Card Discount](./assets/itoutlet_4percent_discount.png) |
 
@@ -994,8 +1026,11 @@ class ReportGenerator:
 > **Status:** 🟢 **AVAILABLE & IN STOCK**  
 > **Offer Price:** **2,500 ₪** *(Original 2,800 ₪, with coupon `IT14`)*  
 > **Includes:** Free laptop bag and wireless mouse  
+> **Offer Price:** **2,500 ₪** *(Original 2,800 ₪, with coupon `IT14` — saves 300 ₪)*  
+> **Includes:** Free laptop carry bag and wireless optical mouse  
 > **Storage:** ⚡ **1 TB M.2 2280 PCIe 3.0 NVMe SSD** *(Fully swappable up to 2TB/4TB)*  
 > **Memory:** 16 GB Soldered + 16 GB SODIMM Slot = **32 GB RAM** *(Expandable up to 48 GB)*  
+> **Graphics:** Dedicated NVIDIA Quadro P520 GPU  
 > **Upgradability Score:** 🟡 **7.5/10**
 
 ![Lenovo ThinkPad P14s Deal Offer](./assets/thinkpad_p14s_offer.png)

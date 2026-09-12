@@ -20,6 +20,7 @@ import logging
 import argparse
 from typing import Dict, List, Tuple, Any, Optional
 from scraper import HardwareClassifier
+from scraper import HardwareClassifier, LaptopItem, ReportGenerator
 
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.json")
@@ -156,10 +157,23 @@ def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = FULL_CATA
 
     all_laptops = []
     store_map = {"itoutlet": [], "ecology": [], "lts": [], "recomp": []}
+    store_map: Dict[str, List[LaptopItem]] = {"itoutlet": [], "ecology": [], "lts": [], "recomp": []}
     if isinstance(data, dict):
         for k, v in data.items():
             store_map[k] = v
             all_laptops.extend(v)
+            laptop_items = []
+            for itm in v:
+                fields = {f: itm[f] for f in itm if f in LaptopItem.__dataclass_fields__}
+                laptop_items.append(LaptopItem(**fields))
+            store_map[k] = laptop_items
+    elif isinstance(data, list):
+        for itm in data:
+            st = itm.get("store", "").lower().replace(" ", "")
+            key = "itoutlet" if "itoutlet" in st else ("ecology" if "eco" in st else ("lts" if "lts" in st else "recomp"))
+            fields = {f: itm[f] for f in itm if f in LaptopItem.__dataclass_fields__}
+            if key in store_map:
+                store_map[key].append(LaptopItem(**fields))
 
     now_str = "Recent Live Audit"
 
@@ -224,6 +238,7 @@ def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = FULL_CATA
 
     with open(md_file, "w", encoding="utf-8") as f:
         f.write("".join(md_parts).strip() + "\n")
+    ReportGenerator.update_summary_markdown(store_map, md_file)
     logger.info(f"Summary markdown updated at {md_file}")
 
 

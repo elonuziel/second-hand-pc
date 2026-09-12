@@ -648,8 +648,15 @@ h1 {
 
 .markdown-body img {
   max-width: 100%;
+  height: auto;
   border-radius: 12px;
   border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.markdown-body td img {
+  display: block;
+  margin: 4px auto;
 }
 
 .markdown-body blockquote {
