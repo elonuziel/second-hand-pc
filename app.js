@@ -17,6 +17,8 @@ const state = {
   catalogFilters: {
     store: 'all',
     brand: 'all',
+    priceMin: 800,
+    priceMax: 5000,
     price: 0,
     priceMode: 'max',
     cpuGen: 'all',
@@ -55,9 +57,11 @@ const themeToggle = typeof document !== 'undefined' ? document.getElementById('t
 
 const storeFilter = typeof document !== 'undefined' ? document.getElementById('storeFilter') : null;
 const brandFilter = typeof document !== 'undefined' ? document.getElementById('brandFilter') : null;
-const priceSlider = typeof document !== 'undefined' ? document.getElementById('priceSlider') : null;
+const priceMinSlider = typeof document !== 'undefined' ? document.getElementById('priceMinSlider') : null;
+const priceMaxSlider = typeof document !== 'undefined' ? document.getElementById('priceMaxSlider') : null;
+const priceSliderRange = typeof document !== 'undefined' ? document.getElementById('priceSliderRange') : null;
+const priceSlider = typeof document !== 'undefined' ? (document.getElementById('priceMaxSlider') || document.getElementById('priceSlider')) : null;
 const priceDisplay = typeof document !== 'undefined' ? document.getElementById('priceDisplay') : null;
-const priceModeBtns = typeof document !== 'undefined' ? document.querySelectorAll('.price-mode-btn') : [];
 const cpuGenFilter = typeof document !== 'undefined' ? document.getElementById('cpuGenFilter') : null;
 const ramFilter = typeof document !== 'undefined' ? document.getElementById('ramFilter') : null;
 const storageFilter = typeof document !== 'undefined' ? document.getElementById('storageFilter') : null;
@@ -68,38 +72,54 @@ const batteryFilter = typeof document !== 'undefined' ? document.getElementById(
 const upgradabilityFilter = typeof document !== 'undefined' ? document.getElementById('upgradabilityFilter') : null;
 const sortFilter = typeof document !== 'undefined' ? document.getElementById('sortFilter') : null;
 
-function updatePriceSliderUI(value, mode = (state.catalogFilters && state.catalogFilters.priceMode) || 'max') {
-  if (!priceSlider || !priceDisplay) return;
-  const numVal = Number(value);
-  priceSlider.value = numVal;
+function updateDualPriceSliderUI(minVal, maxVal) {
+  if (!priceMinSlider || !priceMaxSlider || !priceDisplay) return;
+  const sliderMin = Number(priceMinSlider.min) || 800;
+  const sliderMax = Number(priceMaxSlider.max) || 5000;
 
-  const min = Number(priceSlider.min) || 800;
-  const max = Number(priceSlider.max) || 5000;
-  const pct = Math.max(0, Math.min(100, ((numVal - min) / (max - min)) * 100));
-  priceSlider.style.setProperty('--slider-pct', `${pct}%`);
+  let min = Math.max(sliderMin, Math.min(Number(minVal !== undefined ? minVal : priceMinSlider.value) || sliderMin, sliderMax));
+  let max = Math.max(sliderMin, Math.min(Number(maxVal !== undefined ? maxVal : priceMaxSlider.value) || sliderMax, sliderMax));
 
-  if (mode === 'max') {
-    if (numVal >= max || numVal === 0) {
-      priceDisplay.textContent = 'Any Price';
-      priceDisplay.classList.remove('active');
-    } else {
-      priceDisplay.textContent = `Up to ${numVal.toLocaleString('en-US')} ₪`;
-      priceDisplay.classList.add('active');
-    }
-  } else {
-    if (numVal <= min || numVal === 0) {
-      priceDisplay.textContent = 'Any Price';
-      priceDisplay.classList.remove('active');
-    } else {
-      priceDisplay.textContent = `${numVal.toLocaleString('en-US')} ₪ & Up`;
-      priceDisplay.classList.add('active');
-    }
+  if (min > max) {
+    const temp = min;
+    min = max;
+    max = temp;
   }
 
-  if (priceModeBtns && priceModeBtns.length) {
-    priceModeBtns.forEach((btn) => {
-      btn.classList.toggle('active', btn.dataset.mode === mode);
-    });
+  priceMinSlider.value = min;
+  priceMaxSlider.value = max;
+
+  const minPct = ((min - sliderMin) / (sliderMax - sliderMin)) * 100;
+  const maxPct = ((max - sliderMin) / (sliderMax - sliderMin)) * 100;
+
+  if (priceSliderRange) {
+    priceSliderRange.style.setProperty('--range-left', `${minPct}%`);
+    priceSliderRange.style.setProperty('--range-width', `${maxPct - minPct}%`);
+  }
+
+  const isMinDefault = min <= sliderMin;
+  const isMaxDefault = max >= sliderMax;
+
+  if (isMinDefault && isMaxDefault) {
+    priceDisplay.textContent = 'Any Price';
+    priceDisplay.classList.remove('active');
+  } else if (!isMinDefault && isMaxDefault) {
+    priceDisplay.textContent = `${min.toLocaleString('en-US')} ₪ & Up`;
+    priceDisplay.classList.add('active');
+  } else if (isMinDefault && !isMaxDefault) {
+    priceDisplay.textContent = `Up to ${max.toLocaleString('en-US')} ₪`;
+    priceDisplay.classList.add('active');
+  } else {
+    priceDisplay.textContent = `${min.toLocaleString('en-US')} ₪ – ${max.toLocaleString('en-US')} ₪`;
+    priceDisplay.classList.add('active');
+  }
+}
+
+function updatePriceSliderUI(value, mode = 'max') {
+  if (mode === 'min') {
+    updateDualPriceSliderUI(value, 5000);
+  } else {
+    updateDualPriceSliderUI(800, value);
   }
 }
 
@@ -482,9 +502,9 @@ function setQuickPreset(preset) {
     state.catalogFilters.sort = 'value-desc';
     if (sortFilter) sortFilter.value = 'value-desc';
   } else if (preset === 'under-2000') {
-    state.catalogFilters.price = 2000;
-    state.catalogFilters.priceMode = 'max';
-    updatePriceSliderUI(2000, 'max');
+    state.catalogFilters.priceMin = 800;
+    state.catalogFilters.priceMax = 2000;
+    updateDualPriceSliderUI(800, 2000);
   } else if (preset === 'ram-32') {
     state.catalogFilters.ram = 32;
     state.catalogFilters.filterDirs.ram = 'up';
@@ -502,9 +522,9 @@ function setQuickPreset(preset) {
     if (upgradabilityFilter) upgradabilityFilter.value = '7';
     updateDirButtonsUI();
   } else if (preset === 'budget') {
-    state.catalogFilters.price = 1600;
-    state.catalogFilters.priceMode = 'max';
-    updatePriceSliderUI(1600, 'max');
+    state.catalogFilters.priceMin = 800;
+    state.catalogFilters.priceMax = 1600;
+    updateDualPriceSliderUI(800, 1600);
     state.catalogFilters.sort = 'price-asc';
     if (sortFilter) sortFilter.value = 'price-asc';
   } else if (preset === 'featherlight') {
@@ -526,6 +546,8 @@ function setQuickPreset(preset) {
     state.catalogFilters = {
       store: 'all',
       brand: 'all',
+      priceMin: 800,
+      priceMax: 5000,
       price: 0,
       priceMode: 'max',
       cpuGen: 'all',
@@ -549,7 +571,7 @@ function setQuickPreset(preset) {
     };
     if (storeFilter) storeFilter.value = 'all';
     if (brandFilter) brandFilter.value = 'all';
-    updatePriceSliderUI(5000, 'max');
+    updateDualPriceSliderUI(800, 5000);
     if (cpuGenFilter) cpuGenFilter.value = 'all';
     if (ramFilter) ramFilter.value = '0';
     if (storageFilter) storageFilter.value = '0';
@@ -567,7 +589,7 @@ function setQuickPreset(preset) {
 
 function renderCatalog() {
   if (!catalogContent) return;
-  const { store, brand, price, cpuGen, ram, storage, form, screen, weight, battery, upgradability, sort, filterDirs } = state.catalogFilters;
+  const { store, brand, priceMin, priceMax, cpuGen, ram, storage, form, screen, weight, battery, upgradability, sort, filterDirs } = state.catalogFilters;
   const dirs = filterDirs || {};
   const q = state.query.toLowerCase();
 
@@ -575,15 +597,13 @@ function renderCatalog() {
     if (store !== 'all' && item.store !== store) return false;
     if (brand !== 'all' && item.brand.toLowerCase() !== brand.toLowerCase()) return false;
 
-    // Price Range Slider (Variable Price)
-    if (price && price !== '0' && price !== 0) {
+    // Dual Price Range Slider (arbitrary range between 2 sliding buttons)
+    const minBudget = Number(priceMin) || 800;
+    const maxBudget = Number(priceMax) || 5000;
+    if (minBudget > 800 || maxBudget < 5000) {
       const pVal = item.deal_price_ils || item.price_ils || 0;
-      const numP = Number(price);
-      if (state.catalogFilters.priceMode === 'min') {
-        if (numP > 800 && pVal < numP) return false;
-      } else {
-        if (numP < 5000 && pVal > numP) return false;
-      }
+      if (minBudget > 800 && pVal < minBudget) return false;
+      if (maxBudget < 5000 && pVal > maxBudget) return false;
     }
 
     if (!matchesCpuGen(item.cpu, cpuGen, dirs.cpuGen || 'up')) return false;
@@ -920,35 +940,43 @@ function bindEvents() {
     });
   }
 
-  if (priceSlider) {
-    // Input event provides live, real-time filtering as user drags the slider
-    priceSlider.addEventListener('input', (e) => {
-      const val = Number(e.target.value);
-      state.catalogFilters.price = val;
-      state.activePreset = '';
-      updatePriceSliderUI(val, state.catalogFilters.priceMode);
-      renderCatalog();
-    });
-  }
+  if (priceMinSlider && priceMaxSlider) {
+    const onDualPriceInput = (e) => {
+      let minVal = Number(priceMinSlider.value);
+      let maxVal = Number(priceMaxSlider.value);
 
-  if (priceModeBtns && priceModeBtns.length) {
-    priceModeBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const mode = btn.dataset.mode;
-        state.catalogFilters.priceMode = mode;
-        state.activePreset = '';
-        const currentVal = Number(priceSlider ? priceSlider.value : 5000);
-        updatePriceSliderUI(currentVal, mode);
-        renderCatalog();
-      });
-    });
+      if (e.target === priceMinSlider) {
+        priceMinSlider.style.zIndex = '4';
+        priceMaxSlider.style.zIndex = '3';
+        if (minVal > maxVal - 50) {
+          minVal = Math.max(800, maxVal - 50);
+          priceMinSlider.value = minVal;
+        }
+      } else {
+        priceMaxSlider.style.zIndex = '4';
+        priceMinSlider.style.zIndex = '3';
+        if (maxVal < minVal + 50) {
+          maxVal = Math.min(5000, minVal + 50);
+          priceMaxSlider.value = maxVal;
+        }
+      }
+
+      state.catalogFilters.priceMin = minVal;
+      state.catalogFilters.priceMax = maxVal;
+      state.activePreset = '';
+      updateDualPriceSliderUI(minVal, maxVal);
+      renderCatalog();
+    };
+
+    priceMinSlider.addEventListener('input', onDualPriceInput);
+    priceMaxSlider.addEventListener('input', onDualPriceInput);
   }
 
   if (priceDisplay) {
     priceDisplay.addEventListener('click', () => {
-      state.catalogFilters.price = 0;
-      state.catalogFilters.priceMode = 'max';
-      updatePriceSliderUI(5000, 'max');
+      state.catalogFilters.priceMin = 800;
+      state.catalogFilters.priceMax = 5000;
+      updateDualPriceSliderUI(800, 5000);
       renderCatalog();
     });
   }
@@ -1060,7 +1088,7 @@ function bindEvents() {
 async function init() {
   if (typeof document === 'undefined') return;
   initTheme();
-  updatePriceSliderUI(5000, 'max');
+  updateDualPriceSliderUI(800, 5000);
   updateDirButtonsUI();
   bindEvents();
   await Promise.all([preloadDocContents(), loadCatalogData()]);
