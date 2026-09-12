@@ -41,35 +41,69 @@ def get_proxy_config() -> Optional[str]:
     return os.environ.get("SCRAPER_PROXY") or os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY") or None
 
 
+def _env_float(name: str, default: float, minimum: float = 0.0) -> float:
+    """Reads a float env var, falling back to `default` when absent or unparseable."""
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    try:
+        return max(minimum, float(raw))
+    except ValueError:
+        logger.warning(f"Invalid {name}={raw!r}; using {default}")
+        return default
+
+
+def host_of(url: str) -> str:
+    return urllib.parse.urlsplit(url).netloc.lower()
+
+
 # --- Per-host politeness -------------------------------------------------------
 # WAFs escalate on request bursts, so keep a minimum gap between requests to the same
 # host.  Serialising per host also caps its effective concurrency at one, which is what
-# the Cloudflare/Sucuri walls actually react to.  Set SCRAPER_HOST_DELAY=0 to disable.
+# the Cloudflare/Sucuri walls actually react to.  Each store scrapes a single host, so
+# SCRAPER_HOST_DELAYS lets the WAF-heavy stores run slower than the rest.
 DEFAULT_HOST_DELAY = 1.0
 _host_delay_lock = threading.Lock()
 _host_locks: Dict[str, threading.Lock] = {}
 _last_request_at: Dict[str, float] = {}
 
 
-def get_host_delay() -> float:
-    """Seconds to wait between requests to the same host (SCRAPER_HOST_DELAY, default 1.0)."""
-    raw = os.environ.get("SCRAPER_HOST_DELAY")
-    if raw is None:
-        return DEFAULT_HOST_DELAY
-    try:
-        return max(0.0, float(raw))
-    except ValueError:
-        logger.warning(f"Invalid SCRAPER_HOST_DELAY={raw!r}; using {DEFAULT_HOST_DELAY}s")
-        return DEFAULT_HOST_DELAY
+def get_host_delays() -> Dict[str, float]:
+    """Per-host overrides from SCRAPER_HOST_DELAYS, e.g. 'payngo.co.il=3,cwc.co.il=2'."""
+    overrides: Dict[str, float] = {}
+    raw = (os.environ.get("SCRAPER_HOST_DELAYS") or "").strip()
+    for chunk in raw.split(","):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        host, _, value = chunk.partition("=")
+        host = host.strip().lower()
+        try:
+            overrides[host] = max(0.0, float(value))
+        except ValueError:
+            logger.warning(f"Ignoring invalid SCRAPER_HOST_DELAYS entry {chunk!r}")
+    return overrides
+
+
+def get_host_delay(host: str = "") -> float:
+    """Seconds to wait between same-host requests.
+
+    A host listed in SCRAPER_HOST_DELAYS wins; otherwise SCRAPER_HOST_DELAY (default 1.0s),
+    and 0 disables throttling entirely.
+    """
+    host = (host or "").lower()
+    if host:
+        for suffix, seconds in get_host_delays().items():
+            if host == suffix or host.endswith("." + suffix):
+                return seconds
+    return _env_float("SCRAPER_HOST_DELAY", DEFAULT_HOST_DELAY)
 
 
 def respect_host_delay(url: str) -> float:
     """Blocks until `url`'s host may be contacted again; returns the seconds waited."""
-    delay = get_host_delay()
-    if delay <= 0:
-        return 0.0
-    host = urllib.parse.urlsplit(url).netloc
-    if not host:
+    host = host_of(url)
+    delay = get_host_delay(host)
+    if delay <= 0 or not host:
         return 0.0
 
     with _host_delay_lock:
@@ -91,6 +125,71 @@ def reset_host_delay_state() -> None:
     """Clears the throttle bookkeeping (used by tests and explicit rate-limit resets)."""
     with _host_delay_lock:
         _last_request_at.clear()
+
+
+# --- Backoff on rate-limit / challenge responses --------------------------------
+# These walls apply short-lived per-IP penalty windows (seconds to a minute), so one
+# cooldown-then-retry recovers most transient blocks.  A host that stays blocked has its
+# budget spent once and is then parked, so the rest of that store's URLs fail fast
+# instead of each idling for the full cooldown.
+# Off by default: measured on payngo (2026-09-12), a 30s/URL cooldown-retry tripled run
+# time (10s -> 61-127s) and still produced no more items, because retrying *adds* request
+# volume — the exact thing these walls penalise.  Raise SCRAPER_BACKOFF_BUDGET only when a
+# store's catalog is transiently blocked and you can afford ~a minute of waiting per store.
+DEFAULT_BACKOFF_BUDGET = 0.0    # seconds spent waiting per URL (0 = single attempt)
+DEFAULT_BACKOFF_WAIT = 30.0     # seconds to wait before each retry
+DEFAULT_HOST_PENALTY = 300.0    # seconds a host is parked after exhausting its budget
+# 429 is deliberately absent: the pycurl -> curl_cffi -> requests chain inside one attempt
+# already absorbs per-request throttling.  503 has no such fallback and is worth a retry.
+RETRYABLE_STATUSES = (503,)
+
+_backoff_lock = threading.Lock()
+_penalized_hosts: Dict[str, float] = {}
+
+
+def get_backoff_budget() -> float:
+    return _env_float("SCRAPER_BACKOFF_BUDGET", DEFAULT_BACKOFF_BUDGET)
+
+
+def get_backoff_wait() -> float:
+    return _env_float("SCRAPER_BACKOFF_WAIT", DEFAULT_BACKOFF_WAIT)
+
+
+def get_host_penalty() -> float:
+    return _env_float("SCRAPER_HOST_PENALTY", DEFAULT_HOST_PENALTY)
+
+
+def _is_retryable_block(status: int, body: str) -> bool:
+    """Rate-limit/challenge responses are worth one cooldown-and-retry; hard errors are not."""
+    return status in RETRYABLE_STATUSES or is_bot_challenge(status, body)
+
+
+def _penalize_host(host: str, seconds: float) -> None:
+    if not host or seconds <= 0:
+        return
+    with _backoff_lock:
+        _penalized_hosts[host] = time.monotonic() + seconds
+
+
+def is_host_penalized(host: str) -> bool:
+    """True while a host is parked after burning its retry budget."""
+    host = (host or "").lower()
+    if not host:
+        return False
+    with _backoff_lock:
+        until = _penalized_hosts.get(host)
+        if until is None:
+            return False
+        if time.monotonic() >= until:
+            _penalized_hosts.pop(host, None)
+            return False
+        return True
+
+
+def reset_backoff_state() -> None:
+    """Clears parked hosts and retry bookkeeping (used by tests)."""
+    with _backoff_lock:
+        _penalized_hosts.clear()
 
 
 def create_resilient_session(
@@ -144,7 +243,7 @@ def create_resilient_session(
     return session
 
 
-def fetch_resilient_url(
+def _attempt_fetch(
     url: str,
     post_data: Optional[str] = None,
     headers: Optional[Dict[str, str]] = None,
@@ -152,9 +251,8 @@ def fetch_resilient_url(
     timeout: int = 25,
 ) -> tuple[int, str]:
     """
-    Fetches a URL using HTTP/2 and browser TLS fingerprinting (pycurl / curl_cffi).
-    Bypasses Cloudflare, WAFs, and bot challenges.
-    Returns (status_code, body_string).
+    One pass through the client chain: pycurl (HTTP/2) -> curl_cffi -> plain requests.
+    Returns (status_code, body_string), or (0, "") when every client failed.
     """
     respect_host_delay(url)
 
@@ -275,6 +373,60 @@ def is_bot_challenge(status: int, body: str) -> bool:
 def _looks_like_challenge(body: str) -> bool:
     """True when a rendered body is still an unsolved bot-challenge interstitial."""
     return is_bot_challenge(200, body)
+
+
+def fetch_resilient_url(
+    url: str,
+    post_data: Optional[str] = None,
+    headers: Optional[Dict[str, str]] = None,
+    user_agent: Optional[str] = None,
+    timeout: int = 25,
+) -> tuple[int, str]:
+    """
+    Fetches a URL using HTTP/2 and browser TLS fingerprinting (pycurl / curl_cffi),
+    paced per host and retried through short-lived rate-limit blocks.
+    Returns (status_code, body_string).
+
+    A challenged response (or `503`) is retried after a cooldown when
+    SCRAPER_BACKOFF_BUDGET > 0, waiting SCRAPER_BACKOFF_WAIT between attempts; a host that
+    stays blocked after spending its budget is parked for SCRAPER_HOST_PENALTY seconds so
+    the remaining URLs for that store fail fast.  Retries are off by default — see the
+    note on DEFAULT_BACKOFF_BUDGET for the measurements behind that choice.
+    """
+    host = host_of(url)
+    attempts = 0
+    waited = 0.0
+
+    while True:
+        attempts += 1
+        status, body = _attempt_fetch(url, post_data, headers, user_agent, timeout)
+        if not _is_retryable_block(status, body):
+            if attempts > 1:
+                logger.info(f"Recovered after {attempts} attempts: {url}")
+            return status, body
+
+        budget, wait = get_backoff_budget(), get_backoff_wait()
+        if budget <= 0 or wait <= 0:
+            return status, body  # cooldown retries disabled (the default)
+
+        if is_host_penalized(host):
+            logger.info(f"Host {host} is parked after an earlier block; skipping retries for {url}")
+            return status, body
+
+        if waited + wait > budget:
+            logger.warning(
+                f"Still blocked (HTTP {status}) after {attempts} attempt(s): {url} — "
+                f"parking {host} for {get_host_penalty():.0f}s"
+            )
+            _penalize_host(host, get_host_penalty())
+            return status, body
+
+        logger.warning(
+            f"HTTP {status} looks like a challenge for {url}; "
+            f"cooling down {wait:.0f}s before attempt {attempts + 1}"
+        )
+        time.sleep(wait)
+        waited += wait
 
 
 def _browser_proxy_config(proxy: str) -> Dict[str, str]:

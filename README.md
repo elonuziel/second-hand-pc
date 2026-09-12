@@ -113,19 +113,31 @@ pipeline preserves its previously scraped data.
 | `SCRAPER_BROWSER_HEADLESS=0` | Run the browser headed, for debugging |
 | `PLAYWRIGHT_BROWSERS_PATH` | Where Chromium lives (default `~/.cache/ms-playwright`) |
 
-### Request pacing (per-host politeness)
+### Request pacing and backoff (per-host politeness)
 
 WAFs escalate on bursts, so every resilient fetch keeps a minimum gap between requests to
-the same host, which also serialises that host's concurrency to one. Defaults to 1s:
+the same host, which also serialises that host's concurrency to one. Each store scrapes a
+single host, so per-host overrides are effectively per-store pacing:
 
 | Env var | Effect |
 | --- | --- |
 | `SCRAPER_HOST_DELAY` | Seconds between requests to the same host (default `1.0`; `0` disables) |
+| `SCRAPER_HOST_DELAYS` | Per-host overrides, e.g. `payngo.co.il=3,cwc.co.il=2` (suffix match; `0` zeroes one host) |
+| `SCRAPER_BACKOFF_BUDGET` | Seconds of waiting per URL before retrying a challenge/`503` (default `0`, i.e. off) |
+| `SCRAPER_BACKOFF_WAIT` | Cooldown before each retry (default `30`) |
+| `SCRAPER_HOST_PENALTY` | Seconds a host is parked after spending its budget (default `300`) |
 
-Pacing bounds the damage but is not a cure: these WAFs also apply short-lived per-IP
-penalty windows (Cloudflare `429`/`403`) that a slower fixed pace does not avoid, because
-the first request of each run always fires immediately. When a store is throttled it is
-reported as blocked and its previously scraped data is preserved.
+Cooldown-retry ships **off**, based on measurement: enabling it on payngo with a 30s cooldown
+pushed runs from ~10s to 61-127s while producing no more items, because retrying *adds* the
+request volume these walls penalise. Raise `SCRAPER_BACKOFF_BUDGET` only when a store's
+catalog is transiently blocked and you can afford roughly a minute per store. `429` is never
+retried: the pycurl → curl_cffi → requests chain inside a single attempt already absorbs
+per-request throttling.
+
+Pacing bounds the damage but is not a cure: these WAFs also apply short-lived per-IP penalty
+windows that a slower fixed pace does not avoid, because the first request of each run always
+fires immediately. When a store is throttled it is reported as blocked and its previously
+scraped data is preserved.
 
 **Known limitation:** the fallback clears the JavaScript challenge, but it cannot beat an
 IP-level WAF block. When CWC answers a *cleared* challenge with a Cloudflare `403 - Forbidden`

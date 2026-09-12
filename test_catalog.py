@@ -725,6 +725,88 @@ class TestNewLaptopScrapers(unittest.TestCase):
 
         self.assertEqual(seen, ["https://invalid.invalid.example.invalid/"])
 
+    def test_per_host_delay_overrides(self):
+        """WAF-heavy hosts can be paced slower than the rest of the fleet."""
+        import http_session as hs
+
+        env = {"SCRAPER_HOST_DELAYS": "payngo.co.il=3,cwc.co.il=2,bogus", "SCRAPER_HOST_DELAY": "1"}
+        with patch.dict(os.environ, env):
+            self.assertEqual(hs.get_host_delay("www.payngo.co.il"), 3.0)  # subdomain matches
+            self.assertEqual(hs.get_host_delay("payngo.co.il"), 3.0)      # exact matches
+            self.assertEqual(hs.get_host_delay("www.cwc.co.il"), 2.0)
+            self.assertEqual(hs.get_host_delay("recomp.co.il"), 1.0)      # untouched -> base
+        with patch.dict(os.environ, {"SCRAPER_HOST_DELAYS": "payngo.co.il=0,recomp.co.il=5"}):
+            self.assertEqual(hs.get_host_delay("www.payngo.co.il"), 0.0)  # override can zero a host
+            self.assertEqual(hs.get_host_delay("www.recomp.co.il"), 5.0)
+
+    def test_fetch_retries_after_a_cooldown_and_recovers(self):
+        """A transient 429/challenge is retried once after a cooldown and can recover."""
+        import http_session as hs
+
+        blocked = (403, "<title>Attention Required! | Cloudflare</title>")
+        env = {"SCRAPER_BACKOFF_WAIT": "0.05", "SCRAPER_BACKOFF_BUDGET": "1"}
+        with patch.dict(os.environ, env):
+            hs.reset_backoff_state()
+            with patch.object(hs, "_attempt_fetch", side_effect=[blocked, (200, "real page")]) as attempts:
+                result = hs.fetch_resilient_url("https://www.payngo.co.il/x.html")
+
+        self.assertEqual(result, (200, "real page"))
+        self.assertEqual(attempts.call_count, 2)
+        self.assertFalse(hs.is_host_penalized("www.payngo.co.il"))
+
+    def test_exhausted_budget_parks_the_host_and_stops_retrying(self):
+        """Once a host burns its retry budget it is parked, so its later URLs fail fast."""
+        import http_session as hs
+
+        blocked = (503, "service unavailable")
+        env = {
+            "SCRAPER_BACKOFF_WAIT": "0.05",
+            "SCRAPER_BACKOFF_BUDGET": "0.1",
+            "SCRAPER_HOST_PENALTY": "60",
+        }
+        with patch.dict(os.environ, env):
+            hs.reset_backoff_state()
+            with patch.object(hs, "_attempt_fetch", return_value=blocked) as attempts:
+                first = hs.fetch_resilient_url("https://www.payngo.co.il/a.html")
+                retried_then_parked = attempts.call_count
+                self.assertTrue(hs.is_host_penalized("www.payngo.co.il"))
+
+                second = hs.fetch_resilient_url("https://www.payngo.co.il/b.html")
+                after_second = attempts.call_count
+
+        self.assertEqual(first, blocked)
+        self.assertEqual(second, blocked)
+        self.assertGreaterEqual(retried_then_parked, 2)                  # it did retry first
+        self.assertEqual(after_second - retried_then_parked, 1)          # parked -> no retry
+
+    def test_backoff_can_be_disabled(self):
+        """SCRAPER_BACKOFF_BUDGET=0 restores single-attempt behaviour."""
+        import http_session as hs
+
+        blocked = (503, "service unavailable")
+        with patch.dict(os.environ, {"SCRAPER_BACKOFF_BUDGET": "0"}):
+            hs.reset_backoff_state()
+            with patch.object(hs, "_attempt_fetch", return_value=blocked) as attempts:
+                self.assertEqual(hs.fetch_resilient_url("https://recomp.co.il/a"), blocked)
+
+        self.assertEqual(attempts.call_count, 1)
+        hs.reset_backoff_state()
+
+    def test_backoff_is_off_by_default_and_429_is_left_to_the_client_chain(self):
+        """Measured default: no cooldown retries, and 429 is not retried even when enabled."""
+        import http_session as hs
+
+        os.environ.pop("SCRAPER_BACKOFF_BUDGET", None)
+        self.assertEqual(hs.get_backoff_budget(), 0.0)
+
+        with patch.dict(os.environ, {"SCRAPER_BACKOFF_WAIT": "0.05", "SCRAPER_BACKOFF_BUDGET": "5"}):
+            hs.reset_backoff_state()
+            with patch.object(hs, "_attempt_fetch", return_value=(429, "too many requests")) as attempts:
+                hs.fetch_resilient_url("https://www.payngo.co.il/x.html")
+
+        self.assertEqual(attempts.call_count, 1)  # pycurl -> curl_cffi -> requests already covers this
+        hs.reset_backoff_state()
+
     def test_browser_fallback_is_optional_and_degrades_gracefully(self):
         """fetch_rendered_url returns None (never raises) when Playwright is unavailable/disabled."""
         import http_session
