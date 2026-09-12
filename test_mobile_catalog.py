@@ -58,17 +58,21 @@ class TestMobileDataHealth(unittest.TestCase):
         total_items = sum(len(v) for v in data.values())
         self.assertGreaterEqual(total_items, 15, "Mobile catalog should have at least 15 items")
 
-    def test_all_three_stores_represented(self):
+    def test_all_stores_represented(self):
         with open(MOBILE_JSON_PATH, "r", encoding="utf-8") as f:
             data = json.load(f)
 
         self.assertIn("itoutlet", data)
         self.assertIn("gomobile", data)
         self.assertIn("partner", data)
+        self.assertIn("dynamica", data)
+        self.assertIn("vmobile", data)
 
         self.assertGreater(len(data["itoutlet"]), 0, "IT Outlet mobile should have items")
         self.assertGreater(len(data["gomobile"]), 0, "GoMobile should have items")
         self.assertGreater(len(data["partner"]), 0, "Partner Plus should have items")
+        self.assertGreater(len(data["dynamica"]), 0, "Dynamica Outlet should have items")
+        self.assertGreater(len(data["vmobile"]), 0, "VMobile should have items")
 
 
 class TestFrontendCompatibility(unittest.TestCase):
