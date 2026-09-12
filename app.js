@@ -1,44 +1,16 @@
 const docs = [
   {
-    id: 'overview',
-    title: 'Project Overview',
-    file: 'README.md',
-    category: 'project',
-    content: ''
-  },
-  {
-    id: 'summary',
-    title: 'Summary / Market Guide',
-    file: 'summary.md',
-    category: 'summary',
-    content: ''
-  },
-  {
-    id: 'touch-guides',
-    title: '2-in-1 & Touch Laptops Guide',
-    file: '2in1_and_touch_laptops_guide.md',
-    category: 'guide',
-    content: ''
-  },
-  {
-    id: 'elitebook-review',
-    title: 'HP EliteBook x360 Review',
-    file: 'hp_elitebook_x360_830_g8_master_review.md',
-    category: 'review',
-    content: ''
-  },
-  {
-    id: 'elitebook-accessories',
-    title: 'EliteBook Accessories Guide',
-    file: 'hp_elitebook_x360_accessories_guide.md',
-    category: 'guide',
+    id: 'full-catalog',
+    title: 'Full Catalog',
+    file: 'full_catalog.md',
+    category: 'full-catalog',
     content: ''
   }
 ];
 
 const state = {
-  activeDocId: 'overview',
-  filter: 'all', // 'all', 'project', 'summary', 'guide', 'review', 'catalog'
+  activeDocId: 'full-catalog',
+  filter: 'catalog', // 'catalog' or 'full-catalog'
   query: '',
   activePreset: 'all',
   catalogData: [],
@@ -85,6 +57,17 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+function formatCpuHtml(cpuStr) {
+  if (!cpuStr) return 'N/A';
+  const genMatch = String(cpuStr).match(/^(.*?)\s*\(([^)]+Gen)\)$/i);
+  if (genMatch) {
+    const mainCpu = genMatch[1].trim();
+    const genTag = genMatch[2].trim();
+    return `<span class="cpu-name">${escapeHtml(mainCpu)}</span><span class="cpu-gen-badge">${escapeHtml(genTag)}</span>`;
+  }
+  return escapeHtml(cpuStr);
 }
 
 function calculateValueScore(laptop) {
@@ -240,64 +223,56 @@ async function loadCatalogData() {
   }
 }
 
-function buildVisibleDocs() {
-  return docs.filter((doc) => {
-    const matchesFilter = state.filter === 'all' || doc.category === state.filter;
-    const searchTarget = `${doc.title} ${doc.file} ${doc.content || ''}`.toLowerCase();
-    const matchesQuery = !state.query || searchTarget.includes(state.query.toLowerCase());
-    return matchesFilter && matchesQuery;
-  });
-}
-
-function getVisibleDoc() {
-  const visibleDocs = buildVisibleDocs();
-  const activeDoc = docs.find((doc) => doc.id === state.activeDocId);
-  if (visibleDocs.length === 0) return null;
-  if (activeDoc && visibleDocs.some((doc) => doc.id === activeDoc.id)) return activeDoc;
-  return visibleDocs[0];
-}
-
-function renderTabs() {
-  if (!tabList) return;
-  const visibleDocs = buildVisibleDocs();
-
-  if (visibleDocs.length === 0) {
-    tabList.innerHTML = '<div class="empty-state">No matching documents found.</div>';
+function renderCatalogToc() {
+  if (!tabList || !documentContent) return;
+  const headings = documentContent.querySelectorAll('h2');
+  if (headings.length === 0) {
+    tabList.innerHTML = '<div class="empty-state">No sections found.</div>';
     return;
   }
 
-  const selected = getVisibleDoc();
-  if (selected) {
-    state.activeDocId = selected.id;
-  }
+  let html = '';
+  headings.forEach((h, idx) => {
+    const sectionId = `store-section-${idx}`;
+    h.id = sectionId;
+    const rawText = h.textContent.replace(/^##\s*/, '').trim();
+    const cleanTitle = rawText.split('—')[0].trim();
+    html += `
+      <button
+        type="button"
+        class="tab-button"
+        data-target="${sectionId}"
+        role="tab"
+      >
+        <span>${escapeHtml(cleanTitle)}</span>
+      </button>
+    `;
+  });
 
-  tabList.innerHTML = visibleDocs
-    .map((doc) => {
-      const q = state.query ? state.query.toLowerCase() : '';
-      const contentMatches = q && doc.content && doc.content.toLowerCase().includes(q) && !doc.title.toLowerCase().includes(q);
-      const badgeHtml = contentMatches ? '<span class="match-badge">Text match</span>' : '';
-
-      return `
-        <button
-          type="button"
-          class="tab-button ${doc.id === state.activeDocId ? 'active' : ''}"
-          data-doc-id="${escapeHtml(doc.id)}"
-          role="tab"
-          aria-selected="${doc.id === state.activeDocId}"
-        >
-          <span>${escapeHtml(doc.title)}</span>
-          ${badgeHtml}
-        </button>
-      `;
-    })
-    .join('');
-
-  tabList.querySelectorAll('.tab-button').forEach((button) => {
-    button.addEventListener('click', () => {
-      state.activeDocId = button.dataset.docId;
-      renderTabs();
-      loadDocument();
+  tabList.innerHTML = html;
+  tabList.querySelectorAll('.tab-button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      tabList.querySelectorAll('.tab-button').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      const targetEl = document.getElementById(btn.dataset.target);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
+  });
+}
+
+function applyDocSearchFilter() {
+  if (!documentContent) return;
+  const q = state.query.toLowerCase();
+  const rows = documentContent.querySelectorAll('table tr');
+  rows.forEach((row) => {
+    if (row.querySelector('th')) return;
+    if (!q) {
+      row.style.display = '';
+    } else {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    }
   });
 }
 
@@ -312,39 +287,38 @@ async function loadDocument() {
   if (state.filter === 'catalog') return;
   if (!documentContent) return;
 
-  const selectedDoc = docs.find((doc) => doc.id === state.activeDocId) || buildVisibleDocs()[0];
-  if (!selectedDoc) {
-    documentContent.innerHTML = '<div class="empty-state">No matching document available.</div>';
-    return;
-  }
+  const doc = docs[0];
+  if (!doc) return;
 
-  setStatus(`Loading ${selectedDoc.title}…`);
-  documentContent.innerHTML = '<div class="empty-state">Loading document…</div>';
+  setStatus(`Loading ${doc.title}…`);
 
-  try {
-    let markdown = selectedDoc.content;
-    if (!markdown) {
-      const response = await fetch(`./${selectedDoc.file}`, { cache: 'no-store' });
+  if (!doc.content) {
+    documentContent.innerHTML = '<div class="empty-state">Loading full catalog…</div>';
+    try {
+      const response = await fetch(`./${doc.file}`, { cache: 'no-store' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      markdown = await response.text();
-      selectedDoc.content = markdown;
-    }
-
-    const sanitized = sanitizeMarkdown(markdown);
-    const rendered = DOMPurify.sanitize(marked.parse(sanitized));
-    documentContent.innerHTML = rendered;
-    setStatus(`${selectedDoc.title} loaded`, 'success');
-  } catch (error) {
-    documentContent.innerHTML = `
-      <div class="empty-state">
-        <div>
-          <h3>Unable to load this document.</h3>
-          <p>${escapeHtml(error.message)}</p>
+      doc.content = await response.text();
+    } catch (error) {
+      documentContent.innerHTML = `
+        <div class="empty-state">
+          <div>
+            <h3>Unable to load full catalog.</h3>
+            <p>${escapeHtml(error.message)}</p>
+          </div>
         </div>
-      </div>
-    `;
-    setStatus('Could not load this document.', 'error');
+      `;
+      setStatus('Could not load full catalog.', 'error');
+      return;
+    }
   }
+
+  const sanitized = sanitizeMarkdown(doc.content);
+  const rendered = DOMPurify.sanitize(marked.parse(sanitized));
+  documentContent.innerHTML = rendered;
+
+  renderCatalogToc();
+  applyDocSearchFilter();
+  setStatus(`${doc.title} loaded`, 'success');
 }
 
 function getUpgradabilityBadge(score) {
@@ -513,7 +487,7 @@ function renderCatalog() {
           <div class="specs-grid">
             <div class="spec-item">
               <span class="spec-label">CPU:</span>
-              <span class="spec-value">${escapeHtml(laptop.cpu)}</span>
+              <span class="spec-value">${formatCpuHtml(laptop.cpu)}</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">RAM:</span>
@@ -587,7 +561,6 @@ function updateViewMode() {
     if (catalogFiltersCard) catalogFiltersCard.classList.add('hidden');
     if (documentContent) documentContent.classList.remove('hidden');
     if (catalogContent) catalogContent.classList.add('hidden');
-    renderTabs();
     loadDocument();
   }
 }
@@ -617,8 +590,7 @@ function bindEvents() {
       if (state.filter === 'catalog') {
         renderCatalog();
       } else {
-        renderTabs();
-        loadDocument();
+        applyDocSearchFilter();
       }
     });
   }
@@ -731,5 +703,5 @@ async function init() {
 init();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { escapeHtml, calculateValueScore };
+  module.exports = { escapeHtml, calculateValueScore, formatCpuHtml };
 }

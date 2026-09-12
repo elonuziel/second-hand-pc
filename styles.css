@@ -763,6 +763,25 @@ h1 {
   text-align: right;
 }
 
+.cpu-gen-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  background: rgba(42, 93, 215, 0.12);
+  color: var(--primary);
+  border: 1px solid rgba(42, 93, 215, 0.25);
+  margin-left: 4px;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .cpu-gen-badge {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
 .score-badge {
   font-weight: 700;
   padding: 2px 6px;

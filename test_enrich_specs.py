@@ -25,6 +25,11 @@ class TestSpecEnricher(unittest.TestCase):
         self.assertIn("screen_size_in", enriched)
         self.assertIn("weight_kg", enriched)
         self.assertIn("battery_wh", enriched)
+        self.assertIn("10th Gen", enriched.get("cpu", ""))
+
+        item2 = {"title": "Dell Latitude 5430 i7 32GB"}
+        enriched2 = SpecEnricher.enrich_item_dict(item2)
+        self.assertEqual(enriched2.get("cpu"), "Core i7 (12th Gen)")
 
 if __name__ == '__main__':
     unittest.main()

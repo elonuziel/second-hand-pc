@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { escapeHtml, calculateValueScore } = require('./app.js');
+const { escapeHtml, calculateValueScore, formatCpuHtml } = require('./app.js');
 
 console.log('Running security tests for escapeHtml...');
 
@@ -45,5 +45,18 @@ assert.ok(score2 <= 6.5, `Expected low score for overpriced weak spec, got ${sco
 
 // Edge case: invalid/zero price returns baseline
 assert.strictEqual(calculateValueScore({ deal_price_ils: 0 }), 5.0);
+
+// Test 6: CPU Generation HTML formatting
+console.log('Running tests for formatCpuHtml...');
+assert.strictEqual(
+  formatCpuHtml('Core i7 (11th Gen)'),
+  '<span class="cpu-name">Core i7</span><span class="cpu-gen-badge">11th Gen</span>'
+);
+assert.strictEqual(
+  formatCpuHtml('Core i5 (10th Gen)'),
+  '<span class="cpu-name">Core i5</span><span class="cpu-gen-badge">10th Gen</span>'
+);
+assert.strictEqual(formatCpuHtml('Apple M1'), 'Apple M1');
+assert.strictEqual(formatCpuHtml(null), 'N/A');
 
 console.log('All tests passed successfully!');

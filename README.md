@@ -35,10 +35,12 @@ second-hand-pc/
 ├── scraped_laptops.csv            # Cleaned dataset of scraped listings
 ├── scraped_laptops.json           # JSON version of the dataset
 │
-├── 2in1_and_touch_laptops_guide.md
-├── hp_elitebook_x360_830_g8_master_review.md
-├── hp_elitebook_x360_accessories_guide.md
-├── summary.md
+├── full_catalog.md
+├── guides/
+│   └── 2in1/                         # Dedicated 2-in-1 and touch laptop guides
+│       ├── 2in1_and_touch_laptops_guide.md
+│       ├── hp_elitebook_x360_830_g8_master_review.md
+│       └── hp_elitebook_x360_accessories_guide.md
 │
 ├── assets/                        # Images or static resources
 │
@@ -97,8 +99,8 @@ cat scraped_laptops.csv
 
 Explore documentation:
 
-- `summary.md` for high‑level insights  
-- Model‑specific guides for deeper analysis  
+- `full_catalog.md` for complete multi-store market research and live stock audits
+- `guides/2in1/` for dedicated 2-in-1, touch laptop, and HP EliteBook deep dives  
 
 ---
 

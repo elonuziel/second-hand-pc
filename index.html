@@ -22,7 +22,7 @@
         <div class="header-actions">
           <label class="search-box" aria-label="Search site & catalog">
             <span>Search</span>
-            <input id="searchInput" type="search" placeholder="Search guides, laptops, specs (e.g. i7, 32GB, ThinkPad)..." />
+            <input id="searchInput" type="search" placeholder="Search laptops, specs, catalog (e.g. i7, 32GB, ThinkPad)..." />
           </label>
           <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark / light theme">
             <span id="themeIcon">🌙</span>
@@ -31,23 +31,14 @@
         </div>
       </header>
 
-      <nav class="filter-bar" aria-label="Document & Catalog filter">
-        <button class="filter-btn active" data-filter="all" type="button">All Docs</button>
-        <button class="filter-btn" data-filter="project" type="button">Project</button>
-        <button class="filter-btn" data-filter="summary" type="button">Summary</button>
-        <button class="filter-btn" data-filter="guide" type="button">Guides</button>
-        <button class="filter-btn" data-filter="review" type="button">Reviews</button>
-        <button class="filter-btn catalog-nav-btn" data-filter="catalog" type="button">💻 Laptop Catalog Finder</button>
+      <nav class="filter-bar" aria-label="View switcher">
+        <button class="filter-btn active catalog-nav-btn" data-filter="catalog" type="button">💻 Laptop Catalog Finder</button>
+        <button class="filter-btn" data-filter="full-catalog" type="button">📋 Full Catalog</button>
       </nav>
 
       <main class="content-layout">
         <aside class="sidebar">
-          <div id="documentSidebarCard" class="sidebar-card">
-            <h2>Documents</h2>
-            <div id="tabList" class="tab-list" role="tablist" aria-label="Markdown documents"></div>
-          </div>
-
-          <div id="catalogFiltersCard" class="sidebar-card hidden">
+          <div id="catalogFiltersCard" class="sidebar-card">
             <div class="sidebar-card-header">
               <h2>Catalog Filters</h2>
               <button id="toggleFiltersBtn" class="mobile-filter-toggle" type="button" aria-expanded="true">
@@ -157,20 +148,25 @@
             </div>
           </div>
 
+          <div id="documentSidebarCard" class="sidebar-card hidden">
+            <h2 id="documentSidebarTitle">Catalog Sections</h2>
+            <div id="tabList" class="tab-list" role="tablist" aria-label="Catalog store sections"></div>
+          </div>
+
           <div class="sidebar-card mini-stats">
             <h3>Quick facts</h3>
             <ul>
-              <li>Full-text search across docs</li>
-              <li>Live scraped laptop database</li>
-              <li>Multi-store price & spec comparison</li>
+              <li>Live multi-store laptop database</li>
+              <li>Instant spec & price filter engine</li>
+              <li>Full market research & stock audits</li>
             </ul>
           </div>
         </aside>
 
         <section class="document-panel">
           <div id="statusBar" class="status-bar" aria-live="polite"></div>
-          <article id="documentContent" class="markdown-body" aria-live="polite"></article>
-          <div id="catalogContent" class="catalog-view hidden" aria-live="polite"></div>
+          <div id="catalogContent" class="catalog-view" aria-live="polite"></div>
+          <article id="documentContent" class="markdown-body hidden" aria-live="polite"></article>
         </section>
       </main>
     </div>

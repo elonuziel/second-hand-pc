@@ -21,6 +21,10 @@ class TestHardwareClassifier(unittest.TestCase):
     def test_detect_cpu(self):
         self.assertEqual(HardwareClassifier.detect_cpu("Intel Core i7 12th Gen 1250U"), "Core i7 (12th Gen)")
         self.assertEqual(HardwareClassifier.detect_cpu("HP EliteBook 840 G8 i5 1135G7"), "Core i5 (11th Gen)")
+        self.assertEqual(HardwareClassifier.detect_cpu("Lenovo ThinkPad X13 G1 i7"), "Core i7 (10th Gen)")
+        self.assertEqual(HardwareClassifier.detect_cpu("Lenovo ThinkPad P52 i7"), "Core i7 (8th Gen)")
+        self.assertEqual(HardwareClassifier.detect_cpu("Dell Latitude 5430 i7"), "Core i7 (12th Gen)")
+        self.assertEqual(HardwareClassifier.detect_cpu("Microsoft Surface 3 i7"), "Core i7 (10th Gen)")
         self.assertEqual(HardwareClassifier.detect_cpu("Apple M1 Max"), "Apple M1")
 
     def test_detect_ram_gb(self):

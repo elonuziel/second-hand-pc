@@ -19,11 +19,13 @@ import json
 import logging
 import argparse
 from typing import Dict, List, Tuple, Any, Optional
+from scraper import HardwareClassifier
 
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.json")
 CSV_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.csv")
-SUMMARY_MD_PATH = os.path.join(WORKSPACE_DIR, "summary.md")
+FULL_CATALOG_MD_PATH = os.path.join(WORKSPACE_DIR, "full_catalog.md")
+SUMMARY_MD_PATH = FULL_CATALOG_MD_PATH  # Compatibility alias
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("SpecEnricher")
@@ -133,10 +135,19 @@ class SpecEnricher:
         laptop["screen_size_in"] = round(screen_size, 1)
         laptop["weight_kg"] = round(weight_kg, 2)
         laptop["battery_wh"] = battery_wh
+
+        # Detect and enrich CPU generation if missing
+        current_cpu = laptop.get("cpu", "")
+        detected_cpu = HardwareClassifier.detect_cpu(f"{title} {current_cpu}")
+        if "gen" in detected_cpu.lower() or not current_cpu:
+            laptop["cpu"] = detected_cpu
+        elif current_cpu:
+            laptop["cpu"] = current_cpu
+
         return laptop
 
 
-def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = SUMMARY_MD_PATH):
+def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = FULL_CATALOG_MD_PATH):
     if not os.path.exists(json_file):
         return
 

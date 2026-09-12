@@ -15,7 +15,7 @@ Features:
 - Strongly typed Dataclasses (LaptopItem) with hardware classification
 - Robust connection pooling with exponential backoff retries (urllib3/requests)
 - Multithreaded concurrent scraping
-- Dual export to JSON & CSV + Auto-generation of production markdown guide (`summary.md`)
+- Dual export to JSON & CSV + Auto-generation of production markdown guide (`full_catalog.md`)
 - Advanced CLI filtering (--min-ram, --max-price, --min-score, --store, --csv, --json, --ai)
 
 Author: Advanced Coding Agent
@@ -48,7 +48,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # --- Workspace Paths ---
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
-SUMMARY_MD_PATH = os.path.join(WORKSPACE_DIR, "summary.md")
+FULL_CATALOG_MD_PATH = os.path.join(WORKSPACE_DIR, "full_catalog.md")
+SUMMARY_MD_PATH = FULL_CATALOG_MD_PATH  # Compatibility alias
 JSON_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.json")
 CSV_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.csv")
 ENV_FILE_PATH = os.path.join(WORKSPACE_DIR, ".env")
@@ -218,14 +219,16 @@ class HardwareClassifier:
     _HTML_TAG_RE = re.compile(r'<[^>]+>')
     _CLEAN_PHRASE_RE = re.compile(r'מחשב\s*נייד\s*(?:מחודש)?\s*(?:לעריכה\s*גרפית)?')
 
-    _GEN12_RE = re.compile(r'(?:12th|דור\s*12|gen\s*4|5431|5531|7430|1270p|1260p|1250u|1280p|1240p|1235u)')
-    _GEN11_RE = re.compile(r'(?:11th|דור\s*11|g8|gen\s*2|7420|7320|5420|5320|5520|1185g7|1165g7|1135g7|1145g7)')
-    _GEN10_RE = re.compile(r'(?:10th|דור\s*10|g7|gen\s*1|7410|5410|5510|10510u|10610u|10875h|10210u|10310u)')
-    _GEN9_RE = re.compile(r'(?:9th|דור\s*9|g6|9750h|9850h)')
-    _GEN8_RE = re.compile(r'(?:8th|דור\s*8|e480|l390|7400|5490|5400|x280|t480|8250u|8350u|8650u|8550u)')
-    _GEN7_RE = re.compile(r'(?:7th|דור\s*7|t470|5480|7200u|7300u|7500u)')
-    _GEN6_RE = re.compile(r'(?:6th|דור\s*6|t460|650\s*g2|6200u|6300u|840\s*g3)')
-    _GEN4_RE = re.compile(r'(?:4th|דור\s*4|g-4|e7440|4200u|4300u)')
+    _GEN13_RE = re.compile(r'(?:13th|דור\s*13|13[0-9]{2}[up]|13[0-9]{2}h)', re.IGNORECASE)
+    _GEN12_RE = re.compile(r'(?:12th|דור\s*12|gen\s*4|5330|5430|5530|7330|7430|5431|5531|l13\s*gen\s*3|t14\s*gen\s*3|x1404za|e1504|12[0-9]{2}[up]|12[0-9]{2}h|1270p|1260p|1250u|1280p|1240p|1235u)', re.IGNORECASE)
+    _GEN11_RE = re.compile(r'(?:11th|דור\s*11|\bg8\b|gen\s*2|3520|3420|7420|7320|5420|5320|5520|surface\s*4|x1\s*carbon\s*gen\s*9|x1\s*yoga\s*gen\s*6|a517.*52g|x515ea|x30l\s*j|11[0-9]{2}g[47]|11[0-9]{2}[up]|11[0-9]{2}h|1185g7|1165g7|1135g7|1145g7)', re.IGNORECASE)
+    _GEN10_RE = re.compile(r'(?:10th|דור\s*10|\bg7\b|gen\s*1|\bg1\b|7410|5410|5510|surface\s*3|x1\s*carbon\s*gen\s*8|p1\s*gen\s*3|vostro\s*3591|3591|a2179|a2251|10[0-9]{2}[up]|10[0-9]{2}h|10510u|10610u|10875h|10210u|10310u|\be14\b|\bt14\b|\bt14s\b)', re.IGNORECASE)
+    _GEN9_RE = re.compile(r'(?:9th|דור\s*9|\bg6\b|9750h|9850h)', re.IGNORECASE)
+    _GEN8_RE = re.compile(r'(?:8th|דור\s*8|e480|l390|7400|5490|5400|x280|t480|p52|5379|330\s*15ikb|a1989|x1\s*carbon.*touch|8[0-9]{3}[uh]|8250u|8350u|8650u|8550u)', re.IGNORECASE)
+    _GEN7_RE = re.compile(r'(?:7th|דור\s*7|t470|5480|x442ur|a1707|a1706|a1708|7[0-9]{3}[uh]|7200u|7300u|7500u)', re.IGNORECASE)
+    _GEN6_RE = re.compile(r'(?:6th|דור\s*6|t460|650\s*g2|840\s*g3|ay010|6[0-9]{3}[uh]|6200u|6300u)', re.IGNORECASE)
+    _GEN5_RE = re.compile(r'(?:5th|דור\s*5|a1466|5[0-9]{3}[uh])', re.IGNORECASE)
+    _GEN4_RE = re.compile(r'(?:4th|דור\s*4|g-4|e7440|4[0-9]{3}[uh]|4200u|4300u)', re.IGNORECASE)
 
     _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
     _STORAGE_GB_RE = re.compile(r'(?:^|[^\w])(128|240|250|256|480|500|512)\s*(?:gb|g|גיגה)?(?:\s*ssd|\s*nvme|\s*אחסון)?(?:[^\w]|$)')
@@ -312,6 +315,7 @@ class HardwareClassifier:
         if 'celeron' in t: return "Intel Celeron"
         if 'ultra 7' in t: return "Intel Core Ultra 7"
 
+        gen13 = cls._GEN13_RE.search(t)
         gen12 = cls._GEN12_RE.search(t)
         gen11 = cls._GEN11_RE.search(t)
         gen10 = cls._GEN10_RE.search(t)
@@ -319,10 +323,12 @@ class HardwareClassifier:
         gen8 = cls._GEN8_RE.search(t)
         gen7 = cls._GEN7_RE.search(t)
         gen6 = cls._GEN6_RE.search(t)
+        gen5 = cls._GEN5_RE.search(t)
         gen4 = cls._GEN4_RE.search(t)
 
         i_level = "i7" if "i7" in t else ("i5" if "i5" in t else ("i9" if "i9" in t else ("i3" if "i3" in t else "i5")))
 
+        if gen13: return f"Core {i_level} (13th Gen)"
         if gen12: return f"Core {i_level} (12th Gen)"
         if gen11: return f"Core {i_level} (11th Gen)"
         if gen10: return f"Core {i_level} (10th Gen)"
@@ -330,6 +336,7 @@ class HardwareClassifier:
         if gen8:  return f"Core {i_level} (8th Gen)"
         if gen7:  return f"Core {i_level} (7th Gen)"
         if gen6:  return f"Core {i_level} (6th Gen)"
+        if gen5:  return f"Core {i_level} (5th Gen)"
         if gen4:  return f"Core {i_level} (4th Gen)"
         return f"Core {i_level}"
 
@@ -1023,7 +1030,7 @@ def main():
     parser.add_argument("--ai", "--groq", action="store_true", help="Enable Groq AI hardware intelligence")
     parser.add_argument("--csv", action="store_true", help="Also export all laptops to CSV")
     parser.add_argument("--json", action="store_true", help="Dump JSON output to stdout")
-    parser.add_argument("--no-md", action="store_true", help="Disable automatic summary.md update")
+    parser.add_argument("--no-md", action="store_true", help="Disable automatic full_catalog.md update")
     parser.add_argument("--workers", type=int, default=4, help="Max concurrent store threads")
 
     args = parser.parse_args()
@@ -1055,9 +1062,9 @@ def main():
     if args.csv:
         ReportGenerator.export_csv(all_items, CSV_PATH)
 
-    # Auto-update summary.md with dynamic Top Picks
+    # Auto-update full_catalog.md with dynamic Top Picks
     if not args.no_md:
-        ReportGenerator.update_summary_markdown(results, SUMMARY_MD_PATH)
+        ReportGenerator.update_summary_markdown(results, FULL_CATALOG_MD_PATH)
 
     # CLI Terminal Summary
     print("\n" + "=" * 65)
