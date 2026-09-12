@@ -20,6 +20,7 @@ import logging
 import argparse
 from typing import Dict, List, Tuple, Any, Optional
 from scraper import HardwareClassifier, LaptopItem, ReportGenerator
+from scraper import HardwareClassifier, LaptopItem, ReportGenerator, GroqSpecEnhancer
 
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.json")
@@ -69,6 +70,34 @@ class SpecEnricher:
             return 13.3
         if any(k in t for k in ['x280']):
             return 12.5
+        # Generative algorithmic syntax decoders (accurately parses changing/future models)
+        # Dell Latitude & Precision 4-digit formula (e.g. 7420, 5330, 3540, 5440, 7340, 5520)
+        dell_m = re.search(r'\b(?:latitude|precision)?\s*([3579])([34567])([0-9])([05])?\b', t)
+        if dell_m and ('dell' in t or 'latitude' in t or 'precision' in t):
+            s_digit = dell_m.group(2)
+            if s_digit == '3': return 13.3
+            if s_digit == '4': return 14.0
+            if s_digit == '5': return 15.6
+            if s_digit == '6': return 16.0
+            if s_digit == '7': return 17.3
+
+        # Lenovo ThinkPad formula (e.g. T14, P14s, X13, L15, E16, T16, P16)
+        tp_m = re.search(r'\b(?:thinkpad\s*)?([txple])(13|14|15|16)(s)?\b', t)
+        if tp_m:
+            tp_screen = tp_m.group(2)
+            if tp_screen == '13': return 13.3
+            if tp_screen == '14': return 14.0
+            if tp_screen == '15': return 15.6
+            if tp_screen == '16': return 16.0
+
+        # HP EliteBook & ProBook formula (e.g. 830, 840, 650, 430, 440, 450)
+        hp_m = re.search(r'\b(?:elitebook|probook)?\s*([468])([3456])([05])\b', t)
+        if hp_m and ('hp' in t or 'elitebook' in t or 'probook' in t):
+            hp_screen = hp_m.group(2)
+            if hp_screen == '3': return 13.3
+            if hp_screen == '4': return 14.0
+            if hp_screen == '5': return 15.6
+            if hp_screen == '6': return 16.0
 
         return 14.0
 
@@ -99,6 +128,34 @@ class SpecEnricher:
         if any(k in t for k in ['p52', 'p15 gen', 'p15 g1', 'zbook fury 15']): return 2.45
         if 'a517' in t or screen_size >= 17.0: return 2.60
 
+        # Algorithmic syntax decoders for weight
+        dell_m = re.search(r'\b(?:latitude|precision)?\s*([3579])([34567])([0-9])([05])?\b', t)
+        if dell_m and ('dell' in t or 'latitude' in t or 'precision' in t):
+            tier = dell_m.group(1)
+            s_digit = dell_m.group(2)
+            if tier in ('7', '9'):
+                return 1.20 if s_digit == '3' else 1.35
+            elif tier == '5':
+                return 1.35 if s_digit == '3' else (1.55 if s_digit == '4' else 1.75)
+            elif tier == '3':
+                return 1.60 if s_digit == '4' else 1.85
+
+        tp_m = re.search(r'\b(?:thinkpad\s*)?([txple])(13|14|15|16)(s)?\b', t)
+        if tp_m:
+            s_digit = tp_m.group(2)
+            if tp_m.group(3): return 1.25 if s_digit == '13' else 1.35
+            if s_digit == '13': return 1.35
+            if s_digit == '14': return 1.55
+            if s_digit == '15': return 1.75
+            if s_digit == '16': return 1.85
+
+        hp_m = re.search(r'\b(?:elitebook|probook)?\s*([468])([3456])([05])\b', t)
+        if hp_m and ('hp' in t or 'elitebook' in t or 'probook' in t):
+            tier = hp_m.group(1)
+            s_digit = hp_m.group(2)
+            if tier == '8': return 1.28 if s_digit == '3' else 1.38
+            return 1.40 if s_digit == '3' else (1.50 if s_digit == '4' else 1.78)
+
         # Fallback by screen size
         if screen_size <= 12.5: return 1.20
         if screen_size <= 13.5: return 1.30
@@ -119,6 +176,8 @@ class SpecEnricher:
         if any(k in t for k in ['e480', '5410', '5480', 'x280', 'x13', '840 g3', 'e7440', '435 g7']): return 45
         if any(k in t for k in ['e1504', 'x515', '250 g7', '255 g5', 'ay010nj', 'a517', '330 15ikb']): return 41
 
+        # Algorithmic syntax decoders for battery
+        if any(k in t for k in ['workstation', 'precision', 'fury', 'p15', 'p52', 'p53']): return 90
         if weight_kg >= 2.3: return 83
         if weight_kg >= 1.7: return 54
         return 50
@@ -175,6 +234,7 @@ def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = FULL_CATA
 
 
 def enrich_dataset(json_file: str = JSON_PATH, csv_file: str = CSV_PATH):
+def enrich_dataset(json_file: str = JSON_PATH, csv_file: str = CSV_PATH, use_ai: bool = False):
     if not os.path.exists(json_file):
         logger.warning(f"File {json_file} does not exist. Skipping enrichment.")
         return
@@ -192,6 +252,26 @@ def enrich_dataset(json_file: str = JSON_PATH, csv_file: str = CSV_PATH):
         for item in data:
             SpecEnricher.enrich_item_dict(item)
             all_items_flat.append(item)
+
+    if use_ai:
+        enhancer = GroqSpecEnhancer()
+        if enhancer.enabled:
+            logger.info(f"🤖 Running Groq AI spec audit on {len(all_items_flat)} laptops...")
+            items_to_audit = []
+            for item in all_items_flat:
+                fields = {f: item[f] for f in item if f in LaptopItem.__dataclass_fields__}
+                items_to_audit.append(LaptopItem(**fields))
+            audited = enhancer.enhance_batch(items_to_audit)
+            for raw_item, audited_item in zip(all_items_flat, audited):
+                raw_item["screen_size_in"] = audited_item.screen_size_in
+                raw_item["weight_kg"] = audited_item.weight_kg
+                raw_item["battery_wh"] = audited_item.battery_wh
+                raw_item["gpu"] = audited_item.gpu
+                raw_item["is_touch"] = audited_item.is_touch
+                raw_item["is_2in1"] = audited_item.is_2in1
+                raw_item["upgradability_score"] = audited_item.upgradability_score
+        else:
+            logger.warning("Groq API key not found. Skipping AI audit.")
 
     # Save back to JSON
     with open(json_file, "w", encoding="utf-8") as f:
@@ -215,9 +295,11 @@ def main():
     parser = argparse.ArgumentParser(description="Enrich laptop dataset with screen size, weight, and battery capacity.")
     parser.add_argument("--json", default=JSON_PATH, help="Path to scraped_laptops.json")
     parser.add_argument("--csv", default=CSV_PATH, help="Path to scraped_laptops.csv")
+    parser.add_argument("--ai", action="store_true", help="Enable Groq AI hardware spec audit")
     args = parser.parse_args()
 
     enrich_dataset(args.json, args.csv)
+    enrich_dataset(args.json, args.csv, use_ai=args.ai)
 
 if __name__ == "__main__":
     main()

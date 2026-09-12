@@ -123,6 +123,14 @@ class TestHardwareParsers(unittest.TestCase):
         self.assertEqual(SpecEnricher.detect_screen_size("Dell Latitude 5530 15.6"), 15.6)
         self.assertEqual(SpecEnricher.detect_screen_size("HP EliteBook x360 830 13.3"), 13.3)
 
+        # Algorithmic syntax decoders
+        self.assertEqual(SpecEnricher.detect_screen_size("Dell Latitude 7420"), 14.0)
+        self.assertEqual(SpecEnricher.detect_screen_size("Dell Latitude 5330"), 13.3)
+        self.assertEqual(SpecEnricher.detect_screen_size("Dell Latitude 3540"), 15.6)
+        self.assertEqual(SpecEnricher.detect_screen_size("Lenovo ThinkPad X13 Gen 2"), 13.3)
+        self.assertEqual(SpecEnricher.detect_screen_size("HP EliteBook 830 G8"), 13.3)
+        self.assertEqual(SpecEnricher.detect_screen_size("HP EliteBook 840 G7"), 14.0)
+
         # Lightweight vs standard weight
         self.assertLessEqual(SpecEnricher.detect_weight_kg("ThinkPad X1 Carbon", 14.0), 1.2)
         self.assertGreaterEqual(SpecEnricher.detect_weight_kg("ThinkPad P15 Gen 1", 15.6), 2.0)
@@ -130,6 +138,15 @@ class TestHardwareParsers(unittest.TestCase):
         # Battery Wh
         self.assertGreaterEqual(SpecEnricher.detect_battery_wh("ThinkPad P15", 2.4), 80)
         self.assertGreaterEqual(SpecEnricher.detect_battery_wh("Dell Latitude 7420", 1.35), 50)
+
+    def test_groq_spec_enhancer_graceful_handling(self):
+        """Ensure GroqSpecEnhancer initializes safely and handles empty/fallback batches without crashing."""
+        from scraper import GroqSpecEnhancer
+        enhancer = GroqSpecEnhancer(api_key="fake_key_for_testing")
+        self.assertTrue(enhancer.enabled)
+        # Empty batch should return empty list immediately
+        self.assertEqual(enhancer.enhance_batch([]), [])
+        self.assertEqual(enhancer.enhance_batch_chunk([]), [])
 
 
 class TestFrontendCompatibility(unittest.TestCase):

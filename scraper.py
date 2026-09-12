@@ -146,67 +146,96 @@ class GroqSpecEnhancer:
         self.api_key = api_key or get_groq_api_key()
         self.enabled = bool(self.api_key)
 
-    def enhance_item(self, item: LaptopItem) -> LaptopItem:
-        """Deeply audits a single LaptopItem using Groq LLM inference."""
-        if not self.enabled:
-            return item
+    def enhance_batch_chunk(self, chunk: List[LaptopItem]) -> List[LaptopItem]:
+        """Audits a chunk of LaptopItems in a single prompt to minimize API calls and avoid rate limits."""
+        if not self.enabled or not chunk:
+            return chunk
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
         }
         prompt = (
-            "You are a senior PC hardware engineer. Analyze the Hebrew/English laptop listing and extract accurate specs. "
-            "Return a JSON object with: "
-            "'gpu' (str: e.g. 'NVIDIA Quadro P520', 'Intel Iris Xe', 'Intel UHD', 'AMD Radeon'), "
-            "'is_touch' (bool), 'is_2in1' (bool: True if 360 convertible hinge), "
-            "'upgradability_score' (float: 1.0 to 10.0)."
+            "You are a senior PC hardware engineer. Analyze the following laptops and extract exact factory specs.\n"
+            "For each laptop, return an object with:\n"
+            '- "id": int (matching input id)\n'
+            '- "screen_size_in": float (e.g. 13.3, 14.0, 15.6)\n'
+            '- "weight_kg": float (e.g. 1.25, 1.47, 2.45)\n'
+            '- "battery_wh": int (e.g. 50, 57, 90)\n'
+            '- "gpu": str (e.g. "Intel Iris Xe", "NVIDIA Quadro P520", "AMD Radeon")\n'
+            '- "is_touch": bool\n'
+            '- "is_2in1": bool (true if 360 convertible hinge)\n'
+            '- "upgradability_score": float (1.0 to 10.0)\n\n'
+            "Return ONLY a valid JSON array of objects.\n\n"
+            "Laptops:\n" + "\n".join(f"{idx}: {item.title}" for idx, item in enumerate(chunk))
         )
         payload = {
             "model": self.DEFAULT_MODEL,
-            "messages": [
-                {"role": "system", "content": prompt},
-                {"role": "user", "content": f"Analyze: {item.title} (Store: {item.store})"}
-            ],
-            "response_format": {"type": "json_object"},
-            "temperature": 0.1
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.1,
+            "max_tokens": 1500
         }
 
         try:
-            res = requests.post(self.GROQ_API_URL, headers=headers, json=payload, timeout=6)
+            res = requests.post(self.GROQ_API_URL, headers=headers, json=payload, timeout=20)
             if res.status_code == 200:
                 data = res.json()
-                parsed = json.loads(data['choices'][0]['message']['content'])
-                if 'gpu' in parsed and parsed['gpu']:
-                    item.gpu = str(parsed['gpu'])
-                if 'is_touch' in parsed:
-                    item.is_touch = bool(parsed['is_touch'])
-                if 'is_2in1' in parsed:
-                    item.is_2in1 = bool(parsed['is_2in1'])
-                if 'upgradability_score' in parsed and isinstance(parsed['upgradability_score'], (int, float)):
-                    # Keep valid bounds
-                    score = float(parsed['upgradability_score'])
-                    if 1.0 <= score <= 10.0:
-                        item.upgradability_score = score
+                content = data['choices'][0]['message'].get('content', '')
+                clean = re.sub(r"^```(?:json)?\s*|\s*```$", "", content.strip())
+                parsed = json.loads(clean)
+                if isinstance(parsed, list):
+                    for obj in parsed:
+                        idx = obj.get("id")
+                        if idx is not None and 0 <= idx < len(chunk):
+                            target = chunk[idx]
+                            if obj.get("screen_size_in"):
+                                try:
+                                    target.screen_size_in = round(float(obj["screen_size_in"]), 1)
+                                except (ValueError, TypeError):
+                                    pass
+                            if obj.get("weight_kg"):
+                                try:
+                                    target.weight_kg = round(float(obj["weight_kg"]), 2)
+                                except (ValueError, TypeError):
+                                    pass
+                            if obj.get("battery_wh"):
+                                try:
+                                    target.battery_wh = int(obj["battery_wh"])
+                                except (ValueError, TypeError):
+                                    pass
+                            if obj.get("gpu"):
+                                target.gpu = str(obj["gpu"])
+                            if "is_touch" in obj:
+                                target.is_touch = bool(obj["is_touch"])
+                            if "is_2in1" in obj:
+                                target.is_2in1 = bool(obj["is_2in1"])
+                            if obj.get("upgradability_score") is not None:
+                                try:
+                                    score = float(obj["upgradability_score"])
+                                    if 1.0 <= score <= 10.0:
+                                        target.upgradability_score = score
+                                except (ValueError, TypeError):
+                                    pass
+            else:
+                logger.warning(f"Groq API returned HTTP {res.status_code}: {res.text[:100]}")
         except Exception as e:
-            logger.debug(f"Groq enhance error for {item.title}: {e}")
-        return item
+            logger.warning(f"Groq batch enhancement failed: {e}")
 
-    def enhance_batch(self, items: List[LaptopItem], max_workers: int = 5) -> List[LaptopItem]:
-        """Enhances a batch of items concurrently using Groq."""
+        return chunk
+
+    def enhance_batch(self, items: List[LaptopItem], chunk_size: int = 5) -> List[LaptopItem]:
+        """Enhances items in sequential chunks to respect Groq rate limits with minimal latency."""
         if not self.enabled or not items:
             return items
 
-        logger.info(f"🤖 Groq AI auditing {len(items)} laptops in parallel...")
-        enhanced_items = []
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            future_to_item = {executor.submit(self.enhance_item, itm): itm for itm in items}
-            for future in as_completed(future_to_item):
-                try:
-                    enhanced_items.append(future.result())
-                except Exception:
-                    enhanced_items.append(future_to_item[future])
-        return enhanced_items
+        logger.info(f"🤖 Groq AI auditing {len(items)} laptops in chunked batches ({chunk_size} per call)...")
+        enhanced = []
+        for i in range(0, len(items), chunk_size):
+            chunk = items[i:i + chunk_size]
+            enhanced.extend(self.enhance_batch_chunk(chunk))
+            if i + chunk_size < len(items):
+                time.sleep(1.0)
+        return enhanced
 
 
 # --- Hardware Intelligence & Classification Engine ---
