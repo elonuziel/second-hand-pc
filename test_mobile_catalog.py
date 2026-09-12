@@ -45,6 +45,37 @@ class TestMobileClassifier(unittest.TestCase):
             self.assertEqual(MobileClassifier.detect_device_type(title), expected_type)
             self.assertEqual(MobileClassifier.detect_storage(title), expected_storage)
 
+    def test_lastprice_parsing(self):
+        from mobile_scraper import LastPriceMobileScraper
+
+        class MockResponse:
+            status_code = 200
+            text = '''
+            <div class="col-lg-4 col-md-4 col-sm-6 infinite-item">
+                <a class="prodLink" href="https://www.lastprice.co.il/p/100057932/Apple-iPhone-13-Pro-Max">
+                    <img class="prodimg" src="/uploadimages/APP_PROMAX13_WHITE.jpg" />
+                    <div class="degem">
+                        <h3>טלפון סלולרי 6.7" Apple *מחודש* Silver - iPhone 13 Pro Max 256GB/6GB RAM מחודש</h3>
+                    </div>
+                    <div class="lprice">₪2,890</div>
+                </a>
+            </div>
+            '''
+
+        class MockSession:
+            def get(self, url, timeout=15):
+                return MockResponse()
+
+        scraper = LastPriceMobileScraper(MockSession())
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "LastPrice")
+        self.assertEqual(items[0].brand, "Apple")
+        self.assertEqual(items[0].price_ils, 2890)
+        self.assertEqual(items[0].storage_gb, 256)
+        self.assertEqual(items[0].ram_gb, 6)
+        self.assertEqual(items[0].image_url, "https://www.lastprice.co.il/uploadimages/APP_PROMAX13_WHITE.jpg")
+
 
 class TestMobileDataHealth(unittest.TestCase):
     def test_files_exist_and_populated(self):
@@ -67,12 +98,14 @@ class TestMobileDataHealth(unittest.TestCase):
         self.assertIn("partner", data)
         self.assertIn("dynamica", data)
         self.assertIn("vmobile", data)
+        self.assertIn("lastprice", data)
 
         self.assertGreater(len(data["itoutlet"]), 0, "IT Outlet mobile should have items")
         self.assertGreater(len(data["gomobile"]), 0, "GoMobile should have items")
         self.assertGreater(len(data["partner"]), 0, "Partner Plus should have items")
         self.assertGreater(len(data["dynamica"]), 0, "Dynamica Outlet should have items")
         self.assertGreater(len(data["vmobile"]), 0, "VMobile should have items")
+        self.assertGreater(len(data["lastprice"]), 0, "LastPrice mobile should have items")
 
 
 class TestFrontendCompatibility(unittest.TestCase):

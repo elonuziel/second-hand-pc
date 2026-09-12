@@ -295,6 +295,11 @@ function getStoreClass(store) {
   if (s.includes('ecology') || s.includes('אקולוגיה')) return 'store-ecology';
   if (s.includes('lts') || s.includes('laptoptech') || s.includes('לפטופטק')) return 'store-lts';
   if (s.includes('recomp') || s.includes('ריקומפ')) return 'store-recomp';
+  if (s.includes('lastprice') || s.includes('לאסטפרייס')) return 'store-lastprice';
+  if (s.includes('gomobile')) return 'store-gomobile';
+  if (s.includes('partner')) return 'store-partner';
+  if (s.includes('dynamica')) return 'store-dynamica';
+  if (s.includes('vmobile')) return 'store-vmobile';
   return 'store-default';
 }
 

@@ -46,28 +46,31 @@ logging.basicConfig(
 )
 logger = logging.getLogger("MobileScraper")
 
-DEFAULT_HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-    'Accept-Language': 'he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7',
-    'Cache-Control': 'no-cache',
-    'Pragma': 'no-cache',
-}
+try:
+    from http_session import create_resilient_session, DEFAULT_HEADERS
+except ImportError:
+    DEFAULT_HEADERS = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+    }
 
-def create_resilient_session(retries: int = 3, backoff_factor: float = 0.5) -> requests.Session:
-    session = requests.Session()
-    session.headers.update(DEFAULT_HEADERS)
-    session.verify = False
-    retry_strategy = Retry(
-        total=retries,
-        backoff_factor=backoff_factor,
-        status_forcelist=[429, 500, 502, 503, 504],
-        allowed_methods=["HEAD", "GET", "OPTIONS"]
-    )
-    adapter = HTTPAdapter(max_retries=retry_strategy, pool_connections=15, pool_maxsize=30)
-    session.mount("https://", adapter)
-    session.mount("http://", adapter)
-    return session
+    def create_resilient_session(retries: int = 3, backoff_factor: float = 0.5) -> requests.Session:
+        session = requests.Session()
+        session.headers.update(DEFAULT_HEADERS)
+        session.verify = False
+        retry_strategy = Retry(
+            total=retries,
+            backoff_factor=backoff_factor,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["HEAD", "GET", "OPTIONS"]
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy, pool_connections=15, pool_maxsize=30)
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+        return session
 
 
 @dataclass
@@ -562,15 +565,81 @@ class VMobileScraper:
         return items
 
 
+class LastPriceMobileScraper:
+    STORE_NAME = "LastPrice"
+    CATALOG_URL = "https://www.lastprice.co.il/c/531/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%98%D7%9C%D7%A4%D7%95%D7%A0%D7%99%D7%9D-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D?filter1=20710526,20670485"
+
+    def __init__(self, session: Any):
+        self.session = session
+
+    def scrape(self) -> List[MobileItem]:
+        logger.info("Scraping LastPrice Mobile...")
+        items: List[MobileItem] = []
+        seen = set()
+
+        try:
+            r = self.session.get(self.CATALOG_URL, timeout=15)
+            if r.status_code != 200:
+                logger.warning(f"LastPrice returned HTTP {r.status_code}")
+                return items
+
+            blocks = re.findall(
+                r'<div[^>]*class=[\"\'][^\"\']*infinite-item[^\"\']*[\"\'][^>]*>(.*?)(?=<div[^>]*class=[\"\'][^\"\']*infinite-item|$)',
+                r.text,
+                re.DOTALL
+            )
+
+            for b in blocks:
+                title_m = re.findall(r'<h3[^>]*>(.*?)</h3>', b)
+                if not title_m:
+                    continue
+                raw_title = title_m[0].strip()
+                if not MobileClassifier.is_mobile_device(raw_title):
+                    continue
+
+                link_m = re.findall(r'href=[\"\'](https://www.lastprice.co.il/p/[^\"\']+)[\"\']', b)
+                if not link_m:
+                    continue
+                full_link = link_m[0].strip()
+                if full_link in seen:
+                    continue
+                seen.add(full_link)
+
+                price_m = re.findall(r'₪([0-9,]+)', b)
+                price = int(price_m[0].replace(',', '')) if price_m else 0
+                if price <= 0:
+                    continue
+
+                img_m = re.findall(r'<img[^>]*class=[\"\'][^\"\']*prodimg[^\"\']*[\"\'][^>]*src=[\"\']([^\"\']+)[\"\']', b)
+                img_url = ''
+                if img_m:
+                    src = img_m[0].strip()
+                    img_url = src if src.startswith('http') else f"https://www.lastprice.co.il{src}"
+
+                items.append(MobileClassifier.build_item(
+                    store=self.STORE_NAME,
+                    title=raw_title,
+                    price_ils=price,
+                    url=full_link,
+                    image_url=img_url,
+                    warranty_months=12
+                ))
+        except Exception as e:
+            logger.error(f"Error scraping LastPrice: {e}")
+
+        return items
+
+
 class MasterMobileAuditor:
-    def __init__(self, session: Optional[requests.Session] = None):
+    def __init__(self, session: Optional[Any] = None):
         self.session = session or create_resilient_session()
         self.scraper_classes = {
             'itoutlet': ITOutletMobileScraper,
             'gomobile': GoMobileScraper,
             'partner': PartnerPlusScraper,
             'dynamica': DynamicaScraper,
-            'vmobile': VMobileScraper
+            'vmobile': VMobileScraper,
+            'lastprice': LastPriceMobileScraper
         }
 
     def run(self, store_filter: Optional[str] = None, max_workers: int = 4) -> Dict[str, List[MobileItem]]:
@@ -601,7 +670,7 @@ class MasterMobileAuditor:
 
 def main():
     parser = argparse.ArgumentParser(description="Master Multi-Store Refurbished Mobile Device Scraper & Auditor")
-    parser.add_argument("--store", choices=['itoutlet', 'gomobile', 'partner', 'dynamica', 'vmobile', 'all'], default='all', help="Specific store to scrape")
+    parser.add_argument("--store", choices=['itoutlet', 'gomobile', 'partner', 'dynamica', 'vmobile', 'lastprice', 'all'], default='all', help="Specific store to scrape")
     parser.add_argument("--csv", action="store_true", help="Also export devices to CSV")
     parser.add_argument("--json", action="store_true", help="Dump JSON output to stdout")
     parser.add_argument("--no-md", action="store_true", help="Disable automatic full_mobile_catalog.md update")

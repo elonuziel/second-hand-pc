@@ -931,6 +931,31 @@ h1 {
   color: #d97706;
 }
 
+.store-lastprice {
+  background: rgba(234, 88, 12, 0.12);
+  color: #ea580c;
+}
+
+.store-gomobile {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+}
+
+.store-partner {
+  background: rgba(244, 63, 94, 0.12);
+  color: #e11d48;
+}
+
+.store-dynamica {
+  background: rgba(168, 85, 247, 0.12);
+  color: #9333ea;
+}
+
+.store-vmobile {
+  background: rgba(13, 148, 136, 0.12);
+  color: #0f766e;
+}
+
 .store-default {
   background: rgba(100, 116, 139, 0.12);
   color: var(--muted);
