@@ -139,7 +139,9 @@ def fetch_resilient_url(
         c.perform()
         code = c.getinfo(pycurl.RESPONSE_CODE)
         c.close()
-        return code, buf.getvalue().decode("utf-8", errors="ignore")
+        if code not in (403, 429, 202, 0):
+            return code, buf.getvalue().decode("utf-8", errors="ignore")
+        logger.info(f"pycurl got HTTP {code} for {url}, falling back...")
     except ImportError:
         pass
     except Exception as e:
@@ -156,15 +158,20 @@ def fetch_resilient_url(
             resp = session.post(url, data=post_data, headers=req_headers, timeout=timeout)
         else:
             resp = session.get(url, headers=req_headers, timeout=timeout)
-        return resp.status_code, resp.text
+        if resp.status_code not in (403, 429, 202):
+            return resp.status_code, resp.text
+        logger.info(f"curl_cffi got HTTP {resp.status_code} for {url}, falling back...")
     except ImportError:
         pass
     except Exception as e:
         logger.warning(f"curl_cffi fetch failed for {url}: {e}, falling back...")
 
-    # 3. Fallback to requests
+    # 3. Fallback to standard requests
     try:
-        session = create_resilient_session()
+        import requests
+        session = requests.Session()
+        session.headers['User-Agent'] = user_agent or DEFAULT_HEADERS['User-Agent']
+        session.verify = False
         req_headers = dict(headers or {})
         if user_agent:
             req_headers['User-Agent'] = user_agent
