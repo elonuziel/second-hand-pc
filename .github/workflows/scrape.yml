@@ -33,9 +33,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests urllib3
-          # curl_cffi provides modern Chrome TLS/JA3/JA4 fingerprint impersonation to bypass Cloudflare
-          pip install curl_cffi || echo "curl_cffi optional install fallback"
+          pip install -r requirements.txt || (pip install requests urllib3 && (pip install curl_cffi || true))
 
       - name: Scrape Refurbished Laptops Catalog
         env:
