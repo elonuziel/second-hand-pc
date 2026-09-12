@@ -88,6 +88,36 @@ pip install -r requirements.txt
 
 Create your `.env` file based on `.env.example`.
 
+### Optional: headless-browser fallback for JavaScript bot challenges
+
+Stores behind JavaScript bot challenges cannot be fetched by plain HTTP clients — verified
+against `curl_cffi` Chrome impersonation, datacenter proxies, and Crawlbase (Normal and
+JavaScript tokens). This affects Olam HaKolnoa (CWC) directly, and Machsanei Hashmal (Payngo)
+whenever its catalog is blocked instead of served. Installing Playwright lets those stores
+render the challenge in real Chromium instead of being skipped:
+
+```bash
+pip install playwright
+playwright install chromium          # add --with-deps on a fresh Linux box
+```
+
+The fallback is opt-in by installation: when Playwright (or its Chromium binary) is missing,
+scrapers keep using plain HTTP and log exactly why a store was skipped. It only launches a
+browser when a store is actually challenged or blocked, so healthy stores never pay for it —
+and if the browser still cannot clear the block, the store is reported as blocked and the
+pipeline preserves its previously scraped data.
+
+| Env var | Effect |
+| --- | --- |
+| `SCRAPER_DISABLE_BROWSER=1` | Never launch a browser, even when Playwright is installed |
+| `SCRAPER_BROWSER_HEADLESS=0` | Run the browser headed, for debugging |
+| `PLAYWRIGHT_BROWSERS_PATH` | Where Chromium lives (default `~/.cache/ms-playwright`) |
+
+**Known limitation:** the fallback clears the JavaScript challenge, but it cannot beat an
+IP-level WAF block. When CWC answers a *cleared* challenge with a Cloudflare `403 - Forbidden`
+on every path (as it does for flagged datacenter IPs), the store is reported as blocked rather
+than silently empty — no content is returned. That case needs a non-blocked IP.
+
 ---
 
 ## 🧪 Usage

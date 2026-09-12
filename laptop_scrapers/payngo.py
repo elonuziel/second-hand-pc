@@ -5,7 +5,8 @@ import logging
 import re
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, List, Optional
-from laptop_scrapers.base import fetch_resilient_url
+from http_session import is_bot_challenge
+from laptop_scrapers.base import fetch_rendered_url, fetch_resilient_url
 from laptop_domain import LaptopItem
 from laptop_classification import HardwareClassifier
 from laptop_parsing import is_laptop_title
@@ -42,8 +43,24 @@ class PayngoScraper:
         try:
             status, text = fetch_resilient_url(self.CATALOG_URL)
             if status != 200 or not text:
-                logger.warning(f"Payngo returned HTTP {status}")
-                return items
+                if is_bot_challenge(status, text):
+                    logger.warning(
+                        "Payngo catalog is behind a bot challenge (HTTP %s) — trying the optional browser fallback.",
+                        status,
+                    )
+                else:
+                    logger.warning("Payngo returned HTTP %s — trying the optional browser fallback.", status)
+
+                # Only the catalog is worth a browser: detail pages degrade to empty specs
+                # rather than launching one browser per product.
+                text = fetch_rendered_url(self.CATALOG_URL) or ""
+                if not text:
+                    logger.error(
+                        "Payngo: no usable catalog content (HTTP %s, browser fallback unavailable or blocked). "
+                        "Previously scraped data will be preserved by the pipeline.",
+                        status,
+                    )
+                    return items
 
             cards = re.findall(r'<form\s+method="post"[^>]*action="[^"]*product/(\d+)/"[^>]*>([\s\S]*?)</form>', text)
             for pid, card_body in cards:

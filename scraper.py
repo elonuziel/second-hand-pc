@@ -40,7 +40,7 @@ from laptop_reports import (
     ENV_FILE_PATH,
 )
 from laptop_pipeline import run_store_scrapers
-from http_session import create_resilient_session, fetch_resilient_url, DEFAULT_HEADERS
+from http_session import create_resilient_session, fetch_rendered_url, fetch_resilient_url, DEFAULT_HEADERS
 
 # --- Store Scrapers ---
 from laptop_scrapers import (

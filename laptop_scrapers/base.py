@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Tuple
+from typing import Optional, Tuple
 
 
 def fetch_resilient_url(url: str, **kwargs) -> Tuple[int, str]:
@@ -14,5 +14,17 @@ def fetch_resilient_url(url: str, **kwargs) -> Tuple[int, str]:
     except ImportError:
         pass
     from http_session import fetch_resilient_url as _fetch
+    return _fetch(url, **kwargs)
+
+
+def fetch_rendered_url(url: str, **kwargs) -> Optional[str]:
+    """Fetch a JS-rendered page, delegating through scraper.fetch_rendered_url for mocks."""
+    try:
+        import scraper
+        if hasattr(scraper, "fetch_rendered_url"):
+            return scraper.fetch_rendered_url(url, **kwargs)
+    except ImportError:
+        pass
+    from http_session import fetch_rendered_url as _fetch
     return _fetch(url, **kwargs)
 

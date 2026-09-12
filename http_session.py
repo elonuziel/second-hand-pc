@@ -11,7 +11,9 @@ Provides Cloudflare-resilient HTTP sessions for web scrapers:
 from __future__ import annotations
 
 import os
+import time
 import logging
+import urllib.parse
 from typing import Any, Dict, Optional
 
 logger = logging.getLogger("ResilientSession")
@@ -183,5 +185,166 @@ def fetch_resilient_url(
     except Exception as e:
         logger.error(f"Failed to fetch {url}: {e}")
         return 0, ""
+
+
+# Signatures of JavaScript bot-challenge interstitials that only a real browser clears.
+_CHALLENGE_MARKERS = (
+    "sgcaptcha",
+    "robot challenge",
+    "just a moment",
+    "attention required",
+    "checking your browser",
+    "cf-chl",
+)
+
+
+def is_bot_challenge(status: int, body: str) -> bool:
+    """True when a response is a bot-challenge/block page rather than real content.
+
+    Covers the SiteGround/Sucuri handshake (HTTP 202 plus a meta-refresh pointing at
+    /.well-known/sgcaptcha/) and Cloudflare interstitials (403 "Attention Required!" or
+    "Just a moment...").
+
+    Verified 2026-09-12 against a challenged IP: the Sucuri challenge URL sets no cookie,
+    so replaying it still returns 202; curl_cffi Chrome impersonation (chrome124/131/136)
+    returns 202 while an un-impersonated client gets a hard 403; per-IP proxies and
+    Crawlbase (Normal and JavaScript tokens) also fail.  Only JS execution clears these —
+    see fetch_rendered_url.
+    """
+    if status == 202:  # SiteGround/Sucuri challenge handshake
+        return True
+    text = (body or "")[:6000].lower()
+    return any(marker in text for marker in _CHALLENGE_MARKERS)
+
+
+def _looks_like_challenge(body: str) -> bool:
+    """True when a rendered body is still an unsolved bot-challenge interstitial."""
+    return is_bot_challenge(200, body)
+
+
+def _browser_proxy_config(proxy: str) -> Dict[str, str]:
+    """Converts a proxy URL (possibly with inline credentials) into Playwright's format."""
+    parsed = urllib.parse.urlsplit(proxy)
+    if not parsed.hostname:
+        return {"server": proxy}
+
+    server = f"{parsed.scheme or 'http'}://{parsed.hostname}"
+    if parsed.port:
+        server = f"{server}:{parsed.port}"
+
+    config = {"server": server}
+    if parsed.username:
+        config["username"] = urllib.parse.unquote(parsed.username)
+    if parsed.password:
+        config["password"] = urllib.parse.unquote(parsed.password)
+    return config
+
+
+def fetch_rendered_url(
+    url: str,
+    timeout: int = 45,
+    user_agent: Optional[str] = None,
+    wait_until: str = "domcontentloaded",
+) -> Optional[str]:
+    """
+    Fetches a URL through headless Chromium (Playwright) so JavaScript bot-challenges can
+    execute and clear themselves, then returns the settled page body.
+
+    Playwright is an OPTIONAL dependency: when it (or its Chromium binary) is unavailable
+    this returns None instead of raising, leaving plain HTTP fetching as the fallback.
+    Enable with `pip install playwright && playwright install chromium`; force off with
+    SCRAPER_DISABLE_BROWSER=1, or run headed for debugging with SCRAPER_BROWSER_HEADLESS=0.
+
+    Returns page HTML, or the plain-text body for JSON endpoints (Chromium wraps JSON in
+    a <pre>, so the inner text is the useful payload there).
+    """
+    if os.environ.get("SCRAPER_DISABLE_BROWSER"):
+        logger.info(f"Browser fallback disabled via SCRAPER_DISABLE_BROWSER for {url}")
+        return None
+
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        logger.info(
+            f"Playwright not installed — browser fallback unavailable for {url} "
+            "(pip install playwright && playwright install chromium)"
+        )
+        return None
+
+    headless = os.environ.get("SCRAPER_BROWSER_HEADLESS", "1") not in ("0", "false", "no")
+    proxy = get_proxy_config()
+    timeout = max(timeout, 5)
+    deadline = time.time() + timeout
+
+    launch_kwargs: Dict[str, Any] = {"headless": headless}
+    if proxy:
+        launch_kwargs["proxy"] = _browser_proxy_config(proxy)
+
+    # WAFs often answer a cleared challenge with a 403 page; track the last document status
+    # so an error page is never handed back as if it were real content.
+    document_status: Dict[str, Optional[int]] = {"code": None}
+
+    def _record_document_status(response: Any) -> None:
+        try:
+            if response.request.resource_type == "document":
+                document_status["code"] = response.status
+        except Exception:
+            pass
+
+    try:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(**launch_kwargs)
+            try:
+                context = browser.new_context(
+                    user_agent=user_agent or DEFAULT_HEADERS['User-Agent'],
+                    locale="he-IL",
+                    extra_http_headers={
+                        key: value for key, value in DEFAULT_HEADERS.items() if key != 'User-Agent'
+                    },
+                )
+                page = context.new_page()
+                page.on("response", _record_document_status)
+                page.goto(url, timeout=timeout * 1000, wait_until=wait_until)
+
+                # A solved challenge reloads the original URL, so poll until the body settles.
+                # content() raises while a navigation is in flight (the challenge reload does
+                # exactly that), so treat those reads as "not settled yet" and retry.
+                body = ""
+                while time.time() < deadline:
+                    try:
+                        body = page.content()
+                    except Exception:
+                        body = ""
+                    if body and not _looks_like_challenge(body):
+                        break
+                    page.wait_for_timeout(1000)
+
+                if not body or _looks_like_challenge(body):
+                    logger.warning(f"Browser fallback still challenge-blocked for {url}")
+                    return None
+
+                status_code = document_status["code"]
+                if status_code is not None and status_code >= 400:
+                    logger.warning(
+                        f"Browser fallback cleared the challenge but the site answered HTTP {status_code} "
+                        f"for {url} — this IP is likely WAF-blocked, so no content is usable."
+                    )
+                    return None
+
+                try:
+                    text = (page.evaluate("document.body ? document.body.innerText : ''") or "").strip()
+                except Exception:
+                    text = ""
+                if text[:1] in ("[", "{"):
+                    logger.info(f"Browser fallback rendered JSON endpoint {url} ({len(text)} bytes)")
+                    return text
+
+                logger.info(f"Browser fallback rendered {url} ({len(body)} bytes)")
+                return body
+            finally:
+                browser.close()
+    except Exception as e:
+        logger.warning(f"Browser fallback failed for {url}: {e}")
+        return None
 
 

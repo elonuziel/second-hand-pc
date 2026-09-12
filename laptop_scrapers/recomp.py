@@ -86,6 +86,26 @@ class RecompScraper:
             return html.unescape(re.sub(r'<[^>]+>', ' ', ' '.join(parts))).strip()
         return ""
 
+    def _extract_product_links(self, catalog_html: str) -> List[tuple]:
+        """Extract (url, anchor_text) pairs for product pages from catalog HTML.
+
+        Href values may be padded with whitespace, hence the explicit \\s* after the
+        quote — requiring a literal space there matches nothing at all.
+        """
+        links = re.findall(
+            r'<a[^>]+href=[\"\']\s*(https?://recomp\.co\.il/product/[^\"\']+)[\"\'][^>]*>(.*?)</a>',
+            catalog_html, re.DOTALL | re.IGNORECASE
+        )
+        if not links:
+            # Fallback: simpler href-only extraction, then we fetch each page for the title
+            raw_hrefs = re.findall(
+                r'href=[\"\']\s*(https?://recomp\.co\.il/product/[^\"\']+)[\"\']',
+                catalog_html, re.IGNORECASE
+            )
+            links = [(h, "") for h in raw_hrefs]
+        # Strip whitespace captured by \s* / present in the attribute
+        return [(url.strip(), text) for url, text in links]
+
     def _fetch_catalog(self) -> Optional[str]:
         """Try each catalog URL in order; return HTML text of first successful one."""
         for url in CATALOG_URLS:
@@ -112,19 +132,7 @@ class RecompScraper:
                 return items
 
             # Extract all recomp.co.il/product/ links with their anchor text
-            links = re.findall(
-                r'<a[^>]+href=["\']( https?://recomp\.co\.il/product/[^"\']+)["\'][^>]*>(.*?)</a>',
-                catalog_html, re.DOTALL | re.IGNORECASE
-            )
-            if not links:
-                # Fallback: simpler href-only extraction, then we fetch each page for the title
-                raw_hrefs = re.findall(
-                    r'href=["\']( https?://recomp\.co\.il/product/[^"\']+)["\']',
-                    catalog_html, re.IGNORECASE
-                )
-                links = [(h, "") for h in raw_hrefs]
-            # Strip accidental leading spaces from URLs
-            links = [(url.strip(), text) for url, text in links]
+            links = self._extract_product_links(catalog_html)
 
             seen = set()
             valid_links = []

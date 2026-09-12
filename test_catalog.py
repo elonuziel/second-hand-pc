@@ -12,6 +12,7 @@ import json
 import logging
 import os
 import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -19,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 from enrich_specs import SpecEnricher
 from laptop_parsing import is_desktop_title, is_laptop_title, last_valid_price
+from http_session import is_bot_challenge
 from scraper import (
     HardwareClassifier,
     CWCScraper,
@@ -511,6 +513,102 @@ class TestNewLaptopScrapers(unittest.TestCase):
         self.assertEqual(items[0].weight_kg, 1.35)
         self.assertEqual(items[0].weight_source, "listing_explicit")
 
+    def test_recomp_catalog_link_extraction_handles_whitespace_in_href(self):
+        """Regression: the href pattern demanded a literal space, so it matched 0 links (#b46ef3a)."""
+        mock_html = '''
+        <a href="https://recomp.co.il/product/dell-latitude-5420/" class="woocommerce-LoopProduct-link">
+            מחשב נייד מחודש Dell Latitude 5420 i7 16GB
+        </a>
+        <a href=" https://recomp.co.il/product/lenovo-t490s/">Lenovo ThinkPad T490s</a>
+        '''
+        urls = [u for u, _ in RecompScraper(None)._extract_product_links(mock_html)]
+        self.assertEqual(urls, [
+            "https://recomp.co.il/product/dell-latitude-5420/",
+            "https://recomp.co.il/product/lenovo-t490s/",
+        ])
+
+        # Fallback path (href without an enclosing anchor) must match too
+        bare = '<link rel="canonical" href="https://recomp.co.il/product/hp-zbook-firefly-15-g7/" />'
+        self.assertEqual(
+            [u for u, _ in RecompScraper(None)._extract_product_links(bare)],
+            ["https://recomp.co.il/product/hp-zbook-firefly-15-g7/"],
+        )
+
+    def test_bot_challenge_detection(self):
+        """SiteGround/Sucuri and Cloudflare interstitials are detected by status or body."""
+        self.assertTrue(is_bot_challenge(202, ""))
+        self.assertTrue(is_bot_challenge(200, '<meta http-equiv="refresh" content="0;/.well-known/sgcaptcha/?r=%2F">'))
+        self.assertTrue(is_bot_challenge(200, "<title>Robot Challenge Screen</title>"))
+        self.assertTrue(is_bot_challenge(403, "<title>Attention Required! | Cloudflare</title>"))
+        self.assertTrue(is_bot_challenge(403, "<title>Just a moment...</title>"))
+        self.assertFalse(is_bot_challenge(200, '[{"name": "Dell Latitude 5420"}]'))
+        self.assertFalse(is_bot_challenge(404, "Not Found"))
+
+    @patch("laptop_scrapers.cwc.fetch_rendered_url", return_value=None)
+    @patch("scraper.fetch_resilient_url")
+    def test_cwc_reports_sucuri_challenge_instead_of_silent_zero(self, mock_fetch, mock_browser):
+        """A robot challenge must surface as an ERROR, not a silent 0-item store."""
+        challenge = (
+            '<html><head><link rel="icon" href="data:;">'
+            '<meta http-equiv="refresh" content="0;/.well-known/sgcaptcha/?r=%2Fwp-json%2F'
+            '&y=ipc:89.138.90.232:1789242752.581"></head></html>'
+        )
+        mock_fetch.return_value = (202, challenge)
+        with self.assertLogs("CWCScraper", level="ERROR") as captured:
+            items = CWCScraper().scrape()
+        self.assertEqual(items, [])
+        self.assertEqual(mock_fetch.call_count, 3)  # REST API + 2 category pages
+        self.assertTrue(any("robot challenge" in msg.lower() for msg in captured.output))
+
+    @patch("laptop_scrapers.cwc.fetch_rendered_url")
+    @patch("scraper.fetch_resilient_url")
+    def test_cwc_browser_fallback_rescues_challenged_store(self, mock_fetch, mock_browser):
+        """When the challenge is detected, the optional browser fallback supplies the API payload."""
+        mock_fetch.return_value = (202, '<meta http-equiv="refresh" content="0;/.well-known/sgcaptcha/?r=%2F">')
+        mock_browser.return_value = json.dumps([{
+            "name": "מחשב נייד מחודש Dell Latitude 5420 i7 16GB 512GB",
+            "prices": {"price": "219000", "currency_minor_unit": 2},
+            "permalink": "https://www.cwc.co.il/product/dell-5420",
+            "images": [{"src": "https://www.cwc.co.il/img/dell5420.jpg"}],
+            "description": "מעבד i7-1185G7 סוללה 63Wh",
+            "short_description": "מחשב מעולה",
+        }])
+
+        items = CWCScraper().scrape()
+
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].price_ils, 2190)
+        self.assertEqual(items[0].brand, "Dell")
+        mock_browser.assert_called_once_with(CWCScraper.API_URL, user_agent=CWCScraper.MOBILE_UA)
+        self.assertEqual(mock_fetch.call_count, 1)  # browser rescued it before the HTML fallback
+
+    @patch("laptop_scrapers.cwc.fetch_rendered_url")
+    @patch("scraper.fetch_resilient_url")
+    def test_cwc_browser_fallback_unused_when_api_is_healthy(self, mock_fetch, mock_browser):
+        """The browser must stay idle when plain HTTP already succeeds."""
+        mock_fetch.return_value = (200, json.dumps([{
+            "name": "מחשב נייד מחודש Dell Latitude 5420 i7 16GB 512GB",
+            "prices": {"price": "219000", "currency_minor_unit": 2},
+            "permalink": "https://www.cwc.co.il/product/dell-5420",
+            "images": [],
+            "description": "מעבד i7-1185G7",
+            "short_description": "",
+        }]))
+
+        items = CWCScraper().scrape()
+
+        self.assertEqual(len(items), 1)
+        mock_browser.assert_not_called()
+        self.assertEqual(mock_fetch.call_count, 1)
+
+    def test_browser_fallback_is_optional_and_degrades_gracefully(self):
+        """fetch_rendered_url returns None (never raises) when Playwright is unavailable/disabled."""
+        import http_session
+        with patch.dict(sys.modules, {"playwright": None, "playwright.sync_api": None}):
+            self.assertIsNone(http_session.fetch_rendered_url("https://example.com"))
+        with patch.dict(os.environ, {"SCRAPER_DISABLE_BROWSER": "1"}):
+            self.assertIsNone(http_session.fetch_rendered_url("https://example.com"))
+
     @patch("scraper.fetch_resilient_url")
     def test_payngo_scraper_parsing(self, mock_fetch):
         mock_html = '''
@@ -537,6 +635,47 @@ class TestNewLaptopScrapers(unittest.TestCase):
         self.assertEqual(items[0].brand, "Lenovo")
         self.assertEqual(items[0].price_ils, 1990)
         self.assertEqual(items[0].warranty_months, 24)
+
+    @patch("laptop_scrapers.payngo.fetch_rendered_url")
+    @patch("scraper.fetch_resilient_url")
+    def test_payngo_browser_fallback_rescues_cloudflare_block(self, mock_fetch, mock_browser):
+        """A Cloudflare 403 must trigger the browser fallback instead of yielding 0 items."""
+        mock_fetch.return_value = (
+            403, '<html><head><title>Attention Required! | Cloudflare</title></head></html>'
+        )
+        mock_browser.return_value = '''
+        <form method="post" action="https://www.payngo.co.il/checkout/cart/add/product/12345/">
+            <a class="product-item-link" href="https://www.payngo.co.il/lenovo-thinkpad-t14.html">
+                מחשב נייד מחודש Lenovo ThinkPad T14 Gen 2 i5 16GB 512GB
+            </a>
+            <span class="price-wrapper" data-price-amount="1990">1,990 ₪</span>
+            <img class="product-image-photo" src="https://www.payngo.co.il/media/t14.jpg" />
+        </form>
+        '''
+
+        items = PayngoScraper().scrape()
+
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].price_ils, 1990)
+        mock_browser.assert_called_once_with(PayngoScraper.CATALOG_URL)
+
+    @patch("laptop_scrapers.payngo.fetch_rendered_url")
+    @patch("scraper.fetch_resilient_url")
+    def test_payngo_browser_fallback_unused_when_catalog_is_healthy(self, mock_fetch, mock_browser):
+        """A normal 200 response must never launch a browser."""
+        mock_fetch.return_value = (200, '''
+        <form method="post" action="https://www.payngo.co.il/checkout/cart/add/product/12345/">
+            <a class="product-item-link" href="https://www.payngo.co.il/lenovo-thinkpad-t14.html">
+                מחשב נייד מחודש Lenovo ThinkPad T14 Gen 2 i5 16GB 512GB
+            </a>
+            <span class="price-wrapper" data-price-amount="1990">1,990 ₪</span>
+        </form>
+        ''')
+
+        items = PayngoScraper().scrape()
+
+        self.assertEqual(len(items), 1)
+        mock_browser.assert_not_called()
 
     @patch("scraper.fetch_resilient_url")
     def test_alm_scraper_parsing(self, mock_fetch):
