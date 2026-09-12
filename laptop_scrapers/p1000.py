@@ -27,8 +27,9 @@ class P1000Scraper:
                 logger.warning(f"P1000 returned HTTP {status}")
                 return items
 
-            cards = re.findall(r'<li[^>]*data-sku=[\"\'](\d+)[\"\'][^>]*data-title=[\"\']([^\"\']+)[\"\'][^>]*>([\s\S]*?)</li>', text)
-            for sku, raw_title, card_body in cards:
+            cards = re.findall(r'<li[^>]*data-sku=[\"\'](\d+)[\"\'][^>]*data-title=(?:\"([^\"]+)\"|\'([^\']+)\')[^>]*>([\s\S]*?)</li>', text)
+            for sku, raw_title_dq, raw_title_sq, card_body in cards:
+                raw_title = raw_title_dq or raw_title_sq or ""
                 title = html.unescape(raw_title).strip()
                 t_low = title.lower()
                 if any(k in t_low for k in ["נייח", "mini", "tiny", "desktop"]):
@@ -45,11 +46,15 @@ class P1000Scraper:
                 if price <= 0:
                     continue
 
-                img_m = re.search(r'<img\s+src=[\"\']([^\"\']+)[\"\']', card_body)
+                img_matches = re.findall(r'<img\s+[^>]*src=[\"\']([^\"\']+)[\"\']', card_body)
                 img = ""
-                if img_m:
-                    img_src = img_m.group(1)
-                    img = f"https://www.p1000.co.il{img_src}" if img_src.startswith('/') else img_src
+                for src in img_matches:
+                    src_low = src.lower()
+                    if "brand" not in src_low and "logo" not in src_low and "icon" not in src_low:
+                        img = f"https://www.p1000.co.il{src}" if src.startswith('/') else src
+                        break
+                if not img and img_matches:
+                    img = f"https://www.p1000.co.il{img_matches[0]}" if img_matches[0].startswith('/') else img_matches[0]
 
                 spans = re.findall(r'<span>([^<]+)</span>', card_body)
                 specs_summary = ' '.join(spans)

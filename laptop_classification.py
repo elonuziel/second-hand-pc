@@ -19,16 +19,18 @@ class HardwareClassifier:
     _HTML_TAG_RE = re.compile(r'<[^>]+>')
     _CLEAN_PHRASE_RE = re.compile(r'מחשב\s*נייד\s*(?:מחודש)?\s*(?:לעריכה\s*גרפית)?')
 
-    _GEN13_RE = re.compile(r'(?:13th|דור\s*13|(?<![a-z0-9])13\s*gen(?!\s*[0-9])|13[0-9]{2}[up]|13[0-9]{2}h)', re.IGNORECASE)
-    _GEN12_RE = re.compile(r'(?:12th|דור\s*12|(?<![a-z0-9])12\s*gen(?!\s*[0-9])|gen\s*4|5330|5430|5530|7330|7430|5431|5531|l13\s*gen\s*3|t14\s*gen\s*3|x1404za|e1504|12[0-9]{2}[up]|12[0-9]{2}h|1270p|1260p|1250u|1280p|1240p|1235u)', re.IGNORECASE)
-    _GEN11_RE = re.compile(r'(?:11th|דור\s*11|(?<![a-z0-9])11\s*gen(?!\s*[0-9])|\bg8\b|gen\s*2|3520|3420|7420|7320|5420|5320|5520|surface\s*4|x1\s*carbon\s*gen\s*9|x1\s*yoga\s*gen\s*6|a517.*52g|x515ea|x30l\s*j|11[0-9]{2}g[47]|11[0-9]{2}[up]|11[0-9]{2}h|1185g7|1165g7|1135g7|1145g7)', re.IGNORECASE)
-    _GEN10_RE = re.compile(r'(?:10th|דור\s*10|10\s*gen|\bg7\b|gen\s*1|\bg1\b|7410|5410|5510|surface\s*3|x1\s*carbon\s*gen\s*8|p1\s*gen\s*3|vostro\s*3591|3591|a2179|a2251|10[0-9]{2}[up]|10[0-9]{2}h|10510u|10610u|10875h|10210u|10310u)', re.IGNORECASE)
-    _GEN9_RE = re.compile(r'(?:9th|דור\s*9|9\s*gen|\bg6\b|9750h|9850h)', re.IGNORECASE)
-    _GEN8_RE = re.compile(r'(?:8th|דור\s*8|8\s*gen|e480|l390|7400|5490|5400|x280|t480|t490|p52|5379|330\s*15ikb|a1989|x1\s*carbon.*touch|8[0-9]{3}[uh]|8250u|8350u|8650u|8550u)', re.IGNORECASE)
-    _GEN7_RE = re.compile(r'(?:7th|דור\s*7|7\s*gen|t470|5480|x442ur|a1707|a1706|a1708|7[0-9]{3}[uh]|7200u|7300u|7500u)', re.IGNORECASE)
-    _GEN6_RE = re.compile(r'(?:6th|דור\s*6|6\s*gen|t460|650\s*g2|840\s*g3|ay010|6[0-9]{3}[uh]|6200u|6300u)', re.IGNORECASE)
-    _GEN5_RE = re.compile(r'(?:5th|דור\s*5|5\s*gen|a1466|5[0-9]{3}[uh])', re.IGNORECASE)
-    _GEN4_RE = re.compile(r'(?:4th|דור\s*4|4\s*gen|g-4|e7440|4[0-9]{3}[uh]|4200u|4300u)', re.IGNORECASE)
+    _GEN13_RE = re.compile(r'(?:13th|דור\s*13|(?<![a-z0-9])13\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?13\b|\bgen\s*13(?!\d)|13[0-9]{2}[up]|13[0-9]{3}h|13[0-9]{2}h)', re.IGNORECASE)
+    _GEN12_RE = re.compile(r'(?:12th|דור\s*12|(?<![a-z0-9])12\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?12\b|\bgen\s*12(?!\d)|(?:t14|t14s|x13|l13|l14|l15|p14s|p15s|e14|e15)\s*gen\s*4|\bg9\b|5330|5430|5530|7330|7430|5431|5531|l13\s*gen\s*3|t14\s*gen\s*3|x1404za|e1504|12[0-9]{2}[up]|12[0-9]{3}h|12[0-9]{2}h|1270p|1260p|1250u|1280p|1240p|1235u)', re.IGNORECASE)
+    _GEN11_RE = re.compile(r'(?:11th|דור\s*11|(?<![a-z0-9])11\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?11\b|\bg8\b|(?:t14|t14s|x13|l13|l14|l15|p14s|p15s|e14|e15)\s*gen\s*2|3520|3420|7420|7320|5420|5320|5520|surface\s*4|x1\s*carbon\s*gen\s*9|x1\s*yoga\s*gen\s*6|a517.*52g|x515ea|x30l\s*j|11[0-9]{2}g[47]|11[0-9]{2}[up]|11[0-9]{3}h|11[0-9]{2}h|1185g7|1165g7|1135g7|1145g7|11500h|11800h)', re.IGNORECASE)
+    _GEN10_RE = re.compile(r'(?:10th|דור\s*10|(?<![a-z0-9])10\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?10\b|\bgen\s*10(?!\d)|\bg7\b|(?:t14|t14s|x13|l13|l14|l15|p14s|p15s|e14|e15)\s*(?:gen\s*1|\bg1\b)|7410|5410|5510|surface\s*3|x1\s*carbon\s*gen\s*8|p1\s*gen\s*3|vostro\s*3591|3591|a2179|a2251|10[0-9]{2}[up]|10[0-9]{3}h|10[0-9]{2}h|10510u|10610u|10875h|10850h|10210u|10310u)', re.IGNORECASE)
+    _GEN9_RE = re.compile(r'(?:9th|דור\s*9|(?<![a-z0-9])9\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?9\b|\bgen\s*9(?!\d)|\bg6\b|a2141|9750h|9850h|9[0-9]{3}[uh])', re.IGNORECASE)
+    _GEN8_RE = re.compile(r'(?:8th|דור\s*8|(?<![a-z0-9])8\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?8\b|\bgen\s*8(?!\d)|e480|l390|l480|7400|5490|5400|5500|x280|t480|t490|p52|5379|330\s*15ikb|a1989|a1990|x380|x1\s*carbon.*touch|8[0-9]{3}[uh]|8250u|8350u|8650u|8550u|8750h|8850h)', re.IGNORECASE)
+    _GEN7_RE = re.compile(r'(?:7th|דור\s*7|(?<![a-z0-9])7\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?7\b|\bgen\s*7(?!\d)|t470|l470|5480|x442ur|a1707|a1706|a1708|7[0-9]{3}[uh]|7200u|7300u|7500u)', re.IGNORECASE)
+    _GEN6_RE = re.compile(r'(?:6th|דור\s*6|(?<![a-z0-9])6\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?6\b|\bgen\s*6(?!\d)|t460|650\s*g2|840\s*g3|e5470|e7470|ay010|6[0-9]{3}[uh]|6200u|6300u)', re.IGNORECASE)
+    _GEN5_RE = re.compile(r'(?:5th|דור\s*5|(?<![a-z0-9])5\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?5\b|\bgen\s*5(?!\d)|t450|x250|a1466|5[0-9]{3}[uh]|5200u|5300u)', re.IGNORECASE)
+    _GEN4_RE = re.compile(r'(?:4th|דור\s*4|(?<![a-z0-9])4\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?4\b|\bgen\s*4(?!\d)|g-4|e7440|t440|x240|4[0-9]{3}[uh]|4200u|4300u)', re.IGNORECASE)
+    _GEN3_RE = re.compile(r'(?:3rd|דור\s*3|(?<![a-z0-9])3\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?3\b|\bgen\s*3(?!\d)|t430|x230|e6530|e6230|9470m|3[0-9]{3}[uhm]|3687u|3210m|3320m|3340m)', re.IGNORECASE)
+    _GEN2_RE = re.compile(r'(?:2nd|דור\s*2|(?<![a-z0-9])2\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?2\b|\bgen\s*2(?!\d)|t420|x220|e6420|n5110|2[0-9]{3}[uhm]|2410m|2520m|2540m)', re.IGNORECASE)
 
     _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
     _EXPLICIT_RAM_RE = re.compile(
@@ -39,7 +41,9 @@ class HardwareClassifier:
     )
     _GPU_VRAM_RE = re.compile(r'(?:gtx|rtx|quadro|geforce|radeon|iris|t500|t600|t1000|t1200|t2000)\s*(?:[0-9]{3,4})?\s*(?:\d+\s*(?:gb|g))?|(?:\d+\s*(?:gb|g|גיגה)?\s*(?:graphics|vram|כרטיס מסך|כרטיס גרפי|גרפיקה))', re.IGNORECASE)
     _STORAGE_GB_RE = re.compile(
-        r'(?:^|[^\w])(128|240|250|256|480|500|512)\s*(?:gb|g|גיגה)?(?:\s*(?:ssd|nvme|m\.?2|אחסון|דיסק))?(?=[^\w]|m\.?2|ssd|nvme|$)',
+        r'(?:(?:ssd|nvme|אחסון|דיסק|storage|hdd|emmc)\s*(?:של\s*)?(32|64|120|128|160|180|240|250|256|320|480|500|512|1000|1024|2000|2048)\s*(?:gb|g|גיגה)?'
+        r'|(?:^|[^\w])(32|64|120|128|160|180|240|250|256|320|480|500|512|1000|1024|2000|2048)\s*(?:gb|g|גיגה)?\s*(?:ssd|nvme|אחסון|דיסק|storage|hdd|emmc)'
+        r'|(?:^|[^\w])(64|120|128|160|180|240|250|256|320|480|500|512)\s*(?:gb|g|גיגה)(?!\s*(?:ram|זכרון|זיכרון|memory)))',
         re.IGNORECASE
     )
     _RAM_GEN_EXPLICIT_RE = re.compile(r'\b(lpddr5x|lpddr5|ddr5|lpddr4x|lpddr4|ddr4|ddr3l|ddr3)\b', re.IGNORECASE)
@@ -94,7 +98,7 @@ class HardwareClassifier:
             return "Apple"
         if 'acer' in t:
             return "Acer"
-        if 'asus' in t or 'vivobook' in t:
+        if 'asus' in t or 'vivobook' in t or 'zenbook' in t:
             return "Asus"
         if 'toshiba' in t or 'protege' in t:
             return "Toshiba"
@@ -134,12 +138,6 @@ class HardwareClassifier:
             if re.search(r'\bm3\b', t): return "Apple M3"
             if re.search(r'\bm2\b', t) and not re.search(r'\bm\.?2\s*(?:ssd|nvme|pcie|דיסק)', t): return "Apple M2"
             if re.search(r'\bm1\b', t): return "Apple M1"
-        if 'ryzen 7' in t: return "AMD Ryzen 7 PRO"
-        if 'ryzen 5' in t: return "AMD Ryzen 5 PRO"
-        if 'amd' in t: return "AMD Ryzen"
-        if 'celeron' in t: return "Intel Celeron"
-        if 'pentium' in t: return "Intel Pentium"
-        if 'xeon' in t: return "Intel Xeon"
 
         # Modern Intel Core Ultra (Meteor Lake)
         ultra_m = re.search(r'\b(?:core\s*ultra|ultra)\s*([3579])\b', t)
@@ -147,6 +145,25 @@ class HardwareClassifier:
             return f"Intel Core Ultra {ultra_m.group(1)}"
         if 'core ultra' in t or 'meteor lake' in t:
             return "Intel Core Ultra"
+
+        # AMD Processors
+        if 'ryzen 7' in t: return "AMD Ryzen 7 PRO"
+        if 'ryzen 5' in t: return "AMD Ryzen 5 PRO"
+        if 'ryzen 3' in t: return "AMD Ryzen 3 PRO"
+        if 'ryzen' in t: return "AMD Ryzen"
+        if re.search(r'\b(?:athlon|3020e|4020e)\b', t): return "AMD Athlon"
+        if re.search(r'\b(?:a[468]|a10)\b', t) or re.search(r'amd.*(?:a4|a6|a8|a10)', t): return "AMD A-Series"
+        if 'amd' in t: return "AMD Ryzen"
+
+        # Legacy Intel Architectures & Low-Power CPUs
+        if re.search(r'\b(?:atom|n270|n450|z[0-9]{3}|10v|nb100)\b', t) or 'נטבוק' in t or (('מיני' in t or 'mini' in t) and any(k in t for k in ['atom', '10v', 'nb100'])):
+            return "Intel Atom"
+        if re.search(r'\b(?:c2d|core\s*2\s*duo|su[0-9]{4}|l[0-9]{4}|t[0-9]{4}|p[0-9]{4}|x60|x61|x61s|x301)\b', t):
+            return "Intel Core 2 Duo"
+        if re.search(r'\b(?:pentium|centrino|t43|r40)\b', t):
+            return "Intel Pentium"
+        if 'celeron' in t: return "Intel Celeron"
+        if 'xeon' in t: return "Intel Xeon"
 
         gen13 = cls._GEN13_RE.search(t)
         gen12 = cls._GEN12_RE.search(t)
@@ -158,8 +175,14 @@ class HardwareClassifier:
         gen6 = cls._GEN6_RE.search(t)
         gen5 = cls._GEN5_RE.search(t)
         gen4 = cls._GEN4_RE.search(t)
+        gen3 = cls._GEN3_RE.search(t)
+        gen2 = cls._GEN2_RE.search(t)
 
-        i_level = "i7" if "i7" in t else ("i5" if "i5" in t else ("i9" if "i9" in t else ("i3" if "i3" in t else "i5")))
+        has_i_explicit = re.search(r'\b(i[3579])\b', t)
+        if has_i_explicit:
+            i_level = has_i_explicit.group(1).lower()
+        else:
+            i_level = "i7" if "i7" in t else ("i5" if "i5" in t else ("i9" if "i9" in t else ("i3" if "i3" in t else "i5")))
 
         if gen13: return f"Core {i_level} (13th Gen)"
         if gen12: return f"Core {i_level} (12th Gen)"
@@ -171,7 +194,12 @@ class HardwareClassifier:
         if gen6:  return f"Core {i_level} (6th Gen)"
         if gen5:  return f"Core {i_level} (5th Gen)"
         if gen4:  return f"Core {i_level} (4th Gen)"
-        return f"Core {i_level}"
+        if gen3:  return f"Core {i_level} (3rd Gen)"
+        if gen2:  return f"Core {i_level} (2nd Gen)"
+
+        if any(k in t for k in ["core", "i3", "i5", "i7", "i9", "intel"]):
+            return f"Core {i_level}"
+        return "Intel Core"
 
     @classmethod
     def detect_ram_gb(cls, title: str) -> int:
@@ -197,7 +225,9 @@ class HardwareClassifier:
         if '1tb' in t or '1 טרה' in t or '1000g' in t or '1000gb' in t: return 1000
         m = cls._STORAGE_GB_RE.search(t)
         if m:
-            return int(m.group(1))
+            val = m.group(1) or m.group(2) or m.group(3)
+            if val:
+                return int(val)
         return 512
 
     @classmethod
@@ -503,8 +533,13 @@ class HardwareClassifier:
         """Factory that constructs a fully normalized LaptopItem with hardware analysis and provenance tags."""
         text = analysis_text or title
 
-        brand = cls.detect_brand(text)
-        series = cls.detect_series(text)
+        brand = cls.detect_brand(title)
+        if brand == "Business Laptop" and analysis_text:
+            brand = cls.detect_brand(analysis_text)
+
+        series = cls.detect_series(title)
+        if series == "Business Series" and analysis_text:
+            series = cls.detect_series(analysis_text)
         resolved_model = model or (title.split('/')[0].strip() if '/' in title else title)
         cpu = cls.detect_cpu(text)
         ram_gb = cls.detect_ram_gb(text)

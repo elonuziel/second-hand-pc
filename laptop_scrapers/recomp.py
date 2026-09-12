@@ -29,6 +29,15 @@ class RecompScraper:
         values = [value for pair in nums for value in pair if value]
         return last_valid_price((value for value in values if value.replace(',', '') != '8362'), minimum=501)
 
+    def _parse_recomp_image(self, html: str) -> str:
+        og_m = re.search(r'<meta\s+property=[\"\']og:image[\"\']\s+content=[\"\']([^\"\']+)[\"\']', html, re.I)
+        if og_m:
+            return og_m.group(1).strip()
+        img_m = re.search(r'<img[^>]*src=[\"\']([^\"\']+(?:uploads|product)[^\"\']+)[\"\']', html, re.I)
+        if img_m:
+            return img_m.group(1).strip()
+        return ""
+
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping Recomp Computers...")
         items: List[LaptopItem] = []
@@ -57,14 +66,15 @@ class RecompScraper:
                     try:
                         res = self.session.get(link, timeout=8)
                         p = self._parse_recomp_price(res.text)
-                        return link, title, p
+                        img = self._parse_recomp_image(res.text)
+                        return link, title, p, img
                     except Exception:
-                        return link, title, None
+                        return link, title, None, ""
 
                 with ThreadPoolExecutor(max_workers=6) as executor:
                     fetched_results = list(executor.map(fetch_recomp_item, valid_links))
 
-                for link, title, price in fetched_results:
+                for link, title, price, img in fetched_results:
                     if price is None:
                         logger.warning("Skipping Recomp listing without a valid price: %s", link)
                         continue
@@ -75,6 +85,7 @@ class RecompScraper:
                         url=link,
                         warranty_months=12,
                         stock_status="🟢 In Stock",
+                        image_url=img,
                     ))
         except Exception as e:
             logger.error(f"Error scraping Recomp: {e}")

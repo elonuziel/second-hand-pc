@@ -90,7 +90,7 @@ class TestCatalogDataHealth(unittest.TestCase):
             self.assertIn(ram, [4, 8, 12, 16, 24, 32, 48, 64], f"Unexpected RAM value {ram}GB for {title}")
 
             storage = item.get("storage_gb", 0)
-            self.assertGreaterEqual(storage, 120, f"Unexpected storage {storage}GB for {title}")
+            self.assertGreaterEqual(storage, 64, f"Unexpected storage {storage}GB for {title}")
 
     def test_no_broken_local_paths_in_catalog_files(self):
         """Verify markdown catalog contains no absolute local machine paths (/home/...)."""
@@ -126,7 +126,7 @@ class TestHardwareParsers(unittest.TestCase):
     """Verifies that CPU generation, RAM, Storage, and form factors are accurately parsed."""
 
     def test_cpu_generation_detection(self):
-        """Accurately identify Intel generations (8th to 13th), Apple Silicon, AMD, Core Ultra, and Xeon."""
+        """Accurately identify Intel generations (2nd to 13th), Apple Silicon, AMD, Core Ultra, and Xeon."""
         test_cases = [
             ("Lenovo ThinkPad T14 Gen 2 i5 1135G7", "Core i5 (11th Gen)"),
             ("Dell Latitude 5430 i7 1250U 12th Gen", "Core i7 (12th Gen)"),
@@ -139,6 +139,28 @@ class TestHardwareParsers(unittest.TestCase):
             ("Lenovo ThinkPad P53 Intel Xeon E-2276M", "Intel Xeon"),
             ("ThinkPad X13 Gen 2 Core i5-1145G7", "Core i5 (11th Gen)"),
             ("Dell Latitude i7-8656U M2 256GB SSD", "Core i7 (8th Gen)"),
+            # 5-digit H-series processors
+            ("Core i7-10850H 512GB SSD 16GB ThinkPad P15", "Core i7 (10th Gen)"),
+            ("Precision 3561 Core i5-11500H 512GB 16GB", "Core i5 (11th Gen)"),
+            ("Precision 3561 Core i7-11800H 512GB 32GB", "Core i7 (11th Gen)"),
+            # Hebrew Shorthand
+            ("Thinkpad X1 Carbon I7-10 16GB 256GB", "Core i7 (10th Gen)"),
+            ("T14s I5-10 256 16 ThinkPad T14", "Core i5 (10th Gen)"),
+            ("X1 YOGA I7-8 16/512", "Core i7 (8th Gen)"),
+            # 2nd & 3rd Gen Intel
+            ("HP EliteBook Folio 9470m i7-3687U 180GB SSD", "Core i7 (3rd Gen)"),
+            ("ThinkPad X230 Core i5-3210M 8GB", "Core i5 (3rd Gen)"),
+            ("Dell Latitude E6420 Core-i5 2nd Gen", "Core i5 (2nd Gen)"),
+            ("ThinkPad T420 Core i5 2.5Ghz", "Core i5 (2nd Gen)"),
+            ("DELL Inspiron N5110 i5-2410M", "Core i5 (2nd Gen)"),
+            # AMD non-Ryzen distinction
+            ("Lenovo A4 4GB 64GBSSD מחשב נייד מחודש 11.6", "AMD A-Series"),
+            ("Lenovo 4GB 64SSD 11.6\" AMD-4020e", "AMD Athlon"),
+            ("HP EliteBook 745 G2 מעבד A10", "AMD A-Series"),
+            # Legacy Intel
+            ("Lenovo X60 C2D L2400", "Intel Core 2 Duo"),
+            ("DELL Inspiron Mini 10v", "Intel Atom"),
+            ("Lenovo ThinkPad T43", "Intel Pentium"),
         ]
         for title, expected_cpu in test_cases:
             detected = HardwareClassifier.detect_cpu(title)
@@ -146,6 +168,9 @@ class TestHardwareParsers(unittest.TestCase):
 
     def test_shared_listing_parsers(self):
         self.assertTrue(is_laptop_title("מחשב נייד Dell Latitude 5420"))
+        self.assertTrue(is_laptop_title("HP ProBook 450 G8"))
+        self.assertTrue(is_laptop_title("Dell Precision 3561 Mobile Workstation"))
+        self.assertTrue(is_laptop_title("Lenovo Yoga Slim 7"))
         self.assertFalse(is_laptop_title("מחשב נייח Dell OptiPlex Micro"))
         self.assertTrue(is_desktop_title("Lenovo ThinkCentre Tiny"))
         self.assertEqual(last_valid_price(["newsletter", "2,490 ₪"]), 2490)
@@ -164,11 +189,14 @@ class TestHardwareParsers(unittest.TestCase):
         self.assertEqual(HardwareClassifier.detect_ram_gb("Dell Precision 7550 32GB RAM 512GB SSD RTX 3000 6GB"), 32)
         self.assertEqual(HardwareClassifier.detect_ram_gb("Lenovo Legion 5 16GB 512GB RTX 3060 6GB"), 16)
 
-        # Storage (including Hebrew 'טרה' for 1TB)
+        # Storage (including Hebrew 'טרה' for 1TB, 64GB netbooks, 180GB/320GB)
         self.assertEqual(HardwareClassifier.detect_storage_gb("Dell 256GB SSD"), 256)
         self.assertEqual(HardwareClassifier.detect_storage_gb("HP 512GB SSD NVMe"), 512)
         self.assertEqual(HardwareClassifier.detect_storage_gb("Lenovo 1TB SSD"), 1000)
         self.assertEqual(HardwareClassifier.detect_storage_gb("מחשב נייד 1 טרה אחסון"), 1000)
+        self.assertEqual(HardwareClassifier.detect_storage_gb("Lenovo A4 4GB 64GBSSD מחשב נייד"), 64)
+        self.assertEqual(HardwareClassifier.detect_storage_gb("HP Folio 9470m 180GB SSD"), 180)
+        self.assertEqual(HardwareClassifier.detect_storage_gb("Lenovo X61s 320GB HDD"), 320)
 
     def test_ram_generation_detection(self):
         """Ensure RAM generation (DDR3L, DDR4, LPDDR4x, DDR5, LPDDR5, Unified LPDDR4x) is detected accurately."""

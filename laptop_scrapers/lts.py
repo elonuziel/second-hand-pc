@@ -48,6 +48,15 @@ class LTSScraper:
             return int(schema[-1])
         return None
 
+    def _parse_product_page_image(self, html: str) -> str:
+        og_m = re.search(r'<meta\s+property=[\"\']og:image[\"\']\s+content=[\"\']([^\"\']+)[\"\']', html, re.I)
+        if og_m:
+            return og_m.group(1).strip()
+        img_m = re.search(r'<img[^>]*src=[\"\']([^\"\']+(?:uploads|product)[^\"\']+)[\"\']', html, re.I)
+        if img_m:
+            return img_m.group(1).strip()
+        return ""
+
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping LaptopTech LTS...")
         items: List[LaptopItem] = []
@@ -68,14 +77,15 @@ class LTSScraper:
                     try:
                         res = self.session.get(link, timeout=8)
                         p = self._parse_product_page_price(res.text)
-                        return link, slug_clean, p
+                        img = self._parse_product_page_image(res.text)
+                        return link, slug_clean, p, img
                     except Exception:
-                        return link, slug_clean, None
+                        return link, slug_clean, None, ""
 
                 with ThreadPoolExecutor(max_workers=10) as executor:
                     fetched_results = list(executor.map(fetch_item_price, valid_links))
 
-                for link, slug_clean, price in fetched_results:
+                for link, slug_clean, price, img in fetched_results:
                     if price is None:
                         logger.warning("Skipping LTS listing without a valid price: %s", link)
                         continue
@@ -89,6 +99,7 @@ class LTSScraper:
                         analysis_text=slug_clean,
                         warranty_months=12,
                         stock_status="🟢 In Stock",
+                        image_url=img,
                     ))
         except Exception as e:
             logger.error(f"Error scraping LTS: {e}")

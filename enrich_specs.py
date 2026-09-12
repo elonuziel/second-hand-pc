@@ -43,13 +43,31 @@ class SpecEnricher:
     def enrich_item_dict(cls, laptop: Dict[str, Any]) -> Dict[str, Any]:
         title = laptop.get("title") or laptop.get("model") or ""
 
-        # Detect and enrich CPU generation if missing
+        # Clean brand & series if title provides exact detection
+        current_brand = laptop.get("brand", "")
+        detected_brand = HardwareClassifier.detect_brand(title)
+        if detected_brand != "Business Laptop" or not current_brand:
+            laptop["brand"] = detected_brand
+
+        current_series = laptop.get("series", "")
+        detected_series = HardwareClassifier.detect_series(title)
+        if detected_series != "Business Series" or not current_series:
+            laptop["series"] = detected_series
+
+        # Detect and enrich CPU specification
         current_cpu = laptop.get("cpu", "")
-        detected_cpu = HardwareClassifier.detect_cpu(f"{title} {current_cpu}")
-        if "gen" in detected_cpu.lower() or not current_cpu:
-            laptop["cpu"] = detected_cpu
-        elif current_cpu:
-            laptop["cpu"] = current_cpu
+        detected_cpu = HardwareClassifier.detect_cpu(title)
+        if detected_cpu in ("Intel Core", "Core i5", "Core i7", "Core i3", "AMD Ryzen") and current_cpu and current_cpu != detected_cpu:
+            combined_detected = HardwareClassifier.detect_cpu(f"{title} {current_cpu}")
+            if "gen" in combined_detected.lower():
+                detected_cpu = combined_detected
+        laptop["cpu"] = detected_cpu or current_cpu
+
+        # Enrich storage if misdetected or defaulted to 512
+        current_storage = laptop.get("storage_gb")
+        detected_storage = HardwareClassifier.detect_storage_gb(title)
+        if not current_storage or (current_storage == 512 and detected_storage in (32, 64, 120, 128, 160, 180, 240, 250, 256, 320, 480, 1000, 2000)):
+            laptop["storage_gb"] = detected_storage
 
         # Architectural analysis for ram_type if missing or needs update
         score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)

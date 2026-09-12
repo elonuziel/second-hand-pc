@@ -29,7 +29,17 @@ LAPTOP_KEYWORDS = (
     "thinkpad",
     "latitude",
     "elitebook",
+    "probook",
+    "zbook",
+    "precision",
+    "xps",
+    "yoga",
+    "ideapad",
     "macbook",
+    "zenbook",
+    "vivobook",
+    "inspiron",
+    "vostro",
 )
 
 

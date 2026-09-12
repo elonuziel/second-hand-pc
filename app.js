@@ -359,7 +359,7 @@ function formatCpuHtml(cpuStr) {
 
 function getCpuGenRank(cpuStr) {
   const cpuL = String(cpuStr || '').toLowerCase();
-  const m = cpuL.match(/(\d+)th\s*gen/i);
+  const m = cpuL.match(/(\d+)(?:th|rd|nd|st)\s*gen/i);
   if (m) return parseInt(m[1], 10);
   if (cpuL.includes('ultra') || cpuL.includes('14th')) return 14;
   if (cpuL.includes('13th')) return 13;
@@ -372,8 +372,11 @@ function getCpuGenRank(cpuStr) {
   if (cpuL.includes('6th')) return 6;
   if (cpuL.includes('5th')) return 5;
   if (cpuL.includes('4th')) return 4;
+  if (cpuL.includes('3rd')) return 3;
+  if (cpuL.includes('2nd')) return 2;
   if (cpuL.includes('m1') || cpuL.includes('m2') || cpuL.includes('m3') || cpuL.includes('apple')) return 11;
-  if (cpuL.includes('ryzen') || cpuL.includes('amd')) return 11;
+  if (cpuL.includes('ryzen')) return 11;
+  if (cpuL.includes('amd')) return 7;
   return 0;
 }
 

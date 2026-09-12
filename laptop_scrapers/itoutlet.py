@@ -68,6 +68,12 @@ class ITOutletScraper:
                         deal_price = max(0, raw_price - 100)
                         deal_label = f"{deal_price:,} ₪ (100 ₪ Coupon)"
 
+                    img_m = re.findall(r'<img[^>]*src=[\"\']([^\"\']+)[\"\']', b)
+                    img = ""
+                    if img_m:
+                        src = img_m[0].strip()
+                        img = f"https://www.itoutlet.co.il{src}" if src.startswith('/') else src
+
                     items.append(HardwareClassifier.build_laptop(
                         store=self.STORE_NAME,
                         title=title,
@@ -77,6 +83,7 @@ class ITOutletScraper:
                         deal_label=deal_label,
                         warranty_months=12,
                         stock_status="🟢 In Stock",
+                        image_url=img,
                     ))
             except Exception as e:
                 logger.error(f"Error scraping IT Outlet page {page}: {e}")
