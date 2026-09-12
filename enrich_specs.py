@@ -125,12 +125,19 @@ class SpecEnricher:
         # Performance Workstations / Gaming / 17.3" (2.1kg - 2.7kg)
         if any(k in t for k in ['thinkpad p1', 'p15v']): return 2.05
         if any(k in t for k in ['gaming 3', 'zbook 15 g6', 'zbook g7 14']): return 2.25
-        if any(k in t for k in ['p52', 'p15 gen', 'p15 g1', 'zbook fury 15']): return 2.45
+        if any(k in t for k in ['p50', 'p51', 'p52', 'p53', 'p70', 'p71', 'p72', 'p73', 'p16', 'p15 gen', 'p15 g1', 'zbook fury 15']): return 2.45
         if 'a517' in t or screen_size >= 17.0: return 2.60
 
+        # Precision Mobile Workstations (Heavy desktop replacements)
+        if 'precision' in t or 'workstation' in t:
+            if screen_size >= 17.0 or any(k in t for k in ['77', '7750', '7760', '7770', '7780']): return 3.10
+            if any(k in t for k in ['75', '76', '7550', '7560', '7540', '7530', '7520', '7510', '3571', '3581']): return 2.45
+            if any(k in t for k in ['55', '56', '5550', '5560', '5570', '35', '3540', '3550', '3560', '3570']): return 1.95
+            return 2.30
+
         # Algorithmic syntax decoders for weight
-        dell_m = re.search(r'\b(?:latitude|precision)?\s*([3579])([34567])([0-9])([05])?\b', t)
-        if dell_m and ('dell' in t or 'latitude' in t or 'precision' in t):
+        dell_m = re.search(r'\b(?:latitude)?\s*([3579])([34567])([0-9])([05])?\b', t)
+        if dell_m and ('dell' in t or 'latitude' in t):
             tier = dell_m.group(1)
             s_digit = dell_m.group(2)
             if tier in ('7', '9'):

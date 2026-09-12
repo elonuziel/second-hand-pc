@@ -157,12 +157,15 @@ class GroqSpecEnhancer:
         }
         prompt = (
             "You are a senior PC hardware engineer. Analyze the following laptops and extract exact factory specs.\n"
+            "STRICT RULES:\n"
+            "1. Never invent or substitute GPU models (e.g. if title says Quadro RTX 3000, return 'NVIDIA Quadro RTX 3000', NOT RTX 3060. If unmentioned or integrated, return 'Integrated' or 'Intel Iris Xe').\n"
+            "2. For Apple MacBooks (2016+) and Microsoft Surface laptops with soldered RAM/SSD, upgradability_score MUST be between 1.0 and 2.0.\n\n"
             "For each laptop, return an object with:\n"
             '- "id": int (matching input id)\n'
             '- "screen_size_in": float (e.g. 13.3, 14.0, 15.6)\n'
             '- "weight_kg": float (e.g. 1.25, 1.47, 2.45)\n'
             '- "battery_wh": int (e.g. 50, 57, 90)\n'
-            '- "gpu": str (e.g. "Intel Iris Xe", "NVIDIA Quadro P520", "AMD Radeon")\n'
+            '- "gpu": str (exact GPU model or "Integrated")\n'
             '- "is_touch": bool\n'
             '- "is_2in1": bool (true if 360 convertible hinge)\n'
             '- "upgradability_score": float (1.0 to 10.0)\n\n'
@@ -212,6 +215,9 @@ class GroqSpecEnhancer:
                             if obj.get("upgradability_score") is not None:
                                 try:
                                     score = float(obj["upgradability_score"])
+                                    # Deterministic guardrail: soldered hardware cannot have high repairability score
+                                    if any(k in target.title.lower() for k in ['macbook', 'apple', 'surface']):
+                                        score = min(score, 2.0)
                                     if 1.0 <= score <= 10.0:
                                         target.upgradability_score = score
                                 except (ValueError, TypeError):
@@ -251,7 +257,7 @@ class HardwareClassifier:
     _GEN13_RE = re.compile(r'(?:13th|דור\s*13|13\s*gen|13[0-9]{2}[up]|13[0-9]{2}h)', re.IGNORECASE)
     _GEN12_RE = re.compile(r'(?:12th|דור\s*12|12\s*gen|gen\s*4|5330|5430|5530|7330|7430|5431|5531|l13\s*gen\s*3|t14\s*gen\s*3|x1404za|e1504|12[0-9]{2}[up]|12[0-9]{2}h|1270p|1260p|1250u|1280p|1240p|1235u)', re.IGNORECASE)
     _GEN11_RE = re.compile(r'(?:11th|דור\s*11|11\s*gen|\bg8\b|gen\s*2|3520|3420|7420|7320|5420|5320|5520|surface\s*4|x1\s*carbon\s*gen\s*9|x1\s*yoga\s*gen\s*6|a517.*52g|x515ea|x30l\s*j|11[0-9]{2}g[47]|11[0-9]{2}[up]|11[0-9]{2}h|1185g7|1165g7|1135g7|1145g7)', re.IGNORECASE)
-    _GEN10_RE = re.compile(r'(?:10th|דור\s*10|10\s*gen|\bg7\b|gen\s*1|\bg1\b|7410|5410|5510|surface\s*3|x1\s*carbon\s*gen\s*8|p1\s*gen\s*3|vostro\s*3591|3591|a2179|a2251|10[0-9]{2}[up]|10[0-9]{2}h|10510u|10610u|10875h|10210u|10310u|\be14\b|\bt14\b|\bt14s\b)', re.IGNORECASE)
+    _GEN10_RE = re.compile(r'(?:10th|דור\s*10|10\s*gen|\bg7\b|gen\s*1|\bg1\b|7410|5410|5510|surface\s*3|x1\s*carbon\s*gen\s*8|p1\s*gen\s*3|vostro\s*3591|3591|a2179|a2251|10[0-9]{2}[up]|10[0-9]{2}h|10510u|10610u|10875h|10210u|10310u)', re.IGNORECASE)
     _GEN9_RE = re.compile(r'(?:9th|דור\s*9|9\s*gen|\bg6\b|9750h|9850h)', re.IGNORECASE)
     _GEN8_RE = re.compile(r'(?:8th|דור\s*8|8\s*gen|e480|l390|7400|5490|5400|x280|t480|t490|p52|5379|330\s*15ikb|a1989|x1\s*carbon.*touch|8[0-9]{3}[uh]|8250u|8350u|8650u|8550u)', re.IGNORECASE)
     _GEN7_RE = re.compile(r'(?:7th|דור\s*7|7\s*gen|t470|5480|x442ur|a1707|a1706|a1708|7[0-9]{3}[uh]|7200u|7300u|7500u)', re.IGNORECASE)
@@ -260,6 +266,8 @@ class HardwareClassifier:
     _GEN4_RE = re.compile(r'(?:4th|דור\s*4|4\s*gen|g-4|e7440|4[0-9]{3}[uh]|4200u|4300u)', re.IGNORECASE)
 
     _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
+    _EXPLICIT_RAM_RE = re.compile(r'(?:(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)?\s*(?:ram|זכרון|זיכרון|memory)|(?:ram|זכרון|זיכרון|memory)\s*(?:של\s*)?(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)?)', re.IGNORECASE)
+    _GPU_VRAM_RE = re.compile(r'(?:gtx|rtx|quadro|geforce|radeon|iris|t500|t600|t1000|t1200|t2000)\s*(?:[0-9]{3,4})?\s*(?:\d+\s*(?:gb|g))?|(?:\d+\s*(?:gb|g|גיגה)?\s*(?:graphics|vram|כרטיס מסך|כרטיס גרפי|גרפיקה))', re.IGNORECASE)
     _STORAGE_GB_RE = re.compile(r'(?:^|[^\w])(128|240|250|256|480|500|512)\s*(?:gb|g|גיגה)?(?:\s*ssd|\s*nvme|\s*אחסון)?(?:[^\w]|$)')
 
     # Constant tuples for brand and architecture detection to avoid list allocation at runtime
@@ -323,6 +331,7 @@ class HardwareClassifier:
         t = title.lower()
         if 'thinkpad' in t: return "ThinkPad"
         if 'latitude' in t: return "Latitude"
+        if 'precision' in t: return "Precision"
         if 'elitebook' in t: return "EliteBook"
         if 'zbook fury' in t: return "ZBook Fury"
         if 'zbook firefly' in t: return "ZBook Firefly"
@@ -334,15 +343,34 @@ class HardwareClassifier:
         return "Business Series"
 
     @classmethod
+    def is_touch(cls, text: str) -> bool:
+        t = text.lower()
+        return any(k in t for k in ['touch', 'טאץ', 'טאצ', 'x360', 'yoga', '2-in-1', '2 in 1', '2in1', 'surface', 'flip'])
+
+    @classmethod
+    def is_2in1(cls, text: str) -> bool:
+        t = text.lower()
+        return any(k in t for k in ['x360', 'yoga', '2-in-1', '2 in 1', '2in1', 'convertible', 'flip', '360'])
+
+    @classmethod
     def detect_cpu(cls, title: str) -> str:
         t = title.lower()
         if 'm1' in t: return "Apple M1"
         if 'm2' in t: return "Apple M2"
+        if 'm3' in t: return "Apple M3"
         if 'ryzen 7' in t: return "AMD Ryzen 7 PRO"
         if 'ryzen 5' in t: return "AMD Ryzen 5 PRO"
         if 'amd' in t: return "AMD Ryzen"
         if 'celeron' in t: return "Intel Celeron"
-        if 'ultra 7' in t: return "Intel Core Ultra 7"
+        if 'pentium' in t: return "Intel Pentium"
+        if 'xeon' in t: return "Intel Xeon"
+
+        # Modern Intel Core Ultra (Meteor Lake)
+        ultra_m = re.search(r'\b(?:core\s*ultra|ultra)\s*([3579])\b', t)
+        if ultra_m:
+            return f"Intel Core Ultra {ultra_m.group(1)}"
+        if 'core ultra' in t or 'meteor lake' in t:
+            return "Intel Core Ultra"
 
         gen13 = cls._GEN13_RE.search(t)
         gen12 = cls._GEN12_RE.search(t)
@@ -371,7 +399,17 @@ class HardwareClassifier:
 
     @classmethod
     def detect_ram_gb(cls, title: str) -> int:
-        m = cls._RAM_GB_RE.search(title)
+        # 1. First priority: explicit RAM keyword
+        for m in cls._EXPLICIT_RAM_RE.finditer(title):
+            val = m.group(1) or m.group(2)
+            if val:
+                return int(val)
+
+        # 2. Mask out GPU VRAM and graphics memory strings so they don't corrupt system RAM
+        cleaned = cls._GPU_VRAM_RE.sub(" ", title)
+
+        # 3. Search for RAM in cleaned title
+        m = cls._RAM_GB_RE.search(cleaned)
         if m:
             return int(m.group(1))
         return 16
@@ -461,8 +499,15 @@ class HardwareClassifier:
 
         if any(k in t for k in ['thinkpad p1', 'p15v']): return 2.05
         if any(k in t for k in ['gaming 3', 'zbook 15 g6', 'zbook g7 14']): return 2.25
-        if any(k in t for k in ['p52', 'p15 gen', 'p15 g1', 'zbook fury 15']): return 2.45
+        if any(k in t for k in ['p50', 'p51', 'p52', 'p53', 'p70', 'p71', 'p72', 'p73', 'p16', 'p15 gen', 'p15 g1', 'zbook fury 15']): return 2.45
         if 'a517' in t or screen_size >= 17.0: return 2.60
+
+        # Precision Mobile Workstations (Heavy desktop replacements)
+        if 'precision' in t or 'workstation' in t:
+            if screen_size >= 17.0 or any(k in t for k in ['77', '7750', '7760', '7770', '7780']): return 3.10
+            if any(k in t for k in ['75', '76', '7550', '7560', '7540', '7530', '7520', '7510', '3571', '3581']): return 2.45
+            if any(k in t for k in ['55', '56', '5550', '5560', '5570', '35', '3540', '3550', '3560', '3570']): return 1.95
+            return 2.30
 
         if screen_size <= 12.5: return 1.20
         if screen_size <= 13.5: return 1.30
@@ -609,8 +654,8 @@ class ITOutletScraper:
 
                     # Quick GPU & Touch detection
                     gpu = "NVIDIA Quadro P520" if 'p520' in title.lower() or 'p14s' in title.lower() or 'p15s' in title.lower() else "Integrated"
-                    is_touch = 'touch' in title.lower() or 'x360' in title.lower() or 'yoga' in title.lower() or 'surface' in title.lower()
-                    is_2in1 = 'x360' in title.lower() or 'yoga' in title.lower()
+                    is_touch = HardwareClassifier.is_touch(title)
+                    is_2in1 = HardwareClassifier.is_2in1(title)
 
                     items.append(LaptopItem(
                         store=self.STORE_NAME,
@@ -691,8 +736,8 @@ class EcologyScraper:
                         title = meta['title']
                         price = meta['price']
                         gpu = meta.get('gpu', 'Integrated')
-                        is_touch = 'touch' in title.lower() or 'x360' in title.lower()
-                        is_2in1 = 'x360' in title.lower()
+                        is_touch = HardwareClassifier.is_touch(title)
+                        is_2in1 = HardwareClassifier.is_2in1(title)
 
                         score, storage_type, ram_type = HardwareClassifier.analyze_architecture(title)
                         screen_size = HardwareClassifier.detect_screen_size(title)
@@ -797,8 +842,8 @@ class LTSScraper:
                     screen_size = HardwareClassifier.detect_screen_size(slug_clean)
                     weight_kg = HardwareClassifier.detect_weight_kg(slug_clean, screen_size)
                     battery_wh = HardwareClassifier.detect_battery_wh(slug_clean, weight_kg)
-                    is_touch = 'touch' in slug_clean.lower() or '2-in-1' in slug_clean.lower()
-                    is_2in1 = '2-in-1' in slug_clean.lower() or '2 in 1' in slug_clean.lower() or 'x360' in slug_clean.lower()
+                    is_touch = HardwareClassifier.is_touch(title) or HardwareClassifier.is_touch(slug_clean)
+                    is_2in1 = HardwareClassifier.is_2in1(title) or HardwareClassifier.is_2in1(slug_clean)
 
                     items.append(LaptopItem(
                         store=self.STORE_NAME,
@@ -888,8 +933,8 @@ class RecompScraper:
                     screen_size = HardwareClassifier.detect_screen_size(title)
                     weight_kg = HardwareClassifier.detect_weight_kg(title, screen_size)
                     battery_wh = HardwareClassifier.detect_battery_wh(title, weight_kg)
-                    is_touch = 'touch' in title.lower() or 'x360' in title.lower()
-                    is_2in1 = 'x360' in title.lower()
+                    is_touch = HardwareClassifier.is_touch(title)
+                    is_2in1 = HardwareClassifier.is_2in1(title)
 
                     items.append(LaptopItem(
                         store=self.STORE_NAME,

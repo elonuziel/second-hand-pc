@@ -89,7 +89,7 @@ class TestHardwareParsers(unittest.TestCase):
     """Verifies that CPU generation, RAM, Storage, and form factors are accurately parsed."""
 
     def test_cpu_generation_detection(self):
-        """Accurately identify Intel generations (8th to 13th), Apple Silicon, and AMD."""
+        """Accurately identify Intel generations (8th to 13th), Apple Silicon, AMD, Core Ultra, and Xeon."""
         test_cases = [
             ("Lenovo ThinkPad T14 Gen 2 i5 1135G7", "Core i5 (11th Gen)"),
             ("Dell Latitude 5430 i7 1250U 12th Gen", "Core i7 (12th Gen)"),
@@ -98,17 +98,24 @@ class TestHardwareParsers(unittest.TestCase):
             ("Lenovo ThinkPad T480s i5 8350U", "Core i5 (8th Gen)"),
             ("Apple MacBook Air M1", "Apple M1"),
             ("Lenovo ThinkPad T14 AMD Ryzen 5 PRO", "AMD Ryzen 5 PRO"),
+            ("Lenovo ThinkPad E14 Intel Core Ultra 5 125U", "Intel Core Ultra 5"),
+            ("Lenovo ThinkPad P53 Intel Xeon E-2276M", "Intel Xeon"),
         ]
         for title, expected_cpu in test_cases:
             detected = HardwareClassifier.detect_cpu(title)
             self.assertEqual(detected, expected_cpu, f"Failed CPU detection on: {title}")
 
     def test_ram_and_storage_extraction(self):
-        """Ensure RAM and SSD sizes are extracted even with Hebrew or variant formatting."""
+        """Ensure RAM and SSD sizes are extracted and VRAM is isolated."""
         # RAM
         self.assertEqual(HardwareClassifier.detect_ram_gb("Dell 16GB RAM 512GB SSD"), 16)
         self.assertEqual(HardwareClassifier.detect_ram_gb("ThinkPad 32 GB RAM 1TB"), 32)
         self.assertEqual(HardwareClassifier.detect_ram_gb("Laptop 8g ram"), 8)
+
+        # GPU VRAM isolation: 4GB Graphics / 6GB VRAM must not override system RAM
+        self.assertEqual(HardwareClassifier.detect_ram_gb("HP ProBook 450 G8 15.6 with GTX 1650 4GB Graphics"), 16)
+        self.assertEqual(HardwareClassifier.detect_ram_gb("Dell Precision 7550 32GB RAM 512GB SSD RTX 3000 6GB"), 32)
+        self.assertEqual(HardwareClassifier.detect_ram_gb("Lenovo Legion 5 16GB 512GB RTX 3060 6GB"), 16)
 
         # Storage (including Hebrew 'טרה' for 1TB)
         self.assertEqual(HardwareClassifier.detect_storage_gb("Dell 256GB SSD"), 256)
@@ -131,13 +138,26 @@ class TestHardwareParsers(unittest.TestCase):
         self.assertEqual(SpecEnricher.detect_screen_size("HP EliteBook 830 G8"), 13.3)
         self.assertEqual(SpecEnricher.detect_screen_size("HP EliteBook 840 G7"), 14.0)
 
-        # Lightweight vs standard weight
+        # Lightweight vs standard weight vs heavy workstation
         self.assertLessEqual(SpecEnricher.detect_weight_kg("ThinkPad X1 Carbon", 14.0), 1.2)
         self.assertGreaterEqual(SpecEnricher.detect_weight_kg("ThinkPad P15 Gen 1", 15.6), 2.0)
+        self.assertGreaterEqual(SpecEnricher.detect_weight_kg("Dell Precision 7550", 15.6), 2.4)
+        self.assertLessEqual(SpecEnricher.detect_weight_kg("Dell Latitude 7420", 14.0), 1.4)
 
         # Battery Wh
         self.assertGreaterEqual(SpecEnricher.detect_battery_wh("ThinkPad P15", 2.4), 80)
         self.assertGreaterEqual(SpecEnricher.detect_battery_wh("Dell Latitude 7420", 1.35), 50)
+
+    def test_unified_touch_and_2in1_detection(self):
+        """Ensure touch and 360 convertible 2-in-1 detection is consistent across all store formats."""
+        self.assertTrue(HardwareClassifier.is_2in1("Lenovo ThinkPad X13 Yoga Touch"))
+        self.assertTrue(HardwareClassifier.is_2in1("HP EliteBook x360 830 G8"))
+        self.assertTrue(HardwareClassifier.is_2in1("Dell Inspiron 14 5410 2-in-1 Touch"))
+        self.assertFalse(HardwareClassifier.is_2in1("Dell Latitude 7420 i7 16GB"))
+
+        self.assertTrue(HardwareClassifier.is_touch("Lenovo ThinkPad T14 Touch"))
+        self.assertTrue(HardwareClassifier.is_touch("מחשב נייד טאץ 14 אינץ"))
+        self.assertFalse(HardwareClassifier.is_touch("HP ProBook 450 G8 15.6 inch"))
 
     def test_groq_spec_enhancer_graceful_handling(self):
         """Ensure GroqSpecEnhancer initializes safely and handles empty/fallback batches without crashing."""
