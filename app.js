@@ -543,6 +543,16 @@ async function preloadDocContents() {
   );
 }
 
+function parseDaysOld(scraped_at) {
+  if (!scraped_at) return 0;
+  const parts = String(scraped_at).split('-').map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) return 0;
+  const sDate = new Date(parts[0], parts[1] - 1, parts[2]);
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return Math.max(0, Math.round((now - sDate) / (1000 * 60 * 60 * 24)));
+}
+
 async function loadCatalogData() {
   let laptopsUnified = [];
   try {
@@ -643,13 +653,7 @@ async function loadCatalogData() {
     const storage_gb = Number(dev.storage_gb) || 0;
 
     const scraped_at = dev.scraped_at || '';
-    let days_old = 0;
-    if (scraped_at) {
-      const sDate = new Date(scraped_at);
-      if (!isNaN(sDate.getTime())) {
-        days_old = Math.max(0, Math.floor((new Date() - sDate) / (1000 * 60 * 60 * 24)));
-      }
-    }
+    const days_old = parseDaysOld(scraped_at);
     const is_stale = days_old > 30;
 
     const item = {
@@ -1744,5 +1748,5 @@ async function init() {
 init();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen, getCpuGenRank, getStoreClass };
+  module.exports = { escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen, getCpuGenRank, getStoreClass, parseDaysOld };
 }
