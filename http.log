@@ -1,0 +1,5 @@
+127.0.0.1 - - [25/Sep/2026 19:37:07] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [25/Sep/2026 19:37:07] "GET /styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [25/Sep/2026 19:37:07] "GET /app.js HTTP/1.1" 200 -
+127.0.0.1 - - [25/Sep/2026 19:37:07] "GET /scraped_laptops.json HTTP/1.1" 200 -
+127.0.0.1 - - [25/Sep/2026 19:37:07] "GET /scraped_mobile.json HTTP/1.1" 200 -
