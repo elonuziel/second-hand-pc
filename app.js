@@ -1,3 +1,22 @@
+
+function debounce(fn, delay = 120) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+let rafPending = false;
+function scheduleRenderCatalog() {
+  if (rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => {
+    rafPending = false;
+    renderCatalog();
+  });
+}
+
 const docs = [
   {
     id: 'full-catalog',
@@ -542,7 +561,7 @@ async function preloadDocContents() {
   await Promise.all(
     docs.map(async (doc) => {
       try {
-        const res = await fetch(`./${doc.file}`, { cache: 'no-store' });
+        const res = await fetch(`./${doc.file}`, );
         if (res.ok) {
           doc.content = await res.text();
         }
@@ -566,7 +585,7 @@ function parseDaysOld(scraped_at) {
 async function loadCatalogData() {
   let laptopsUnified = [];
   try {
-    const res = await fetch('./scraped_laptops.json', { cache: 'no-store' });
+    const res = await fetch('./scraped_laptops.json', );
     if (res.ok) {
       const rawJson = await res.json();
       if (Array.isArray(rawJson)) {
@@ -585,7 +604,7 @@ async function loadCatalogData() {
 
   let mobileUnified = [];
   try {
-    const resM = await fetch('./scraped_mobile.json', { cache: 'no-store' });
+    const resM = await fetch('./scraped_mobile.json', );
     if (resM.ok) {
       const rawMJson = await resM.json();
       if (Array.isArray(rawMJson)) {
@@ -779,7 +798,7 @@ async function loadDocument() {
   if (!doc.content) {
     documentContent.innerHTML = '<div class="empty-state">Loading full catalog…</div>';
     try {
-      const response = await fetch(`./${doc.file}`, { cache: 'no-store' });
+      const response = await fetch(`./${doc.file}`, );
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       doc.content = await response.text();
     } catch (error) {
@@ -1364,13 +1383,16 @@ function bindEvents() {
   });
 
   if (searchInput) {
-    searchInput.addEventListener('input', (event) => {
-      state.query = event.target.value.trim();
+    const debouncedSearch = debounce((val) => {
+      state.query = val.trim();
       if (state.filter === 'catalog') {
         renderCatalog();
       } else {
         applyDocSearchFilter();
       }
+    }, 120);
+    searchInput.addEventListener('input', (event) => {
+      debouncedSearch(event.target.value);
     });
   }
 
@@ -1450,7 +1472,7 @@ function bindEvents() {
       state.catalogFilters.priceMax = maxVal;
       state.activePreset = '';
       updateDualPriceSliderUI(minVal, maxVal);
-      renderCatalog();
+      scheduleRenderCatalog();
     };
 
     priceMinSlider.addEventListener('input', onDualPriceInput);
@@ -1618,7 +1640,7 @@ async function openScraperStatusModal() {
 
   let statusData = null;
   try {
-    const res = await fetch('./scraper_status.json', { cache: 'no-store' });
+    const res = await fetch('./scraper_status.json', );
     if (res.ok) {
       statusData = await res.json();
     }
@@ -1751,7 +1773,7 @@ async function init() {
   updateDualPriceSliderUI(800, 5000);
   updateDirButtonsUI();
   bindEvents();
-  await Promise.all([preloadDocContents(), loadCatalogData()]);
+  await loadCatalogData();
   updateViewMode();
 }
 
