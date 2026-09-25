@@ -151,6 +151,37 @@ class TestCatalogDataHealth(unittest.TestCase):
             self.assertTrue(bool(ram_gen), f"Missing ram_gen for: {title}")
             self.assertIn(conf, valid_confidences, f"Invalid confidence_level '{conf}' for: {title}")
 
+    def test_scraped_at_timestamp_validity(self):
+        """Every laptop must have a valid scraped_at date formatted as YYYY-MM-DD."""
+        import datetime
+        import re
+        date_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+        self.assertGreater(len(self.items), 0, "No laptops to test scraped_at")
+        for item in self.items:
+            scraped_at = item.get("scraped_at")
+            title = item.get("title", "Unknown")
+            self.assertIsNotNone(scraped_at, f"Laptop '{title}' is missing 'scraped_at' field")
+            self.assertTrue(bool(scraped_at), f"Laptop '{title}' has empty 'scraped_at' field")
+            self.assertTrue(bool(date_pattern.match(scraped_at)), f"Laptop '{title}' has invalid date format: '{scraped_at}'")
+            try:
+                datetime.date.fromisoformat(scraped_at)
+            except ValueError:
+                self.fail(f"Laptop '{title}' has unparseable ISO date: '{scraped_at}'")
+
+    def test_scraper_status_file(self):
+        """Ensure scraper_status.json exists and contains valid status for laptops and mobile."""
+        status_path = os.path.join(os.path.dirname(__file__), "scraper_status.json")
+        self.assertTrue(os.path.exists(status_path), "scraper_status.json missing")
+        with open(status_path, "r", encoding="utf-8") as f:
+            status_data = json.load(f)
+        self.assertIn("last_updated", status_data)
+        self.assertIn("laptops", status_data)
+        self.assertIn("mobile", status_data)
+        self.assertGreater(status_data["laptops"]["total_items"], 0)
+        self.assertGreater(len(status_data["laptops"]["stores"]), 0)
+        self.assertGreater(status_data["mobile"]["total_items"], 0)
+        self.assertGreater(len(status_data["mobile"]["stores"]), 0)
+
 
 class TestHardwareParsers(unittest.TestCase):
     """Verifies that CPU generation, RAM, Storage, and form factors are accurately parsed."""

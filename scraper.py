@@ -211,6 +211,9 @@ def main():
     if not args.no_md:
         ReportGenerator.update_summary_markdown(results, FULL_CATALOG_MD_PATH)
 
+    # Update scraper status metadata
+    ReportGenerator.update_scraper_status(results, fresh_counts, preserved_counts, get_store_blocks())
+
     # CLI Terminal Summary
     print("\n" + "=" * 65)
     print(f"📊 LIVE AUDIT COMPLETE: {len(all_items)} total laptops parsed across {len(results)} stores.")

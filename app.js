@@ -39,6 +39,7 @@ const state = {
     battery: 0,
     upgradability: 0,
     sort: 'value-desc',
+    hideStale: false,
     filterDirs: {
       cpuGen: 'up',
       ram: 'up',
@@ -591,6 +592,10 @@ async function loadCatalogData() {
     const upgradability_score = Number(laptop.upgradability_score) || 5.0;
     const cpu = laptop.cpu || 'N/A';
 
+    const scraped_at = laptop.scraped_at || '';
+    const days_old = parseDaysOld(scraped_at);
+    const is_stale = days_old > 30;
+
     const item = {
       id: `laptop-${index}-${store.replace(/\s+/g, '_')}`,
       category: 'laptops',
@@ -620,7 +625,10 @@ async function loadCatalogData() {
       battery_source: laptop.battery_source || 'chassis_decoder',
       confidence_level: laptop.confidence_level || 'verified',
       weight_warning: laptop.weight_warning || '',
-      battery_warning: laptop.battery_warning || ''
+      battery_warning: laptop.battery_warning || '',
+      scraped_at,
+      days_old,
+      is_stale
     };
     item.value_score = calculateValueScore(item);
     return item;
@@ -633,6 +641,16 @@ async function loadCatalogData() {
     const price_ils = Number(dev.price_ils || dev.deal_price_ils) || 0;
     const ram_gb = Number(dev.ram_gb) || 0;
     const storage_gb = Number(dev.storage_gb) || 0;
+
+    const scraped_at = dev.scraped_at || '';
+    let days_old = 0;
+    if (scraped_at) {
+      const sDate = new Date(scraped_at);
+      if (!isNaN(sDate.getTime())) {
+        days_old = Math.max(0, Math.floor((new Date() - sDate) / (1000 * 60 * 60 * 24)));
+      }
+    }
+    const is_stale = days_old > 30;
 
     const item = {
       id: `mobile-${index}-${store.replace(/\s+/g, '_')}`,
@@ -662,7 +680,10 @@ async function loadCatalogData() {
       screen_source: 'listing_explicit',
       weight_source: 'chassis_decoder',
       battery_source: 'chassis_decoder',
-      confidence_level: dev.confidence_level || 'verified'
+      confidence_level: dev.confidence_level || 'verified',
+      scraped_at,
+      days_old,
+      is_stale
     };
     item.value_score = calculateValueScore(item);
     return item;
@@ -901,6 +922,7 @@ function setQuickPreset(preset) {
       battery: 0,
       upgradability: 0,
       sort: 'value-desc',
+      hideStale: false,
       filterDirs: {
         cpuGen: 'up',
         ram: 'up',
@@ -912,6 +934,8 @@ function setQuickPreset(preset) {
       }
     };
     if (storeFilter) storeFilter.value = 'all';
+    const filterHideStale = document.getElementById('filterHideStale');
+    if (filterHideStale) filterHideStale.checked = false;
     renderBrandPills();
     updateDualPriceSliderUI(minLimit, maxLimit);
     if (cpuGenFilter) cpuGenFilter.value = 'all';
@@ -939,6 +963,7 @@ function renderCatalog() {
     if (state.catalogFilters.category === 'laptops' && item.category !== 'laptops') return false;
     if (state.catalogFilters.category === 'phones' && item.category !== 'phones') return false;
     if (store !== 'all' && item.store !== store) return false;
+    if (state.catalogFilters.hideStale && item.is_stale) return false;
 
     if (brands && brands.length > 0) {
       if (!brands.some((b) => b.toLowerCase() === item.brand.toLowerCase())) return false;
@@ -1207,8 +1232,12 @@ function renderCatalog() {
         `;
       }
 
+      const dateText = laptop.scraped_at ? (laptop.days_old === 0 ? 'Today' : laptop.days_old === 1 ? '1d ago' : `${laptop.days_old}d ago`) : '';
+      const dateBadge = laptop.scraped_at ? `<span class="badge-scraped-date" title="Scraped on ${escapeHtml(laptop.scraped_at)}">📅 ${dateText}</span>` : '';
+      const staleBadge = laptop.is_stale ? `<span class="badge-stale" title="Scraped ${laptop.days_old} days ago (${escapeHtml(laptop.scraped_at)})">⚠️ Stale (>30d)</span>` : '';
+
       return `
-        <div class="catalog-card ${isTopValue ? 'top-value-card' : ''}">
+        <div class="catalog-card ${isTopValue ? 'top-value-card' : ''} ${laptop.is_stale ? 'stale-card' : ''}">
           <div class="card-header">
             <div class="card-title-group">
               <div class="tags-row">
@@ -1217,6 +1246,8 @@ function renderCatalog() {
                 ${laptop.warranty_months >= 24 ? '<span class="badge-warranty-24m">🛡️ 2-Yr Warranty</span>' : ''}
                 ${isTopValue ? '<span class="value-pick-badge">🏆 Best Value Pick</span>' : ''}
                 ${(laptop.weight_warning || laptop.battery_warning) ? `<span class="badge tag-spec-warn" title="${escapeHtml(laptop.weight_warning || laptop.battery_warning)}">⚠️ Spec Alert</span>` : ''}
+                ${dateBadge}
+                ${staleBadge}
               </div>
               <h3 class="laptop-title">${escapeHtml(laptop.title)}</h3>
             </div>
@@ -1523,6 +1554,181 @@ function bindEvents() {
       renderCatalog();
     });
   }
+
+  const filterHideStale = document.getElementById('filterHideStale');
+  if (filterHideStale) {
+    filterHideStale.addEventListener('change', (e) => {
+      state.catalogFilters.hideStale = Boolean(e.target.checked);
+      renderCatalog();
+    });
+  }
+
+  const scraperStatusBtn = document.getElementById('scraperStatusBtn');
+  const closeStatusModalBtn = document.getElementById('closeStatusModalBtn');
+  const closeStatusModalFooterBtn = document.getElementById('closeStatusModalFooterBtn');
+  const scraperStatusModal = document.getElementById('scraperStatusModal');
+
+  if (scraperStatusBtn) {
+    scraperStatusBtn.addEventListener('click', openScraperStatusModal);
+  }
+  if (closeStatusModalBtn) {
+    closeStatusModalBtn.addEventListener('click', closeScraperStatusModal);
+  }
+  if (closeStatusModalFooterBtn) {
+    closeStatusModalFooterBtn.addEventListener('click', closeScraperStatusModal);
+  }
+  if (scraperStatusModal) {
+    scraperStatusModal.addEventListener('click', (e) => {
+      if (e.target === scraperStatusModal) {
+        closeScraperStatusModal();
+      }
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeScraperStatusModal();
+    }
+  });
+}
+
+async function openScraperStatusModal() {
+  const modal = document.getElementById('scraperStatusModal');
+  const body = document.getElementById('scraperStatusBody');
+  const subtitle = document.getElementById('statusModalSubtitle');
+  if (!modal || !body) return;
+
+  body.innerHTML = '<div class="empty-state">Loading scraper run status...</div>';
+  modal.style.display = 'grid';
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  let statusData = null;
+  try {
+    const res = await fetch('./scraper_status.json', { cache: 'no-store' });
+    if (res.ok) {
+      statusData = await res.json();
+    }
+  } catch (err) {
+    console.warn('Could not load scraper_status.json', err);
+  }
+
+  if (!statusData) {
+    statusData = computeScraperStatusFromCatalog();
+  }
+
+  if (subtitle && statusData.last_updated) {
+    try {
+      const dt = new Date(statusData.last_updated);
+      subtitle.textContent = `Last pipeline audit: ${dt.toLocaleString()}`;
+    } catch (_) {}
+  }
+
+  renderScraperStatusBody(body, statusData);
+}
+
+function closeScraperStatusModal() {
+  const modal = document.getElementById('scraperStatusModal');
+  if (!modal) return;
+  modal.style.display = 'none';
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function computeScraperStatusFromCatalog() {
+  const now = new Date();
+  const laptopsByStore = {};
+  const mobileByStore = {};
+
+  state.catalogData.forEach((item) => {
+    const target = item.category === 'phones' ? mobileByStore : laptopsByStore;
+    if (!target[item.store]) {
+      target[item.store] = {
+        store: item.store,
+        count: 0,
+        scraped_at: item.scraped_at || '',
+        days_ago: item.days_old || 0,
+      };
+    }
+    target[item.store].count += 1;
+    if (item.scraped_at && (!target[item.store].scraped_at || item.scraped_at > target[item.store].scraped_at)) {
+      target[item.store].scraped_at = item.scraped_at;
+      target[item.store].days_ago = item.days_old || 0;
+    }
+  });
+
+  const formatStoreMap = (storeObj) => {
+    const res = {};
+    for (const [storeName, data] of Object.entries(storeObj)) {
+      const isFresh = data.days_ago <= 3;
+      const isStale = data.days_ago > 30;
+      let status = isFresh ? 'fresh' : (isStale ? 'stale' : 'preserved');
+      let note = isFresh ? 'Successfully scraped fresh catalog' :
+                 isStale ? `Stale listing (>30d ago: ${data.scraped_at})` :
+                 'Preserved stock (anti-bot challenge on CI runner)';
+      res[storeName] = {
+        display_name: storeName,
+        count: data.count,
+        scraped_at: data.scraped_at,
+        status,
+        days_ago: data.days_ago,
+        note
+      };
+    }
+    return res;
+  };
+
+  return {
+    last_updated: now.toISOString(),
+    laptops: {
+      total_items: Object.values(laptopsByStore).reduce((a, b) => a + b.count, 0),
+      stores: formatStoreMap(laptopsByStore)
+    },
+    mobile: {
+      total_items: Object.values(mobileByStore).reduce((a, b) => a + b.count, 0),
+      stores: formatStoreMap(mobileByStore)
+    }
+  };
+}
+
+function renderScraperStatusBody(body, statusData) {
+  const renderCategory = (title, icon, catData) => {
+    if (!catData || !catData.stores) return '';
+    const storesList = Object.values(catData.stores);
+    const freshCount = storesList.filter(s => s.status === 'fresh').length;
+
+    const rows = storesList.map(s => {
+      const isFresh = s.status === 'fresh';
+      const isStale = s.days_ago > 30;
+      let pillClass = isFresh ? 'fresh' : (isStale ? 'stale' : 'preserved');
+      let pillText = isFresh ? '🟢 Live & Fresh' : (isStale ? '🔴 Stale (>30d)' : '🟡 Preserved (WAF challenge)');
+      let daysText = s.days_ago === 0 ? 'Today' : (s.days_ago === 1 ? 'Yesterday' : `${s.days_ago}d ago`);
+      let dateMeta = s.scraped_at ? `Scraped: ${escapeHtml(s.scraped_at)} (${daysText})` : 'Date unknown';
+
+      return `
+        <div class="store-status-row">
+          <div class="store-status-info">
+            <span class="store-status-name">${escapeHtml(s.display_name)} (${s.count} items)</span>
+            <span class="store-status-meta">${dateMeta} &bull; ${escapeHtml(s.note || '')}</span>
+          </div>
+          <span class="status-pill ${pillClass}">${pillText}</span>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="status-category-block">
+        <h3>${icon} ${title} (${catData.total_items} items &bull; ${freshCount}/${storesList.length} stores refreshed)</h3>
+        <div class="store-status-list">
+          ${rows}
+        </div>
+      </div>
+    `;
+  };
+
+  const laptopsHtml = renderCategory('Refurbished Laptops', '💻', statusData.laptops);
+  const mobileHtml = renderCategory('Refurbished Phones & Tablets', '📱', statusData.mobile);
+
+  body.innerHTML = (laptopsHtml + mobileHtml) || '<div class="empty-state">No scraper status information available.</div>';
 }
 
 async function init() {

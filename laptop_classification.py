@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime
 import html
 import re
 import urllib.parse
@@ -603,6 +604,7 @@ class HardwareClassifier:
         is_2in1: Optional[bool] = None,
         analysis_text: Optional[str] = None,
         image_url: str = "",
+        scraped_at: Optional[str] = None,
     ) -> LaptopItem:
         """Factory that constructs a fully normalized LaptopItem with hardware analysis and provenance tags."""
         text = analysis_text or title
@@ -646,6 +648,7 @@ class HardwareClassifier:
 
         resolved_deal_price = deal_price_ils if deal_price_ils is not None else price_ils
         resolved_deal_label = deal_label or f"{resolved_deal_price:,} ₪"
+        resolved_scraped_at = scraped_at or datetime.date.today().isoformat()
 
         return LaptopItem(
             store=store,
@@ -680,5 +683,6 @@ class HardwareClassifier:
             confidence_level=confidence_level,
             weight_warning=weight_warn,
             battery_warning=battery_warn,
+            scraped_at=resolved_scraped_at,
         )
 

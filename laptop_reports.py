@@ -20,10 +20,73 @@ SUMMARY_MD_PATH = FULL_CATALOG_MD_PATH
 JSON_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.json")
 CSV_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.csv")
 ENV_FILE_PATH = os.path.join(WORKSPACE_DIR, ".env")
+SCRAPER_STATUS_PATH = os.path.join(WORKSPACE_DIR, "scraper_status.json")
 
 
 class ReportGenerator:
     """Exports structured datasets and generates comprehensive comparison markdown guides."""
+
+    @staticmethod
+    def update_scraper_status(
+        results: Dict[str, List[LaptopItem]],
+        fresh_counts: Dict[str, int],
+        preserved_counts: Dict[str, int],
+        block_reasons: Dict[str, str],
+        filepath: str = SCRAPER_STATUS_PATH,
+    ):
+        status_data = {}
+        if os.path.exists(filepath):
+            try:
+                with open(filepath, "r", encoding="utf-8") as f:
+                    status_data = json.load(f)
+            except Exception:
+                pass
+
+        today = datetime.date.today()
+        store_map = {}
+        total_items = 0
+        for name, items in results.items():
+            count = len(items)
+            total_items += count
+            fresh = fresh_counts.get(name, 0)
+            scraped_at = items[0].scraped_at if items and hasattr(items[0], "scraped_at") and items[0].scraped_at else today.isoformat()
+            days_ago = 0
+            try:
+                s_dt = datetime.date.fromisoformat(scraped_at)
+                days_ago = (today - s_dt).days
+            except Exception:
+                pass
+
+            display_name = getattr(items[0], "store", name) if items else name
+            if fresh > 0:
+                st = "fresh"
+                note = "Successfully scraped fresh catalog"
+            else:
+                st = "preserved"
+                reason = block_reasons.get(name) or "Anti-bot challenge or unreachable in CI"
+                note = f"Preserved stock ({reason})"
+
+            store_map[name] = {
+                "display_name": display_name,
+                "count": count,
+                "scraped_at": scraped_at,
+                "status": st,
+                "days_ago": days_ago,
+                "note": note
+            }
+
+        status_data["last_updated"] = datetime.datetime.now().isoformat()
+        status_data["laptops"] = {
+            "total_items": total_items,
+            "stores": store_map
+        }
+
+        try:
+            with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(status_data, f, ensure_ascii=False, indent=2)
+            logger.info(f"Updated scraper status JSON: {filepath}")
+        except Exception as e:
+            logger.warning(f"Could not write scraper status: {e}")
 
     @staticmethod
     def export_json(data: Dict[str, List[LaptopItem]], filepath: str):
@@ -215,15 +278,28 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
             if extra_note:
                 md_parts.append(f"\n*({extra_note})*\n")
             md_parts.append("""
-| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Direct Link |
-| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: |
+| # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Scraped | Direct Link |
+| :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: | :---: |
 """)
+            today = datetime.date.today()
             for i, itm in enumerate(items_list, 1):
                 score_badge = f"🟢 {itm.upgradability_score}" if itm.upgradability_score >= 8.5 else (f"🟡 {itm.upgradability_score}" if itm.upgradability_score >= 7.0 else f"🟠 {itm.upgradability_score}")
                 ram_gen_str = f" {itm.ram_gen}" if getattr(itm, 'ram_gen', '') else ""
                 weight_warn_str = " ⚠️ *(Typo alert)*" if getattr(itm, 'weight_warning', '') else ""
                 battery_warn_str = " ⚠️ *(Typo alert)*" if getattr(itm, 'battery_warning', '') else ""
-                md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg{weight_warn_str} | 🔋 {itm.battery_wh} Wh{battery_warn_str} | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | [View Product]({itm.url}) |\n")
+                scraped_str = getattr(itm, 'scraped_at', '') or today.isoformat()
+                stale_badge = ""
+                try:
+                    s_dt = datetime.date.fromisoformat(scraped_str)
+                    days_old = (today - s_dt).days
+                    if days_old > 30:
+                        stale_badge = f" ⚠️ *({days_old}d ago - Stale)*"
+                    elif days_old > 1:
+                        stale_badge = f" *({days_old}d ago)*"
+                except Exception:
+                    pass
+                scraped_cell = f"{scraped_str}{stale_badge}"
+                md_parts.append(f"| {i} | **{itm.title}** | {itm.cpu} | {itm.ram_gb}GB{ram_gen_str} / {itm.storage_gb}GB | {itm.screen_size_in}\" | ⚖️ {itm.weight_kg} kg{weight_warn_str} | 🔋 {itm.battery_wh} Wh{battery_warn_str} | **{itm.deal_label}** | {itm.storage_type} | {score_badge} | {scraped_cell} | [View Product]({itm.url}) |\n")
 
         _append_store_section(1, "IT Outlet (איי טי אאוטלט)", it_items)
         _append_store_section(2, "Ecology Computers (אקולוגיה לקהילה מוגנת)", eco_items, "All laptops include a full 24-Month / 2-Year Warranty")

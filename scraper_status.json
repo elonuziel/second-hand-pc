@@ -1,0 +1,157 @@
+{
+  "last_updated": "2026-09-25T17:01:54.161918",
+  "laptops": {
+    "total_items": 246,
+    "stores": {
+      "itoutlet": {
+        "display_name": "IT Outlet",
+        "count": 36,
+        "scraped_at": "2026-09-24",
+        "status": "fresh",
+        "days_ago": 1,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "ecology": {
+        "display_name": "Ecology Computers",
+        "count": 7,
+        "scraped_at": "2026-09-24",
+        "status": "fresh",
+        "days_ago": 1,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "p1000": {
+        "display_name": "P1000",
+        "count": 28,
+        "scraped_at": "2026-09-24",
+        "status": "fresh",
+        "days_ago": 1,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "ofekpc": {
+        "display_name": "Ofek PC",
+        "count": 11,
+        "scraped_at": "2026-09-24",
+        "status": "fresh",
+        "days_ago": 1,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "volt": {
+        "display_name": "VOLT Green Computing",
+        "count": 60,
+        "scraped_at": "2026-09-23",
+        "status": "fresh",
+        "days_ago": 2,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "cwc": {
+        "display_name": "Olam HaKolnoa (CWC)",
+        "count": 29,
+        "scraped_at": "2026-09-23",
+        "status": "fresh",
+        "days_ago": 2,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "lts": {
+        "display_name": "LaptopTech LTS",
+        "count": 29,
+        "scraped_at": "2026-09-20",
+        "status": "fresh",
+        "days_ago": 5,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "recomp": {
+        "display_name": "Recomp Computers",
+        "count": 6,
+        "scraped_at": "2026-09-15",
+        "status": "preserved",
+        "days_ago": 10,
+        "note": "Preserved stock (connection timeout on CI runner)"
+      },
+      "payngo": {
+        "display_name": "Machsanei Hashmal (Payngo)",
+        "count": 8,
+        "scraped_at": "2026-09-12",
+        "status": "preserved",
+        "days_ago": 13,
+        "note": "Preserved stock (Cloudflare bot challenge HTTP 403 on CI runner)"
+      },
+      "alm": {
+        "display_name": "A.L.M",
+        "count": 6,
+        "scraped_at": "2026-09-12",
+        "status": "preserved",
+        "days_ago": 13,
+        "note": "Preserved stock (bot challenge on CI runner)"
+      },
+      "shufersal": {
+        "display_name": "Shufersal Online",
+        "count": 19,
+        "scraped_at": "2026-09-12",
+        "status": "preserved",
+        "days_ago": 13,
+        "note": "Preserved stock (bot challenge on CI runner)"
+      },
+      "lastprice": {
+        "display_name": "LastPrice Laptops",
+        "count": 7,
+        "scraped_at": "2026-09-12",
+        "status": "preserved",
+        "days_ago": 13,
+        "note": "Preserved stock (WAF challenge on CI runner)"
+      }
+    }
+  },
+  "mobile": {
+    "total_items": 116,
+    "stores": {
+      "partner": {
+        "display_name": "Partner Plus",
+        "count": 30,
+        "scraped_at": "2026-09-24",
+        "status": "fresh",
+        "days_ago": 1,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "itoutlet": {
+        "display_name": "IT Outlet Mobile",
+        "count": 8,
+        "scraped_at": "2026-09-24",
+        "status": "fresh",
+        "days_ago": 1,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "gomobile": {
+        "display_name": "GoMobile Outlet",
+        "count": 10,
+        "scraped_at": "2026-09-18",
+        "status": "fresh",
+        "days_ago": 7,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "dynamica": {
+        "display_name": "Dynamica Outlet",
+        "count": 35,
+        "scraped_at": "2026-09-12",
+        "status": "preserved",
+        "days_ago": 13,
+        "note": "Preserved stock (WAF bot challenge on CI runner)"
+      },
+      "vmobile": {
+        "display_name": "VMobile",
+        "count": 27,
+        "scraped_at": "2026-09-12",
+        "status": "preserved",
+        "days_ago": 13,
+        "note": "Preserved stock (WAF bot challenge on CI runner)"
+      },
+      "lastprice": {
+        "display_name": "LastPrice Mobile",
+        "count": 6,
+        "scraped_at": "2026-09-12",
+        "status": "preserved",
+        "days_ago": 13,
+        "note": "Preserved stock (WAF bot challenge on CI runner)"
+      }
+    }
+  }
+}

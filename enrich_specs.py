@@ -18,6 +18,7 @@ import csv
 import json
 import logging
 import argparse
+import datetime
 from typing import Dict, List, Tuple, Any, Optional, Union
 from scraper import HardwareClassifier, LaptopItem, ReportGenerator, GroqSpecEnhancer
 
@@ -117,6 +118,7 @@ class SpecEnricher:
         )
         laptop["weight_warning"] = weight_warn
         laptop["battery_warning"] = battery_warn
+        laptop["scraped_at"] = laptop.get("scraped_at") or datetime.date.today().isoformat()
         if weight_warn or battery_warn:
             laptop["confidence_level"] = "warning"
         else:
@@ -132,7 +134,7 @@ def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = FULL_CATA
     with open(json_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    store_map: Dict[str, List[LaptopItem]] = {"itoutlet": [], "ecology": [], "lts": [], "recomp": []}
+    store_map: Dict[str, List[LaptopItem]] = {}
     if isinstance(data, dict):
         for k, v in data.items():
             laptop_items = []
@@ -141,12 +143,21 @@ def update_summary_markdown(json_file: str = JSON_PATH, md_file: str = FULL_CATA
                 laptop_items.append(LaptopItem(**fields))
             store_map[k] = laptop_items
     elif isinstance(data, list):
+        store_aliases = {
+            "itoutlet": "itoutlet", "eco": "ecology", "lts": "lts", "recomp": "recomp",
+            "cwc": "cwc", "olam": "cwc", "payngo": "payngo", "alm": "alm",
+            "shufersal": "shufersal", "p1000": "p1000", "lastprice": "lastprice",
+            "volt": "volt", "ofek": "ofekpc"
+        }
         for itm in data:
             st = itm.get("store", "").lower().replace(" ", "")
-            key = "itoutlet" if "itoutlet" in st else ("ecology" if "eco" in st else ("lts" if "lts" in st else "recomp"))
+            target_key = "itoutlet"
+            for alias, skey in store_aliases.items():
+                if alias in st:
+                    target_key = skey
+                    break
             fields = {f: itm[f] for f in itm if f in LaptopItem.__dataclass_fields__}
-            if key in store_map:
-                store_map[key].append(LaptopItem(**fields))
+            store_map.setdefault(target_key, []).append(LaptopItem(**fields))
 
     ReportGenerator.update_summary_markdown(store_map, md_file)
     logger.info(f"Summary markdown updated at {md_file}")

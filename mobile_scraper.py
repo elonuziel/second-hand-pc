@@ -100,6 +100,7 @@ class MobileItem:
     screen_size_in: float = 6.1
     image_url: str = ""
     confidence_level: str = "verified"
+    scraped_at: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -221,7 +222,8 @@ class MobileClassifier:
         deal_label: Optional[str] = None,
         warranty_months: int = 12,
         stock_status: str = "🟢 In Stock",
-        image_url: str = ""
+        image_url: str = "",
+        scraped_at: Optional[str] = None,
     ) -> MobileItem:
         clean_title = ' '.join(re.sub(r'<[^>]+>', ' ', title).split())
         brand = cls.detect_brand(clean_title)
@@ -232,6 +234,7 @@ class MobileClassifier:
 
         resolved_deal_price = deal_price_ils if deal_price_ils is not None else price_ils
         resolved_deal_label = deal_label or f"{resolved_deal_price:,} ₪"
+        resolved_scraped_at = scraped_at or datetime.date.today().isoformat()
 
         return MobileItem(
             store=store,
@@ -248,7 +251,8 @@ class MobileClassifier:
             stock_status=stock_status,
             url=url,
             screen_size_in=screen_size,
-            image_url=image_url
+            image_url=image_url,
+            scraped_at=resolved_scraped_at,
         )
 
 
@@ -418,6 +422,68 @@ class PartnerPlusScraper:
 
 
 class MobileReportGenerator:
+    SCRAPER_STATUS_PATH = os.path.join(WORKSPACE_DIR, "scraper_status.json")
+
+    @staticmethod
+    def update_scraper_status(
+        results: Dict[str, List[MobileItem]],
+        fresh_counts: Dict[str, int],
+        preserved_counts: Dict[str, int],
+        filepath: str = SCRAPER_STATUS_PATH,
+    ):
+        status_data = {}
+        if os.path.exists(filepath):
+            try:
+                with open(filepath, "r", encoding="utf-8") as f:
+                    status_data = json.load(f)
+            except Exception:
+                pass
+
+        today = datetime.date.today()
+        store_map = {}
+        total_items = 0
+        for name, items in results.items():
+            count = len(items)
+            total_items += count
+            fresh = fresh_counts.get(name, 0)
+            scraped_at = items[0].scraped_at if items and hasattr(items[0], "scraped_at") and items[0].scraped_at else today.isoformat()
+            days_ago = 0
+            try:
+                s_dt = datetime.date.fromisoformat(scraped_at)
+                days_ago = (today - s_dt).days
+            except Exception:
+                pass
+
+            display_name = getattr(items[0], "store", name) if items else name
+            if fresh > 0:
+                st = "fresh"
+                note = "Successfully scraped fresh catalog"
+            else:
+                st = "preserved"
+                note = "Preserved stock (anti-bot challenge or unreachable in CI)"
+
+            store_map[name] = {
+                "display_name": display_name,
+                "count": count,
+                "scraped_at": scraped_at,
+                "status": st,
+                "days_ago": days_ago,
+                "note": note
+            }
+
+        status_data["last_updated"] = datetime.datetime.now().isoformat()
+        status_data["mobile"] = {
+            "total_items": total_items,
+            "stores": store_map
+        }
+
+        try:
+            with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(status_data, f, ensure_ascii=False, indent=2)
+            logger.info(f"Updated scraper status JSON (mobile): {filepath}")
+        except Exception as e:
+            logger.warning(f"Could not write mobile scraper status: {e}")
+
     @staticmethod
     def export_json(data: Dict[str, List[MobileItem]], filepath: str):
         serializable = {k: [item.to_dict() for item in v] for k, v in data.items()}
@@ -456,14 +522,27 @@ class MobileReportGenerator:
             f"*Last Automated Live Audit: {now_str}*\n\n",
             "---\n\n",
             "## 📱 Live Mobile Devices Catalog & Stock Audit\n\n",
-            "| # | Model / Device Title | Brand | Type | RAM & Storage | Screen | Deal Price | Store | Warranty | Direct Link |\n",
-            "| :-: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |\n"
+            "| # | Model / Device Title | Brand | Type | RAM & Storage | Screen | Deal Price | Store | Warranty | Scraped | Direct Link |\n",
+            "| :-: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |\n"
         ]
 
+        today = datetime.date.today()
         for i, dev in enumerate(all_devices, 1):
             type_badge = "📱 Phone" if dev.device_type == "phone" else "📱 Tablet"
+            scraped_str = getattr(dev, 'scraped_at', '') or today.isoformat()
+            stale_badge = ""
+            try:
+                s_dt = datetime.date.fromisoformat(scraped_str)
+                days_old = (today - s_dt).days
+                if days_old > 30:
+                    stale_badge = f" ⚠️ *({days_old}d ago - Stale)*"
+                elif days_old > 1:
+                    stale_badge = f" *({days_old}d ago)*"
+            except Exception:
+                pass
+            scraped_cell = f"{scraped_str}{stale_badge}"
             md_parts.append(
-                f"| {i} | **{dev.title}** | {dev.brand} | {type_badge} | {dev.ram_gb}GB / {dev.storage_gb}GB | {dev.screen_size_in}\" | **{dev.deal_label}** | {dev.store} | {dev.warranty_months}M | [View Product]({dev.url}) |\n"
+                f"| {i} | **{dev.title}** | {dev.brand} | {type_badge} | {dev.ram_gb}GB / {dev.storage_gb}GB | {dev.screen_size_in}\" | **{dev.deal_label}** | {dev.store} | {dev.warranty_months}M | {scraped_cell} | [View Product]({dev.url}) |\n"
             )
 
         with open(filepath, "w", encoding="utf-8") as f:
@@ -735,6 +814,9 @@ def main():
         max_workers=args.workers
     )
 
+    fresh_counts: Dict[str, int] = {_name: len(_items) for _name, _items in results.items()}
+    preserved_counts: Dict[str, int] = {}
+
     all_items: List[MobileItem] = []
     for store_name, items in results.items():
         all_items.extend(items)
@@ -752,6 +834,7 @@ def main():
                         "⚠️  Mobile store '%s' returned 0 items — preserving %d previously scraped items.",
                         _key, len(_prev_raw[_key])
                     )
+                    preserved_counts[_key] = len(_prev_raw[_key])
                     results[_key] = [
                         MobileItem(**{k: v for k, v in _d.items() if k in _fields})
                         for _d in _prev_raw[_key]
@@ -767,12 +850,13 @@ def main():
     ReportGenerator_export = MobileReportGenerator
     ReportGenerator_export.export_json(results, JSON_PATH)
 
-
     if args.csv:
         ReportGenerator_export.export_csv(all_items, CSV_PATH)
 
     if not args.no_md:
         ReportGenerator_export.update_summary_markdown(results, FULL_MOBILE_CATALOG_MD_PATH)
+
+    ReportGenerator_export.update_scraper_status(results, fresh_counts, preserved_counts)
 
     print("\n" + "=" * 65)
     print(f"📊 MOBILE LIVE AUDIT COMPLETE: {len(all_items)} total devices parsed across {len(results)} stores.")

@@ -127,7 +127,27 @@ class TestMobileDataHealth(unittest.TestCase):
             f"(minimum {REQUIRED_MINIMUM} required). Missing: {missing_stores}"
         )
 
-
+    def test_scraped_at_timestamp_validity(self):
+        """Every mobile item must have a valid scraped_at date formatted as YYYY-MM-DD."""
+        import datetime
+        import re
+        date_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+        with open(MOBILE_JSON_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        total_items = 0
+        for store_key, items in data.items():
+            for item in items:
+                total_items += 1
+                scraped_at = item.get("scraped_at")
+                title = item.get("title", "Unknown")
+                self.assertIsNotNone(scraped_at, f"Mobile item '{title}' in {store_key} is missing 'scraped_at' field")
+                self.assertTrue(bool(scraped_at), f"Mobile item '{title}' in {store_key} has empty 'scraped_at' field")
+                self.assertTrue(bool(date_pattern.match(scraped_at)), f"Mobile item '{title}' in {store_key} has invalid date format: '{scraped_at}'")
+                try:
+                    datetime.date.fromisoformat(scraped_at)
+                except ValueError:
+                    self.fail(f"Mobile item '{title}' in {store_key} has unparseable ISO date: '{scraped_at}'")
+        self.assertGreater(total_items, 0, "No mobile items found to test scraped_at")
 
 
 class TestFrontendCompatibility(unittest.TestCase):
@@ -136,6 +156,22 @@ class TestFrontendCompatibility(unittest.TestCase):
         res = subprocess.run(cmd, capture_output=True, text=True, cwd=WORKSPACE_DIR)
         self.assertEqual(res.returncode, 0, f"app.js failed node execution: {res.stderr}")
 
+    def test_app_js_parse_days_old(self):
+        cmd = [
+            "node", "-e",
+            """
+            const app = require('./app.js');
+            const today = new Date().toISOString().slice(0, 10);
+            if (app.parseDaysOld(today) !== 0) throw new Error('Today should be 0 days old');
+            if (app.parseDaysOld('2020-01-01') <= 30) throw new Error('2020-01-01 should be > 30 days old');
+            if (app.parseDaysOld('') !== 0) throw new Error('Empty date should return 0');
+            console.log('OK');
+            """
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True, cwd=WORKSPACE_DIR)
+        self.assertEqual(res.returncode, 0, f"parseDaysOld validation failed: {res.stderr}")
+
 
 if __name__ == "__main__":
     unittest.main()
+
