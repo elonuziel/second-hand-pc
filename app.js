@@ -52,6 +52,16 @@ const state = {
   }
 };
 
+function buildVisibleDocs() {
+  const queryLower = state.query ? state.query.toLowerCase() : '';
+  return docs.filter((doc) => {
+    const matchesFilter = state.filter === 'all' || doc.category === state.filter;
+    const haystack = `${doc.title} ${doc.file}`.toLowerCase();
+    const matchesQuery = !queryLower || haystack.includes(queryLower);
+    return matchesFilter && matchesQuery;
+  });
+}
+
 const tabList = typeof document !== 'undefined' ? document.getElementById('tabList') : null;
 const documentContent = typeof document !== 'undefined' ? document.getElementById('documentContent') : null;
 const catalogContent = typeof document !== 'undefined' ? document.getElementById('catalogContent') : null;
@@ -1748,5 +1758,5 @@ async function init() {
 init();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen, getCpuGenRank, getStoreClass, parseDaysOld };
+  module.exports = { docs, state, buildVisibleDocs, escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen, getCpuGenRank, getStoreClass, parseDaysOld };
 }
