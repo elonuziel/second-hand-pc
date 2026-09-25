@@ -33,7 +33,7 @@ class HardwareClassifier:
     _GEN3_RE = re.compile(r'(?:3rd|דור\s*3|(?<![a-z0-9])3\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?3\b|\bgen\s*3(?!\d)|t430|x230|e6530|e6230|9470m|3[0-9]{3}[uhm]|3687u|3210m|3320m|3340m)', re.IGNORECASE)
     _GEN2_RE = re.compile(r'(?:2nd|דור\s*2|(?<![a-z0-9])2\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?2\b|\bgen\s*2(?!\d)|t420|x220|e6420|n5110|2[0-9]{3}[uhm]|2410m|2520m|2540m)', re.IGNORECASE)
 
-    _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
+    _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
     _EXPLICIT_RAM_RE = re.compile(
         r'(?:(?:ram|זכרון|זיכרון|memory)\s*(?:של\s*)?(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)?'
         r'|(?<!דור\s)(?<!דור)(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)\s*(?:ram|זכרון|זיכרון|memory)'
@@ -54,6 +54,33 @@ class HardwareClassifier:
         re.IGNORECASE
     )
     _RAM_GEN_EXPLICIT_RE = re.compile(r'\b(lpddr5x|lpddr5|ddr5|lpddr4x|lpddr4|ddr4|ddr3l|ddr3)\b', re.IGNORECASE)
+
+    _APPLE_SILICON_RE = re.compile(r'\b(?:apple\s*m[123]|m[123]\s*(?:pro|max|ultra))\b', re.IGNORECASE)
+    _M3_RE = re.compile(r'\bm3\b', re.IGNORECASE)
+    _M2_RE = re.compile(r'\bm2\b', re.IGNORECASE)
+    _M2_DISCARD_RE = re.compile(r'\bm\.?2\s*(?:ssd|nvme|pcie|דיסק)', re.IGNORECASE)
+    _M1_RE = re.compile(r'\bm1\b', re.IGNORECASE)
+    _CORE_ULTRA_RE = re.compile(r'\b(?:core\s*ultra|ultra)\s*([3579])\b', re.IGNORECASE)
+    _AMD_ATHLON_RE = re.compile(r'\b(?:athlon|3020e|4020e)\b', re.IGNORECASE)
+    _AMD_A_SERIES_1_RE = re.compile(r'\b(?:a[468]|a10)\b', re.IGNORECASE)
+    _AMD_A_SERIES_2_RE = re.compile(r'amd.*(?:a4|a6|a8|a10)', re.IGNORECASE)
+    _ATOM_RE = re.compile(r'\b(?:atom|n270|n450|z[0-9]{3}|10v|nb100)\b', re.IGNORECASE)
+    _CORE_2_DUO_RE = re.compile(r'\b(?:c2d|core\s*2\s*duo|su[0-9]{4}|l[0-9]{4}|t[0-9]{4}|p[0-9]{4}|x60|x61|x61s|x301)\b', re.IGNORECASE)
+    _PENTIUM_RE = re.compile(r'\b(?:pentium|centrino|t43|r40)\b', re.IGNORECASE)
+    _INTEL_I_LEVEL_RE = re.compile(r'\b(i[3579])\b', re.IGNORECASE)
+
+    _RYZEN_6K_RE = re.compile(r'ryzen\s*[3579]?\s*(?:pro\s*)?[678]\d{3}', re.IGNORECASE)
+
+    _DELL_MODEL_RE = re.compile(r'\b(?:latitude|precision)?\s*([3579])([34567])([0-9])([05])?\b', re.IGNORECASE)
+    _DELL_MODEL_SIMPLE_RE = re.compile(r'\b(?:latitude)?\s*([3579])([34567])([0-9])([05])?\b', re.IGNORECASE)
+    _TP_MODEL_RE = re.compile(r'\b(?:thinkpad\s*)?([txple])(13|14|15|16)(s)?\b', re.IGNORECASE)
+    _HP_MODEL_RE = re.compile(r'\b(?:elitebook|probook)?\s*([468])([3456])([05])\b', re.IGNORECASE)
+
+    _WEIGHT_HEBREW_RE = re.compile(r'(?:משקל\s*[:\-]?\s*)?(\d+(?:\.\d+)?)\s*(?:kg|ק["\'״]*ג|קג)\b', re.IGNORECASE)
+    _WEIGHT_ENGLISH_RE = re.compile(r'\bweight\s*[:\-]?\s*(\d+(?:\.\d+)?)\s*(?:kg)?\b', re.IGNORECASE)
+
+    _BATTERY_HEBREW_RE = re.compile(r'(\d{2,3})\s*(?:whr?|w/h|watt|וואט(?:-שעה)?)\b', re.IGNORECASE)
+    _BATTERY_ENGLISH_RE = re.compile(r'\bbattery\s*[:\-]?\s*(\d{2,3})\s*(?:whr?|w/h)?\b', re.IGNORECASE)
 
     # Constant tuples for brand and architecture detection to avoid list allocation at runtime
     _LENOVO_KEYWORDS = ('thinkpad', 'lenovo', 'ideapad', 'legion', 'לנובו')
@@ -141,13 +168,13 @@ class HardwareClassifier:
     def detect_cpu(cls, title: str) -> str:
         t = title.lower()
         # Apple Silicon (must be Apple/MacBook or explicit Apple M-series, not M.2 NVMe SSD)
-        if any(k in t for k in ['apple', 'macbook', 'mac']) or re.search(r'\b(?:apple\s*m[123]|m[123]\s*(?:pro|max|ultra))\b', t):
-            if re.search(r'\bm3\b', t): return "Apple M3"
-            if re.search(r'\bm2\b', t) and not re.search(r'\bm\.?2\s*(?:ssd|nvme|pcie|דיסק)', t): return "Apple M2"
-            if re.search(r'\bm1\b', t): return "Apple M1"
+        if any(k in t for k in ['apple', 'macbook', 'mac']) or cls._APPLE_SILICON_RE.search(t):
+            if cls._M3_RE.search(t): return "Apple M3"
+            if cls._M2_RE.search(t) and not cls._M2_DISCARD_RE.search(t): return "Apple M2"
+            if cls._M1_RE.search(t): return "Apple M1"
 
         # Modern Intel Core Ultra (Meteor Lake)
-        ultra_m = re.search(r'\b(?:core\s*ultra|ultra)\s*([3579])\b', t)
+        ultra_m = cls._CORE_ULTRA_RE.search(t)
         if ultra_m:
             return f"Intel Core Ultra {ultra_m.group(1)}"
         if 'core ultra' in t or 'meteor lake' in t:
@@ -158,16 +185,16 @@ class HardwareClassifier:
         if 'ryzen 5' in t: return "AMD Ryzen 5 PRO"
         if 'ryzen 3' in t: return "AMD Ryzen 3 PRO"
         if 'ryzen' in t: return "AMD Ryzen"
-        if re.search(r'\b(?:athlon|3020e|4020e)\b', t): return "AMD Athlon"
-        if re.search(r'\b(?:a[468]|a10)\b', t) or re.search(r'amd.*(?:a4|a6|a8|a10)', t): return "AMD A-Series"
+        if cls._AMD_ATHLON_RE.search(t): return "AMD Athlon"
+        if cls._AMD_A_SERIES_1_RE.search(t) or cls._AMD_A_SERIES_2_RE.search(t): return "AMD A-Series"
         if 'amd' in t: return "AMD Ryzen"
 
         # Legacy Intel Architectures & Low-Power CPUs
-        if re.search(r'\b(?:atom|n270|n450|z[0-9]{3}|10v|nb100)\b', t) or 'נטבוק' in t or (('מיני' in t or 'mini' in t) and any(k in t for k in ['atom', '10v', 'nb100'])):
+        if cls._ATOM_RE.search(t) or 'נטבוק' in t or (('מיני' in t or 'mini' in t) and any(k in t for k in ['atom', '10v', 'nb100'])):
             return "Intel Atom"
-        if re.search(r'\b(?:c2d|core\s*2\s*duo|su[0-9]{4}|l[0-9]{4}|t[0-9]{4}|p[0-9]{4}|x60|x61|x61s|x301)\b', t):
+        if cls._CORE_2_DUO_RE.search(t):
             return "Intel Core 2 Duo"
-        if re.search(r'\b(?:pentium|centrino|t43|r40)\b', t):
+        if cls._PENTIUM_RE.search(t):
             return "Intel Pentium"
         if 'celeron' in t: return "Intel Celeron"
         if 'xeon' in t: return "Intel Xeon"
@@ -185,7 +212,7 @@ class HardwareClassifier:
         gen3 = cls._GEN3_RE.search(t)
         gen2 = cls._GEN2_RE.search(t)
 
-        has_i_explicit = re.search(r'\b(i[3579])\b', t)
+        has_i_explicit = cls._INTEL_I_LEVEL_RE.search(t)
         if has_i_explicit:
             i_level = has_i_explicit.group(1).lower()
         else:
@@ -214,8 +241,9 @@ class HardwareClassifier:
         cleaned = cls._GPU_VRAM_RE.sub(" ", title)
 
         # 2. First priority: explicit RAM keyword in cleaned title
-        for m in cls._EXPLICIT_RAM_RE.finditer(cleaned):
-            val = m.group(1) or m.group(2) or m.group(3)
+        m_exp = cls._EXPLICIT_RAM_RE.search(cleaned)
+        if m_exp:
+            val = m_exp.group(1) or m_exp.group(2) or m_exp.group(3)
             if val:
                 return int(val)
 
@@ -320,7 +348,7 @@ class HardwareClassifier:
             return ("Unified LPDDR5", "chassis_decoder") if return_source else "Unified LPDDR5"
 
         # 3. Modern DDR5 era (Core Ultra, 13th Gen, Ryzen 6000+)
-        ryzen_6k_plus = bool(re.search(r'ryzen\s*[3579]?\s*(?:pro\s*)?[678]\d{3}', t + " " + cpu_low))
+        ryzen_6k_plus = bool(cls._RYZEN_6K_RE.search(t + " " + cpu_low))
         if "core ultra" in cpu_low or "13th gen" in cpu_low or ryzen_6k_plus:
             val = "LPDDR5" if is_soldered else "DDR5"
             return (val, "chassis_decoder") if return_source else val
@@ -390,7 +418,7 @@ class HardwareClassifier:
             return (12.5, "chassis_decoder") if return_source else 12.5
 
         # Generative algorithmic syntax decoders (Dell, ThinkPad, HP)
-        dell_m = re.search(r'\b(?:latitude|precision)?\s*([3579])([34567])([0-9])([05])?\b', t)
+        dell_m = cls._DELL_MODEL_RE.search(t)
         if dell_m and ('dell' in t or 'latitude' in t or 'precision' in t):
             s_digit = dell_m.group(2)
             if s_digit == '3': return (13.3, "chassis_decoder") if return_source else 13.3
@@ -399,7 +427,7 @@ class HardwareClassifier:
             if s_digit == '6': return (16.0, "chassis_decoder") if return_source else 16.0
             if s_digit == '7': return (17.3, "chassis_decoder") if return_source else 17.3
 
-        tp_m = re.search(r'\b(?:thinkpad\s*)?([txple])(13|14|15|16)(s)?\b', t)
+        tp_m = cls._TP_MODEL_RE.search(t)
         if tp_m:
             tp_screen = tp_m.group(2)
             if tp_screen == '13': return (13.3, "chassis_decoder") if return_source else 13.3
@@ -407,7 +435,7 @@ class HardwareClassifier:
             if tp_screen == '15': return (15.6, "chassis_decoder") if return_source else 15.6
             if tp_screen == '16': return (16.0, "chassis_decoder") if return_source else 16.0
 
-        hp_m = re.search(r'\b(?:elitebook|probook)?\s*([468])([3456])([05])\b', t)
+        hp_m = cls._HP_MODEL_RE.search(t)
         if hp_m and ('hp' in t or 'elitebook' in t or 'probook' in t):
             hp_screen = hp_m.group(2)
             if hp_screen == '3': return (13.3, "chassis_decoder") if return_source else 13.3
@@ -422,14 +450,16 @@ class HardwareClassifier:
         t = title.lower()
 
         # Check explicit weight in text
-        wt_m = re.search(r'(?:משקל\s*[:\-]?\s*)?(\d+(?:\.\d+)?)\s*(?:kg|ק["\'״]*ג|קג)\b', t)
+        wt_m = cls._WEIGHT_HEBREW_RE.search(t)
         if not wt_m:
-            wt_m = re.search(r'\bweight\s*[:\-]?\s*(\d+(?:\.\d+)?)\s*(?:kg)?\b', t)
+            wt_m = cls._WEIGHT_ENGLISH_RE.search(t)
         if wt_m:
             try:
-                w = float(wt_m.group(1))
-                if 0.7 <= w <= 5.0:
-                    return (w, "listing_explicit") if return_source else w
+                w_str = wt_m.group(1)
+                if w_str:
+                    w = float(w_str)
+                    if 0.7 <= w <= 5.0:
+                        return (w, "listing_explicit") if return_source else w
             except (ValueError, TypeError):
                 pass
 
@@ -470,7 +500,7 @@ class HardwareClassifier:
             return (2.30, "chassis_decoder") if return_source else 2.30
 
         # Algorithmic syntax decoders for weight
-        dell_m = re.search(r'\b(?:latitude)?\s*([3579])([34567])([0-9])([05])?\b', t)
+        dell_m = cls._DELL_MODEL_SIMPLE_RE.search(t)
         if dell_m and ('dell' in t or 'latitude' in t):
             tier = dell_m.group(1)
             s_digit = dell_m.group(2)
@@ -484,7 +514,7 @@ class HardwareClassifier:
                 w = 1.50
             return (w, "chassis_decoder") if return_source else w
 
-        tp_m = re.search(r'\b(?:thinkpad\s*)?([txple])(13|14|15|16)(s)?\b', t)
+        tp_m = cls._TP_MODEL_RE.search(t)
         if tp_m:
             s_digit = tp_m.group(2)
             if tp_m.group(3): w = 1.25 if s_digit == '13' else 1.35
@@ -495,7 +525,7 @@ class HardwareClassifier:
             else: w = 1.50
             return (w, "chassis_decoder") if return_source else w
 
-        hp_m = re.search(r'\b(?:elitebook|probook)?\s*([468])([3456])([05])\b', t)
+        hp_m = cls._HP_MODEL_RE.search(t)
         if hp_m and ('hp' in t or 'elitebook' in t or 'probook' in t):
             tier = hp_m.group(1)
             s_digit = hp_m.group(2)
@@ -515,9 +545,9 @@ class HardwareClassifier:
         t = title.lower()
 
         # Check explicit battery in text
-        bat_m = re.search(r'(\d{2,3})\s*(?:whr?|w/h|watt|וואט(?:-שעה)?)\b', t)
+        bat_m = cls._BATTERY_HEBREW_RE.search(t)
         if not bat_m:
-            bat_m = re.search(r'\bbattery\s*[:\-]?\s*(\d{2,3})\s*(?:whr?|w/h)?\b', t)
+            bat_m = cls._BATTERY_ENGLISH_RE.search(t)
         if bat_m:
             try:
                 b = int(bat_m.group(1))

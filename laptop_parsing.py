@@ -55,12 +55,15 @@ def is_laptop_title(title: str) -> bool:
     return any(keyword in lowered for keyword in LAPTOP_KEYWORDS) and not is_desktop_title(title)
 
 
+_PRICE_NUM_RE = re.compile(r"\d+(?:\.\d+)?")
+
+
 def parse_price_value(value: object, *, minimum: int = 1, maximum: int = 30000) -> Optional[int]:
     """Parse a currency-like value and reject values outside catalog bounds."""
     if value is None:
         return None
     text = str(value).replace(",", "").replace("₪", "").strip()
-    match = re.search(r"\d+(?:\.\d+)?", text)
+    match = _PRICE_NUM_RE.search(text)
     if not match:
         return None
     try:
