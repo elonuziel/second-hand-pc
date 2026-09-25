@@ -219,7 +219,7 @@ class TestHardwareParsers(unittest.TestCase):
         self.assertEqual(HardwareClassifier.detect_ram_gb("Dell Precision 7550 32GB RAM 512GB SSD RTX 3000 6GB"), 32)
         self.assertEqual(HardwareClassifier.detect_ram_gb("Lenovo Legion 5 16GB 512GB RTX 3060 6GB"), 16)
 
-        # Storage (including Hebrew 'טרה' for 1TB, 64GB netbooks, 180GB/320GB)
+        # Storage (including Hebrew 'טרה' for 1TB, 64GB netbooks, 180GB/320GB, Hebrew prefix/postfix)
         self.assertEqual(HardwareClassifier.detect_storage_gb("Dell 256GB SSD"), 256)
         self.assertEqual(HardwareClassifier.detect_storage_gb("HP 512GB SSD NVMe"), 512)
         self.assertEqual(HardwareClassifier.detect_storage_gb("Lenovo 1TB SSD"), 1000)
@@ -227,6 +227,10 @@ class TestHardwareParsers(unittest.TestCase):
         self.assertEqual(HardwareClassifier.detect_storage_gb("Lenovo A4 4GB 64GBSSD מחשב נייד"), 64)
         self.assertEqual(HardwareClassifier.detect_storage_gb("HP Folio 9470m 180GB SSD"), 180)
         self.assertEqual(HardwareClassifier.detect_storage_gb("Lenovo X61s 320GB HDD"), 320)
+        self.assertEqual(HardwareClassifier.detect_storage_gb("מחשב נייד Latitude 5320 מעבד I7 דור 11 זיכרון 32GB דיסק 256 WIN11 דל מחודש DELL"), 256)
+        self.assertEqual(HardwareClassifier.detect_storage_gb("מחשב נייד Latitude 5320 מעבד I7 דור 12 זיכרון 32GB דיסק 256 WIN11 דל מחודש DELL"), 256)
+        self.assertEqual(HardwareClassifier.detect_storage_gb("Dell Latitude 5420 i5 16GB דיסק 512GB SSD"), 512)
+        self.assertEqual(HardwareClassifier.detect_storage_gb("Lenovo ThinkPad T14s דור 11 זיכרון 16GB דיסק 512 SSD"), 512)
 
     def test_ram_generation_detection(self):
         """Ensure RAM generation (DDR3L, DDR4, LPDDR4x, DDR5, LPDDR5, Unified LPDDR4x) is detected accurately."""

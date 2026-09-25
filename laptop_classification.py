@@ -40,10 +40,16 @@ class HardwareClassifier:
         re.IGNORECASE
     )
     _GPU_VRAM_RE = re.compile(r'(?:gtx|rtx|quadro|geforce|radeon|iris|t500|t600|t1000|t1200|t2000)\s*(?:[0-9]{3,4})?\s*(?:\d+\s*(?:gb|g))?|(?:\d+\s*(?:gb|g|גיגה)?\s*(?:graphics|vram|כרטיס מסך|כרטיס גרפי|גרפיקה))', re.IGNORECASE)
-    _STORAGE_GB_RE = re.compile(
-        r'(?:(?:ssd|nvme|אחסון|דיסק|storage|hdd|emmc)\s*(?:של\s*)?(32|64|120|128|160|180|240|250|256|320|480|500|512|1000|1024|2000|2048)\s*(?:gb|g|גיגה)?'
-        r'|(?:^|[^\w])(32|64|120|128|160|180|240|250|256|320|480|500|512|1000|1024|2000|2048)\s*(?:gb|g|גיגה)?\s*(?:ssd|nvme|אחסון|דיסק|storage|hdd|emmc)'
-        r'|(?:^|[^\w])(64|120|128|160|180|240|250|256|320|480|500|512)\s*(?:gb|g|גיגה)(?!\s*(?:ram|זכרון|זיכרון|memory)))',
+    _STORAGE_PREFIX_RE = re.compile(
+        r'(?:ssd|nvme|אחסון|דיסק|storage|hdd|emmc|hard\s*drive|drive)\s*(?:של\s*)?(64|120|128|160|180|240|250|256|320|480|500|512|1000|1024|2000|2048)\s*(?:gb|g|גיגה)?',
+        re.IGNORECASE
+    )
+    _STORAGE_POSTFIX_RE = re.compile(
+        r'(?:^|[^\w])(64|120|128|160|180|240|250|256|320|480|500|512|1000|1024|2000|2048)\s*(?:gb|g|גיגה)?\s*(?:ssd|nvme|אחסון|דיסק|storage|hdd|emmc)',
+        re.IGNORECASE
+    )
+    _STORAGE_STANDALONE_RE = re.compile(
+        r'(?:^|[^\w])(120|128|160|180|240|250|256|320|480|500|512)\s*(?:gb|g|גיגה)(?!\s*(?:ram|זכרון|זיכרון|memory))',
         re.IGNORECASE
     )
     _RAM_GEN_EXPLICIT_RE = re.compile(r'\b(lpddr5x|lpddr5|ddr5|lpddr4x|lpddr4|ddr4|ddr3l|ddr3)\b', re.IGNORECASE)
@@ -221,13 +227,33 @@ class HardwareClassifier:
     @classmethod
     def detect_storage_gb(cls, title: str) -> int:
         t = title.lower()
-        if '2tb' in t: return 2000
+        if '2tb' in t or '2 טרה' in t or '2000gb' in t: return 2000
         if '1tb' in t or '1 טרה' in t or '1000g' in t or '1000gb' in t: return 1000
-        m = cls._STORAGE_GB_RE.search(t)
+
+        # 1. First priority: explicit storage prefix like 'דיסק 256' or 'ssd 512'
+        m = cls._STORAGE_PREFIX_RE.search(t)
         if m:
-            val = m.group(1) or m.group(2) or m.group(3)
+            val = m.group(1)
             if val:
                 return int(val)
+
+        # 2. Mask out explicit RAM patterns so 'זיכרון 32GB' won't be matched as storage
+        cleaned = cls._EXPLICIT_RAM_RE.sub(' ', t)
+
+        # 3. Check postfix storage like '256GB SSD'
+        m = cls._STORAGE_POSTFIX_RE.search(cleaned)
+        if m:
+            val = m.group(1)
+            if val:
+                return int(val)
+
+        # 4. Check standalone storage like '256GB'
+        m = cls._STORAGE_STANDALONE_RE.search(cleaned)
+        if m:
+            val = m.group(1)
+            if val:
+                return int(val)
+
         return 512
 
     @classmethod
