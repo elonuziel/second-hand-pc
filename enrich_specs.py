@@ -13,13 +13,12 @@ Uses regex & hardware model heuristic classification, with optional Groq AI enha
 from __future__ import annotations
 
 import os
-import re
 import csv
 import json
 import logging
 import argparse
 import datetime
-from typing import Dict, List, Tuple, Any, Optional, Union
+from typing import Dict, List, Any
 from scraper import HardwareClassifier, LaptopItem, ReportGenerator, GroqSpecEnhancer
 
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
