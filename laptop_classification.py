@@ -33,7 +33,7 @@ class HardwareClassifier:
     _GEN3_RE = re.compile(r'(?:3rd|דור\s*3|(?<![a-z0-9])3\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?3\b|\bgen\s*3(?!\d)|t430|x230|e6530|e6230|9470m|3[0-9]{3}[uhm]|3687u|3210m|3320m|3340m)', re.IGNORECASE)
     _GEN2_RE = re.compile(r'(?:2nd|דור\s*2|(?<![a-z0-9])2\s*gen(?!\s*[0-9])|\bi[3579]-(?:gen\s*)?2\b|\bgen\s*2(?!\d)|t420|x220|e6420|n5110|2[0-9]{3}[uhm]|2410m|2520m|2540m)', re.IGNORECASE)
 
-    _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
+    _RAM_GB_RE = re.compile(r'(?:^|[^\w])(4|8|12|16|24|32|48|64)\s*(?:gb|g|גיגה)(?:[^\w]|$)', re.IGNORECASE)
     _EXPLICIT_RAM_RE = re.compile(
         r'(?:(?:ram|זכרון|זיכרון|memory)\s*(?:של\s*)?(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)?'
         r'|(?<!דור\s)(?<!דור)(?:^|[^\w])(4|8|12|16|24|32|48|64|128)\s*(?:gb|g|גיגה)\s*(?:ram|זכרון|זיכרון|memory)'
@@ -240,14 +240,19 @@ class HardwareClassifier:
         # 1. Mask out GPU VRAM and graphics memory strings so they don't corrupt system RAM
         cleaned = cls._GPU_VRAM_RE.sub(" ", title)
 
-        # 2. First priority: explicit RAM keyword in cleaned title
+        # 2. Mask out storage indicators (e.g. 128GB SSD, דיסק 256GB, 1TB) so SSD sizes aren't mistaken for RAM
+        cleaned = cls._STORAGE_PREFIX_RE.sub(" ", cleaned)
+        cleaned = cls._STORAGE_POSTFIX_RE.sub(" ", cleaned)
+        cleaned = re.sub(r'\b(?:1|2)\s*(?:tb|טרה)\b', " ", cleaned, flags=re.IGNORECASE)
+
+        # 3. First priority: explicit RAM keyword in cleaned title
         m_exp = cls._EXPLICIT_RAM_RE.search(cleaned)
         if m_exp:
             val = m_exp.group(1) or m_exp.group(2) or m_exp.group(3)
             if val:
                 return int(val)
 
-        # 3. Search for RAM in cleaned title
+        # 4. Search for RAM in cleaned title
         m = cls._RAM_GB_RE.search(cleaned)
         if m:
             return int(m.group(1))
