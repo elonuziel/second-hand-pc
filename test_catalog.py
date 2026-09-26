@@ -117,7 +117,7 @@ class TestCatalogDataHealth(unittest.TestCase):
 
             # RAM & Storage must be realistic positive numbers
             ram = item.get("ram_gb", 0)
-            self.assertIn(ram, [4, 8, 12, 16, 24, 32, 48, 64], f"Unexpected RAM value {ram}GB for {title}")
+            self.assertIn(ram, [4, 8, 12, 16, 24, 32, 48, 64, 128], f"Unexpected RAM value {ram}GB for {title}")
 
             storage = item.get("storage_gb", 0)
             self.assertGreaterEqual(storage, 64, f"Unexpected storage {storage}GB for {title}")
@@ -244,6 +244,7 @@ class TestHardwareParsers(unittest.TestCase):
         self.assertEqual(HardwareClassifier.detect_ram_gb("Dell 16GB RAM 512GB SSD"), 16)
         self.assertEqual(HardwareClassifier.detect_ram_gb("ThinkPad 32 GB RAM 1TB"), 32)
         self.assertEqual(HardwareClassifier.detect_ram_gb("Laptop 8g ram"), 8)
+        self.assertEqual(HardwareClassifier.detect_ram_gb("DELL Latitude E7240 Core i5 מסך 12.5 אינצ' דיסק 128GB SSD חלונות 10 פרו דל"), 16)
 
         # GPU VRAM isolation: 4GB Graphics / 6GB VRAM must not override system RAM
         self.assertEqual(HardwareClassifier.detect_ram_gb("HP ProBook 450 G8 15.6 with GTX 1650 4GB Graphics"), 16)
