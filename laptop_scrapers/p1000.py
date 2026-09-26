@@ -11,6 +11,20 @@ from laptop_classification import HardwareClassifier
 
 logger = logging.getLogger("P1000Scraper")
 
+# Pre-compiled regex patterns for P1000 parsing
+RE_DETAIL_PRODUCT_DETAILS = re.compile(r'id=[\"\'][^\"\']*productDetails[\"\'][^>]*>([\s\S]*?)</li>')
+RE_DETAIL_MAIN_CONTENT = re.compile(r'id=[\"\']MainContent_Properties[^\"]*[\"\'][^>]*>([\s\S]*?)</ul>')
+RE_DETAIL_SPECS_CLASS = re.compile(r'<div[^>]*class=[\"\'][^\"\']*specs[^\"\']*[\"\'][^>]*>([\s\S]*?)</div>', re.I)
+RE_HTML_TAGS = re.compile(r'<[^>]+>')
+
+RE_CARDS = re.compile(r'<li[^>]*data-sku=[\"\'](\d+)[\"\'][^>]*data-title=(?:\"([^\"]+)\"|\'([^\']+)\')[^>]*>([\s\S]*?)</li>')
+RE_HREF = re.compile(r'href=[\"\']([^\"\']+)[\"\']')
+RE_PRICE_CATEGORY = re.compile(r'categoryResults_itemBuy[\"\']>\s*[^0-9]*([0-9,]+)')
+RE_PRICE_FALLBACK = re.compile(r'([0-9,]+)\s*(?:₪|ש\"ח)')
+RE_IMG_SRC = re.compile(r'<img\s+[^>]*src=[\"\']([^\"\']+)[\"\']')
+RE_SPANS = re.compile(r'<span>([^<]+)</span>')
+
+
 # --- Store 9: P1000 Scraper ---
 class P1000Scraper:
     STORE_NAME = "P1000"
@@ -23,14 +37,14 @@ class P1000Scraper:
         try:
             status, html_page = fetch_resilient_url(url)
             if status == 200 and html_page:
-                m = re.search(r'id=[\"\'][^\"\']*productDetails[\"\'][^>]*>([\s\S]*?)</li>', html_page)
+                m = RE_DETAIL_PRODUCT_DETAILS.search(html_page)
                 if not m:
-                    m = re.search(r'id=[\"\']MainContent_Properties[^\"]*[\"\'][^>]*>([\s\S]*?)</ul>', html_page)
+                    m = RE_DETAIL_MAIN_CONTENT.search(html_page)
                 if m:
-                    return html.unescape(re.sub(r'<[^>]+>', ' ', m.group(1))).strip()
-                m2 = re.search(r'<div[^>]*class=[\"\'][^\"\']*specs[^\"\']*[\"\'][^>]*>([\s\S]*?)</div>', html_page, re.I)
+                    return html.unescape(RE_HTML_TAGS.sub(' ', m.group(1))).strip()
+                m2 = RE_DETAIL_SPECS_CLASS.search(html_page)
                 if m2:
-                    return html.unescape(re.sub(r'<[^>]+>', ' ', m2.group(1))).strip()
+                    return html.unescape(RE_HTML_TAGS.sub(' ', m2.group(1))).strip()
         except Exception:
             pass
         return ""
@@ -44,7 +58,7 @@ class P1000Scraper:
                 logger.warning(f"P1000 returned HTTP {status}")
                 return items
 
-            cards = re.findall(r'<li[^>]*data-sku=[\"\'](\d+)[\"\'][^>]*data-title=(?:\"([^\"]+)\"|\'([^\']+)\')[^>]*>([\s\S]*?)</li>', text)
+            cards = RE_CARDS.findall(text)
             parsed_cards = []
             for sku, raw_title_dq, raw_title_sq, card_body in cards:
                 raw_title = raw_title_dq or raw_title_sq or ""
@@ -53,18 +67,18 @@ class P1000Scraper:
                 if any(k in t_low for k in ["נייח", "mini", "tiny", "desktop"]):
                     continue
 
-                link_m = re.search(r'href=[\"\']([^\"\']+)[\"\']', card_body)
+                link_m = RE_HREF.search(card_body)
                 rel_url = link_m.group(1) if link_m else f"/sales/saledetails.aspx?productid={sku}"
                 url = f"https://www.p1000.co.il{rel_url}" if rel_url.startswith('/') else rel_url
 
-                price_m = re.search(r'categoryResults_itemBuy[\"\']>\s*[^0-9]*([0-9,]+)', card_body)
+                price_m = RE_PRICE_CATEGORY.search(card_body)
                 if not price_m:
-                    price_m = re.search(r'([0-9,]+)\s*(?:₪|ש\"ח)', card_body)
+                    price_m = RE_PRICE_FALLBACK.search(card_body)
                 price = int(price_m.group(1).replace(',', '')) if price_m else 0
                 if price <= 0:
                     continue
 
-                img_matches = re.findall(r'<img\s+[^>]*src=[\"\']([^\"\']+)[\"\']', card_body)
+                img_matches = RE_IMG_SRC.findall(card_body)
                 img = ""
                 for src in img_matches:
                     src_low = src.lower()
@@ -74,7 +88,7 @@ class P1000Scraper:
                 if not img and img_matches:
                     img = f"https://www.p1000.co.il{img_matches[0]}" if img_matches[0].startswith('/') else img_matches[0]
 
-                spans = re.findall(r'<span>([^<]+)</span>', card_body)
+                spans = RE_SPANS.findall(card_body)
                 specs_summary = ' '.join(spans)
 
                 parsed_cards.append((sku, title, price, url, img, specs_summary, card_body))
