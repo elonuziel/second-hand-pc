@@ -13,6 +13,7 @@ import logging
 import os
 import subprocess
 import sys
+import time
 import unittest
 from unittest.mock import patch
 
@@ -39,7 +40,6 @@ from scraper import (
     VoltScraper,
     OfekPCScraper,
     ITOutletScraper,
-    EcologyScraper,
 )
 
 
@@ -721,19 +721,18 @@ class TestNewLaptopScrapers(unittest.TestCase):
 
     def test_host_delay_throttles_same_host_only(self):
         """Politeness: requests to one host are spaced out, different hosts are unaffected."""
-        import time as _time
         import http_session as hs
 
         with patch.dict(os.environ, {"SCRAPER_HOST_DELAY": "0.3"}):
             hs.reset_host_delay_state()
-            start = _time.monotonic()
+            start = time.monotonic()
             hs.respect_host_delay("https://www.payngo.co.il/a.html")
             hs.respect_host_delay("https://www.payngo.co.il/b.html")  # same host -> waits
-            same_host = _time.monotonic() - start
+            same_host = time.monotonic() - start
 
-            start = _time.monotonic()
+            start = time.monotonic()
             hs.respect_host_delay("https://recomp.co.il/x")  # different host -> no wait
-            other_host = _time.monotonic() - start
+            other_host = time.monotonic() - start
 
         self.assertGreaterEqual(same_host, 0.3)
         self.assertLess(other_host, 0.2)
