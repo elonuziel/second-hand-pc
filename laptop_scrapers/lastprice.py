@@ -4,7 +4,7 @@ import html
 import logging
 import re
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, List, Optional
+from typing import Any, List
 from laptop_scrapers.base import fetch_resilient_url
 from laptop_domain import LaptopItem
 from laptop_classification import HardwareClassifier
