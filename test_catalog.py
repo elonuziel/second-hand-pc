@@ -39,7 +39,6 @@ from scraper import (
     VoltScraper,
     OfekPCScraper,
     ITOutletScraper,
-    EcologyScraper,
 )
 
 
