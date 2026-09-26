@@ -53,6 +53,7 @@ class HardwareClassifier:
         r'(?:^|[^\w])(120|128|160|180|240|250|256|320|480|500|512)\s*(?:gb|g|גיגה)(?!\s*(?:ram|זכרון|זיכרון|memory))',
         re.IGNORECASE
     )
+    _TB_STORAGE_RE = re.compile(r'\b(?:1|2)\s*(?:tb|טרה)\b', re.IGNORECASE)
     _RAM_GEN_EXPLICIT_RE = re.compile(r'\b(lpddr5x|lpddr5|ddr5|lpddr4x|lpddr4|ddr4|ddr3l|ddr3)\b', re.IGNORECASE)
 
     _APPLE_SILICON_RE = re.compile(r'\b(?:apple\s*m[123]|m[123]\s*(?:pro|max|ultra))\b', re.IGNORECASE)
@@ -243,7 +244,7 @@ class HardwareClassifier:
         # 2. Mask out storage indicators (e.g. 128GB SSD, דיסק 256GB, 1TB) so SSD sizes aren't mistaken for RAM
         cleaned = cls._STORAGE_PREFIX_RE.sub(" ", cleaned)
         cleaned = cls._STORAGE_POSTFIX_RE.sub(" ", cleaned)
-        cleaned = re.sub(r'\b(?:1|2)\s*(?:tb|טרה)\b', " ", cleaned, flags=re.IGNORECASE)
+        cleaned = cls._TB_STORAGE_RE.sub(" ", cleaned)
 
         # 3. First priority: explicit RAM keyword in cleaned title
         m_exp = cls._EXPLICIT_RAM_RE.search(cleaned)
