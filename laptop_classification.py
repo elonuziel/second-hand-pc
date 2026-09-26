@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import datetime
-import html
 import re
 import urllib.parse
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Optional, Tuple, Union
 
 from laptop_domain import LaptopItem
 
