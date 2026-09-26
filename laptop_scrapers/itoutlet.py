@@ -3,7 +3,6 @@ from __future__ import annotations
 import html
 import logging
 import re
-import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, List, Optional
 import requests
