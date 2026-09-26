@@ -11,7 +11,7 @@ import os
 import json
 import logging
 import subprocess
-from mobile_scraper import MobileClassifier, MasterMobileAuditor, MobileItem
+from mobile_scraper import MobileClassifier
 
 logger = logging.getLogger(__name__)
 
