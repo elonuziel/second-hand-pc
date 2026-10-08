@@ -5,7 +5,7 @@ on:
     branches: [ main ]
   workflow_dispatch:
   workflow_run:
-    workflows: ["Live Laptop Market Audit"]
+    workflows: ["Live Market Scraper & Catalog Audit"]
     types:
       - completed
 
