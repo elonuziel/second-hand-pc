@@ -1,16 +1,19 @@
 """Recomp Computers scraper."""
 from __future__ import annotations
 import html
+import json
 import logging
 import re
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Set
 import requests
+
 from laptop_domain import LaptopItem
 from laptop_classification import HardwareClassifier
-from laptop_parsing import last_valid_price
+from laptop_parsing import is_laptop_title, last_valid_price
 from laptop_pipeline import report_store_block
+from laptop_scrapers.base import fetch_resilient_url
 
 logger = logging.getLogger("RecompScraper")
 
@@ -23,12 +26,13 @@ CATALOG_URLS = [
     "https://recomp.co.il/",
 ]
 
-# --- Store 4: Recomp Computers Scraper ---
+
 class RecompScraper:
     STORE_NAME = "Recomp Computers"
+    API_URL = "https://recomp.co.il/wp-json/wc/store/v1/products?category=24&per_page=50"
 
-    def __init__(self, session: requests.Session):
-        self.session = session
+    def __init__(self, session: Optional[requests.Session] = None):
+        self.session = session or requests.Session()
         # Import resilient fetcher — prefer the shared engine over bare session
         try:
             from http_session import fetch_resilient_url as _fetch
@@ -52,6 +56,85 @@ class RecompScraper:
                 logger.debug("Resilient fetch failed for %s: %s", url, ex)
         # Fallback: plain session
         return self.session.get(url, timeout=timeout)
+
+    def _items_from_api_payload(self, data: list) -> List[LaptopItem]:
+        """Parse WooCommerce Store API products adding all active, in-stock refurbished laptops."""
+        items: List[LaptopItem] = []
+        for p in data:
+            if not isinstance(p, dict):
+                continue
+
+            name = html.unescape(p.get("name", "")).strip()
+            if not name or not HardwareClassifier.is_laptop(name) or not is_laptop_title(name):
+                continue
+
+            if not p.get("is_in_stock", True):
+                continue
+
+            short_desc = html.unescape(re.sub(r'<[^>]+>', ' ', p.get("short_description", ""))).strip()
+            desc = html.unescape(re.sub(r'<[^>]+>', ' ', p.get("description", ""))).strip()
+
+            prices = p.get("prices", {})
+            raw_price = prices.get("price") or prices.get("regular_price")
+            minor = prices.get("currency_minor_unit", 0)
+            try:
+                price_val = int(round(float(raw_price) / (10 ** minor)))
+            except Exception:
+                price_val = 0
+
+            if price_val < 601:
+                continue
+
+            url = p.get("permalink", "")
+            images = p.get("images", [])
+            img_url = images[0].get("src", "") if images else ""
+
+            # Deal price calculation (if on sale)
+            sale_price_raw = prices.get("sale_price")
+            deal_price = price_val
+            deal_label = f"{price_val:,} ₪"
+            if sale_price_raw and str(sale_price_raw).isdigit():
+                try:
+                    sale_val = int(round(float(sale_price_raw) / (10 ** minor)))
+                    if 601 <= sale_val < price_val:
+                        deal_price = sale_val
+                        deal_label = f"{sale_val:,} ₪ (Sale)"
+                except Exception:
+                    pass
+
+            # Attributes & description
+            attr_parts = []
+            warranty_terms = []
+            for a in p.get("attributes", []):
+                aname = a.get("name", "")
+                terms = [t.get("name", "") for t in a.get("terms", [])]
+                attr_parts.append(f"{aname}: {', '.join(terms)}")
+                if aname in ["אחריות", "Warranty", "warranty"]:
+                    warranty_terms.extend(terms)
+
+            analysis = f"{name} {' '.join(attr_parts)} {short_desc} {desc}".strip()
+
+            warranty = 12
+            all_warr_text = f"{' '.join(warranty_terms)} {analysis}"
+            if any(k in all_warr_text for k in ["3 שנות אחריות", "3 שנים", "שלוש שנים", "36 חודש", "3 years", "3y"]):
+                warranty = 36
+            elif any(k in all_warr_text for k in ["שנתיים אחריות", "שנתיים", "24 חודש", "2 years", "2y"]):
+                warranty = 24
+
+            items.append(HardwareClassifier.build_laptop(
+                store=self.STORE_NAME,
+                title=name,
+                price_ils=price_val,
+                url=url,
+                deal_price_ils=deal_price,
+                deal_label=deal_label,
+                analysis_text=analysis,
+                warranty_months=warranty,
+                stock_status="🟢 In Stock",
+                image_url=img_url,
+            ))
+
+        return items
 
     def _parse_recomp_price(self, page_html: str) -> Optional[int]:
         cleaned = page_html.replace('&#8362;', '₪').replace('&nbsp;', ' ')
@@ -88,11 +171,7 @@ class RecompScraper:
         return ""
 
     def _extract_product_links(self, catalog_html: str) -> List[tuple]:
-        """Extract (url, anchor_text) pairs for product pages from catalog HTML.
-
-        Href values may be padded with whitespace, hence the explicit \\s* after the
-        quote — requiring a literal space there matches nothing at all.
-        """
+        """Extract (url, anchor_text) pairs for product pages from catalog HTML."""
         links = re.findall(
             r'<a[^>]+href=[\"\']\s*(https?://recomp\.co\.il/product/[^\"\']+)[\"\'][^>]*>(.*?)</a>',
             catalog_html, re.DOTALL | re.IGNORECASE
@@ -104,7 +183,6 @@ class RecompScraper:
                 catalog_html, re.IGNORECASE
             )
             links = [(h, "") for h in raw_hrefs]
-        # Strip whitespace captured by \s* / present in the attribute
         return [(url.strip(), text) for url, text in links]
 
     def _fetch_catalog(self) -> Optional[str]:
@@ -126,6 +204,36 @@ class RecompScraper:
     def scrape(self) -> List[LaptopItem]:
         logger.info("Scraping Recomp Computers...")
         items: List[LaptopItem] = []
+        seen_urls: Set[str] = set()
+
+        # 1. Primary: WooCommerce Store API
+        for page in range(1, 3):
+            url = f"{self.API_URL}&page={page}"
+            try:
+                status, text = fetch_resilient_url(url, headers={"Accept": "application/json"})
+                if status == 200 and text:
+                    data = json.loads(text)
+                    if not isinstance(data, list) or len(data) == 0:
+                        break
+                    page_items = self._items_from_api_payload(data)
+                    for item in page_items:
+                        if item.url not in seen_urls:
+                            seen_urls.add(item.url)
+                            items.append(item)
+                    if len(data) < 50:
+                        break
+                else:
+                    break
+            except Exception as e:
+                logger.warning("Error fetching Recomp API page %d: %s", page, e)
+                break
+
+        if items:
+            logger.info("Recomp: successfully scraped %d in-stock laptops via Store API", len(items))
+            return items
+
+        # 2. Fallback: HTML Catalog
+        logger.info("Recomp: Store API returned 0 items; falling back to HTML catalog scraping...")
         try:
             catalog_html = self._fetch_catalog()
             if not catalog_html:
@@ -135,33 +243,32 @@ class RecompScraper:
                 )
                 return items
 
-            # Extract all recomp.co.il/product/ links with their anchor text
             links = self._extract_product_links(catalog_html)
 
-            seen = set()
             valid_links = []
             for link, text in links:
                 link = link.strip()
-                if link in seen:
+                if link in seen_urls:
                     continue
-                seen.add(link)
                 title = HardwareClassifier.clean_text(text)
                 if len(title) < 4:
                     slug = link.rstrip('/').split('/')[-1]
                     title = HardwareClassifier.clean_text(urllib.parse.unquote(slug).replace('-', ' '))
-                if not HardwareClassifier.is_laptop(title):
+                if not HardwareClassifier.is_laptop(title) or not is_laptop_title(title):
                     continue
                 valid_links.append((link, title))
 
-            logger.info("Recomp: found %d product links to fetch.", len(valid_links))
+            logger.info("Recomp: found %d product links to fetch in HTML fallback.", len(valid_links))
 
-            # Fetch exact prices and descriptions concurrently
             def fetch_recomp_item(item_tuple):
                 link, title = item_tuple
                 for attempt in range(2):
                     try:
                         res = self._get(link, timeout=20)
                         if res and res.status_code == 200:
+                            # Skip out-of-stock items in fallback
+                            if any(k in res.text for k in ["class=\"out-of-stock\"", "class='out-of-stock'", "חסר במלאי", "אזל מהמלאי"]):
+                                return link, title, None, "", ""
                             p = self._parse_recomp_price(res.text)
                             img = self._parse_recomp_image(res.text)
                             desc = self._parse_recomp_desc(res.text)
@@ -174,8 +281,7 @@ class RecompScraper:
                 fetched_results = list(executor.map(fetch_recomp_item, valid_links))
 
             for link, title, price, img, desc in fetched_results:
-                if price is None:
-                    logger.warning("Skipping Recomp listing without a valid price: %s", link)
+                if price is None or price < 601:
                     continue
                 analysis = f"{title} {desc}".strip()
 
@@ -185,7 +291,7 @@ class RecompScraper:
                 elif any(k in analysis for k in ["שנתיים אחריות", "שנתיים", "24 חודש"]):
                     warranty = 24
 
-                items.append(HardwareClassifier.build_laptop(
+                item = HardwareClassifier.build_laptop(
                     store=self.STORE_NAME,
                     title=title,
                     price_ils=price,
@@ -194,7 +300,10 @@ class RecompScraper:
                     warranty_months=warranty,
                     stock_status="🟢 In Stock",
                     image_url=img,
-                ))
+                )
+                if item.url not in seen_urls:
+                    seen_urls.add(item.url)
+                    items.append(item)
         except Exception as e:
-            logger.error("Error scraping Recomp: %s", e)
+            logger.error("Error scraping Recomp HTML fallback: %s", e)
         return items

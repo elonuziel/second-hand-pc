@@ -1350,6 +1350,125 @@ class TestNewLaptopScrapers(unittest.TestCase):
         self.assertEqual(items[0].price_ils, 1650)
         self.assertIn("Lenovo", items[0].title)
 
+    def test_lts_api_payload_parsing_modern_refurb_only(self):
+        """LTS scraper parses only modern refurbished laptops (8th Gen+, Ryzen, Apple M) and excludes sold/legacy items."""
+        mock_payload = [
+            {
+                "id": 101,
+                "name": "מחשב נייד לנובו מחודש Lenovo ThinkPad T490s Core i7-8565U 16GB 512GB SSD",
+                "permalink": "https://lts.co.il/product/lenovo-thinkpad-t490s/",
+                "is_in_stock": True,
+                "prices": {"price": "1450", "currency_minor_unit": 0},
+                "images": [{"src": "https://lts.co.il/img1.jpg"}],
+                "attributes": [{"name": "אחריות", "terms": [{"name": "שלוש שנים"}]}],
+                "short_description": "מצב מעולה",
+                "description": "מעבד דור 8",
+            },
+            {
+                "id": 102,
+                "name": "מחשב נייד אפל Apple MacBook Air 13 M1 8GB 256GB SSD",
+                "permalink": "https://lts.co.il/product/macbook-air-m1/",
+                "is_in_stock": True,
+                "prices": {"price": "2490", "currency_minor_unit": 0},
+                "images": [{"src": "https://lts.co.il/img2.jpg"}],
+                "attributes": [],
+                "short_description": "",
+                "description": "",
+            },
+            {
+                "id": 103,
+                "name": "Lenovo ThinkPad T480s i5-8250U 16GB",
+                "permalink": "https://lts.co.il/product/sold-item/",
+                "is_in_stock": True,
+                "prices": {"price": "1290", "currency_minor_unit": 0},
+                "short_description": "<p>**נמכר**</p>",
+                "description": "המחשב נמכר",
+            },
+            {
+                "id": 104,
+                "name": "מחשב נייד לנובו Lenovo T460s Core i5-6300U 8GB",
+                "permalink": "https://lts.co.il/product/lenovo-t460s/",
+                "is_in_stock": True,
+                "prices": {"price": "890", "currency_minor_unit": 0},
+                "short_description": "מחשב ישן",
+                "description": "",
+            },
+            {
+                "id": 105,
+                "name": "HP Desktop ProDesk 400 G3 Mini i5 8GB",
+                "permalink": "https://lts.co.il/product/hp-prodesk/",
+                "is_in_stock": True,
+                "prices": {"price": "750", "currency_minor_unit": 0},
+                "short_description": "מחשב שולחני מיני",
+                "description": "",
+            },
+            {
+                "id": 106,
+                "name": "Dell Latitude 5420 i5-1135G7 16GB",
+                "permalink": "https://lts.co.il/product/out-of-stock/",
+                "is_in_stock": False,
+                "prices": {"price": "1800", "currency_minor_unit": 0},
+                "short_description": "",
+                "description": "",
+            },
+        ]
+        scraper = LTSScraper()
+        items = scraper._items_from_api_payload(mock_payload)
+        self.assertEqual(len(items), 2)
+        urls = [i.url for i in items]
+        self.assertIn("https://lts.co.il/product/lenovo-thinkpad-t490s/", urls)
+        self.assertIn("https://lts.co.il/product/macbook-air-m1/", urls)
+        self.assertEqual(items[0].store, "LaptopTech LTS")
+        self.assertEqual(items[0].price_ils, 1450)
+        self.assertEqual(items[0].warranty_months, 36)
+
+    def test_recomp_api_payload_parsing_all_in_stock(self):
+        """Recomp scraper parses all in-stock laptops and filters out out-of-stock and non-laptops."""
+        mock_payload = [
+            {
+                "id": 201,
+                "name": "מחשב נייד HP EliteBook 855 G7 Ryzen 7 PRO 4750U 16GB 512GB",
+                "permalink": "https://recomp.co.il/product/hp-855-g7/",
+                "is_in_stock": True,
+                "prices": {"price": "1890", "currency_minor_unit": 0},
+                "images": [{"src": "https://recomp.co.il/hp855.jpg"}],
+                "attributes": [{"name": "אחריות", "terms": [{"name": "שנתיים"}]}],
+                "short_description": "מחשב עסקי במצב מצוין",
+                "description": "",
+            },
+            {
+                "id": 202,
+                "name": "Lenovo ThinkPad X1 Carbon Gen 9 i7 16GB 512GB",
+                "permalink": "https://recomp.co.il/product/x1-gen9-sold/",
+                "is_in_stock": False,
+                "prices": {"price": "2990", "currency_minor_unit": 0},
+                "images": [],
+                "attributes": [],
+                "short_description": "אזל",
+                "description": "",
+            },
+            {
+                "id": 203,
+                "name": "Docking Station USB-C Lenovo 90W",
+                "permalink": "https://recomp.co.il/product/docking-station/",
+                "is_in_stock": True,
+                "prices": {"price": "250", "currency_minor_unit": 0},
+                "images": [],
+                "attributes": [],
+                "short_description": "תחנת עגינה",
+                "description": "",
+            },
+        ]
+        scraper = RecompScraper()
+        items = scraper._items_from_api_payload(mock_payload)
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "Recomp Computers")
+        self.assertEqual(items[0].price_ils, 1890)
+        self.assertEqual(items[0].ram_gb, 16)
+        self.assertEqual(items[0].storage_gb, 512)
+        self.assertEqual(items[0].warranty_months, 24)
+        self.assertEqual(items[0].url, "https://recomp.co.il/product/hp-855-g7/")
+
 
 class TestFrontendCompatibility(unittest.TestCase):
     """Verifies that the catalog data works cleanly with app.js without crashing the browser."""
