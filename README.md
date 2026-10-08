@@ -31,26 +31,48 @@ This project provides:
 ```
 second-hand-pc/
 │
-├── scraper.py                     # Main scraping script
-├── laptop_domain.py               # Shared LaptopItem domain model
-├── laptop_parsing.py              # Pure price and listing validation helpers
-├── laptop_pipeline.py             # Concurrent store execution and isolation
-├── laptop_recommendations.py      # Deterministic top-pick selection
-├── scraped_laptops.csv            # Cleaned dataset of scraped listings
-├── scraped_laptops.json           # JSON version of the dataset
+├── src/                              # Scraper engine and pipeline backend
+│   ├── scraper.py                    # Main laptop scraper & auditor
+│   ├── mobile_scraper.py             # Mobile devices & tablets scraper
+│   ├── enrich_specs.py               # Hardware spec decoders & AI enrichment
+│   ├── http_session.py               # Resilient HTTP client & bot challenge bypass
+│   ├── laptop_domain.py              # LaptopItem domain model
+│   ├── laptop_classification.py      # Hardware spec classification engine
+│   ├── laptop_pipeline.py            # Concurrent execution & store isolation
+│   ├── laptop_recommendations.py     # Deterministic top-pick selection
+│   ├── laptop_reports.py             # Markdown generator & audit reports
+│   └── laptop_scrapers/              # Store scraper adapters (12 stores)
 │
-├── full_catalog.md
-├── guides/
+├── data/                             # Scraped live datasets & audit catalogs
+│   ├── scraped_laptops.json          # Live laptop catalog (JSON)
+│   ├── scraped_laptops.csv           # Live laptop catalog (CSV)
+│   ├── scraped_mobile.json           # Live mobile catalog (JSON)
+│   ├── scraped_mobile.csv            # Live mobile catalog (CSV)
+│   ├── scraper_status.json           # Store scraper health & audit status
+│   ├── full_catalog.md               # Markdown laptop comparison guide
+│   └── full_mobile_catalog.md        # Markdown mobile comparison guide
+│
+├── guides/                           # Dedicated purchasing and review guides
 │   └── 2in1/                         # Dedicated 2-in-1 and touch laptop guides
 │       ├── 2in1_and_touch_laptops_guide.md
 │       ├── hp_elitebook_x360_830_g8_master_review.md
 │       └── hp_elitebook_x360_accessories_guide.md
 │
-├── assets/                        # Images or static resources
+├── tests/                            # Automated test suite
+│   ├── test_catalog.py               # Laptop scraper & catalog health tests
+│   └── test_mobile_catalog.py        # Mobile scraper & catalog health tests
 │
-├── .env.example                   # Example environment variables
+├── assets/                           # Static assets & icons
+├── index.html                        # Catalog Finder web app (GitHub Pages)
+├── app.js                            # Frontend search & filter engine
+├── styles.css                        # Web application stylesheet
+├── scraper.py                        # Root convenience entrypoint
+├── mobile_scraper.py                 # Root convenience entrypoint
+├── enrich_specs.py                   # Root convenience entrypoint
+├── requirements.txt                  # Python dependencies
+├── .env.example                      # Example environment variables
 ├── .gitignore
-└── .github/workflows/             # GitHub Actions automation
+└── .github/workflows/                # GitHub Actions automation
 ```
 
 ---

@@ -57,8 +57,7 @@ jobs:
 
       - name: Run Catalog Health Tests
         run: |
-          python3 -m unittest test_catalog.py
-          python3 -m unittest test_mobile_catalog.py
+          python3 -m unittest discover tests
 
       - name: Upload Catalog Artifacts Backup
         uses: actions/upload-artifact@v4
@@ -66,22 +65,20 @@ jobs:
         with:
           name: live-catalogs-backup
           path: |
-            full_catalog.md
-            scraped_laptops.json
-            scraped_laptops.csv
-            full_mobile_catalog.md
-            scraped_mobile.json
-            scraped_mobile.csv
-            scraper_status.json
+            data/full_catalog.md
+            data/scraped_laptops.json
+            data/scraped_laptops.csv
+            data/full_mobile_catalog.md
+            data/scraped_mobile.json
+            data/scraped_mobile.csv
+            data/scraper_status.json
           if-no-files-found: warn
 
       - name: Commit and Push Updated Catalogs
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add scraped_laptops.json scraped_laptops.csv full_catalog.md \
-                  scraped_mobile.json scraped_mobile.csv full_mobile_catalog.md \
-                  scraper_status.json
+          git add data/
           if git diff --staged --quiet; then
             echo "No changes in catalogs to commit."
           else

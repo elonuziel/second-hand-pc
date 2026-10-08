@@ -19,6 +19,12 @@ from unittest.mock import patch
 
 logger = logging.getLogger(__name__)
 
+WORKSPACE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC_DIR = os.path.join(WORKSPACE_DIR, "src")
+DATA_DIR = os.path.join(WORKSPACE_DIR, "data")
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
+
 from enrich_specs import SpecEnricher
 from laptop_parsing import is_desktop_title, is_laptop_title, last_valid_price
 from http_session import is_bot_challenge
@@ -48,7 +54,9 @@ class TestCatalogDataHealth(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        catalog_path = os.path.join(os.path.dirname(__file__), "scraped_laptops.json")
+        catalog_path = os.path.join(DATA_DIR, "scraped_laptops.json")
+        if not os.path.exists(catalog_path):
+            catalog_path = os.path.join(WORKSPACE_DIR, "scraped_laptops.json")
         cls.catalog_path = catalog_path
         if os.path.exists(catalog_path):
             with open(catalog_path, "r", encoding="utf-8") as f:
@@ -124,7 +132,9 @@ class TestCatalogDataHealth(unittest.TestCase):
 
     def test_no_broken_local_paths_in_catalog_files(self):
         """Verify markdown catalog contains no absolute local machine paths (/home/...)."""
-        md_path = os.path.join(os.path.dirname(__file__), "full_catalog.md")
+        md_path = os.path.join(DATA_DIR, "full_catalog.md")
+        if not os.path.exists(md_path):
+            md_path = os.path.join(WORKSPACE_DIR, "full_catalog.md")
         if os.path.exists(md_path):
             with open(md_path, "r", encoding="utf-8") as f:
                 content = f.read()
@@ -170,7 +180,9 @@ class TestCatalogDataHealth(unittest.TestCase):
 
     def test_scraper_status_file(self):
         """Ensure scraper_status.json exists and contains valid status for laptops and mobile."""
-        status_path = os.path.join(os.path.dirname(__file__), "scraper_status.json")
+        status_path = os.path.join(DATA_DIR, "scraper_status.json")
+        if not os.path.exists(status_path):
+            status_path = os.path.join(WORKSPACE_DIR, "scraper_status.json")
         self.assertTrue(os.path.exists(status_path), "scraper_status.json missing")
         with open(status_path, "r", encoding="utf-8") as f:
             status_data = json.load(f)
@@ -1218,7 +1230,8 @@ class TestFrontendCompatibility(unittest.TestCase):
         node_script = """
         const fs = require('fs');
         const { calculateValueScore, matchesCpuGen } = require('./app.js');
-        const raw = JSON.parse(fs.readFileSync('scraped_laptops.json'));
+        const jsonFile = fs.existsSync('data/scraped_laptops.json') ? 'data/scraped_laptops.json' : 'scraped_laptops.json';
+        const raw = JSON.parse(fs.readFileSync(jsonFile));
         let items = Array.isArray(raw) ? raw : [];
         if (!Array.isArray(raw)) {
             Object.keys(raw).forEach(k => { if (Array.isArray(raw[k])) items = items.concat(raw[k]); });
@@ -1244,7 +1257,7 @@ class TestFrontendCompatibility(unittest.TestCase):
         try:
             res = subprocess.run(
                 ["node", "-e", node_script],
-                cwd=os.path.dirname(__file__),
+                cwd=WORKSPACE_DIR,
                 capture_output=True,
                 text=True,
                 check=True

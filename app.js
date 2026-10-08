@@ -21,7 +21,7 @@ const docs = [
   {
     id: 'summary',
     title: 'Market Research Guide',
-    file: 'full_catalog.md',
+    file: 'data/full_catalog.md',
     category: 'summary',
     content: ''
   }
@@ -578,7 +578,8 @@ function parseDaysOld(scraped_at) {
 async function loadCatalogData() {
   let laptopsUnified = [];
   try {
-    const res = await fetch('./scraped_laptops.json', );
+    let res = await fetch('./data/scraped_laptops.json');
+    if (!res.ok) res = await fetch('./scraped_laptops.json');
     if (res.ok) {
       const rawJson = await res.json();
       if (Array.isArray(rawJson)) {
@@ -597,7 +598,8 @@ async function loadCatalogData() {
 
   let mobileUnified = [];
   try {
-    const resM = await fetch('./scraped_mobile.json', );
+    let resM = await fetch('./data/scraped_mobile.json');
+    if (!resM.ok) resM = await fetch('./scraped_mobile.json');
     if (resM.ok) {
       const rawMJson = await resM.json();
       if (Array.isArray(rawMJson)) {
@@ -790,7 +792,10 @@ async function loadDocument() {
   if (!doc.content) {
     documentContent.innerHTML = `<div class="empty-state">Loading ${escapeHtml(doc.title)}…</div>`;
     try {
-      const response = await fetch(`./${doc.file}`);
+      let response = await fetch(`./${doc.file}`);
+      if (!response.ok && !doc.file.startsWith('data/')) {
+        response = await fetch(`./data/${doc.file}`);
+      }
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       doc.content = await response.text();
     } catch (error) {
@@ -1632,7 +1637,8 @@ async function openScraperStatusModal() {
 
   let statusData = null;
   try {
-    const res = await fetch('./scraper_status.json', );
+    let res = await fetch('./data/scraper_status.json');
+    if (!res.ok) res = await fetch('./scraper_status.json');
     if (res.ok) {
       statusData = await res.json();
     }

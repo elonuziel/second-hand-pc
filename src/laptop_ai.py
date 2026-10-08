@@ -15,7 +15,7 @@ from laptop_domain import LaptopItem
 
 logger = logging.getLogger("LaptopAI")
 
-WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
+WORKSPACE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV_FILE_PATH = os.path.join(WORKSPACE_DIR, ".env")
 
 

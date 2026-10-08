@@ -8,17 +8,32 @@ and frontend compatibility for phones and tablets.
 
 import unittest
 import os
+import sys
 import json
 import logging
 import subprocess
+
+WORKSPACE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC_DIR = os.path.join(WORKSPACE_DIR, "src")
+DATA_DIR = os.path.join(WORKSPACE_DIR, "data")
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
+
 from mobile_scraper import MobileClassifier
 
 logger = logging.getLogger(__name__)
 
-WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
-MOBILE_JSON_PATH = os.path.join(WORKSPACE_DIR, "scraped_mobile.json")
-MOBILE_CSV_PATH = os.path.join(WORKSPACE_DIR, "scraped_mobile.csv")
-MOBILE_MD_PATH = os.path.join(WORKSPACE_DIR, "full_mobile_catalog.md")
+MOBILE_JSON_PATH = os.path.join(DATA_DIR, "scraped_mobile.json")
+if not os.path.exists(MOBILE_JSON_PATH):
+    MOBILE_JSON_PATH = os.path.join(WORKSPACE_DIR, "scraped_mobile.json")
+
+MOBILE_CSV_PATH = os.path.join(DATA_DIR, "scraped_mobile.csv")
+if not os.path.exists(MOBILE_CSV_PATH):
+    MOBILE_CSV_PATH = os.path.join(WORKSPACE_DIR, "scraped_mobile.csv")
+
+MOBILE_MD_PATH = os.path.join(DATA_DIR, "full_mobile_catalog.md")
+if not os.path.exists(MOBILE_MD_PATH):
+    MOBILE_MD_PATH = os.path.join(WORKSPACE_DIR, "full_mobile_catalog.md")
 
 
 

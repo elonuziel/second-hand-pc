@@ -14,13 +14,14 @@ from laptop_recommendations import TopPicksEngine
 
 logger = logging.getLogger("ReportGenerator")
 
-WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
-FULL_CATALOG_MD_PATH = os.path.join(WORKSPACE_DIR, "full_catalog.md")
+WORKSPACE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(WORKSPACE_DIR, "data")
+FULL_CATALOG_MD_PATH = os.path.join(DATA_DIR, "full_catalog.md")
 SUMMARY_MD_PATH = FULL_CATALOG_MD_PATH
-JSON_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.json")
-CSV_PATH = os.path.join(WORKSPACE_DIR, "scraped_laptops.csv")
+JSON_PATH = os.path.join(DATA_DIR, "scraped_laptops.json")
+CSV_PATH = os.path.join(DATA_DIR, "scraped_laptops.csv")
 ENV_FILE_PATH = os.path.join(WORKSPACE_DIR, ".env")
-SCRAPER_STATUS_PATH = os.path.join(WORKSPACE_DIR, "scraper_status.json")
+SCRAPER_STATUS_PATH = os.path.join(DATA_DIR, "scraper_status.json")
 
 
 class ReportGenerator:
