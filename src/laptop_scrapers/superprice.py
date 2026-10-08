@@ -140,3 +140,4 @@ class SuperPriceScraper:
             logger.error("Error scraping SuperPrice: %s", e)
 
         return []
+

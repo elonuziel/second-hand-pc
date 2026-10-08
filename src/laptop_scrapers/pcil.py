@@ -93,3 +93,4 @@ class PCILScraper:
 
         logger.info("PCIL: scraped %d clearance laptops", len(items))
         return items
+
