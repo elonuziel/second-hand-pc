@@ -366,6 +366,7 @@ class GoMobileScraper:
 class PartnerPlusScraper:
     STORE_NAME = "Partner Plus"
     CATALOG_URL = "https://partnerplus.partner.co.il/renewed"
+    _LD_JSON_PATTERN = re.compile(r"<script[^>]*type=['\"]application/ld\+json['\"][^>]*>(.*?)</script>", re.DOTALL)
 
     def __init__(self, session: requests.Session):
         self.session = session
@@ -388,7 +389,7 @@ class PartnerPlusScraper:
                         return None
                     try:
                         r_p = self.session.get(url, timeout=6)
-                        p_json = re.search(r'<script[^>]*type=[\"\']application/ld\+json[\"\'][^>]*>(.*?)</script>', r_p.text, re.DOTALL)
+                        p_json = self._LD_JSON_PATTERN.search(r_p.text)
                         price = 0
                         if p_json:
                             data = json.loads(p_json.group(1))
