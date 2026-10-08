@@ -19,6 +19,12 @@ class ITOutletScraper:
 
     def __init__(self, session: Optional[requests.Session] = None):
         self.session = session or requests.Session()
+        if hasattr(self.session, "headers") and hasattr(self.session.headers, "setdefault"):
+            self.session.headers.setdefault("Referer", "https://www.itoutlet.co.il/")
+            self.session.headers.setdefault(
+                "User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            )
 
     def _fetch_detail_specs(self, url: str) -> str:
         try:
@@ -57,7 +63,11 @@ class ITOutletScraper:
                 if r.status_code != 200:
                     break
 
-                blocks = re.findall(r'<div[^>]*class=[\"\'][^\"\']*layout_list_item[^\"\']*[\"\'][^>]*>(.*?)(?=<div[^>]*class=[\"\'][^\"\']*layout_list_item|$)', r.text, re.DOTALL)
+                blocks = re.findall(
+                    r'<div[^>]*class=[\"\'][^\"\']*layout_list_item[^\"\']*[\"\'][^>]*>(.*?)(?=<div[^>]*class=[\"\'][^\"\']*layout_list_item|<div[^>]*class=[\"\'][^\"\']*(?:pagingWrapper|pagination)|<div[^>]*id=[\"\'][^\"\']*bg_footer|<!-- layout_footer|$)',
+                    r.text,
+                    re.DOTALL,
+                )
                 for b in blocks:
                     link_m = re.findall(r'href=[\"\']\s*(/items/\d+-[^\"\']+)[\"\']', b)
                     if not link_m:
@@ -73,18 +83,48 @@ class ITOutletScraper:
                     if not HardwareClassifier.is_laptop(title):
                         continue
 
-                    # Exact price extraction (excluding newsletter coupon thresholds)
-                    raw_prices = [int(p.replace(',', '')) for p in re.findall(r'(\d[\d,]*)\s*₪', b)]
-                    raw_price = last_valid_price(
-                        (price for price in raw_prices if price != 1500),
-                        minimum=601,
+                    # Exact price extraction:
+                    # Look inside dedicated selling price span (ignoring origin_price and newsletter promo)
+                    price_span_m = re.search(
+                        r'<span[^>]*class=[\"\'][^\"\']*\bprice\b[^\"\']*[\"\'][^>]*>(.*?)</span>\s*</a>',
+                        b,
+                        re.DOTALL,
                     )
+                    if not price_span_m:
+                        price_span_m = re.search(
+                            r'<span[^>]*class=[\"\'][^\"\']*\bprice\b[^\"\']*[\"\'][^>]*>(.*?)</span>',
+                            b,
+                            re.DOTALL,
+                        )
+
+                    raw_price = None
+                    if price_span_m:
+                        span_nums = [
+                            int(p.replace(',', ''))
+                            for p in re.findall(r'(\d[\d,]*)\s*₪', price_span_m.group(0))
+                        ]
+                        raw_price = last_valid_price(span_nums, minimum=601)
+
+                    if raw_price is None:
+                        # Fallback: strip any contact/newsletter footer before matching
+                        clean_b = re.split(
+                            r'<h3[^>]*class=[\"\'][^\"\']*contact_title|<div[^>]*id=[\"\'][^\"\']*footer|<div[^>]*class=[\"\'][^\"\']*(?:paging|footer)',
+                            b,
+                        )[0]
+                        raw_prices = [
+                            int(p.replace(',', ''))
+                            for p in re.findall(r'(\d[\d,]*)\s*₪', clean_b)
+                        ]
+                        # Discard promo thresholds (1,000 / 1,500) if another price is present
+                        non_promo = [p for p in raw_prices if p not in (1000, 1500)]
+                        raw_price = last_valid_price(non_promo, minimum=601) or last_valid_price(raw_prices, minimum=601)
+
                     if raw_price is None:
                         logger.warning("Skipping IT Outlet listing without a valid price: %s", title)
                         continue
 
                     # Smart Discount & Deal Price Logic
-                    if 'p14s' in title.lower():
+                    if re.search(r'p14s\s*(?:gen\s*1\b|\bg1\b)', title, re.IGNORECASE):
                         deal_price = 2500
                         deal_label = "2,500 ₪ (Coupon IT14)"
                     elif raw_price >= 2500:

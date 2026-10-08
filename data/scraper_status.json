@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-10-08T14:46:28.791518",
+  "last_updated": "2026-10-08T15:03:15.030179",
   "laptops": {
-    "total_items": 231,
+    "total_items": 232,
     "stores": {
       "itoutlet": {
         "display_name": "IT Outlet",
-        "count": 35,
+        "count": 36,
         "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
@@ -21,7 +21,7 @@
       },
       "lts": {
         "display_name": "LaptopTech LTS",
-        "count": 27,
+        "count": 26,
         "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
@@ -45,7 +45,7 @@
       },
       "payngo": {
         "display_name": "Payngo",
-        "count": 3,
+        "count": 4,
         "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,

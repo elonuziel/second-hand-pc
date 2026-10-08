@@ -1195,6 +1195,44 @@ class TestNewLaptopScrapers(unittest.TestCase):
         self.assertIn("i7-1165G7", specs)
         self.assertIn("1.3", specs)
 
+    def test_itoutlet_catalog_price_extraction_avoids_newsletter_promo(self):
+        """IT Outlet catalog parser extracts real selling price without being misled by footer promo banner."""
+        mock_catalog_html = '''
+        <div class="layout_list_item">
+            <a href="/items/6505116-Lenovo-ThinkPad-X1-Carbon-Gen8"><img src="/img1.jpg" alt="מחשב נייד Lenovo ThinkPad X1 Carbon Gen8 i7/16GB/500GB"/></a>
+            <p class="origin_price"> <span style="display: none;">מחיר רגיל: </span> 5,000 ₪ </p>
+            <a href="/items/6505116"><span class="price center-price-in-grid text-right"><span style="display: none;">מחיר</span> 2,500 ₪ </span></a>
+            <h3 class="contact_title1">נרשמים ומקבלים מתנה בקניית מחשב מעל 1,000 ₪</h3>
+        </div>
+        <div class="pagingWrapper"><div class="pagination"></div></div>
+        <div id="bg_footer"></div>
+        '''
+        class FakeResponse:
+            status_code = 200
+            text = mock_catalog_html
+        class FakeSession:
+            def get(self, url, timeout=12):
+                return FakeResponse()
+
+        scraper = ITOutletScraper(FakeSession())
+        with patch.object(scraper, "_fetch_detail_specs", return_value=""):
+            # Only scrape 1 page for test
+            scraper.CATALOG_URL = "https://www.itoutlet.co.il/test?order=up_price"
+            # Limit page loop to page 1 by returning 404 for page 2+
+            def fake_get(url, timeout=12):
+                if "page=1" in url:
+                    return FakeResponse()
+                res = FakeResponse()
+                res.status_code = 404
+                return res
+            scraper.session.get = fake_get
+
+            items = scraper.scrape()
+            self.assertEqual(len(items), 1)
+            self.assertEqual(items[0].price_ils, 2500)
+            self.assertEqual(items[0].deal_price_ils, 2400)  # 4% card discount for >= 2500
+
+
     def test_lastprice_detail_page_specs_parsing(self):
         """LastPrice detail page parser extracts #html-description block with battery and specs."""
         mock_html = '''
