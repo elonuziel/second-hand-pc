@@ -19,24 +19,17 @@ function scheduleRenderCatalog() {
 
 const docs = [
   {
-    id: 'full-catalog',
-    title: 'Full Laptop Catalog',
+    id: 'summary',
+    title: 'Market Research Guide',
     file: 'full_catalog.md',
-    category: 'full-catalog',
-    content: ''
-  },
-  {
-    id: 'full-mobile-catalog',
-    title: 'Full Mobile Catalog',
-    file: 'full_mobile_catalog.md',
-    category: 'full-mobile-catalog',
+    category: 'summary',
     content: ''
   }
 ];
 
 const state = {
-  activeDocId: 'full-catalog',
-  filter: 'catalog', // 'catalog', 'mobile-catalog', 'full-catalog', or 'full-mobile-catalog'
+  activeDocId: 'summary',
+  filter: 'catalog', // Default view is 'catalog'
   query: '',
   activePreset: 'all',
   catalogData: [],
@@ -74,7 +67,7 @@ const state = {
 function buildVisibleDocs() {
   const queryLower = state.query ? state.query.toLowerCase() : '';
   return docs.filter((doc) => {
-    const matchesFilter = state.filter === 'all' || doc.category === state.filter;
+    const matchesFilter = state.filter === 'all' || state.filter === 'catalog' || doc.category === state.filter;
     const haystack = `${doc.title} ${doc.file}`.toLowerCase();
     const matchesQuery = !queryLower || haystack.includes(queryLower);
     return matchesFilter && matchesQuery;
@@ -789,28 +782,27 @@ async function loadDocument() {
   if (state.filter === 'catalog' || state.filter === 'mobile-catalog') return;
   if (!documentContent) return;
 
-  const docId = state.filter === 'full-mobile-catalog' ? 'full-mobile-catalog' : 'full-catalog';
-  const doc = docs.find((d) => d.id === docId) || docs[0];
+  const doc = docs.find((d) => d.id === state.activeDocId || d.id === state.filter || d.category === state.filter) || docs[0];
   if (!doc) return;
 
   setStatus(`Loading ${doc.title}…`);
 
   if (!doc.content) {
-    documentContent.innerHTML = '<div class="empty-state">Loading full catalog…</div>';
+    documentContent.innerHTML = `<div class="empty-state">Loading ${escapeHtml(doc.title)}…</div>`;
     try {
-      const response = await fetch(`./${doc.file}`, );
+      const response = await fetch(`./${doc.file}`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       doc.content = await response.text();
     } catch (error) {
       documentContent.innerHTML = `
         <div class="empty-state">
           <div>
-            <h3>Unable to load full catalog.</h3>
+            <h3>Unable to load ${escapeHtml(doc.title)}.</h3>
             <p>${escapeHtml(error.message)}</p>
           </div>
         </div>
       `;
-      setStatus('Could not load full catalog.', 'error');
+      setStatus(`Could not load ${doc.title}.`, 'error');
       return;
     }
   }
