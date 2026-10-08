@@ -294,6 +294,11 @@
               <li>Full market research & stock audits</li>
             </ul>
           </div>
+
+          <div class="sidebar-card store-audit-note">
+            <h3>💡 Quality & In-Stock Audit</h3>
+            <p>Our audit engine actively filters out phantom and sold listings (such as <code>**נמכר**</code> on LaptopTech LTS). By default, only modern platforms (Intel 8th Gen+, AMD Ryzen, Apple Silicon) are included for security &amp; Windows 11 readiness. Older legacy models (≤7th Gen) can optionally be included via <code>--include-legacy</code>.</p>
+          </div>
         </aside>
 
         <section class="document-panel">
@@ -319,7 +324,7 @@
           <!-- Dynamically populated by app.js -->
         </div>
         <div class="modal-footer">
-          <p class="modal-footer-note">ℹ️ Stores protected by strict bot firewalls in CI runner datacenter IPs safely preserve last known stock so listings remain active.</p>
+          <p class="modal-footer-note">ℹ️ Stores protected by strict bot firewalls safely preserve last known stock. Stores with historical sold items (e.g. LaptopTech LTS) are strictly audited to exclude sold listings and focus on modern platforms (8th Gen+ / Ryzen / M1); legacy models can optionally be included via <code>--include-legacy</code>.</p>
           <button id="closeStatusModalFooterBtn" class="filter-btn active" type="button">Close</button>
         </div>
       </div>

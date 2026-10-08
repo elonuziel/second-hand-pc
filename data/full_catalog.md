@@ -180,6 +180,8 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 
 ## 🏬 3. LaptopTech LTS (לפטופ.טק) — Live Stock Audit
 
+*(Verified in-stock units via Store API — sold/phantom listings excluded. Filtered to modern platforms (8th Gen+ / Ryzen / M1) by default; legacy units available via --include-legacy)*
+
 | # | Model / Product Title | CPU & Gen | RAM & SSD | Screen | Weight | Battery | Deal Price | Storage Interface | Upgradability | Scraped | Direct Link |
 | :-: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :---: | :---: |
 | 1 | **Acer A517 52G 51E7 17 3 I5 8GB 1TB** | Core i5 (11th Gen) | 8GB DDR4 / 1000GB | 17.3" | ⚖️ 2.6 kg | 🔋 41 Wh | **1,300 ₪** | ⚡ M.2 2280 PCIe NVMe (Swappable) | 🟢 9.0 | 2026-10-08 | [View Product](https://lts.co.il/פריט/acer-a517-52g-51e7-17-3-i5-8gb-1tb/) |

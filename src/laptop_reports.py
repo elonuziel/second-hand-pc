@@ -307,8 +307,8 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
 
         _append_store_section(1, "IT Outlet (איי טי אאוטלט)", it_items)
         _append_store_section(2, "Ecology Computers (אקולוגיה לקהילה מוגנת)", eco_items, "All laptops include a full 24-Month / 2-Year Warranty")
-        _append_store_section(3, "LaptopTech LTS (לפטופ.טק)", lts_items)
-        _append_store_section(4, "Recomp Computers (ריקומפ)", rec_items)
+        _append_store_section(3, "LaptopTech LTS (לפטופ.טק)", lts_items, "Verified in-stock units via Store API (sold/phantom listings excluded). Filtered to modern platforms (8th Gen+ / Ryzen / M1) by default; legacy units available via --include-legacy.")
+        _append_store_section(4, "Recomp Computers (ריקומפ)", rec_items, "100% verified in-stock units via Store API (out-of-stock listings excluded).")
         _append_store_section(5, "Olam HaKolnoa (עולם הקולנוע)", cwc_items, "Most laptops include a full 36-Month / 3-Year Hardware Warranty")
         _append_store_section(6, "Machsanei Hashmal (מחסני חשמל / Payngo)", payngo_items)
         _append_store_section(7, "A.L.M (א.ל.מ)", alm_items)

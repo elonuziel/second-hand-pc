@@ -22,8 +22,12 @@ class LTSScraper:
     API_URL = "https://lts.co.il/wp-json/wc/store/v1/products?category=559&per_page=100"
     CATALOG_URL = "https://lts.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%99%D7%93-2/"
 
-    def __init__(self, session: Optional[requests.Session] = None):
+    def __init__(self, session: Optional[requests.Session] = None, include_legacy: Optional[bool] = None):
         self.session = session or requests.Session()
+        if include_legacy is None:
+            import os
+            include_legacy = os.environ.get("SCRAPER_INCLUDE_LEGACY", "").lower() in ("1", "true", "yes")
+        self.include_legacy = include_legacy
 
     @staticmethod
     def _is_modern_cpu(cpu_str: str) -> bool:
@@ -117,8 +121,8 @@ class LTSScraper:
                 image_url=img_url,
             )
 
-            # Strict filter for modern laptops (8th Gen Intel or newer, AMD Ryzen, Apple Silicon)
-            if not self._is_modern_cpu(item.cpu):
+            # Filter for modern laptops (8th Gen Intel or newer, AMD Ryzen, Apple Silicon) unless include_legacy is set
+            if not self.include_legacy and not self._is_modern_cpu(item.cpu):
                 continue
 
             items.append(item)
@@ -259,7 +263,7 @@ class LTSScraper:
                         stock_status="🟢 In Stock",
                         image_url=img,
                     )
-                    if not self._is_modern_cpu(item.cpu):
+                    if not self.include_legacy and not self._is_modern_cpu(item.cpu):
                         continue
                     if item.url not in seen_urls:
                         seen_urls.add(item.url)

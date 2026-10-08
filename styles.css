@@ -582,6 +582,36 @@ h1 {
   color: var(--muted);
 }
 
+.store-audit-note {
+  border-left: 3px solid var(--primary);
+  background: rgba(42, 93, 215, 0.04);
+}
+
+[data-theme="dark"] .store-audit-note {
+  background: rgba(42, 93, 215, 0.08);
+}
+
+.store-audit-note h3 {
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.store-audit-note p {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0;
+}
+
+.store-audit-note code {
+  font-size: 0.78rem;
+  padding: 1px 4px;
+  background: rgba(42, 93, 215, 0.1);
+  border-radius: 4px;
+  color: var(--primary-strong);
+}
+
 .document-panel {
   background: var(--panel);
   border: 1px solid var(--border);

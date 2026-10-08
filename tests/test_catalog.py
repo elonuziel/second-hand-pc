@@ -1422,6 +1422,46 @@ class TestNewLaptopScrapers(unittest.TestCase):
         self.assertEqual(items[0].price_ils, 1450)
         self.assertEqual(items[0].warranty_months, 36)
 
+    def test_lts_include_legacy_option(self):
+        """LTS scraper with include_legacy=True includes older 4th-7th Gen laptops while still filtering sold/OOS."""
+        mock_payload = [
+            {
+                "id": 101,
+                "name": "מחשב נייד לנובו מחודש Lenovo ThinkPad T490s Core i7-8565U 16GB 512GB SSD",
+                "permalink": "https://lts.co.il/product/lenovo-thinkpad-t490s/",
+                "is_in_stock": True,
+                "prices": {"price": "1450", "currency_minor_unit": 0},
+            },
+            {
+                "id": 104,
+                "name": "מחשב נייד לנובו Lenovo T460s Core i5-6300U 8GB",
+                "permalink": "https://lts.co.il/product/lenovo-t460s/",
+                "is_in_stock": True,
+                "prices": {"price": "890", "currency_minor_unit": 0},
+            },
+            {
+                "id": 103,
+                "name": "Lenovo ThinkPad T480s i5-8250U 16GB",
+                "permalink": "https://lts.co.il/product/sold-item/",
+                "is_in_stock": True,
+                "prices": {"price": "1290", "currency_minor_unit": 0},
+                "short_description": "<p>**נמכר**</p>",
+            },
+        ]
+        # Default: legacy excluded
+        scraper_default = LTSScraper(include_legacy=False)
+        items_def = scraper_default._items_from_api_payload(mock_payload)
+        self.assertEqual(len(items_def), 1)
+        self.assertEqual(items_def[0].url, "https://lts.co.il/product/lenovo-thinkpad-t490s/")
+
+        # include_legacy=True: legacy included, but sold item still excluded
+        scraper_legacy = LTSScraper(include_legacy=True)
+        items_leg = scraper_legacy._items_from_api_payload(mock_payload)
+        self.assertEqual(len(items_leg), 2)
+        urls = [i.url for i in items_leg]
+        self.assertIn("https://lts.co.il/product/lenovo-thinkpad-t490s/", urls)
+        self.assertIn("https://lts.co.il/product/lenovo-t460s/", urls)
+
     def test_recomp_api_payload_parsing_all_in_stock(self):
         """Recomp scraper parses all in-stock laptops and filters out out-of-stock and non-laptops."""
         mock_payload = [
