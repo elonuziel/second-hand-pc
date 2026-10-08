@@ -78,16 +78,22 @@ While the majority of Israeli second-hand and refurbished hardware stores are sc
 second-hand-pc/
 │
 ├── src/                              # Scraper engine and pipeline backend
-│   ├── scraper.py                    # Main laptop scraper & auditor
-│   ├── mobile_scraper.py             # Mobile devices & tablets scraper
-│   ├── enrich_specs.py               # Hardware spec decoders & AI enrichment
+│   ├── scraper.py                    # Master orchestrator & laptop scraper
+│   ├── scraper_progress.py           # Real-time progress, ETA, and status tracking
 │   ├── http_session.py               # Resilient HTTP client & bot challenge bypass
 │   ├── laptop_domain.py              # LaptopItem domain model
 │   ├── laptop_classification.py      # Hardware spec classification engine
 │   ├── laptop_pipeline.py            # Concurrent execution & store isolation
 │   ├── laptop_recommendations.py     # Deterministic top-pick selection
 │   ├── laptop_reports.py             # Markdown generator & audit reports
-│   └── laptop_scrapers/              # Store scraper adapters (17 stores)
+│   ├── laptop_scrapers/              # Laptop scraper adapters (17 stores)
+│   ├── mobile_domain.py              # MobileItem domain model
+│   ├── mobile_classification.py      # Mobile device heuristics & classification
+│   ├── mobile_pipeline.py            # Mobile pipeline runner & auditor
+│   ├── mobile_reports.py             # Mobile exports & markdown catalog generator
+│   ├── mobile_scrapers/              # Mobile scraper adapters (8 stores)
+│   ├── mobile_scraper.py             # Backward-compatible mobile facade
+│   └── enrich_specs.py               # Hardware spec decoders & AI enrichment
 │
 ├── data/                             # Scraped live datasets & audit catalogs
 │   ├── scraped_laptops.json          # Live laptop catalog (JSON)
@@ -106,14 +112,14 @@ second-hand-pc/
 │
 ├── tests/                            # Automated test suite
 │   ├── test_catalog.py               # Laptop scraper & catalog health tests
-│   └── test_mobile_catalog.py        # Mobile scraper & catalog health tests
+│   ├── test_mobile_catalog.py        # Mobile scraper & catalog health tests
+│   └── test_scraper_progress.py      # Scraper progress tracker tests
 │
 ├── assets/                           # Static assets & icons
 ├── index.html                        # Catalog Finder web app (GitHub Pages)
 ├── app.js                            # Frontend search & filter engine
 ├── styles.css                        # Web application stylesheet
-├── scraper.py                        # Root convenience entrypoint
-├── mobile_scraper.py                 # Root convenience entrypoint
+├── scraper.py                        # Master CLI scraper orchestrator
 ├── enrich_specs.py                   # Root convenience entrypoint
 ├── requirements.txt                  # Python dependencies
 ├── .env.example                      # Example environment variables

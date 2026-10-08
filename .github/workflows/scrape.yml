@@ -53,7 +53,7 @@ jobs:
           HTTPS_PROXY: ${{ secrets.HTTPS_PROXY }}
           SCRAPER_PROXY: ${{ secrets.SCRAPER_PROXY }}
         run: |
-          python3 mobile_scraper.py --csv
+          python3 scraper.py --phones --csv
 
       - name: Run Catalog Health Tests
         run: |
