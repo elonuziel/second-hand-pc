@@ -112,6 +112,7 @@ class MobileClassifier:
         'case', 'cover', 'charger', 'cable', 'protector', 'holder', 'strap', 'רצועה',
         'אוזניות', 'headset', 'airpods', 'buds'
     )
+    TABLET_KEYWORDS = ('ipad', 'tab', 'טאבלט', 'tablet')
 
     _RAM_PATTERN = re.compile(r'(?:^|[^\d])(3|4|6|8|12|16)\s*(?:gb|ג"ב|גיגה)?\s*(?:ram|זכרון|זיכרון)(?:[^\d]|$)', re.IGNORECASE)
     _STORAGE_PATTERN = re.compile(r'(?:^|[^\d])(32|64|128|256|512|1000|1tb|1000gb|1 טרה)(?:gb|g|ג"ב|גיגה)?(?:[^\d]|$)', re.IGNORECASE)
@@ -143,7 +144,7 @@ class MobileClassifier:
     @classmethod
     def detect_device_type(cls, title: str) -> str:
         t = title.lower()
-        if any(k in t for k in ['ipad', 'tab', 'טאבלט', 'tablet']):
+        if any(k in t for k in cls.TABLET_KEYWORDS):
             return "tablet"
         return "phone"
 
