@@ -157,3 +157,4 @@ class MobileClassifier:
             image_url=image_url,
             scraped_at=resolved_scraped_at,
         )
+

@@ -34,3 +34,4 @@ __all__ = [
     'BuyMobileScraper',
     'DEFAULT_MOBILE_SCRAPER_CLASSES',
 ]
+

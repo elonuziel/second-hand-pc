@@ -146,3 +146,4 @@ class MobileReportGenerator:
         with open(filepath, "w", encoding="utf-8") as f:
             f.write("".join(md_parts).strip() + "\n")
         logger.info(f"Mobile Markdown catalog saved to: {filepath}")
+

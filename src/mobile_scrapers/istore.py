@@ -103,3 +103,4 @@ class IStoreMobileScraper:
 
         logger.info("iStore CPO: scraped %d mobile items.", len(items))
         return items
+

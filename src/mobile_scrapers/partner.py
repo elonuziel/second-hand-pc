@@ -71,3 +71,4 @@ class PartnerPlusScraper:
         except Exception as e:
             logger.error(f"Error scraping Partner Plus: {e}")
         return items
+

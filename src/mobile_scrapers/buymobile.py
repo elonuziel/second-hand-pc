@@ -111,3 +111,4 @@ class BuyMobileScraper:
 
         logger.info("BuyMobile: scraped %d mobile items.", len(items))
         return items
+

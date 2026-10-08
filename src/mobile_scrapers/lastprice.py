@@ -122,3 +122,4 @@ class LastPriceMobileScraper:
         if not items:
             logger.warning("LastPrice: all catalog URLs exhausted, returning 0 items.")
         return items
+

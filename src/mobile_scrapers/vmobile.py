@@ -63,3 +63,4 @@ class VMobileScraper:
                 logger.error(f"Error scraping VMobile page {page}: {e}")
 
         return items
+

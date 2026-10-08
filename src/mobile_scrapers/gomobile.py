@@ -64,3 +64,4 @@ class GoMobileScraper:
         except Exception as e:
             logger.error(f"Error scraping GoMobile: {e}")
         return items
+

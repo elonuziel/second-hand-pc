@@ -63,3 +63,4 @@ class ITOutletMobileScraper:
                 logger.error(f"Error scraping IT Outlet Mobile page {page}: {e}")
 
         return items
+

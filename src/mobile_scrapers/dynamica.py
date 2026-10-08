@@ -63,3 +63,4 @@ class DynamicaScraper:
                 logger.error(f"Error scraping Dynamica Outlet page {page}: {e}")
 
         return items
+
