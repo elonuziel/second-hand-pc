@@ -1,21 +1,10 @@
+/* ==========================================================================
+   Refurbished PC & Mobile Catalog — Web Application
+   ========================================================================== */
 
-function debounce(fn, delay = 120) {
-  let timeoutId;
-  return function (...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn.apply(this, args), delay);
-  };
-}
-
-let rafPending = false;
-function scheduleRenderCatalog() {
-  if (rafPending) return;
-  rafPending = true;
-  requestAnimationFrame(() => {
-    rafPending = false;
-    renderCatalog();
-  });
-}
+/* --------------------------------------------------------------------------
+   1. CONFIGURATION & STATE MANAGEMENT
+   -------------------------------------------------------------------------- */
 
 const docs = [
   {
@@ -64,32 +53,41 @@ const state = {
   }
 };
 
-function buildVisibleDocs() {
-  const queryLower = state.query ? state.query.toLowerCase() : '';
-  return docs.filter((doc) => {
-    const matchesFilter = state.filter === 'all' || state.filter === 'catalog' || doc.category === state.filter;
-    const haystack = `${doc.title} ${doc.file}`.toLowerCase();
-    const matchesQuery = !queryLower || haystack.includes(queryLower);
-    return matchesFilter && matchesQuery;
-  });
-}
+const PAGE_SIZE = 24;
+let currentFilteredItems = [];
+let currentTopValueIds = new Set();
+let renderedCount = 0;
+let catalogObserver = null;
+let mobileDataPromise = null;
+let rafPending = false;
 
+/* --------------------------------------------------------------------------
+   2. DOM ELEMENTS CACHE
+   -------------------------------------------------------------------------- */
+
+// Core Layout & Views
 const tabList = typeof document !== 'undefined' ? document.getElementById('tabList') : null;
 const documentContent = typeof document !== 'undefined' ? document.getElementById('documentContent') : null;
 const catalogContent = typeof document !== 'undefined' ? document.getElementById('catalogContent') : null;
-const searchInput = typeof document !== 'undefined' ? document.getElementById('searchInput') : null;
-const statusBar = typeof document !== 'undefined' ? document.getElementById('statusBar') : null;
-
 const documentSidebarCard = typeof document !== 'undefined' ? document.getElementById('documentSidebarCard') : null;
 const catalogFiltersCard = typeof document !== 'undefined' ? document.getElementById('catalogFiltersCard') : null;
+const statusBar = typeof document !== 'undefined' ? document.getElementById('statusBar') : null;
+
+// Header, Search & Theme
+const searchInput = typeof document !== 'undefined' ? document.getElementById('searchInput') : null;
+const themeToggle = typeof document !== 'undefined' ? document.getElementById('themeToggle') : null;
+
+// Filter Layout & Controls
 const catalogFilterFields = typeof document !== 'undefined' ? document.getElementById('catalogFilterFields') : null;
 const toggleFiltersBtn = typeof document !== 'undefined' ? document.getElementById('toggleFiltersBtn') : null;
 const resetFiltersBtn = typeof document !== 'undefined' ? document.getElementById('resetFiltersBtn') : null;
-const themeToggle = typeof document !== 'undefined' ? document.getElementById('themeToggle') : null;
 
+// Primary Dropdowns & Containers
 const categoryFilter = typeof document !== 'undefined' ? document.getElementById('categoryFilter') : null;
 const storeFilter = typeof document !== 'undefined' ? document.getElementById('storeFilter') : null;
 const brandFilterContainer = typeof document !== 'undefined' ? document.getElementById('brandFilterContainer') : null;
+
+// Dual Price Range Slider Elements
 const priceMinSlider = typeof document !== 'undefined' ? document.getElementById('priceMinSlider') : null;
 const priceMaxSlider = typeof document !== 'undefined' ? document.getElementById('priceMaxSlider') : null;
 const priceSliderRange = typeof document !== 'undefined' ? document.getElementById('priceSliderRange') : null;
@@ -99,6 +97,7 @@ const tickMin = typeof document !== 'undefined' ? document.getElementById('tickM
 const tickMid = typeof document !== 'undefined' ? document.getElementById('tickMid') : null;
 const tickMax = typeof document !== 'undefined' ? document.getElementById('tickMax') : null;
 
+// Directional Groups & Filter Selects
 const cpuGenFilterGroup = typeof document !== 'undefined' ? document.getElementById('cpuGenFilterGroup') : null;
 const weightFilterGroup = typeof document !== 'undefined' ? document.getElementById('weightFilterGroup') : null;
 const batteryFilterGroup = typeof document !== 'undefined' ? document.getElementById('batteryFilterGroup') : null;
@@ -114,259 +113,60 @@ const weightFilter = typeof document !== 'undefined' ? document.getElementById('
 const batteryFilter = typeof document !== 'undefined' ? document.getElementById('batteryFilter') : null;
 const upgradabilityFilter = typeof document !== 'undefined' ? document.getElementById('upgradabilityFilter') : null;
 const sortFilter = typeof document !== 'undefined' ? document.getElementById('sortFilter') : null;
+const filterHideStale = typeof document !== 'undefined' ? document.getElementById('filterHideStale') : null;
 
-function adaptFilterControlsForMode(isMobile) {
-  if (typeof document === 'undefined') return;
+// Scraper Status Modal Elements
+const scraperStatusBtn = typeof document !== 'undefined' ? document.getElementById('scraperStatusBtn') : null;
+const closeStatusModalBtn = typeof document !== 'undefined' ? document.getElementById('closeStatusModalBtn') : null;
+const closeStatusModalFooterBtn = typeof document !== 'undefined' ? document.getElementById('closeStatusModalFooterBtn') : null;
+const scraperStatusModal = typeof document !== 'undefined' ? document.getElementById('scraperStatusModal') : null;
+const scraperStatusBody = typeof document !== 'undefined' ? document.getElementById('scraperStatusBody') : null;
+const statusModalSubtitle = typeof document !== 'undefined' ? document.getElementById('statusModalSubtitle') : null;
 
-  const minLimit = isMobile ? 100 : 800;
-  const maxLimit = isMobile ? 4500 : 5000;
-  const step = isMobile ? 50 : 50;
+/* --------------------------------------------------------------------------
+   3. UTILITY & SPEC HELPER FUNCTIONS
+   -------------------------------------------------------------------------- */
 
-  if (priceMinSlider) {
-    priceMinSlider.min = minLimit;
-    priceMinSlider.max = maxLimit;
-    priceMinSlider.step = step;
-  }
-  if (priceMaxSlider) {
-    priceMaxSlider.min = minLimit;
-    priceMaxSlider.max = maxLimit;
-    priceMaxSlider.step = step;
-  }
-
-  if (tickMin) tickMin.textContent = `${minLimit.toLocaleString('en-US')} ₪`;
-  if (tickMid) tickMid.textContent = `${Math.round((minLimit + maxLimit) / 2).toLocaleString('en-US')} ₪`;
-  if (tickMax) tickMax.textContent = `${maxLimit.toLocaleString('en-US')} ₪`;
-
-  if (cpuGenFilterGroup) cpuGenFilterGroup.classList.toggle('hidden', isMobile);
-  if (weightFilterGroup) weightFilterGroup.classList.toggle('hidden', isMobile);
-  if (batteryFilterGroup) batteryFilterGroup.classList.toggle('hidden', isMobile);
-  if (upgradabilityFilterGroup) upgradabilityFilterGroup.classList.toggle('hidden', isMobile);
-
-  if (formFilterLabel) {
-    formFilterLabel.textContent = isMobile ? 'Device Type' : 'Type / Screen';
-  }
-
-  if (ramFilter) {
-    const currentRam = ramFilter.value;
-    if (isMobile) {
-      ramFilter.innerHTML = `
-        <option value="0">Any RAM</option>
-        <option value="4">4 GB</option>
-        <option value="6">6 GB</option>
-        <option value="8">8 GB</option>
-        <option value="12">12 GB</option>
-        <option value="16">16 GB</option>
-      `;
-    } else {
-      ramFilter.innerHTML = `
-        <option value="0">Any RAM</option>
-        <option value="8">8 GB</option>
-        <option value="16">16 GB</option>
-        <option value="32">32 GB</option>
-        <option value="64">64 GB</option>
-      `;
-    }
-    if ([...ramFilter.options].some((o) => o.value === currentRam)) {
-      ramFilter.value = currentRam;
-    } else {
-      ramFilter.value = '0';
-      state.catalogFilters.ram = 0;
-    }
-  }
-
-  if (storageFilter) {
-    const currentStorage = storageFilter.value;
-    if (isMobile) {
-      storageFilter.innerHTML = `
-        <option value="0">Any Storage</option>
-        <option value="64">64 GB</option>
-        <option value="128">128 GB</option>
-        <option value="256">256 GB</option>
-        <option value="512">512 GB</option>
-        <option value="1000">1 TB</option>
-      `;
-    } else {
-      storageFilter.innerHTML = `
-        <option value="0">Any Storage</option>
-        <option value="256">256 GB</option>
-        <option value="512">512 GB</option>
-        <option value="1000">1 TB</option>
-      `;
-    }
-    if ([...storageFilter.options].some((o) => o.value === currentStorage)) {
-      storageFilter.value = currentStorage;
-    } else {
-      storageFilter.value = '0';
-      state.catalogFilters.storage = 0;
-    }
-  }
-
-  if (formFilter) {
-    const currentForm = formFilter.value;
-    if (isMobile) {
-      formFilter.innerHTML = `
-        <option value="all">All Devices</option>
-        <option value="phone">📱 Smartphone</option>
-        <option value="tablet">📱 Tablet</option>
-      `;
-    } else {
-      formFilter.innerHTML = `
-        <option value="all">All Types</option>
-        <option value="2in1">2-in-1 / Touchscreen</option>
-        <option value="clamshell">Clamshell Standard</option>
-      `;
-    }
-    if ([...formFilter.options].some((o) => o.value === currentForm)) {
-      formFilter.value = currentForm;
-    } else {
-      formFilter.value = 'all';
-      state.catalogFilters.form = 'all';
-    }
-  }
-
-  if (screenFilter) {
-    const currentScreen = screenFilter.value;
-    if (isMobile) {
-      screenFilter.innerHTML = `
-        <option value="all">All Sizes</option>
-        <option value="compact">Compact (&lt; 6.0")</option>
-        <option value="6.1">Standard (~6.1")</option>
-        <option value="6.7">Large (~6.7")</option>
-        <option value="10.0">Tablet (10"+)</option>
-      `;
-    } else {
-      screenFilter.innerHTML = `
-        <option value="all">All Sizes</option>
-        <option value="13.3">13.3" (Compact)</option>
-        <option value="14.0">14.0" (Standard Ultra)</option>
-        <option value="15.6">15.6" (Large Productivity)</option>
-      `;
-    }
-    if ([...screenFilter.options].some((o) => o.value === currentScreen)) {
-      screenFilter.value = currentScreen;
-    } else {
-      screenFilter.value = 'all';
-      state.catalogFilters.screen = 'all';
-    }
-  }
-
-  if (sortFilter) {
-    const currentSort = sortFilter.value;
-    if (isMobile) {
-      sortFilter.innerHTML = `
-        <option value="value-desc" selected>🏆 Best Value (Specs per ₪)</option>
-        <option value="price-asc">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option>
-        <option value="screen-desc">Screen Size: Large to Small</option>
-        <option value="ram-desc">RAM Capacity</option>
-      `;
-    } else {
-      sortFilter.innerHTML = `
-        <option value="value-desc" selected>🏆 Best Value (Specs per ₪)</option>
-        <option value="price-asc">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option>
-        <option value="weight-asc">Weight: Light to Heavy</option>
-        <option value="battery-desc">Battery: High to Low</option>
-        <option value="screen-desc">Screen Size: Large to Small</option>
-        <option value="upgrade-desc">Upgradability Score</option>
-        <option value="ram-desc">RAM Capacity</option>
-      `;
-    }
-    if ([...sortFilter.options].some((o) => o.value === currentSort)) {
-      sortFilter.value = currentSort;
-    } else {
-      sortFilter.value = 'value-desc';
-      state.catalogFilters.sort = 'value-desc';
-    }
-  }
-
-  // Ensure catalog filters min/max price state is bounded
-  if (state.catalogFilters.priceMin < minLimit) state.catalogFilters.priceMin = minLimit;
-  if (state.catalogFilters.priceMax > maxLimit) state.catalogFilters.priceMax = maxLimit;
+function debounce(fn, delay = 120) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), delay);
+  };
 }
 
-function updateDualPriceSliderUI(minVal, maxVal) {
-  if (!priceMinSlider || !priceMaxSlider || !priceDisplay) return;
-  const isMobile = state.catalogFilters.category === 'phones';
-  const sliderMin = Number(priceMinSlider.min) || (isMobile ? 100 : 800);
-  const sliderMax = Number(priceMaxSlider.max) || (isMobile ? 4500 : 5000);
-
-  let min = Math.max(sliderMin, Math.min(Number(minVal !== undefined ? minVal : priceMinSlider.value) || sliderMin, sliderMax));
-  let max = Math.max(sliderMin, Math.min(Number(maxVal !== undefined ? maxVal : priceMaxSlider.value) || sliderMax, sliderMax));
-
-  if (min > max) {
-    const temp = min;
-    min = max;
-    max = temp;
-  }
-
-  priceMinSlider.value = min;
-  priceMaxSlider.value = max;
-
-  const minPct = ((min - sliderMin) / (sliderMax - sliderMin)) * 100;
-  const maxPct = ((max - sliderMin) / (sliderMax - sliderMin)) * 100;
-
-  if (priceSliderRange) {
-    priceSliderRange.style.setProperty('--range-left', `${minPct}%`);
-    priceSliderRange.style.setProperty('--range-width', `${maxPct - minPct}%`);
-  }
-
-  const isMinDefault = min <= sliderMin;
-  const isMaxDefault = max >= sliderMax;
-
-  if (isMinDefault && isMaxDefault) {
-    priceDisplay.textContent = 'Any Price';
-    priceDisplay.classList.remove('active');
-  } else if (!isMinDefault && isMaxDefault) {
-    priceDisplay.textContent = `${min.toLocaleString('en-US')} ₪ & Up`;
-    priceDisplay.classList.add('active');
-  } else if (isMinDefault && !isMaxDefault) {
-    priceDisplay.textContent = `Up to ${max.toLocaleString('en-US')} ₪`;
-    priceDisplay.classList.add('active');
-  } else {
-    priceDisplay.textContent = `${min.toLocaleString('en-US')} ₪ – ${max.toLocaleString('en-US')} ₪`;
-    priceDisplay.classList.add('active');
-  }
-}
-
-function updatePriceSliderUI(value, mode = 'max') {
-  if (mode === 'min') {
-    updateDualPriceSliderUI(value, 5000);
-  } else {
-    updateDualPriceSliderUI(800, value);
-  }
-}
-
-function updateDirButtonsUI() {
-  if (typeof document === 'undefined') return;
-  const pillsContainers = document.querySelectorAll('.filter-dir-pills');
-  pillsContainers.forEach((container) => {
-    const filterName = container.dataset.filter;
-    const currentDir = (state.catalogFilters.filterDirs && state.catalogFilters.filterDirs[filterName]) || (filterName === 'weight' ? 'down' : 'up');
-    container.querySelectorAll('.dir-btn').forEach((btn) => {
-      btn.classList.toggle('active', btn.dataset.dir === currentDir);
+function scheduleRenderCatalog() {
+  if (rafPending) return;
+  rafPending = true;
+  if (typeof requestAnimationFrame !== 'undefined') {
+    requestAnimationFrame(() => {
+      rafPending = false;
+      renderCatalog();
     });
-  });
-}
-
-function applySmartDefaultDir(filterName) {
-  if (!state.catalogFilters.filterDirs) {
-    state.catalogFilters.filterDirs = {};
-  }
-  // If previously exact (i.e. neither was active), turn back to smart default on new selection
-  if (state.catalogFilters.filterDirs[filterName] === 'exact') {
-    state.catalogFilters.filterDirs[filterName] = filterName === 'weight' ? 'down' : 'up';
-    updateDirButtonsUI();
+  } else {
+    rafPending = false;
+    renderCatalog();
   }
 }
 
 function escapeHtml(str) {
-  return String(str || '')
+  if (str === null || str === undefined) return '';
+  return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+function parseDaysOld(scraped_at) {
+  if (!scraped_at) return 0;
+  const parts = String(scraped_at).split('-').map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) return 0;
+  const sDate = new Date(parts[0], parts[1] - 1, parts[2]);
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return Math.max(0, Math.round((now - sDate) / (1000 * 60 * 60 * 24)));
 }
 
 function formatCpuHtml(cpuStr) {
@@ -518,6 +318,13 @@ function getStoreClass(store) {
   return 'store-default';
 }
 
+function getUpgradabilityBadge(score) {
+  if (score >= 8.5) return `<span class="score-badge score-high">🟢 ${score}/10</span>`;
+  if (score >= 6.5) return `<span class="score-badge score-mid">🟡 ${score}/10</span>`;
+  if (score >= 4.0) return `<span class="score-badge score-low">🟠 ${score}/10</span>`;
+  return `<span class="score-badge score-locked">🔴 ${score}/10</span>`;
+}
+
 function setStatus(message, type = 'info') {
   const badgeClass = type === 'error' ? 'status-badge error' : 'status-badge';
   if (statusBar) {
@@ -550,32 +357,9 @@ function setTheme(theme) {
   }
 }
 
-async function preloadDocContents() {
-  await Promise.all(
-    docs.map(async (doc) => {
-      try {
-        const res = await fetch(`./${doc.file}`, );
-        if (res.ok) {
-          doc.content = await res.text();
-        }
-      } catch (e) {
-        console.warn(`Could not preload ${doc.file}`, e);
-      }
-    })
-  );
-}
-
-function parseDaysOld(scraped_at) {
-  if (!scraped_at) return 0;
-  const parts = String(scraped_at).split('-').map(Number);
-  if (parts.length !== 3 || parts.some(isNaN)) return 0;
-  const sDate = new Date(parts[0], parts[1] - 1, parts[2]);
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  return Math.max(0, Math.round((now - sDate) / (1000 * 60 * 60 * 24)));
-}
-
-let mobileDataPromise = null;
+/* --------------------------------------------------------------------------
+   4. DATA NORMALIZATION & ASYNC DATA LAYER
+   -------------------------------------------------------------------------- */
 
 function normalizeLaptopItems(laptopsUnified) {
   return (laptopsUnified || []).map((laptop, index) => {
@@ -748,119 +532,220 @@ async function loadCatalogData() {
   await loadLaptopData();
 }
 
-function renderCatalogToc() {
-  if (!tabList || !documentContent) return;
-  const headings = documentContent.querySelectorAll('h2');
-  if (headings.length === 0) {
-    tabList.innerHTML = '<div class="empty-state">No sections found.</div>';
-    return;
+/* --------------------------------------------------------------------------
+   5. FILTER CONTROLS & UI ADAPTATION
+   -------------------------------------------------------------------------- */
+
+function adaptFilterControlsForMode(isMobile) {
+  if (typeof document === 'undefined') return;
+
+  const minLimit = isMobile ? 100 : 800;
+  const maxLimit = isMobile ? 4500 : 5000;
+  const step = 50;
+
+  if (priceMinSlider) {
+    priceMinSlider.min = minLimit;
+    priceMinSlider.max = maxLimit;
+    priceMinSlider.step = step;
   }
+  if (priceMaxSlider) {
+    priceMaxSlider.min = minLimit;
+    priceMaxSlider.max = maxLimit;
+    priceMaxSlider.step = step;
+  }
+  if (tickMin) tickMin.textContent = `${minLimit} ₪`;
+  if (tickMid) tickMid.textContent = isMobile ? '2,200 ₪' : '2,900 ₪';
+  if (tickMax) tickMax.textContent = `${maxLimit.toLocaleString()} ₪`;
 
-  let html = '';
-  headings.forEach((h, idx) => {
-    const sectionId = `store-section-${idx}`;
-    h.id = sectionId;
-    const rawText = h.textContent.replace(/^##\s*/, '').trim();
-    const cleanTitle = rawText.split('—')[0].trim();
-    html += `
-      <button
-        type="button"
-        class="tab-button"
-        data-target="${sectionId}"
-        role="tab"
-      >
-        <span>${escapeHtml(cleanTitle)}</span>
-      </button>
-    `;
-  });
+  // Hide or show hardware-specific filter groups
+  if (cpuGenFilterGroup) cpuGenFilterGroup.style.display = isMobile ? 'none' : 'flex';
+  if (weightFilterGroup) weightFilterGroup.style.display = isMobile ? 'none' : 'flex';
+  if (batteryFilterGroup) batteryFilterGroup.style.display = isMobile ? 'none' : 'flex';
+  if (upgradabilityFilterGroup) upgradabilityFilterGroup.style.display = isMobile ? 'none' : 'flex';
 
-  tabList.innerHTML = html;
-  tabList.querySelectorAll('.tab-button').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      tabList.querySelectorAll('.tab-button').forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      const targetEl = document.getElementById(btn.dataset.target);
-      if (targetEl) {
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  });
-}
-
-function applyDocSearchFilter() {
-  if (!documentContent) return;
-  const q = state.query.toLowerCase();
-  const rows = documentContent.querySelectorAll('table tr');
-  rows.forEach((row) => {
-    if (row.querySelector('th')) return;
-    if (!q) {
-      row.style.display = '';
-    } else {
-      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
-    }
-  });
-}
-
-function sanitizeMarkdown(rawText) {
-  return rawText
-    .replace(/!\[[^\]]*\]\((?:\/home\/[^)]+|\/[^)]+)\)/g, '')
-    .replace(/\[(?:Current page|View Product)\]\(citation-section:[^)]+\)/g, '')
-    .replace(/\[\s*\]\(https?:\/\/[^)]+\)/g, '');
-}
-
-async function loadDocument() {
-  if (state.filter === 'catalog' || state.filter === 'mobile-catalog') return;
-  if (!documentContent) return;
-
-  const doc = docs.find((d) => d.id === state.activeDocId || d.id === state.filter || d.category === state.filter) || docs[0];
-  if (!doc) return;
-
-  setStatus(`Loading ${doc.title}…`);
-
-  if (!doc.content) {
-    documentContent.innerHTML = `<div class="empty-state">Loading ${escapeHtml(doc.title)}…</div>`;
-    try {
-      let response = await fetch(`./${doc.file}`);
-      if (!response.ok && !doc.file.startsWith('data/')) {
-        response = await fetch(`./data/${doc.file}`);
-      }
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      doc.content = await response.text();
-    } catch (error) {
-      documentContent.innerHTML = `
-        <div class="empty-state">
-          <div>
-            <h3>Unable to load ${escapeHtml(doc.title)}.</h3>
-            <p>${escapeHtml(error.message)}</p>
-          </div>
-        </div>
+  // Adapt form factor labels and options
+  if (formFilterLabel) formFilterLabel.textContent = isMobile ? 'Device Type' : 'Form Factor';
+  if (formFilter) {
+    if (isMobile) {
+      formFilter.innerHTML = `
+        <option value="all">All Devices</option>
+        <option value="phone">📱 Smartphones</option>
+        <option value="tablet">📱 Tablets</option>
       `;
-      setStatus(`Could not load ${doc.title}.`, 'error');
-      return;
+    } else {
+      formFilter.innerHTML = `
+        <option value="all">All Form Factors</option>
+        <option value="clamshell">Standard Clamshell</option>
+        <option value="2in1">2-in-1 Convertible / Touch</option>
+      `;
     }
   }
 
-  const sanitized = sanitizeMarkdown(doc.content);
-  const rendered = DOMPurify.sanitize(marked.parse(sanitized));
-  documentContent.innerHTML = rendered;
+  // Adapt screen size options
+  if (screenFilter) {
+    if (isMobile) {
+      screenFilter.innerHTML = `
+        <option value="all">All Screen Sizes</option>
+        <option value="compact">Compact (&lt; 6.0")</option>
+        <option value="6.1">Standard Phone (~6.1")</option>
+        <option value="6.7">Plus / Max (~6.7")</option>
+        <option value="large">Tablet Display (10"+)</option>
+      `;
+    } else {
+      screenFilter.innerHTML = `
+        <option value="all">All Sizes</option>
+        <option value="12.5">12.5" Ultraportable</option>
+        <option value="13.3">13.3" Thin &amp; Light</option>
+        <option value="14.0">14.0" Sweetspot</option>
+        <option value="15.6">15.6" Productivity</option>
+      `;
+    }
+  }
 
-  renderCatalogToc();
-  applyDocSearchFilter();
-  setStatus(`${doc.title} loaded`, 'success');
+  // Adapt RAM options
+  if (ramFilter) {
+    if (isMobile) {
+      ramFilter.innerHTML = `
+        <option value="0">Any RAM</option>
+        <option value="4">4 GB RAM</option>
+        <option value="6">6 GB RAM</option>
+        <option value="8">8 GB RAM</option>
+        <option value="12">12 GB+ RAM</option>
+      `;
+    } else {
+      ramFilter.innerHTML = `
+        <option value="0">Any RAM</option>
+        <option value="8">8 GB RAM</option>
+        <option value="16">16 GB RAM</option>
+        <option value="32">32 GB RAM</option>
+      `;
+    }
+  }
+
+  // Adapt Storage options
+  if (storageFilter) {
+    if (isMobile) {
+      storageFilter.innerHTML = `
+        <option value="0">Any Storage</option>
+        <option value="64">64 GB Storage</option>
+        <option value="128">128 GB Storage</option>
+        <option value="256">256 GB Storage</option>
+        <option value="512">512 GB+ Storage</option>
+      `;
+    } else {
+      storageFilter.innerHTML = `
+        <option value="0">Any Storage</option>
+        <option value="256">256 GB SSD</option>
+        <option value="512">512 GB SSD</option>
+        <option value="1000">1 TB SSD</option>
+      `;
+    }
+  }
+
+  // Adapt Store options
+  if (storeFilter) {
+    if (isMobile) {
+      storeFilter.innerHTML = `
+        <option value="all">All Stores</option>
+        <option value="LastPrice Mobile">LastPrice Mobile</option>
+        <option value="GoMobile">GoMobile</option>
+        <option value="Partner">Partner</option>
+        <option value="VMobile">VMobile</option>
+        <option value="Dynamica">Dynamica</option>
+      `;
+    } else {
+      storeFilter.innerHTML = `
+        <option value="all">All Stores</option>
+        <option value="Ecology">Ecology (אקולוגיה לקהילה)</option>
+        <option value="IT Outlet">IT Outlet (איי טי אאוטלט)</option>
+        <option value="LTS">LTS (לפטופטק)</option>
+        <option value="Recomp">Recomp (ריקומפ)</option>
+        <option value="Olam HaKolnoa">Olam HaKolnoa (עולם הקולנוע)</option>
+        <option value="Payngo">Payngo (מחסני חשמל)</option>
+        <option value="ALM">A.L.M (א.ל.מ)</option>
+        <option value="Shufersal">Shufersal Online (שופרסל)</option>
+        <option value="P1000">P1000 (פי אלף)</option>
+        <option value="LastPrice">LastPrice (לאסטפרייס)</option>
+        <option value="Volt">Volt (וולט קומפיוטינג)</option>
+        <option value="Ofek PC">Ofek PC (אופק פי סי)</option>
+      `;
+    }
+  }
 }
 
-function getUpgradabilityBadge(score) {
-  if (score >= 8.5) return `<span class="score-badge score-high">🟢 ${score}/10</span>`;
-  if (score >= 6.5) return `<span class="score-badge score-mid">🟡 ${score}/10</span>`;
-  if (score >= 4.0) return `<span class="score-badge score-low">🟠 ${score}/10</span>`;
-  return `<span class="score-badge score-locked">🔴 ${score}/10</span>`;
+function updateDualPriceSliderUI(minVal, maxVal) {
+  if (typeof document === 'undefined') return;
+  const isMobile = state.catalogFilters.category === 'phones';
+  const minLimit = isMobile ? 100 : 800;
+  const maxLimit = isMobile ? 4500 : 5000;
+
+  const min = Math.max(minLimit, Math.min(Number(minVal) || minLimit, maxLimit));
+  const max = Math.min(maxLimit, Math.max(Number(maxVal) || maxLimit, minLimit));
+
+  if (priceMinSlider) priceMinSlider.value = min;
+  if (priceMaxSlider) priceMaxSlider.value = max;
+
+  // Calculate percentage for visual fill between thumbs
+  if (priceSliderRange) {
+    const totalRange = maxLimit - minLimit;
+    const minPercent = ((min - minLimit) / totalRange) * 100;
+    const maxPercent = ((max - minLimit) / totalRange) * 100;
+    priceSliderRange.style.left = `${minPercent}%`;
+    priceSliderRange.style.width = `${maxPercent - minPercent}%`;
+  }
+
+  if (!priceDisplay) return;
+
+  if (min <= minLimit && max >= maxLimit) {
+    priceDisplay.textContent = 'Any Budget';
+    priceDisplay.classList.remove('active');
+  } else if (min <= minLimit) {
+    priceDisplay.textContent = `Under ${max.toLocaleString('en-US')} ₪`;
+    priceDisplay.classList.add('active');
+  } else if (max >= maxLimit) {
+    priceDisplay.textContent = `Above ${min.toLocaleString('en-US')} ₪`;
+    priceDisplay.classList.add('active');
+  } else {
+    priceDisplay.textContent = `${min.toLocaleString('en-US')} ₪ – ${max.toLocaleString('en-US')} ₪`;
+    priceDisplay.classList.add('active');
+  }
+}
+
+function updatePriceSliderUI(value, mode = 'max') {
+  if (mode === 'min') {
+    updateDualPriceSliderUI(value, 5000);
+  } else {
+    updateDualPriceSliderUI(800, value);
+  }
+}
+
+function updateDirButtonsUI() {
+  if (typeof document === 'undefined') return;
+  const pillsContainers = document.querySelectorAll('.filter-dir-pills');
+  pillsContainers.forEach((container) => {
+    const filterName = container.dataset.filter;
+    const currentDir = (state.catalogFilters.filterDirs && state.catalogFilters.filterDirs[filterName]) || (filterName === 'weight' ? 'down' : 'up');
+    const upBtn = container.querySelector('.dir-up');
+    const downBtn = container.querySelector('.dir-down');
+
+    if (upBtn) upBtn.classList.toggle('active', currentDir === 'up');
+    if (downBtn) downBtn.classList.toggle('active', currentDir === 'down');
+  });
+}
+
+function applySmartDefaultDir(filterName) {
+  if (!state.catalogFilters.filterDirs) {
+    state.catalogFilters.filterDirs = {};
+  }
+  const defaultDir = filterName === 'weight' ? 'down' : 'up';
+  state.catalogFilters.filterDirs[filterName] = defaultDir;
+  updateDirButtonsUI();
 }
 
 function renderBrandPills() {
   if (!brandFilterContainer) return;
 
   const currentCategory = state.catalogFilters.category;
-  // Dynamic brand list based on category
   const brandSet = new Set();
   state.catalogData.forEach((item) => {
     if (currentCategory === 'all' || item.category === currentCategory) {
@@ -881,16 +766,18 @@ function renderBrandPills() {
 
   brandFilterContainer.querySelectorAll('.brand-pill-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const b = btn.dataset.brand;
-      if (b === 'all') {
+      const clickedBrand = btn.dataset.brand;
+      if (clickedBrand === 'all') {
         state.catalogFilters.brands = [];
       } else {
-        const idx = state.catalogFilters.brands.indexOf(b);
-        if (idx >= 0) {
-          state.catalogFilters.brands.splice(idx, 1);
+        const curBrands = state.catalogFilters.brands || [];
+        const exists = curBrands.indexOf(clickedBrand);
+        if (exists >= 0) {
+          curBrands.splice(exists, 1);
         } else {
-          state.catalogFilters.brands.push(b);
+          curBrands.push(clickedBrand);
         }
+        state.catalogFilters.brands = curBrands;
       }
       state.activePreset = '';
       renderBrandPills();
@@ -905,117 +792,89 @@ function setQuickPreset(preset) {
   const minLimit = isMobile ? 100 : 800;
   const maxLimit = isMobile ? 4500 : 5000;
 
+  // Reset base filters
+  state.catalogFilters.brand = 'all';
+  state.catalogFilters.brands = [];
+  state.catalogFilters.store = 'all';
+  state.catalogFilters.priceMin = minLimit;
+  state.catalogFilters.priceMax = maxLimit;
+  state.catalogFilters.cpuGen = 'all';
+  state.catalogFilters.ram = 0;
+  state.catalogFilters.storage = 0;
+  state.catalogFilters.form = 'all';
+  state.catalogFilters.screen = 'all';
+  state.catalogFilters.weight = 0;
+  state.catalogFilters.battery = 0;
+  state.catalogFilters.upgradability = 0;
+  state.catalogFilters.sort = 'value-desc';
+  state.catalogFilters.hideStale = false;
+  state.catalogFilters.filterDirs = {
+    cpuGen: 'up',
+    ram: 'up',
+    storage: 'up',
+    screen: 'up',
+    weight: 'down',
+    battery: 'up',
+    upgradability: 'up'
+  };
+
   if (preset === 'top-value') {
     state.catalogFilters.sort = 'value-desc';
-    if (sortFilter) sortFilter.value = 'value-desc';
   } else if (preset === 'under-1000') {
-    state.catalogFilters.priceMin = 100;
     state.catalogFilters.priceMax = 1000;
-    updateDualPriceSliderUI(100, 1000);
   } else if (preset === 'under-2000') {
-    state.catalogFilters.priceMin = minLimit;
     state.catalogFilters.priceMax = 2000;
-    updateDualPriceSliderUI(minLimit, 2000);
-  } else if (preset === 'ram-12') {
-    state.catalogFilters.ram = 12;
-    state.catalogFilters.filterDirs.ram = 'up';
-    if (ramFilter) ramFilter.value = '12';
-    updateDirButtonsUI();
-  } else if (preset === 'brand-apple') {
-    state.catalogFilters.brands = ['Apple'];
-    renderBrandPills();
-  } else if (preset === 'brand-samsung') {
-    state.catalogFilters.brands = ['Samsung'];
-    renderBrandPills();
   } else if (preset === 'tablets') {
     state.catalogFilters.form = 'tablet';
-    if (formFilter) formFilter.value = 'tablet';
-  } else if (preset === 'ram-32') {
-    state.catalogFilters.ram = 32;
-    state.catalogFilters.filterDirs.ram = 'up';
-    if (ramFilter) ramFilter.value = '32';
-    updateDirButtonsUI();
-  } else if (preset === '2in1') {
-    state.catalogFilters.form = '2in1';
-    if (formFilter) formFilter.value = '2in1';
-  } else if (preset === 'warranty-24') {
-    state.catalogFilters.store = 'Ecology Computers';
-    if (storeFilter) storeFilter.value = 'Ecology Computers';
-  } else if (preset === 'modular') {
-    state.catalogFilters.upgradability = 7;
-    state.catalogFilters.filterDirs.upgradability = 'up';
-    if (upgradabilityFilter) upgradabilityFilter.value = '7';
-    updateDirButtonsUI();
+  } else if (preset === 'brand-apple') {
+    state.catalogFilters.brands = ['Apple'];
+  } else if (preset === 'brand-samsung') {
+    state.catalogFilters.brands = ['Samsung'];
   } else if (preset === 'featherlight') {
     state.catalogFilters.weight = 1.3;
     state.catalogFilters.filterDirs.weight = 'down';
-    if (weightFilter) weightFilter.value = '1.3';
-    updateDirButtonsUI();
-  } else if (preset === 'large-screen') {
-    state.catalogFilters.screen = isMobile ? '6.7' : '15.6';
-    state.catalogFilters.filterDirs.screen = 'up';
-    if (screenFilter) screenFilter.value = isMobile ? '6.7' : '15.6';
-    updateDirButtonsUI();
   } else if (preset === 'long-battery') {
     state.catalogFilters.battery = 55;
     state.catalogFilters.filterDirs.battery = 'up';
-    if (batteryFilter) batteryFilter.value = '55';
-    updateDirButtonsUI();
-  } else if (preset === 'all') {
-    state.catalogFilters = {
-      category: state.catalogFilters.category,
-      store: 'all',
-      brands: [],
-      brand: 'all',
-      priceMin: minLimit,
-      priceMax: maxLimit,
-      price: 0,
-      priceMode: 'max',
-      cpuGen: 'all',
-      ram: 0,
-      storage: 0,
-      form: 'all',
-      screen: 'all',
-      weight: 0,
-      battery: 0,
-      upgradability: 0,
-      sort: 'value-desc',
-      hideStale: false,
-      filterDirs: {
-        cpuGen: 'up',
-        ram: 'up',
-        storage: 'up',
-        screen: 'up',
-        weight: 'down',
-        battery: 'up',
-        upgradability: 'up'
-      }
-    };
-    if (storeFilter) storeFilter.value = 'all';
-    const filterHideStale = document.getElementById('filterHideStale');
-    if (filterHideStale) filterHideStale.checked = false;
+  } else if (preset === 'large-screen') {
+    state.catalogFilters.screen = '15.6';
+    state.catalogFilters.filterDirs.screen = 'up';
+  } else if (preset === 'ram-12') {
+    state.catalogFilters.ram = 12;
+    state.catalogFilters.filterDirs.ram = 'up';
+  } else if (preset === 'ram-32') {
+    state.catalogFilters.ram = 32;
+    state.catalogFilters.filterDirs.ram = 'up';
+  } else if (preset === '2in1') {
+    state.catalogFilters.form = '2in1';
+  } else if (preset === 'modular') {
+    state.catalogFilters.upgradability = 7.0;
+    state.catalogFilters.filterDirs.upgradability = 'up';
+  }
+
+  // Sync Form UI elements
+  if (typeof document !== 'undefined') {
+    updateDualPriceSliderUI(state.catalogFilters.priceMin, state.catalogFilters.priceMax);
     renderBrandPills();
-    updateDualPriceSliderUI(minLimit, maxLimit);
-    if (cpuGenFilter) cpuGenFilter.value = 'all';
-    if (ramFilter) ramFilter.value = '0';
-    if (storageFilter) storageFilter.value = '0';
-    if (formFilter) formFilter.value = 'all';
-    if (screenFilter) screenFilter.value = 'all';
-    if (weightFilter) weightFilter.value = '0';
-    if (batteryFilter) batteryFilter.value = '0';
-    if (upgradabilityFilter) upgradabilityFilter.value = '0';
-    if (sortFilter) sortFilter.value = 'value-desc';
+    if (storeFilter) storeFilter.value = 'all';
+    if (cpuGenFilter) cpuGenFilter.value = state.catalogFilters.cpuGen;
+    if (ramFilter) ramFilter.value = String(state.catalogFilters.ram);
+    if (storageFilter) storageFilter.value = String(state.catalogFilters.storage);
+    if (formFilter) formFilter.value = state.catalogFilters.form;
+    if (screenFilter) screenFilter.value = state.catalogFilters.screen;
+    if (weightFilter) weightFilter.value = String(state.catalogFilters.weight);
+    if (batteryFilter) batteryFilter.value = String(state.catalogFilters.battery);
+    if (upgradabilityFilter) upgradabilityFilter.value = String(state.catalogFilters.upgradability);
+    if (sortFilter) sortFilter.value = state.catalogFilters.sort;
     updateDirButtonsUI();
   }
 
   renderCatalog();
 }
 
-const PAGE_SIZE = 24;
-let currentFilteredItems = [];
-let currentTopValueIds = new Set();
-let renderedCount = 0;
-let catalogObserver = null;
+/* --------------------------------------------------------------------------
+   6. CATALOG RENDERING & PROGRESSIVE LOADING
+   -------------------------------------------------------------------------- */
 
 function renderCardHtml(laptop, isTopValue) {
   const isMobileItem = laptop.category === 'phones';
@@ -1369,6 +1228,12 @@ function renderCatalog() {
   `;
 
   if (filtered.length === 0) {
+    if (catalogObserver) {
+      catalogObserver.disconnect();
+      catalogObserver = null;
+    }
+    currentFilteredItems = [];
+    renderedCount = 0;
     catalogContent.innerHTML = `
       ${chipsHtml}
       <div class="empty-state">
@@ -1378,12 +1243,6 @@ function renderCatalog() {
         <button type="button" class="filter-btn active reset-empty-btn" style="margin-top: 14px; display: inline-flex;">🔄 Reset All Filters</button>
       </div>
     `;
-    if (catalogObserver) {
-      catalogObserver.disconnect();
-      catalogObserver = null;
-    }
-    currentFilteredItems = [];
-    renderedCount = 0;
     bindChipButtons();
     const resetBtn = catalogContent.querySelector('.reset-empty-btn');
     if (resetBtn) {
@@ -1443,356 +1302,146 @@ function bindChipButtons() {
   });
 }
 
-async function updateViewMode() {
-  if (state.filter === 'catalog' || state.filter === 'mobile-catalog') {
-    if (documentSidebarCard) documentSidebarCard.classList.add('hidden');
-    if (catalogFiltersCard) catalogFiltersCard.classList.remove('hidden');
-    if (documentContent) documentContent.classList.add('hidden');
-    if (catalogContent) catalogContent.classList.remove('hidden');
+/* --------------------------------------------------------------------------
+   7. DOCUMENT / RESEARCH GUIDE VIEWER
+   -------------------------------------------------------------------------- */
 
-    const isMobile = state.filter === 'mobile-catalog';
-    const prevCat = state.catalogFilters.category;
-    if (isMobile) {
-      state.catalogFilters.category = 'phones';
-      if (categoryFilter) categoryFilter.value = 'phones';
-    } else {
-      state.catalogFilters.category = 'laptops';
-      if (categoryFilter) categoryFilter.value = 'laptops';
-    }
-
-    if (prevCat !== state.catalogFilters.category) {
-      state.catalogFilters.priceMin = isMobile ? 100 : 800;
-      state.catalogFilters.priceMax = isMobile ? 4500 : 5000;
-    }
-
-    adaptFilterControlsForMode(isMobile);
-    const minP = isMobile ? 100 : 800;
-    const maxP = isMobile ? 4500 : 5000;
-    updateDualPriceSliderUI(state.catalogFilters.priceMin || minP, state.catalogFilters.priceMax || maxP);
-    if (isMobile && mobileDataPromise) {
-      await mobileDataPromise;
-    }
-    renderBrandPills();
-    renderCatalog();
-  } else {
-    if (documentSidebarCard) documentSidebarCard.classList.remove('hidden');
-    if (catalogFiltersCard) catalogFiltersCard.classList.add('hidden');
-    if (documentContent) documentContent.classList.remove('hidden');
-    if (catalogContent) catalogContent.classList.add('hidden');
-    loadDocument();
-  }
-}
-
-function updateFilterButtons() {
-  if (typeof document === 'undefined') return;
-  document.querySelectorAll('.filter-btn').forEach((button) => {
-    const isActive = button.dataset.filter === state.filter;
-    button.classList.toggle('active', isActive);
+function buildVisibleDocs() {
+  const queryLower = state.query ? state.query.toLowerCase() : '';
+  return docs.filter((doc) => {
+    const matchesFilter = state.filter === 'all' || state.filter === 'catalog' || doc.category === state.filter;
+    const haystack = `${doc.title} ${doc.file}`.toLowerCase();
+    const matchesQuery = !queryLower || haystack.includes(queryLower);
+    return matchesFilter && matchesQuery;
   });
 }
 
-function bindEvents() {
-  if (typeof document === 'undefined') return;
+function sanitizeMarkdown(rawText) {
+  return rawText
+    .replace(/!\[[^\]]*\]\((?:\/home\/[^)]+|\/[^)]+)\)/g, '')
+    .replace(/\[(?:Current page|View Product)\]\(citation-section:[^)]+\)/g, '')
+    .replace(/\[\s*\]\(https?:\/\/[^)]+\)/g, '');
+}
 
-  document.querySelectorAll('.filter-btn').forEach((button) => {
-    button.addEventListener('click', () => {
-      state.filter = button.dataset.filter;
-      updateFilterButtons();
-      updateViewMode();
-    });
-  });
-
-  if (searchInput) {
-    const debouncedSearch = debounce((val) => {
-      state.query = val.trim();
-      if (state.filter === 'catalog') {
-        renderCatalog();
-      } else {
-        applyDocSearchFilter();
-      }
-    }, 120);
-    searchInput.addEventListener('input', (event) => {
-      debouncedSearch(event.target.value);
-    });
-  }
-
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      setTheme(newTheme);
-    });
-  }
-
-  if (toggleFiltersBtn && catalogFilterFields) {
-    toggleFiltersBtn.addEventListener('click', () => {
-      const isHidden = catalogFilterFields.classList.toggle('collapsed');
-      toggleFiltersBtn.setAttribute('aria-expanded', !isHidden);
-      const arrowSpan = toggleFiltersBtn.querySelector('.toggle-arrow');
-      if (arrowSpan) {
-        arrowSpan.textContent = isHidden ? '▾' : '▴';
-      }
-    });
-  }
-
-  if (resetFiltersBtn) {
-    resetFiltersBtn.addEventListener('click', () => {
-      setQuickPreset('all');
-    });
-  }
-
-  if (categoryFilter) {
-    categoryFilter.addEventListener('change', async (e) => {
-      const cat = e.target.value;
-      state.catalogFilters.category = cat;
-      const isMobile = cat === 'phones';
-      adaptFilterControlsForMode(isMobile);
-      const minP = isMobile ? 100 : 800;
-      const maxP = isMobile ? 4500 : 5000;
-      state.catalogFilters.priceMin = minP;
-      state.catalogFilters.priceMax = maxP;
-      updateDualPriceSliderUI(minP, maxP);
-      state.activePreset = '';
-      if (isMobile && mobileDataPromise) {
-        await mobileDataPromise;
-      }
-      renderBrandPills();
-      renderCatalog();
-    });
-  }
-
-  if (storeFilter) {
-    storeFilter.addEventListener('change', (e) => {
-      state.catalogFilters.store = e.target.value;
-      state.activePreset = '';
-      renderCatalog();
-    });
-  }
-
-
-  if (priceMinSlider && priceMaxSlider) {
-    const onDualPriceInput = (e) => {
-      let minVal = Number(priceMinSlider.value);
-      let maxVal = Number(priceMaxSlider.value);
-
-      if (e.target === priceMinSlider) {
-        priceMinSlider.style.zIndex = '4';
-        priceMaxSlider.style.zIndex = '3';
-        if (minVal > maxVal - 50) {
-          minVal = Math.max(800, maxVal - 50);
-          priceMinSlider.value = minVal;
+async function preloadDocContents() {
+  await Promise.all(
+    docs.map(async (doc) => {
+      try {
+        const res = await fetch(`./${doc.file}`);
+        if (res.ok) {
+          doc.content = await res.text();
         }
-      } else {
-        priceMaxSlider.style.zIndex = '4';
-        priceMinSlider.style.zIndex = '3';
-        if (maxVal < minVal + 50) {
-          maxVal = Math.min(5000, minVal + 50);
-          priceMaxSlider.value = maxVal;
-        }
+      } catch (e) {
+        console.warn(`Could not preload ${doc.file}`, e);
       }
-
-      state.catalogFilters.priceMin = minVal;
-      state.catalogFilters.priceMax = maxVal;
-      state.activePreset = '';
-      updateDualPriceSliderUI(minVal, maxVal);
-      scheduleRenderCatalog();
-    };
-
-    priceMinSlider.addEventListener('input', onDualPriceInput);
-    priceMaxSlider.addEventListener('input', onDualPriceInput);
-  }
-
-  if (priceDisplay) {
-    priceDisplay.addEventListener('click', () => {
-      state.catalogFilters.priceMin = 800;
-      state.catalogFilters.priceMax = 5000;
-      updateDualPriceSliderUI(800, 5000);
-      renderCatalog();
-    });
-  }
-
-  const dirBtns = document.querySelectorAll('.dir-btn');
-  dirBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const container = btn.closest('.filter-dir-pills');
-      if (!container) return;
-      const filterName = container.dataset.filter;
-      const clickedDir = btn.dataset.dir;
-
-      if (!state.catalogFilters.filterDirs) {
-        state.catalogFilters.filterDirs = {};
-      }
-
-      // If clicked the already active button, toggle to exact (unselect both)
-      if (state.catalogFilters.filterDirs[filterName] === clickedDir) {
-        state.catalogFilters.filterDirs[filterName] = 'exact';
-      } else {
-        state.catalogFilters.filterDirs[filterName] = clickedDir;
-      }
-
-      state.activePreset = '';
-      updateDirButtonsUI();
-      renderCatalog();
-    });
-  });
-
-  if (cpuGenFilter) {
-    cpuGenFilter.addEventListener('change', (e) => {
-      state.catalogFilters.cpuGen = e.target.value;
-      if (e.target.value !== 'all') applySmartDefaultDir('cpuGen');
-      state.activePreset = '';
-      renderCatalog();
-    });
-  }
-
-  if (ramFilter) {
-    ramFilter.addEventListener('change', (e) => {
-      state.catalogFilters.ram = e.target.value;
-      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('ram');
-      state.activePreset = '';
-      renderCatalog();
-    });
-  }
-
-  if (storageFilter) {
-    storageFilter.addEventListener('change', (e) => {
-      state.catalogFilters.storage = e.target.value;
-      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('storage');
-      state.activePreset = '';
-      renderCatalog();
-    });
-  }
-
-  if (formFilter) {
-    formFilter.addEventListener('change', (e) => {
-      state.catalogFilters.form = e.target.value;
-      state.activePreset = '';
-      renderCatalog();
-    });
-  }
-
-  if (screenFilter) {
-    screenFilter.addEventListener('change', (e) => {
-      state.catalogFilters.screen = e.target.value;
-      if (e.target.value !== 'all') applySmartDefaultDir('screen');
-      state.activePreset = '';
-      renderCatalog();
-    });
-  }
-
-  if (weightFilter) {
-    weightFilter.addEventListener('change', (e) => {
-      state.catalogFilters.weight = e.target.value;
-      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('weight');
-      state.activePreset = '';
-      renderCatalog();
-    });
-  }
-
-  if (batteryFilter) {
-    batteryFilter.addEventListener('change', (e) => {
-      state.catalogFilters.battery = e.target.value;
-      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('battery');
-      state.activePreset = '';
-      renderCatalog();
-    });
-  }
-
-  if (upgradabilityFilter) {
-    upgradabilityFilter.addEventListener('change', (e) => {
-      state.catalogFilters.upgradability = e.target.value;
-      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('upgradability');
-      state.activePreset = '';
-      renderCatalog();
-    });
-  }
-
-  if (sortFilter) {
-    sortFilter.addEventListener('change', (e) => {
-      state.catalogFilters.sort = e.target.value;
-      renderCatalog();
-    });
-  }
-
-  const filterHideStale = document.getElementById('filterHideStale');
-  if (filterHideStale) {
-    filterHideStale.addEventListener('change', (e) => {
-      state.catalogFilters.hideStale = Boolean(e.target.checked);
-      renderCatalog();
-    });
-  }
-
-  const scraperStatusBtn = document.getElementById('scraperStatusBtn');
-  const closeStatusModalBtn = document.getElementById('closeStatusModalBtn');
-  const closeStatusModalFooterBtn = document.getElementById('closeStatusModalFooterBtn');
-  const scraperStatusModal = document.getElementById('scraperStatusModal');
-
-  if (scraperStatusBtn) {
-    scraperStatusBtn.addEventListener('click', openScraperStatusModal);
-  }
-  if (closeStatusModalBtn) {
-    closeStatusModalBtn.addEventListener('click', closeScraperStatusModal);
-  }
-  if (closeStatusModalFooterBtn) {
-    closeStatusModalFooterBtn.addEventListener('click', closeScraperStatusModal);
-  }
-  if (scraperStatusModal) {
-    scraperStatusModal.addEventListener('click', (e) => {
-      if (e.target === scraperStatusModal) {
-        closeScraperStatusModal();
-      }
-    });
-  }
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeScraperStatusModal();
-    }
-  });
+    })
+  );
 }
 
-async function openScraperStatusModal() {
-  const modal = document.getElementById('scraperStatusModal');
-  const body = document.getElementById('scraperStatusBody');
-  const subtitle = document.getElementById('statusModalSubtitle');
-  if (!modal || !body) return;
+async function loadDocument() {
+  if (state.filter === 'catalog' || state.filter === 'mobile-catalog') return;
+  if (!documentContent) return;
 
-  body.innerHTML = '<div class="empty-state">Loading scraper run status...</div>';
-  modal.style.display = 'grid';
-  modal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
+  const doc = docs.find((d) => d.id === state.activeDocId || d.id === state.filter || d.category === state.filter) || docs[0];
+  if (!doc) return;
 
-  let statusData = null;
-  try {
-    let res = await fetch('./data/scraper_status.json');
-    if (!res.ok) res = await fetch('./scraper_status.json');
-    if (res.ok) {
-      statusData = await res.json();
-    }
-  } catch (err) {
-    console.warn('Could not load scraper_status.json', err);
-  }
+  setStatus(`Loading ${doc.title}…`);
 
-  if (!statusData) {
-    statusData = computeScraperStatusFromCatalog();
-  }
-
-  if (subtitle && statusData.last_updated) {
+  if (!doc.content) {
+    documentContent.innerHTML = `<div class="empty-state">Loading ${escapeHtml(doc.title)}…</div>`;
     try {
-      const dt = new Date(statusData.last_updated);
-      subtitle.textContent = `Last pipeline audit: ${dt.toLocaleString()}`;
-    } catch (_) {}
+      let response = await fetch(`./${doc.file}`);
+      if (!response.ok && !doc.file.startsWith('data/')) {
+        response = await fetch(`./data/${doc.file}`);
+      }
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      doc.content = await response.text();
+    } catch (error) {
+      documentContent.innerHTML = `
+        <div class="empty-state">
+          <div>
+            <h3>Unable to load ${escapeHtml(doc.title)}.</h3>
+            <p>${escapeHtml(error.message)}</p>
+          </div>
+        </div>
+      `;
+      setStatus(`Could not load ${doc.title}.`, 'error');
+      return;
+    }
   }
 
-  renderScraperStatusBody(body, statusData);
+  const sanitized = sanitizeMarkdown(doc.content);
+  const rendered = DOMPurify.sanitize(marked.parse(sanitized));
+  documentContent.innerHTML = rendered;
+
+  renderCatalogToc();
+  applyDocSearchFilter();
+  setStatus(`${doc.title} loaded`, 'success');
 }
 
-function closeScraperStatusModal() {
-  const modal = document.getElementById('scraperStatusModal');
-  if (!modal) return;
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
+function renderCatalogToc() {
+  if (!tabList || !documentContent) return;
+  const headings = documentContent.querySelectorAll('h2');
+  if (headings.length === 0) {
+    tabList.innerHTML = '<div class="empty-state">No sections found.</div>';
+    return;
+  }
+
+  let html = '';
+  headings.forEach((h, idx) => {
+    const sectionId = `store-section-${idx}`;
+    h.id = sectionId;
+    const rawText = h.textContent.replace(/^##\s*/, '').trim();
+    const cleanTitle = rawText.split('—')[0].trim();
+    html += `
+      <button
+        type="button"
+        class="tab-button"
+        data-section-id="${sectionId}"
+        title="${escapeHtml(cleanTitle)}"
+      >
+        <span class="tab-button-title">${escapeHtml(cleanTitle)}</span>
+      </button>
+    `;
+  });
+
+  tabList.innerHTML = html;
+
+  tabList.querySelectorAll('.tab-button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      tabList.querySelectorAll('.tab-button').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(btn.dataset.sectionId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
 }
+
+function applyDocSearchFilter() {
+  if (!documentContent) return;
+  const q = state.query.trim().toLowerCase();
+  const sections = documentContent.querySelectorAll('h2, table, p, ul');
+  if (!q) {
+    sections.forEach((s) => (s.style.display = ''));
+    return;
+  }
+  sections.forEach((s) => {
+    const text = s.textContent.toLowerCase();
+    if (text.includes(q)) {
+      s.style.display = '';
+    } else {
+      if (s.tagName !== 'H2') {
+        s.style.display = 'none';
+      }
+    }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   8. SCRAPER STATUS & MODAL
+   -------------------------------------------------------------------------- */
 
 function computeScraperStatusFromCatalog() {
   const now = new Date();
@@ -1891,6 +1540,365 @@ function renderScraperStatusBody(body, statusData) {
   body.innerHTML = (laptopsHtml + mobileHtml) || '<div class="empty-state">No scraper status information available.</div>';
 }
 
+async function openScraperStatusModal() {
+  const modal = document.getElementById('scraperStatusModal');
+  const body = document.getElementById('scraperStatusBody');
+  const subtitle = document.getElementById('statusModalSubtitle');
+  if (!modal || !body) return;
+
+  body.innerHTML = '<div class="empty-state">Loading scraper run status...</div>';
+  modal.style.display = 'grid';
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  let statusData = null;
+  try {
+    let res = await fetch('./data/scraper_status.json');
+    if (!res.ok) res = await fetch('./scraper_status.json');
+    if (res.ok) {
+      statusData = await res.json();
+    }
+  } catch (err) {
+    console.warn('Could not load scraper_status.json', err);
+  }
+
+  if (!statusData) {
+    statusData = computeScraperStatusFromCatalog();
+  }
+
+  if (subtitle && statusData.last_updated) {
+    try {
+      const dt = new Date(statusData.last_updated);
+      subtitle.textContent = `Last pipeline audit: ${dt.toLocaleString()}`;
+    } catch (_) {}
+  }
+
+  renderScraperStatusBody(body, statusData);
+}
+
+function closeScraperStatusModal() {
+  const modal = document.getElementById('scraperStatusModal');
+  if (!modal) return;
+  modal.style.display = 'none';
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+/* --------------------------------------------------------------------------
+   9. NAVIGATION, EVENT BINDINGS & LIFECYCLE
+   -------------------------------------------------------------------------- */
+
+async function updateViewMode() {
+  if (state.filter === 'catalog' || state.filter === 'mobile-catalog') {
+    if (documentSidebarCard) documentSidebarCard.classList.add('hidden');
+    if (catalogFiltersCard) catalogFiltersCard.classList.remove('hidden');
+    if (documentContent) documentContent.classList.add('hidden');
+    if (catalogContent) catalogContent.classList.remove('hidden');
+
+    const isMobile = state.filter === 'mobile-catalog';
+    const prevCat = state.catalogFilters.category;
+    if (isMobile) {
+      state.catalogFilters.category = 'phones';
+      if (categoryFilter) categoryFilter.value = 'phones';
+    } else {
+      state.catalogFilters.category = 'laptops';
+      if (categoryFilter) categoryFilter.value = 'laptops';
+    }
+
+    if (prevCat !== state.catalogFilters.category) {
+      state.catalogFilters.priceMin = isMobile ? 100 : 800;
+      state.catalogFilters.priceMax = isMobile ? 4500 : 5000;
+    }
+
+    adaptFilterControlsForMode(isMobile);
+    const minP = isMobile ? 100 : 800;
+    const maxP = isMobile ? 4500 : 5000;
+    updateDualPriceSliderUI(state.catalogFilters.priceMin || minP, state.catalogFilters.priceMax || maxP);
+    if (isMobile && mobileDataPromise) {
+      await mobileDataPromise;
+    }
+    renderBrandPills();
+    renderCatalog();
+  } else {
+    if (documentSidebarCard) documentSidebarCard.classList.remove('hidden');
+    if (catalogFiltersCard) catalogFiltersCard.classList.add('hidden');
+    if (documentContent) documentContent.classList.remove('hidden');
+    if (catalogContent) catalogContent.classList.add('hidden');
+    loadDocument();
+  }
+}
+
+function updateFilterButtons() {
+  if (typeof document === 'undefined') return;
+  document.querySelectorAll('.filter-btn').forEach((button) => {
+    const isActive = button.dataset.filter === state.filter;
+    button.classList.toggle('active', isActive);
+  });
+}
+
+function bindEvents() {
+  if (typeof document === 'undefined') return;
+
+  // View navigation tabs
+  document.querySelectorAll('.filter-btn').forEach((button) => {
+    button.addEventListener('click', () => {
+      state.filter = button.dataset.filter;
+      updateFilterButtons();
+      updateViewMode();
+    });
+  });
+
+  // Search input
+  if (searchInput) {
+    const debouncedSearch = debounce((val) => {
+      state.query = val.trim();
+      if (state.filter === 'catalog') {
+        renderCatalog();
+      } else {
+        applyDocSearchFilter();
+      }
+    }, 120);
+    searchInput.addEventListener('input', (event) => {
+      debouncedSearch(event.target.value);
+    });
+  }
+
+  // Theme toggle
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+    });
+  }
+
+  // Collapse / expand filter controls
+  if (toggleFiltersBtn && catalogFilterFields) {
+    toggleFiltersBtn.addEventListener('click', () => {
+      const isHidden = catalogFilterFields.classList.toggle('collapsed');
+      toggleFiltersBtn.setAttribute('aria-expanded', !isHidden);
+      const arrowSpan = toggleFiltersBtn.querySelector('.toggle-arrow');
+      if (arrowSpan) {
+        arrowSpan.textContent = isHidden ? '▾' : '▴';
+      }
+    });
+  }
+
+  // Reset filters
+  if (resetFiltersBtn) {
+    resetFiltersBtn.addEventListener('click', () => {
+      setQuickPreset('all');
+    });
+  }
+
+  // Category change
+  if (categoryFilter) {
+    categoryFilter.addEventListener('change', async (e) => {
+      const cat = e.target.value;
+      state.catalogFilters.category = cat;
+      const isMobile = cat === 'phones';
+      adaptFilterControlsForMode(isMobile);
+      const minP = isMobile ? 100 : 800;
+      const maxP = isMobile ? 4500 : 5000;
+      state.catalogFilters.priceMin = minP;
+      state.catalogFilters.priceMax = maxP;
+      updateDualPriceSliderUI(minP, maxP);
+      state.activePreset = '';
+      if (isMobile && mobileDataPromise) {
+        await mobileDataPromise;
+      }
+      renderBrandPills();
+      renderCatalog();
+    });
+  }
+
+  // Store filter
+  if (storeFilter) {
+    storeFilter.addEventListener('change', (e) => {
+      state.catalogFilters.store = e.target.value;
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  // Dual price sliders
+  if (priceMinSlider && priceMaxSlider) {
+    const onDualPriceInput = (e) => {
+      let minVal = Number(priceMinSlider.value);
+      let maxVal = Number(priceMaxSlider.value);
+
+      if (e.target === priceMinSlider) {
+        priceMinSlider.style.zIndex = '4';
+        priceMaxSlider.style.zIndex = '3';
+        if (minVal > maxVal - 50) {
+          minVal = Math.max(800, maxVal - 50);
+          priceMinSlider.value = minVal;
+        }
+      } else {
+        priceMaxSlider.style.zIndex = '4';
+        priceMinSlider.style.zIndex = '3';
+        if (maxVal < minVal + 50) {
+          maxVal = Math.min(5000, minVal + 50);
+          priceMaxSlider.value = maxVal;
+        }
+      }
+
+      state.catalogFilters.priceMin = minVal;
+      state.catalogFilters.priceMax = maxVal;
+      state.activePreset = '';
+      updateDualPriceSliderUI(minVal, maxVal);
+      scheduleRenderCatalog();
+    };
+
+    priceMinSlider.addEventListener('input', onDualPriceInput);
+    priceMaxSlider.addEventListener('input', onDualPriceInput);
+  }
+
+  if (priceDisplay) {
+    priceDisplay.addEventListener('click', () => {
+      state.catalogFilters.priceMin = 800;
+      state.catalogFilters.priceMax = 5000;
+      updateDualPriceSliderUI(800, 5000);
+      renderCatalog();
+    });
+  }
+
+  // Directional filter pill buttons (≥ Up, ≤ Down, = Exact)
+  const dirBtns = document.querySelectorAll('.dir-btn');
+  dirBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const container = btn.closest('.filter-dir-pills');
+      if (!container) return;
+      const filterName = container.dataset.filter;
+      const clickedDir = btn.dataset.dir;
+
+      if (!state.catalogFilters.filterDirs) {
+        state.catalogFilters.filterDirs = {};
+      }
+
+      // If clicked the already active button, toggle to exact
+      if (state.catalogFilters.filterDirs[filterName] === clickedDir) {
+        state.catalogFilters.filterDirs[filterName] = 'exact';
+      } else {
+        state.catalogFilters.filterDirs[filterName] = clickedDir;
+      }
+
+      state.activePreset = '';
+      updateDirButtonsUI();
+      renderCatalog();
+    });
+  });
+
+  // Filter dropdown selectors
+  if (cpuGenFilter) {
+    cpuGenFilter.addEventListener('change', (e) => {
+      state.catalogFilters.cpuGen = e.target.value;
+      if (e.target.value !== 'all') applySmartDefaultDir('cpuGen');
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (ramFilter) {
+    ramFilter.addEventListener('change', (e) => {
+      state.catalogFilters.ram = e.target.value;
+      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('ram');
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (storageFilter) {
+    storageFilter.addEventListener('change', (e) => {
+      state.catalogFilters.storage = e.target.value;
+      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('storage');
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (formFilter) {
+    formFilter.addEventListener('change', (e) => {
+      state.catalogFilters.form = e.target.value;
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (screenFilter) {
+    screenFilter.addEventListener('change', (e) => {
+      state.catalogFilters.screen = e.target.value;
+      if (e.target.value !== 'all') applySmartDefaultDir('screen');
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (weightFilter) {
+    weightFilter.addEventListener('change', (e) => {
+      state.catalogFilters.weight = e.target.value;
+      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('weight');
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (batteryFilter) {
+    batteryFilter.addEventListener('change', (e) => {
+      state.catalogFilters.battery = e.target.value;
+      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('battery');
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (upgradabilityFilter) {
+    upgradabilityFilter.addEventListener('change', (e) => {
+      state.catalogFilters.upgradability = e.target.value;
+      if (e.target.value !== '0' && e.target.value !== 0) applySmartDefaultDir('upgradability');
+      state.activePreset = '';
+      renderCatalog();
+    });
+  }
+
+  if (sortFilter) {
+    sortFilter.addEventListener('change', (e) => {
+      state.catalogFilters.sort = e.target.value;
+      renderCatalog();
+    });
+  }
+
+  if (filterHideStale) {
+    filterHideStale.addEventListener('change', (e) => {
+      state.catalogFilters.hideStale = Boolean(e.target.checked);
+      renderCatalog();
+    });
+  }
+
+  // Scraper status modal triggers
+  if (scraperStatusBtn) {
+    scraperStatusBtn.addEventListener('click', openScraperStatusModal);
+  }
+  if (closeStatusModalBtn) {
+    closeStatusModalBtn.addEventListener('click', closeScraperStatusModal);
+  }
+  if (closeStatusModalFooterBtn) {
+    closeStatusModalFooterBtn.addEventListener('click', closeScraperStatusModal);
+  }
+  if (scraperStatusModal) {
+    scraperStatusModal.addEventListener('click', (e) => {
+      if (e.target === scraperStatusModal) {
+        closeScraperStatusModal();
+      }
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeScraperStatusModal();
+    }
+  });
+}
+
 async function init() {
   if (typeof document === 'undefined') return;
   initTheme();
@@ -1903,6 +1911,10 @@ async function init() {
 
 init();
 
+/* --------------------------------------------------------------------------
+   10. COMMONJS MODULE EXPORTS (for Node test suite)
+   -------------------------------------------------------------------------- */
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     docs,
@@ -1914,6 +1926,7 @@ if (typeof module !== 'undefined' && module.exports) {
     matchesCpuGen,
     getCpuGenRank,
     getStoreClass,
+    getUpgradabilityBadge,
     parseDaysOld,
     loadLaptopData,
     loadMobileData,
