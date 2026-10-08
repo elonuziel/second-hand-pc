@@ -40,6 +40,15 @@ LAPTOP_KEYWORDS = (
     "vivobook",
     "inspiron",
     "vostro",
+    "aspire",
+    "victus",
+    "alienware",
+    "omnibook",
+    "surface",
+    "expertbook",
+    "loq",
+    "tuf",
+    "rog",
 )
 
 

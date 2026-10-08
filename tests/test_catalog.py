@@ -47,7 +47,10 @@ from scraper import (
     OfekPCScraper,
     ITOutletScraper,
     KTWOScraper,
+    SuperPriceScraper,
+    PCILScraper,
 )
+from mobile_scraper import IStoreMobileScraper
 
 
 class TestCatalogDataHealth(unittest.TestCase):
@@ -1554,6 +1557,100 @@ class TestFrontendCompatibility(unittest.TestCase):
         except FileNotFoundError:
             # Node not installed; pass gracefully
             pass
+
+
+
+class TestNewCandidateScrapers(unittest.TestCase):
+    """Unit tests for newly added scrapers: SuperPrice, PC-Online (PCIL), and iStore CPO."""
+
+    def test_superprice_scraper_payload_parsing(self):
+        sample_payload = [
+            {
+                "id": 101,
+                "name": "Dell Latitude 7430 Core i5-1245U 256GB SSD 16GB 14″ WIN11 Pro",
+                "permalink": "https://superprice.co.il/product/dell-latitude-7430/",
+                "is_in_stock": True,
+                "prices": {
+                    "price": "190000",
+                    "regular_price": "190000",
+                    "currency_minor_unit": 2,
+                },
+                "attributes": [
+                    {"name": "Brands", "terms": [{"name": "DELL"}]},
+                    {"name": "RAM", "terms": [{"name": "16GB"}]},
+                    {"name": "SSD/HDD", "terms": [{"name": "256GB SSD"}]},
+                    {"name": "מצב", "terms": [{"name": "מחודש"}]},
+                    {"name": "אחריות", "terms": [{"name": "שלוש שנים"}]},
+                ],
+                "short_description": "עסקי מחודש",
+                "description": "מחשב נייד שמור במצב מצוין",
+                "images": [{"src": "https://superprice.co.il/img.jpg"}]
+            }
+        ]
+        scraper = SuperPriceScraper(session=None)
+        items = scraper._items_from_api_payload(sample_payload)
+        self.assertEqual(len(items), 1)
+        item = items[0]
+        self.assertEqual(item.store, "SuperPrice")
+        self.assertEqual(item.brand, "Dell")
+        self.assertEqual(item.price_ils, 1900)
+        self.assertEqual(item.ram_gb, 16)
+        self.assertEqual(item.storage_gb, 256)
+        self.assertEqual(item.warranty_months, 36)
+
+    def test_pcil_scraper_parsing(self):
+        sample_html = """
+        <html><body>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "item": {
+                "@type": "Product",
+                "name": "Lenovo ThinkPad E14 Gen 2 | Ryzen 3 4300U | 256GB SSD | 8GB RAM | 14\\" FHD | Win10 Pro | 1Y Warranty",
+                "url": "https://pcil.co.il/products/thinkpad-e14",
+                "image": "https://pcil.co.il/img.jpg",
+                "offers": {"price": "1699.00"}
+              }
+            }
+          ]
+        }
+        </script>
+        </body></html>
+        """
+        scraper = PCILScraper(session=None)
+        with patch.object(scraper, "_get_html", return_value=sample_html):
+            items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        item = items[0]
+        self.assertEqual(item.store, "PC-Online (PCIL)")
+        self.assertEqual(item.brand, "Lenovo")
+        self.assertEqual(item.price_ils, 1699)
+        self.assertEqual(item.ram_gb, 8)
+        self.assertEqual(item.storage_gb, 256)
+
+    def test_istore_mobile_scraper_parsing(self):
+        sample_html = """
+        <div class="category-products">
+          <div class="product-description">
+            <a href="https://www.istoreil.co.il/refurbish/iphone/refurbished-apple-iphone-14-plus-128gb-yellow">iPhone 14 Plus</a>
+            <div class="category-main-price">2,299.00 ₪</div>
+          </div>
+        </div>
+        """
+        scraper = IStoreMobileScraper(session=None)
+        with patch.object(scraper, "_fetch", return_value=sample_html):
+            items = scraper.scrape()
+        self.assertGreaterEqual(len(items), 1)
+        item = items[0]
+        self.assertEqual(item.store, "iStore CPO")
+        self.assertEqual(item.brand, "Apple")
+        self.assertEqual(item.price_ils, 2299)
+        self.assertEqual(item.storage_gb, 128)
 
 
 if __name__ == "__main__":

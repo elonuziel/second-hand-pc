@@ -521,7 +521,8 @@ class MobileReportGenerator:
             "3. 🏬 **Partner Plus Renewed (פרטנר פלוס):** [partnerplus.partner.co.il/renewed](https://partnerplus.partner.co.il/renewed)\n",
             "4. 🏬 **Dynamica Outlet (דינמיקה אאוטלט):** [dynamica.co.il/325880-Outlet](https://www.dynamica.co.il/325880-Outlet)\n",
             "5. 🏬 **VMobile (וי מובייל):** [vmobile.co.il/361324-מחודשים](https://www.vmobile.co.il/361324-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)\n",
-            "6. 🏬 **LastPrice (לאסטפרייס):** [lastprice.co.il/טלפונים-סלולרים-מחודשים](https://www.lastprice.co.il/c/531/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%98%D7%9C%D7%A4%D7%95%D7%A0%D7%99%D7%9D-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D?filter1=20710526,20670485)\n\n",
+            "6. 🏬 **LastPrice (לאסטפרייס):** [lastprice.co.il/טלפונים-סלולרים-מחודשים](https://www.lastprice.co.il/c/531/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%98%D7%9C%D7%A4%D7%95%D7%A0%D7%99%D7%9D-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D?filter1=20710526,20670485)\n",
+            "7. 🏬 **iStore CPO (אייסטור מחודשים ועודפים):** [istoreil.co.il/refurbish](https://www.istoreil.co.il/refurbish)\n\n",
             f"*Last Automated Live Audit: {now_str}*\n\n",
             "---\n\n",
             "## 📱 Live Mobile Devices Catalog & Stock Audit\n\n",
@@ -763,6 +764,85 @@ class LastPriceMobileScraper:
 
 
 
+class IStoreMobileScraper:
+    STORE_NAME = "iStore CPO"
+    CATALOG_URLS = [
+        "https://www.istoreil.co.il/refurbish/iphone",
+        "https://www.istoreil.co.il/refurbish/ipad",
+    ]
+
+    def __init__(self, session: Any):
+        self.session = session
+
+    def _fetch(self, url: str, timeout: int = 20) -> str:
+        try:
+            r = self.session.get(url, timeout=timeout)
+            if r.status_code == 200 and r.text:
+                return r.text
+        except Exception as ex:
+            logger.debug("Session.get failed for %s: %s", url, ex)
+        try:
+            status, text = fetch_resilient_url(url, timeout=timeout)
+            if status == 200 and text:
+                return text
+        except Exception as ex:
+            logger.debug("Resilient fetch failed for %s: %s", url, ex)
+        return ""
+
+    def scrape(self) -> List[MobileItem]:
+        logger.info("Scraping iStore CPO (Apple)...")
+        items: List[MobileItem] = []
+        seen = set()
+
+        for cat_url in self.CATALOG_URLS:
+            try:
+                html_text = self._fetch(cat_url)
+                if not html_text:
+                    continue
+
+                cat_prods = html_text[html_text.find('class="category-products"'):] if 'class="category-products"' in html_text else ""
+                raw_blocks = [it for it in cat_prods.split('product-description') if 'category-main-price' in it]
+
+                for b in raw_blocks:
+                    link_m = re.search(r'href=[\"\'](https://www.istoreil.co.il/[^\"\']+)[\"\']', b)
+                    price_m = re.search(r'category-main-price[\"\'][^>]*>\s*([0-9,\.]+)\s*₪', b)
+                    if not link_m or not price_m:
+                        continue
+                    p_url = link_m.group(1).strip()
+                    if p_url in seen:
+                        continue
+                    seen.add(p_url)
+
+                    try:
+                        price = int(round(float(price_m.group(1).replace(',', ''))))
+                    except Exception:
+                        continue
+                    if price <= 0:
+                        continue
+
+                    slug = p_url.rstrip('/').split('/')[-1]
+                    raw_title = slug.replace('-', ' ').title()
+                    raw_title = re.sub(r'^(Refurbished|Ref|Demo)\s+', '', raw_title, flags=re.IGNORECASE)
+                    raw_title = re.sub(r'\s+(Demo|Refurbished)$', '', raw_title, flags=re.IGNORECASE)
+
+                    img_m = re.search(r'<img[^>]*src=[\"\']([^\"\']+)[\"\']', b)
+                    img_url = img_m.group(1) if img_m else ""
+
+                    items.append(MobileClassifier.build_item(
+                        store=self.STORE_NAME,
+                        title=raw_title,
+                        price_ils=price,
+                        url=p_url,
+                        image_url=img_url,
+                        warranty_months=12
+                    ))
+            except Exception as e:
+                logger.error("Error scraping iStore from %s: %s", cat_url, e)
+
+        logger.info("iStore CPO: scraped %d mobile items.", len(items))
+        return items
+
+
 class MasterMobileAuditor:
     def __init__(self, session: Optional[Any] = None):
         self.session = session or create_resilient_session()
@@ -772,7 +852,8 @@ class MasterMobileAuditor:
             'partner': PartnerPlusScraper,
             'dynamica': DynamicaScraper,
             'vmobile': VMobileScraper,
-            'lastprice': LastPriceMobileScraper
+            'lastprice': LastPriceMobileScraper,
+            'istore': IStoreMobileScraper
         }
 
     def run(self, store_filter: Optional[str] = None, max_workers: int = 4) -> Dict[str, List[MobileItem]]:
@@ -803,7 +884,7 @@ class MasterMobileAuditor:
 
 def main():
     parser = argparse.ArgumentParser(description="Master Multi-Store Refurbished Mobile Device Scraper & Auditor")
-    parser.add_argument("--store", choices=['itoutlet', 'gomobile', 'partner', 'dynamica', 'vmobile', 'lastprice', 'all'], default='all', help="Specific store to scrape")
+    parser.add_argument("--store", choices=['itoutlet', 'gomobile', 'partner', 'dynamica', 'vmobile', 'lastprice', 'istore', 'all'], default='all', help="Specific store to scrape")
     parser.add_argument("--csv", action="store_true", help="Also export devices to CSV")
     parser.add_argument("--json", action="store_true", help="Dump JSON output to stdout")
     parser.add_argument("--no-md", action="store_true", help="Disable automatic full_mobile_catalog.md update")
@@ -844,6 +925,13 @@ def main():
                         if isinstance(_d, dict)
                     ]
                     # Rebuild all_items to include re-instated items
+            if args.store != 'all':
+                for _k, _v in _prev_raw.items():
+                    if _k not in results and isinstance(_v, list):
+                        results[_k] = [
+                            MobileItem(**{k: v for k, v in _d.items() if k in _fields})
+                            for _d in _v if isinstance(_d, dict)
+                        ]
             all_items = []
             for store_name, items in results.items():
                 all_items.extend(items)

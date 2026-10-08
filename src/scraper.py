@@ -57,6 +57,8 @@ from laptop_scrapers import (
     VoltScraper,
     OfekPCScraper,
     KTWOScraper,
+    SuperPriceScraper,
+    PCILScraper,
     DEFAULT_SCRAPER_CLASSES,
 )
 
@@ -180,6 +182,14 @@ def main():
                             LaptopItem(**{k: v for k, v in _d.items() if k in _fields})
                             for _d in _prev_items
                             if isinstance(_d, dict)
+                        ]
+            # If a single store was targeted, keep all other existing stores in the catalog
+            if args.store != 'all':
+                for _k, _v in _prev_by_store.items():
+                    if _k not in results and isinstance(_v, list):
+                        results[_k] = [
+                            LaptopItem(**{k: v for k, v in _d.items() if k in _fields})
+                            for _d in _v if isinstance(_d, dict)
                         ]
         except Exception as _e:
             logger.warning("Could not load previous catalog for fallback: %s", _e)
