@@ -1,12 +1,12 @@
 {
-  "last_updated": "2026-10-07T12:52:06.675098",
+  "last_updated": "2026-10-08T14:46:28.791518",
   "laptops": {
-    "total_items": 272,
+    "total_items": 231,
     "stores": {
       "itoutlet": {
         "display_name": "IT Outlet",
-        "count": 36,
-        "scraped_at": "2026-10-07",
+        "count": 35,
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -14,7 +14,7 @@
       "ecology": {
         "display_name": "Ecology Computers",
         "count": 8,
-        "scraped_at": "2026-10-07",
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -22,7 +22,7 @@
       "lts": {
         "display_name": "LaptopTech LTS",
         "count": 27,
-        "scraped_at": "2026-10-07",
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -30,47 +30,47 @@
       "recomp": {
         "display_name": "Recomp Computers",
         "count": 6,
-        "scraped_at": "2026-10-07",
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
       },
       "cwc": {
         "display_name": "Olam HaKolnoa",
-        "count": 65,
-        "scraped_at": "2026-10-07",
+        "count": 32,
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
       },
       "payngo": {
         "display_name": "Payngo",
-        "count": 8,
-        "scraped_at": "2026-09-12",
-        "status": "preserved",
-        "days_ago": 25,
-        "note": "Preserved stock (catalog blocked (HTTP 403) and the browser fallback could not clear it)"
+        "count": 3,
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
       },
       "alm": {
         "display_name": "ALM",
         "count": 3,
-        "scraped_at": "2026-10-07",
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
       },
       "shufersal": {
         "display_name": "Shufersal",
-        "count": 19,
-        "scraped_at": "2026-09-12",
-        "status": "preserved",
-        "days_ago": 25,
-        "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
+        "count": 17,
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
       },
       "p1000": {
         "display_name": "P1000",
         "count": 27,
-        "scraped_at": "2026-10-07",
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -78,15 +78,15 @@
       "lastprice": {
         "display_name": "LastPrice",
         "count": 7,
-        "scraped_at": "2026-09-12",
-        "status": "preserved",
-        "days_ago": 25,
-        "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
       },
       "volt": {
         "display_name": "Volt",
         "count": 60,
-        "scraped_at": "2026-10-07",
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -94,7 +94,7 @@
       "ofekpc": {
         "display_name": "Ofek PC",
         "count": 6,
-        "scraped_at": "2026-10-07",
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -104,10 +104,18 @@
   "mobile": {
     "total_items": 116,
     "stores": {
+      "dynamica": {
+        "display_name": "Dynamica Outlet",
+        "count": 35,
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
+      },
       "gomobile": {
         "display_name": "GoMobile Outlet",
         "count": 10,
-        "scraped_at": "2026-10-07",
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -115,7 +123,7 @@
       "partner": {
         "display_name": "Partner Plus",
         "count": 30,
-        "scraped_at": "2026-10-07",
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -123,23 +131,7 @@
       "itoutlet": {
         "display_name": "IT Outlet",
         "count": 8,
-        "scraped_at": "2026-10-07",
-        "status": "fresh",
-        "days_ago": 0,
-        "note": "Successfully scraped fresh catalog"
-      },
-      "dynamica": {
-        "display_name": "Dynamica Outlet",
-        "count": 35,
-        "scraped_at": "2026-10-07",
-        "status": "fresh",
-        "days_ago": 0,
-        "note": "Successfully scraped fresh catalog"
-      },
-      "vmobile": {
-        "display_name": "VMobile",
-        "count": 27,
-        "scraped_at": "2026-10-07",
+        "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -147,10 +139,18 @@
       "lastprice": {
         "display_name": "LastPrice",
         "count": 6,
-        "scraped_at": "2026-09-12",
-        "status": "preserved",
-        "days_ago": 25,
-        "note": "Preserved stock (anti-bot challenge or unreachable in CI)"
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "vmobile": {
+        "display_name": "VMobile",
+        "count": 27,
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
       }
     }
   }
