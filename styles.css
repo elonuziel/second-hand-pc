@@ -1042,6 +1042,11 @@ h1 {
   color: #2563eb;
 }
 
+.store-ktwo {
+  background: rgba(14, 165, 233, 0.12);
+  color: #0284c7;
+}
+
 .store-gomobile {
   background: rgba(2, 132, 199, 0.12);
   color: #0284c7;

@@ -1,7 +1,7 @@
 {
-  "last_updated": "2026-10-08T13:00:41.636822",
+  "last_updated": "2026-10-08T15:39:48.131604",
   "laptops": {
-    "total_items": 265,
+    "total_items": 253,
     "stores": {
       "itoutlet": {
         "display_name": "IT Outlet",
@@ -37,19 +37,19 @@
       },
       "cwc": {
         "display_name": "Olam HaKolnoa",
-        "count": 65,
+        "count": 32,
         "scraped_at": "2026-10-08",
-        "status": "fresh",
+        "status": "preserved",
         "days_ago": 0,
-        "note": "Successfully scraped fresh catalog"
+        "note": "Preserved stock (REST API and category pages returned no laptops)"
       },
       "payngo": {
         "display_name": "Payngo",
         "count": 4,
         "scraped_at": "2026-10-08",
-        "status": "preserved",
+        "status": "fresh",
         "days_ago": 0,
-        "note": "Preserved stock (catalog blocked (HTTP 403) and the browser fallback could not clear it)"
+        "note": "Successfully scraped fresh catalog"
       },
       "alm": {
         "display_name": "ALM",
@@ -63,9 +63,9 @@
         "display_name": "Shufersal",
         "count": 17,
         "scraped_at": "2026-10-08",
-        "status": "preserved",
+        "status": "fresh",
         "days_ago": 0,
-        "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
+        "note": "Successfully scraped fresh catalog"
       },
       "p1000": {
         "display_name": "P1000",
@@ -79,9 +79,9 @@
         "display_name": "LastPrice",
         "count": 7,
         "scraped_at": "2026-10-08",
-        "status": "preserved",
+        "status": "fresh",
         "days_ago": 0,
-        "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
+        "note": "Successfully scraped fresh catalog"
       },
       "volt": {
         "display_name": "Volt",
@@ -98,23 +98,31 @@
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
+      },
+      "ktwo": {
+        "display_name": "KTWO",
+        "count": 21,
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
       }
     }
   },
   "mobile": {
     "total_items": 116,
     "stores": {
-      "gomobile": {
-        "display_name": "GoMobile Outlet",
-        "count": 10,
+      "dynamica": {
+        "display_name": "Dynamica Outlet",
+        "count": 35,
         "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
       },
-      "itoutlet": {
-        "display_name": "IT Outlet",
-        "count": 8,
+      "gomobile": {
+        "display_name": "GoMobile Outlet",
+        "count": 10,
         "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
@@ -128,9 +136,9 @@
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
       },
-      "vmobile": {
-        "display_name": "VMobile",
-        "count": 27,
+      "itoutlet": {
+        "display_name": "IT Outlet",
+        "count": 8,
         "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
@@ -140,13 +148,13 @@
         "display_name": "LastPrice",
         "count": 6,
         "scraped_at": "2026-10-08",
-        "status": "preserved",
+        "status": "fresh",
         "days_ago": 0,
-        "note": "Preserved stock (anti-bot challenge or unreachable in CI)"
+        "note": "Successfully scraped fresh catalog"
       },
-      "dynamica": {
-        "display_name": "Dynamica Outlet",
-        "count": 35,
+      "vmobile": {
+        "display_name": "VMobile",
+        "count": 27,
         "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,

@@ -46,6 +46,7 @@ from scraper import (
     VoltScraper,
     OfekPCScraper,
     ITOutletScraper,
+    KTWOScraper,
 )
 
 
@@ -1258,6 +1259,96 @@ class TestNewLaptopScrapers(unittest.TestCase):
         recomp = RecompScraper(None)
         self.assertIn("i5-1135G7", lts._parse_product_page_desc(mock_html))
         self.assertIn("57Wh", recomp._parse_recomp_desc(mock_html))
+
+    def test_ktwo_api_payload_parsing_refurb_only(self):
+        """KTWO scraper parses refurbished laptops and filters out brand-new/zero-price products."""
+        mock_payload = [
+            {
+                "id": 1,
+                "name": "Dell Latitude 7440 | Core i7-1365U | 32GB | 512GB SSD | 14\" FHD | מחודש",
+                "permalink": "https://www.ktwo.co.il/product/dell-latitude-7440-i7-1365u-32gb-512gb/",
+                "is_in_stock": True,
+                "prices": {
+                    "price": "3499",
+                    "regular_price": "3499",
+                    "sale_price": "3499",
+                    "currency_minor_unit": 0,
+                },
+                "images": [{"src": "https://www.ktwo.co.il/img.jpg"}],
+                "attributes": [
+                    {"name": "מותג", "terms": [{"name": "Dell"}]},
+                    {"name": "מצב", "terms": [{"name": "מחודש"}]},
+                    {"name": "אחריות", "terms": [{"name": "שנתיים"}]},
+                ],
+                "tags": [{"name": "מחודשים-חיסכון"}],
+                "short_description": "מחשב נייד עסקי מחודש",
+                "description": "",
+            },
+            {
+                "id": 2,
+                "name": "ASUS Vivobook 15 | Core 5 320 | 16GB DDR5 | 512GB SSD",
+                "permalink": "https://www.ktwo.co.il/product/asus-vivobook-15/",
+                "is_in_stock": True,
+                "prices": {"price": "3500", "currency_minor_unit": 0},
+                "attributes": [
+                    {"name": "מצב", "terms": [{"name": "חדש"}]},
+                ],
+                "tags": [],
+            },
+            {
+                "id": 3,
+                "name": "ThinkPad P15s Gen 2 i7-1165 /16 GB /1TSSD/Win 10 pro NEW!",
+                "permalink": "https://www.ktwo.co.il/product/thinkpad-p15s-new/",
+                "is_in_stock": True,
+                "prices": {"price": "5500", "currency_minor_unit": 0},
+                "attributes": [],
+                "tags": [{"name": "מחודשים-חיסכון"}],
+            },
+            {
+                "id": 4,
+                "name": "HP ProBook x360 G8 | מחודש",
+                "permalink": "https://www.ktwo.co.il/product/hp-probook-zero/",
+                "is_in_stock": False,
+                "prices": {"price": "0", "currency_minor_unit": 0},
+                "attributes": [{"name": "מצב", "terms": [{"name": "מחודש"}]}],
+                "tags": [],
+            },
+        ]
+        scraper = KTWOScraper()
+        items = scraper._items_from_api_payload(mock_payload)
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "KTWO")
+        self.assertEqual(items[0].price_ils, 3499)
+        self.assertEqual(items[0].ram_gb, 32)
+        self.assertEqual(items[0].storage_gb, 512)
+        self.assertEqual(items[0].warranty_months, 24)
+        self.assertEqual(items[0].brand, "Dell")
+
+    def test_ktwo_html_fallback_parsing(self):
+        """KTWO scraper fallback extracts refurbished product cards from HTML."""
+        mock_html = '''
+        <ul class="products">
+            <li class="product">
+                <a href="https://www.ktwo.co.il/product/lenovo-thinkpad-t14-refurb/">
+                    <h2 class="woocommerce-loop-product__title">מחשב נייד מחודש Lenovo ThinkPad T14 G1 i5 16GB 512GB</h2>
+                    <img src="https://www.ktwo.co.il/t14.jpg" />
+                    <span class="price"><bdi>1,650</bdi></span>
+                </a>
+            </li>
+            <li class="product">
+                <a href="https://www.ktwo.co.il/product/asus-gaming-new/">
+                    <h2 class="woocommerce-loop-product__title">Asus ROG Strix Gaming Laptop NEW!</h2>
+                    <span class="price"><bdi>9,999</bdi></span>
+                </a>
+            </li>
+        </ul>
+        '''
+        scraper = KTWOScraper()
+        items = scraper._items_from_html(mock_html, set())
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "KTWO")
+        self.assertEqual(items[0].price_ils, 1650)
+        self.assertIn("Lenovo", items[0].title)
 
 
 class TestFrontendCompatibility(unittest.TestCase):

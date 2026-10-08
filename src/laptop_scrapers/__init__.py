@@ -16,6 +16,7 @@ from laptop_scrapers.p1000 import P1000Scraper
 from laptop_scrapers.lastprice import LastPriceScraper
 from laptop_scrapers.volt import VoltScraper
 from laptop_scrapers.ofekpc import OfekPCScraper
+from laptop_scrapers.ktwo import KTWOScraper
 
 DEFAULT_SCRAPER_CLASSES: Dict[str, Type] = {
     'itoutlet': ITOutletScraper,
@@ -30,6 +31,7 @@ DEFAULT_SCRAPER_CLASSES: Dict[str, Type] = {
     'lastprice': LastPriceScraper,
     'volt': VoltScraper,
     'ofekpc': OfekPCScraper,
+    'ktwo': KTWOScraper,
 }
 
 __all__ = [
@@ -45,6 +47,7 @@ __all__ = [
     'LastPriceScraper',
     'VoltScraper',
     'OfekPCScraper',
+    'KTWOScraper',
     'DEFAULT_SCRAPER_CLASSES',
 ]
 

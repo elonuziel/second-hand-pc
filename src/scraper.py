@@ -56,6 +56,7 @@ from laptop_scrapers import (
     LastPriceScraper,
     VoltScraper,
     OfekPCScraper,
+    KTWOScraper,
     DEFAULT_SCRAPER_CLASSES,
 )
 

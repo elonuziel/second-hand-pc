@@ -144,6 +144,7 @@ class ReportGenerator:
         lp_items = all_results.get('lastprice', [])
         volt_items = all_results.get('volt', [])
         ofek_items = all_results.get('ofekpc', [])
+        ktwo_items = all_results.get('ktwo', [])
 
         # Flatten all items to dynamically compute Top Overall Picks
         all_laptops: List[LaptopItem] = []
@@ -167,6 +168,7 @@ class ReportGenerator:
 10. 🏬 **LastPrice (לאסטפרייס):** [lastprice.co.il/c/85](https://www.lastprice.co.il/c/85/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%95%D7%92%D7%99%D7%99%D7%9E%D7%99%D7%A0%D7%92/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D-%D7%95%D7%A2%D7%95%D7%93%D7%A4%D7%99-%D7%9E%D7%9C%D7%90%D7%99)
 11. 🏬 **VOLT (וולט מחשוב ירוק):** [volt.co.il/23409-ניידים-מחודשים](https://www.volt.co.il/23409-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
 12. 🏬 **Ofek PC (אופק פי סי):** [ofekpc.co.il/מחשבים-ניידים-מחודשים](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
+13. 🏬 **KTWO (קיי טו):** [ktwo.co.il/category/laptop](https://www.ktwo.co.il/category/laptop/)
 
 *Last Automated Live Audit: {now_str}*
 
@@ -190,6 +192,7 @@ class ReportGenerator:
 - [🏬 LastPrice Live Audit](#-10-lastprice-לאסטפרייס--live-stock-audit)
 - [🏬 VOLT Live Audit](#-11-volt-וולט-מחשוב-ירוק--live-stock-audit)
 - [🏬 Ofek PC Live Audit](#-12-ofek-pc-אופק-פי-סי--live-stock-audit)
+- [🏬 KTWO Live Audit](#-13-ktwo-קיי-טו--live-stock-audit)
 - [🎯 Buyer Rules of Thumb](#-quick-rules-of-thumb)
 
 ---
@@ -314,6 +317,7 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
         _append_store_section(10, "LastPrice (לאסטפרייס)", lp_items)
         _append_store_section(11, "VOLT (וולט מחשוב ירוק)", volt_items)
         _append_store_section(12, "Ofek PC (אופק פי סי)", ofek_items)
+        _append_store_section(13, "KTWO (קיי טו)", ktwo_items, "Refurbished business laptops with hardware warranty")
 
         md_parts.append("""
 ---

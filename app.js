@@ -312,6 +312,7 @@ function getStoreClass(store) {
   if (s.includes('lastprice') || s.includes('לאסטפרייס')) return 'store-lastprice';
   if (s.includes('volt') || s.includes('וולט')) return 'store-volt';
   if (s.includes('ofek') || s.includes('אופק')) return 'store-ofekpc';
+  if (s.includes('ktwo') || s.includes('k-two') || s.includes('קיי טו')) return 'store-ktwo';
   if (s.includes('gomobile')) return 'store-gomobile';
   if (s.includes('partner')) return 'store-partner';
   if (s.includes('vmobile')) return 'store-vmobile';
