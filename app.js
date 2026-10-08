@@ -1,44 +1,16 @@
 const docs = [
   {
-    id: 'overview',
-    title: 'Project Overview',
-    file: 'README.md',
-    category: 'project',
-    content: ''
-  },
-  {
     id: 'summary',
-    title: 'Summary / Market Guide',
+    title: 'Market Research Guide',
     file: 'summary.md',
     category: 'summary',
-    content: ''
-  },
-  {
-    id: 'touch-guides',
-    title: '2-in-1 & Touch Laptops Guide',
-    file: '2in1_and_touch_laptops_guide.md',
-    category: 'guide',
-    content: ''
-  },
-  {
-    id: 'elitebook-review',
-    title: 'HP EliteBook x360 Review',
-    file: 'hp_elitebook_x360_830_g8_master_review.md',
-    category: 'review',
-    content: ''
-  },
-  {
-    id: 'elitebook-accessories',
-    title: 'EliteBook Accessories Guide',
-    file: 'hp_elitebook_x360_accessories_guide.md',
-    category: 'guide',
     content: ''
   }
 ];
 
 const state = {
-  activeDocId: 'overview',
-  filter: 'all', // 'all', 'project', 'summary', 'guide', 'review', 'catalog'
+  activeDocId: 'summary',
+  filter: 'catalog', // Default view is 'catalog'
   query: '',
   activePreset: 'all',
   catalogData: [],
@@ -242,10 +214,9 @@ async function loadCatalogData() {
 
 function buildVisibleDocs() {
   return docs.filter((doc) => {
-    const matchesFilter = state.filter === 'all' || doc.category === state.filter;
     const searchTarget = `${doc.title} ${doc.file} ${doc.content || ''}`.toLowerCase();
     const matchesQuery = !state.query || searchTarget.includes(state.query.toLowerCase());
-    return matchesFilter && matchesQuery;
+    return matchesQuery;
   });
 }
 

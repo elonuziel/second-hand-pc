@@ -32,22 +32,18 @@
       </header>
 
       <nav class="filter-bar" aria-label="Document & Catalog filter">
-        <button class="filter-btn active" data-filter="all" type="button">All Docs</button>
-        <button class="filter-btn" data-filter="project" type="button">Project</button>
-        <button class="filter-btn" data-filter="summary" type="button">Summary</button>
-        <button class="filter-btn" data-filter="guide" type="button">Guides</button>
-        <button class="filter-btn" data-filter="review" type="button">Reviews</button>
-        <button class="filter-btn catalog-nav-btn" data-filter="catalog" type="button">💻 Laptop Catalog Finder</button>
+        <button class="filter-btn catalog-nav-btn active" data-filter="catalog" type="button">💻 Laptop Catalog Finder</button>
+        <button class="filter-btn" data-filter="summary" type="button">📊 Market Research Guide</button>
       </nav>
 
       <main class="content-layout">
         <aside class="sidebar">
-          <div id="documentSidebarCard" class="sidebar-card">
+          <div id="documentSidebarCard" class="sidebar-card hidden">
             <h2>Documents</h2>
             <div id="tabList" class="tab-list" role="tablist" aria-label="Markdown documents"></div>
           </div>
 
-          <div id="catalogFiltersCard" class="sidebar-card hidden">
+          <div id="catalogFiltersCard" class="sidebar-card">
             <div class="sidebar-card-header">
               <h2>Catalog Filters</h2>
               <button id="toggleFiltersBtn" class="mobile-filter-toggle" type="button" aria-expanded="true">
@@ -169,8 +165,8 @@
 
         <section class="document-panel">
           <div id="statusBar" class="status-bar" aria-live="polite"></div>
-          <article id="documentContent" class="markdown-body" aria-live="polite"></article>
-          <div id="catalogContent" class="catalog-view hidden" aria-live="polite"></div>
+          <article id="documentContent" class="markdown-body hidden" aria-live="polite"></article>
+          <div id="catalogContent" class="catalog-view" aria-live="polite"></div>
         </section>
       </main>
     </div>
