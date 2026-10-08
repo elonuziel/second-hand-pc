@@ -1,23 +1,15 @@
 {
-  "last_updated": "2026-10-08T16:39:34.339730",
+  "last_updated": "2026-10-08T18:12:40.624283",
   "laptops": {
-    "total_items": 318,
+    "total_items": 360,
     "stores": {
-      "pcil": {
-        "display_name": "PC-Online (PCIL)",
-        "count": 4,
+      "ivory": {
+        "display_name": "Ivory Outlet",
+        "count": 19,
         "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
-      },
-      "superprice": {
-        "display_name": "SuperPrice",
-        "count": 28,
-        "scraped_at": "2026-10-08",
-        "status": "preserved",
-        "days_ago": 0,
-        "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
       },
       "itoutlet": {
         "display_name": "IT Outlet",
@@ -37,7 +29,7 @@
       },
       "lts": {
         "display_name": "LaptopTech LTS",
-        "count": 26,
+        "count": 10,
         "scraped_at": "2026-10-08",
         "status": "preserved",
         "days_ago": 0,
@@ -45,7 +37,7 @@
       },
       "recomp": {
         "display_name": "Recomp Computers",
-        "count": 6,
+        "count": 7,
         "scraped_at": "2026-10-08",
         "status": "preserved",
         "days_ago": 0,
@@ -122,15 +114,55 @@
         "status": "preserved",
         "days_ago": 0,
         "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
+      },
+      "superprice": {
+        "display_name": "SuperPrice",
+        "count": 28,
+        "scraped_at": "2026-10-08",
+        "status": "preserved",
+        "days_ago": 0,
+        "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
+      },
+      "pcil": {
+        "display_name": "PC-Online (PCIL)",
+        "count": 4,
+        "scraped_at": "2026-10-08",
+        "status": "preserved",
+        "days_ago": 0,
+        "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
+      },
+      "espir": {
+        "display_name": "Espircom",
+        "count": 38,
+        "scraped_at": "2026-10-08",
+        "status": "preserved",
+        "days_ago": 0,
+        "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
       }
     }
   },
   "mobile": {
-    "total_items": 121,
+    "total_items": 145,
     "stores": {
-      "istore": {
-        "display_name": "iStore CPO",
-        "count": 5,
+      "dynamica": {
+        "display_name": "Dynamica Outlet",
+        "count": 35,
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "partner": {
+        "display_name": "Partner Plus",
+        "count": 30,
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "itoutlet": {
+        "display_name": "IT Outlet",
+        "count": 8,
         "scraped_at": "2026-10-08",
         "status": "fresh",
         "days_ago": 0,
@@ -140,49 +172,41 @@
         "display_name": "GoMobile Outlet",
         "count": 10,
         "scraped_at": "2026-10-08",
-        "status": "preserved",
+        "status": "fresh",
         "days_ago": 0,
-        "note": "Preserved stock (anti-bot challenge or unreachable in CI)"
-      },
-      "itoutlet": {
-        "display_name": "IT Outlet",
-        "count": 8,
-        "scraped_at": "2026-10-08",
-        "status": "preserved",
-        "days_ago": 0,
-        "note": "Preserved stock (anti-bot challenge or unreachable in CI)"
-      },
-      "partner": {
-        "display_name": "Partner Plus",
-        "count": 30,
-        "scraped_at": "2026-10-08",
-        "status": "preserved",
-        "days_ago": 0,
-        "note": "Preserved stock (anti-bot challenge or unreachable in CI)"
-      },
-      "vmobile": {
-        "display_name": "VMobile",
-        "count": 27,
-        "scraped_at": "2026-10-08",
-        "status": "preserved",
-        "days_ago": 0,
-        "note": "Preserved stock (anti-bot challenge or unreachable in CI)"
+        "note": "Successfully scraped fresh catalog"
       },
       "lastprice": {
         "display_name": "LastPrice",
         "count": 6,
         "scraped_at": "2026-10-08",
-        "status": "preserved",
+        "status": "fresh",
         "days_ago": 0,
-        "note": "Preserved stock (anti-bot challenge or unreachable in CI)"
+        "note": "Successfully scraped fresh catalog"
       },
-      "dynamica": {
-        "display_name": "Dynamica Outlet",
-        "count": 35,
+      "vmobile": {
+        "display_name": "VMobile",
+        "count": 27,
         "scraped_at": "2026-10-08",
-        "status": "preserved",
+        "status": "fresh",
         "days_ago": 0,
-        "note": "Preserved stock (anti-bot challenge or unreachable in CI)"
+        "note": "Successfully scraped fresh catalog"
+      },
+      "istore": {
+        "display_name": "iStore CPO",
+        "count": 5,
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "buymobile": {
+        "display_name": "BuyMobile",
+        "count": 24,
+        "scraped_at": "2026-10-08",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
       }
     }
   }

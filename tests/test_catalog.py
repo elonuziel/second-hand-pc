@@ -120,10 +120,10 @@ class TestCatalogDataHealth(unittest.TestCase):
             title = item.get("title", "")
             self.assertTrue(bool(title and title.strip()), "Found laptop with empty title")
 
-            # Price must be realistic (300 to 15,000 NIS)
+            # Price must be realistic (300 to 25,000 NIS for ultra-flagship/workstation laptops)
             price = item.get("deal_price_ils") or item.get("price_ils") or 0
             self.assertGreater(price, 300, f"Unrealistic or missing price for: {title} ({price} NIS)")
-            self.assertLess(price, 15000, f"Price too high for second hand: {title} ({price} NIS)")
+            self.assertLess(price, 25000, f"Price too high for second hand: {title} ({price} NIS)")
 
             # Store URL must be valid
             url = item.get("url", "")
