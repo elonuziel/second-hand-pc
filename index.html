@@ -1,367 +1,415 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Second-Hand PC Hub</title>
-    <meta
-      name="description"
-      content="Friendly GitHub Pages site for second-hand PC guides, reviews, and research notes."
-    />
-    <link rel="stylesheet" href="./styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.2/dist/purify.min.js" defer></script>
-  </head>
-  <body>
-    <div class="page-shell">
-      <header class="site-header">
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Second-Hand PC Hub — Refurbished Laptop & Mobile Finder</title>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Marked & DOMPurify for dynamic markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-full flex flex-col font-sans transition-colors duration-200">
+
+  <!-- Header Bar -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+
+      <!-- Brand & Mode Pill -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 shrink-0">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </div>
         <div>
-          <p class="eyebrow">Second-hand PC research</p>
-          <h1>Second-Hand PC Hub</h1>
-        </div>
-        <div class="header-actions">
-          <label class="search-box" aria-label="Search site & catalog">
-            <span>Search</span>
-            <input id="searchInput" type="search" placeholder="Search laptops, specs, catalog (e.g. i7, 32GB, ThinkPad)..." />
-          </label>
-          <button id="scraperStatusBtn" class="scraper-status-btn" type="button" aria-label="Store Scraper Status" title="View Store Scraper Status & Health">
-            <span>ℹ️</span>
-            <span class="status-btn-text">Scraper Status</span>
-          </button>
-          <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark / light theme">
-            <span id="themeIcon">🌙</span>
-            <span class="theme-text">Dark</span>
-          </button>
-        </div>
-      </header>
-
-      <nav class="filter-bar" aria-label="Document & Catalog filter">
-        <button class="filter-btn catalog-nav-btn active" data-filter="catalog" type="button">💻 Laptop Catalog Finder</button>
-        <button class="filter-btn" data-filter="summary" type="button">📊 Market Research Guide</button>
-      </nav>
-
-      <main class="content-layout">
-        <aside class="sidebar">
-          <div id="catalogFiltersCard" class="sidebar-card">
-            <div class="sidebar-card-header">
-              <h2>Catalog Filters</h2>
-              <button id="toggleFiltersBtn" class="mobile-filter-toggle" type="button" aria-expanded="true">
-                <span class="toggle-text">Filters</span> <span class="toggle-arrow">▴</span>
-              </button>
-            </div>
-
-            <div id="catalogFilterFields" class="filter-fields-wrapper">
-              <div class="filter-group">
-                <label for="storeFilter">Store</label>
-                <select id="storeFilter" class="filter-select">
-                  <option value="all">All Stores</option>
-                  <option value="IT Outlet">IT Outlet</option>
-                  <option value="Ecology Computers">Ecology Computers</option>
-                  <option value="LaptopTech LTS">LaptopTech LTS</option>
-                  <option value="Recomp Computers">Recomp Computers</option>
-                  <option value="Olam HaKolnoa">Olam HaKolnoa (עולם הקולנוע)</option>
-                  <option value="Payngo">Payngo (מחסני חשמל)</option>
-                  <option value="ALM">ALM (א.ל.מ)</option>
-                  <option value="Shufersal">Shufersal (שופרסל)</option>
-                  <option value="P1000">P1000 (פי אלף)</option>
-                  <option value="LastPrice">LastPrice</option>
-                  <option value="Volt">Volt (וולט מחשוב ירוק)</option>
-                  <option value="Ofek PC">Ofek PC (אופק פי סי)</option>
-                  <option value="KTWO">KTWO (קיי טו)</option>
-                  <option value="SuperPrice">SuperPrice</option>
-                  <option value="PC-Online (PCIL)">PC-Online (PCIL)</option>
-                  <option value="Ivory Outlet">Ivory Outlet (אייבורי עודפים/מציאון)</option>
-                  <option value="Espircom">Espircom (אספירקום)</option>
-                  <option value="GoMobile">GoMobile</option>
-                  <option value="Partner Plus">Partner Plus</option>
-                  <option value="Dynamica Outlet">Dynamica Outlet</option>
-                  <option value="VMobile">VMobile</option>
-                  <option value="iStore CPO">iStore CPO (אפל מחודש)</option>
-                  <option value="BuyMobile">BuyMobile (ביי מובייל)</option>
-                </select>
-              </div>
-
-              <div class="filter-group">
-                <label for="categoryFilter">Category</label>
-                <select id="categoryFilter" class="filter-select">
-                  <option value="all">All Categories</option>
-                  <option value="laptops">💻 Laptops</option>
-                  <option value="phones">📱 Phones & Tablets</option>
-                </select>
-              </div>
-
-              <div class="filter-group filter-group-checkbox">
-                <label class="filter-checkbox-label" for="filterHideStale">
-                  <input type="checkbox" id="filterHideStale" />
-                  <span>Hide Stale Listings (>30d)</span>
-                </label>
-              </div>
-
-              <div class="filter-group">
-                <label>Brand <small>(Multi-Select)</small></label>
-                <div id="brandFilterContainer" class="brand-pills-wrapper">
-                  <!-- Dynamically populated brand pills -->
-                </div>
-              </div>
-
-              <div class="filter-group filter-group-slider">
-                <div class="slider-header-row">
-                  <label>Price Range</label>
-                  <span id="priceDisplay" class="slider-value-badge" title="Click to reset price range">Any Price</span>
-                </div>
-                <div class="dual-slider-wrapper">
-                  <div class="dual-slider-track"></div>
-                  <div class="dual-slider-range" id="priceSliderRange"></div>
-                  <input
-                    type="range"
-                    id="priceMinSlider"
-                    class="dual-range-input"
-                    min="800"
-                    max="5000"
-                    step="50"
-                    value="800"
-                    aria-label="Minimum price budget"
-                  />
-                  <input
-                    type="range"
-                    id="priceMaxSlider"
-                    class="dual-range-input"
-                    min="800"
-                    max="5000"
-                    step="50"
-                    value="5000"
-                    aria-label="Maximum price budget"
-                  />
-                </div>
-                <div id="sliderTicks" class="slider-ticks">
-                  <span id="tickMin">800 ₪</span>
-                  <span id="tickMid">2,500 ₪</span>
-                  <span id="tickMax">5,000 ₪</span>
-                </div>
-              </div>
-
-              <div id="cpuGenFilterGroup" class="filter-group">
-                <label for="cpuGenFilter">CPU Gen</label>
-                <div class="filter-control-row">
-                  <select id="cpuGenFilter" class="filter-select">
-                    <option value="all">All Generations</option>
-                    <option value="13">13th Gen</option>
-                    <option value="12">12th Gen</option>
-                    <option value="11">11th Gen</option>
-                    <option value="10">10th Gen</option>
-                    <option value="8">8th / 9th Gen</option>
-                    <option value="older">Older (4th - 7th Gen)</option>
-                    <option value="apple">Apple Silicon (M1/M2)</option>
-                    <option value="amd">AMD Ryzen</option>
-                  </select>
-                  <div class="filter-dir-pills" data-filter="cpuGen" role="group" aria-label="CPU generation filter direction">
-                    <button type="button" class="dir-btn active" data-dir="up" title="This generation & up">≥ Up</button>
-                    <button type="button" class="dir-btn" data-dir="down" title="This generation & down">≤ Down</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="filter-group">
-                <label for="ramFilter">RAM</label>
-                <div class="filter-control-row">
-                  <select id="ramFilter" class="filter-select">
-                    <option value="0">Any RAM</option>
-                    <option value="8">8 GB</option>
-                    <option value="16">16 GB</option>
-                    <option value="32">32 GB</option>
-                    <option value="64">64 GB</option>
-                  </select>
-                  <div class="filter-dir-pills" data-filter="ram" role="group" aria-label="RAM filter direction">
-                    <button type="button" class="dir-btn active" data-dir="up" title="This RAM & up">≥ Up</button>
-                    <button type="button" class="dir-btn" data-dir="down" title="This RAM & down">≤ Down</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="filter-group">
-                <label for="storageFilter">Storage (SSD)</label>
-                <div class="filter-control-row">
-                  <select id="storageFilter" class="filter-select">
-                    <option value="0">Any Storage</option>
-                    <option value="256">256 GB</option>
-                    <option value="512">512 GB</option>
-                    <option value="1000">1 TB</option>
-                  </select>
-                  <div class="filter-dir-pills" data-filter="storage" role="group" aria-label="Storage filter direction">
-                    <button type="button" class="dir-btn active" data-dir="up" title="This storage & up">≥ Up</button>
-                    <button type="button" class="dir-btn" data-dir="down" title="This storage & down">≤ Down</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="filter-group">
-                <label id="formFilterLabel" for="formFilter">Type / Screen</label>
-                <select id="formFilter" class="filter-select">
-                  <option value="all">All Types</option>
-                  <option value="2in1">2-in-1 / Touchscreen</option>
-                  <option value="clamshell">Clamshell Standard</option>
-                </select>
-              </div>
-
-              <div class="filter-group">
-                <label for="screenFilter">Screen Size</label>
-                <div class="filter-control-row">
-                  <select id="screenFilter" class="filter-select">
-                    <option value="all">All Sizes</option>
-                    <option value="13.3">13.3" (Compact)</option>
-                    <option value="14.0">14.0" (Standard Ultra)</option>
-                    <option value="15.6">15.6" (Large Productivity)</option>
-                  </select>
-                  <div class="filter-dir-pills" data-filter="screen" role="group" aria-label="Screen size filter direction">
-                    <button type="button" class="dir-btn active" data-dir="up" title="This screen size & up">≥ Up</button>
-                    <button type="button" class="dir-btn" data-dir="down" title="This screen size & down">≤ Down</button>
-                  </div>
-                </div>
-              </div>
-
-              <div id="weightFilterGroup" class="filter-group">
-                <label for="weightFilter">Weight</label>
-                <div class="filter-control-row">
-                  <select id="weightFilter" class="filter-select">
-                    <option value="0">Any Weight</option>
-                    <option value="1.3">1.3 kg (Featherlight)</option>
-                    <option value="1.5">1.5 kg (Portable)</option>
-                    <option value="1.8">1.8 kg (Everyday Carry)</option>
-                    <option value="2.0">2.0 kg (Workstation)</option>
-                  </select>
-                  <div class="filter-dir-pills" data-filter="weight" role="group" aria-label="Weight filter direction">
-                    <button type="button" class="dir-btn" data-dir="up" title="This weight & up">≥ Up</button>
-                    <button type="button" class="dir-btn active" data-dir="down" title="This weight & down (lighter)">≤ Down</button>
-                  </div>
-                </div>
-              </div>
-
-              <div id="batteryFilterGroup" class="filter-group">
-                <label for="batteryFilter">Battery</label>
-                <div class="filter-control-row">
-                  <select id="batteryFilter" class="filter-select">
-                    <option value="0">Any Battery</option>
-                    <option value="45">45 Wh</option>
-                    <option value="50">50 Wh (Standard Business)</option>
-                    <option value="55">55 Wh (Long Battery)</option>
-                    <option value="65">65 Wh (High Capacity)</option>
-                  </select>
-                  <div class="filter-dir-pills" data-filter="battery" role="group" aria-label="Battery capacity filter direction">
-                    <button type="button" class="dir-btn active" data-dir="up" title="This battery & up">≥ Up</button>
-                    <button type="button" class="dir-btn" data-dir="down" title="This battery & down">≤ Down</button>
-                  </div>
-                </div>
-              </div>
-
-              <div id="upgradabilityFilterGroup" class="filter-group">
-                <label for="upgradabilityFilter">Upgradability</label>
-                <div class="filter-control-row">
-                  <select id="upgradabilityFilter" class="filter-select">
-                    <option value="0">Any Rating</option>
-                    <option value="5">5 (Soldered Ultrabook)</option>
-                    <option value="7">7 (Semi-Modular)</option>
-                    <option value="8">8 (Highly Upgradable)</option>
-                    <option value="9">9 (Fully Modular)</option>
-                  </select>
-                  <div class="filter-dir-pills" data-filter="upgradability" role="group" aria-label="Upgradability filter direction">
-                    <button type="button" class="dir-btn active" data-dir="up" title="This rating & up">≥ Up</button>
-                    <button type="button" class="dir-btn" data-dir="down" title="This rating & down">≤ Down</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="filter-group">
-                <label for="sortFilter">Sort By</label>
-                <select id="sortFilter" class="filter-select">
-                  <option value="value-desc" selected>🏆 Best Value (Specs per ₪)</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                  <option value="weight-asc">Weight: Light to Heavy</option>
-                  <option value="battery-desc">Battery: High to Low</option>
-                  <option value="screen-desc">Screen Size: Large to Small</option>
-                  <option value="upgrade-desc">Upgradability Score</option>
-                  <option value="ram-desc">RAM Capacity</option>
-                </select>
-              </div>
-
-              <button id="resetFiltersBtn" class="reset-filters-btn" type="button">🔄 Reset Filters</button>
-            </div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">Second-Hand PC Hub</span>
+            <button id="openStatusModalBtn" type="button" class="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 hover:bg-emerald-200 dark:hover:bg-emerald-900 transition cursor-pointer flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="statusHeaderPill">Live Feed</span>
+            </button>
           </div>
-
-          <div id="documentSidebarCard" class="sidebar-card hidden">
-            <h2 id="documentSidebarTitle">Catalog Sections</h2>
-            <div id="tabList" class="tab-list" role="tablist" aria-label="Catalog store sections"></div>
-          </div>
-
-          <div class="sidebar-card mini-stats">
-            <h3>Quick facts</h3>
-            <ul>
-              <li>Live multi-store laptop database</li>
-              <li>Instant spec & price filter engine</li>
-              <li>Full market research & stock audits</li>
-            </ul>
-          </div>
-
-          <div class="sidebar-card store-audit-note">
-            <h3>💡 Quality & In-Stock Audit</h3>
-            <p>Our audit engine actively filters out phantom and sold listings (such as <code>**נמכר**</code> on LaptopTech LTS). By default, only modern platforms (Intel 8th Gen+, AMD Ryzen, Apple Silicon) are included for security &amp; Windows 11 readiness. Older legacy models (≤7th Gen) can optionally be included via <code>--include-legacy</code>.</p>
-          </div>
-
-          <div class="sidebar-card honorable-mentions-card">
-            <h3>🌟 Honorable Mentions / רשתות נוספות</h3>
-            <p>רשתות מובילות בעלות היקף מלאי משמעותי של עודפים, מציאון ותצוגות, המוגנות בחומות הגנה קפדניות נגד בוטים (Imperva / Akamai) – מומלץ לבקר בהן לגלישה ישירה:</p>
-            <ul class="honorable-links">
-              <li>
-                <a href="https://www.pelephone.co.il/ds/heb/eshop/lobby/outlet/" target="_blank" rel="noopener noreferrer">
-                  <span class="honorable-icon">📱</span>
-                  <div class="honorable-text">
-                    <strong>פלאפון Outlet</strong>
-                    <span>פלאפון Outlet - המחירים הכי שווים לסלולר, טאבלטים, אייפד, אייפון, גלקסי ועוד | פלאפון</span>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a href="https://ksp.co.il/web/cat/31635..1215" target="_blank" rel="noopener noreferrer">
-                  <span class="honorable-icon">💻</span>
-                  <div class="honorable-text">
-                    <strong>KSP מציאון ועודפים</strong>
-                    <span>מציאון ותצוגות מחשבים וסלולר ב- KSP</span>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </aside>
-
-        <section class="document-panel">
-          <div id="statusBar" class="status-bar" aria-live="polite"></div>
-          <div id="catalogContent" class="catalog-view" aria-live="polite"></div>
-          <article id="documentContent" class="markdown-body hidden" aria-live="polite"></article>
-        </section>
-      </main>
-    <!-- Scraper Run Status Modal -->
-    <div id="scraperStatusModal" class="modal-overlay" style="display: none;" aria-hidden="true" role="dialog" aria-labelledby="statusModalTitle">
-      <div class="modal-card">
-        <div class="modal-header">
-          <div class="modal-title-wrap">
-            <span class="modal-icon">🤖</span>
-            <div>
-              <h2 id="statusModalTitle">Scraper Run Status & Store Health</h2>
-              <p class="modal-subtitle" id="statusModalSubtitle">Showing status of automated scraping runs</p>
-            </div>
-          </div>
-          <button id="closeStatusModalBtn" class="modal-close-btn" type="button" aria-label="Close modal">✕</button>
-        </div>
-        <div class="modal-body" id="scraperStatusBody">
-          <!-- Dynamically populated by app.js -->
-        </div>
-        <div class="modal-footer">
-          <p class="modal-footer-note">ℹ️ Stores protected by strict bot firewalls safely preserve last known stock. Stores with historical sold items (e.g. LaptopTech LTS) are strictly audited to exclude sold listings and focus on modern platforms (8th Gen+ / Ryzen / M1); legacy models can optionally be included via <code>--include-legacy</code>.</p>
-          <button id="closeStatusModalFooterBtn" class="filter-btn active" type="button">Close</button>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-normal hidden sm:block">Vetted enterprise refurbs & grade-A Israeli stores</p>
         </div>
       </div>
-    </div>
 
-    <script src="./app.js" defer></script>
-  </body>
+      <!-- Quick Search Bar -->
+      <div class="flex-1 max-w-md hidden md:block">
+        <div class="relative">
+          <svg class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search specs, model, CPU (e.g. ThinkPad T14, i7, 32GB, iPhone)..."
+            class="w-full bg-slate-100 dark:bg-slate-800/70 border border-transparent focus:border-indigo-500 dark:focus:border-indigo-400 rounded-xl pl-10 pr-12 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-slate-800 dark:text-slate-100 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500"
+          >
+          <kbd class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-slate-400 bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600 shadow-xs">/</kbd>
+        </div>
+      </div>
+
+      <!-- Header Action Controls -->
+      <div class="flex items-center gap-2">
+        <!-- Main Catalog vs Market Guide toggle -->
+        <button id="viewToggleGuide" type="button" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5">
+          <span>📖 Market Guide</span>
+        </button>
+
+        <!-- View Toggle (Grid / Table) -->
+        <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200/60 dark:border-slate-700/60">
+          <button id="viewToggleGrid" title="Grid View" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs transition flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            <span class="hidden sm:inline">Grid</span>
+          </button>
+          <button id="viewToggleTable" title="Compact Table View" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+            <span class="hidden sm:inline">Table</span>
+          </button>
+        </div>
+
+        <!-- Export CSV Button -->
+        <button id="exportCsvBtn" title="Export CSV" class="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button id="themeToggle" title="Toggle Dark/Light Mode" class="p-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <svg class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Explore Preset Strip -->
+  <div class="border-b border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/40 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4 overflow-x-auto no-scrollbar">
+      <div class="flex items-center gap-2 text-xs flex-nowrap shrink-0">
+        <span class="text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider text-[11px] mr-1 flex items-center gap-1.5 shrink-0">
+          <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd"/></svg>
+          Presets:
+        </span>
+        <button data-preset="all" class="preset-btn active px-3 py-1.5 rounded-full font-medium bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs shrink-0 transition">
+          All Devices
+        </button>
+        <button data-preset="value" class="preset-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shrink-0 transition">
+          🏆 Top Value Score (9.5+)
+        </button>
+        <button data-preset="budget" class="preset-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shrink-0 transition">
+          💰 Under ₪1,500
+        </button>
+        <button data-preset="modular" class="preset-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shrink-0 transition">
+          🛠️ Modular RAM / Storage
+        </button>
+        <button data-preset="feather" class="preset-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shrink-0 transition">
+          🪶 Featherlight / Mobile
+        </button>
+        <button data-preset="workstation" class="preset-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shrink-0 transition">
+          🚀 High Performance (32GB+)
+        </button>
+      </div>
+
+      <!-- Search on mobile -->
+      <div class="block md:hidden flex-1 min-w-[180px]">
+        <input
+          type="text"
+          id="mobileSearchInput"
+          placeholder="Search devices..."
+          class="w-full bg-slate-100 dark:bg-slate-800/70 border border-transparent rounded-lg px-3 py-1 text-xs text-slate-800 dark:text-slate-100 focus:outline-none"
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Application Layout -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- Filter Sidebar (Col-Span 3) -->
+      <aside class="lg:col-span-3 space-y-5">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <h2 class="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+              <svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+              </svg>
+              Filter Listings
+            </h2>
+            <button id="resetFiltersBtn" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium cursor-pointer">Reset</button>
+          </div>
+
+          <!-- Category Selector (Laptops vs Mobile/Tablets) -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Category</label>
+            <div class="grid grid-cols-2 gap-1.5" id="categoryChips">
+              <button data-category="all" class="category-chip active py-1.5 text-xs text-center rounded-lg font-medium bg-slate-900 text-white dark:bg-white dark:text-slate-900 transition">
+                💻 Laptops
+              </button>
+              <button data-category="phones" class="category-chip py-1.5 text-xs text-center rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                📱 Phones & Tablets
+              </button>
+            </div>
+          </div>
+
+          <!-- Store Selector -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Certified Store</label>
+            <select id="storeSelect" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500/20 focus:outline-none text-slate-800 dark:text-slate-200">
+              <option value="all">All Stores</option>
+            </select>
+          </div>
+
+          <!-- Price Range Slider -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <span>Max Price</span>
+              <span id="priceOutput" class="font-mono text-indigo-600 dark:text-indigo-400 text-sm">₪ 5,000</span>
+            </div>
+            <input
+              type="range"
+              id="priceSlider"
+              min="100"
+              max="5000"
+              step="50"
+              value="5000"
+              class="w-full accent-indigo-600 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer"
+            >
+            <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+              <span id="priceMinLabel">₪100</span>
+              <span id="priceMaxLabel">₪5,000+</span>
+            </div>
+          </div>
+
+          <!-- Brand Filter Chips -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Brand</label>
+            <div class="flex flex-wrap gap-1.5" id="brandPills">
+              <button data-brand="all" class="brand-chip active px-2.5 py-1 text-xs rounded-lg font-medium bg-slate-900 text-white dark:bg-white dark:text-slate-900 transition">All</button>
+              <button data-brand="Lenovo" class="brand-chip px-2.5 py-1 text-xs rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition">Lenovo</button>
+              <button data-brand="HP" class="brand-chip px-2.5 py-1 text-xs rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition">HP</button>
+              <button data-brand="Dell" class="brand-chip px-2.5 py-1 text-xs rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition">Dell</button>
+              <button data-brand="Apple" class="brand-chip px-2.5 py-1 text-xs rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition">Apple</button>
+              <button data-brand="Samsung" class="brand-chip px-2.5 py-1 text-xs rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition">Samsung</button>
+            </div>
+          </div>
+
+          <!-- Minimum RAM -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Min. RAM / Memory</label>
+            <div class="grid grid-cols-4 gap-1.5" id="ramPills">
+              <button data-ram="0" class="ram-chip active py-1.5 text-xs text-center rounded-lg font-medium bg-slate-900 text-white dark:bg-white dark:text-slate-900 transition">Any</button>
+              <button data-ram="8" class="ram-chip py-1.5 text-xs text-center rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition">8 GB</button>
+              <button data-ram="16" class="ram-chip py-1.5 text-xs text-center rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition">16 GB</button>
+              <button data-ram="32" class="ram-chip py-1.5 text-xs text-center rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition">32 GB+</button>
+            </div>
+          </div>
+
+          <!-- Minimum Storage -->
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Min. Storage (SSD/Flash)</label>
+            <div class="grid grid-cols-3 gap-1.5" id="storagePills">
+              <button data-ssd="0" class="ssd-chip active py-1.5 text-xs text-center rounded-lg font-medium bg-slate-900 text-white dark:bg-white dark:text-slate-900 transition">Any</button>
+              <button data-ssd="256" class="ssd-chip py-1.5 text-xs text-center rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition">256 GB</button>
+              <button data-ssd="512" class="ssd-chip py-1.5 text-xs text-center rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition">512 GB+</button>
+            </div>
+          </div>
+
+          <!-- Processor Generation Min Threshold (Laptops) -->
+          <div id="cpuGenGroup" class="space-y-2">
+            <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Min. CPU Generation</label>
+            <select id="cpuGenSelect" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500/20 focus:outline-none text-slate-800 dark:text-slate-200">
+              <option value="0">All Generations</option>
+              <option value="8">Intel 8th Gen+ / Ryzen 3000+</option>
+              <option value="10">Intel 10th Gen+ / Ryzen 4000+</option>
+              <option value="11">Intel 11th Gen+ / Ryzen 5000+</option>
+              <option value="12">Intel 12th Gen+ / Apple Silicon M1+</option>
+            </select>
+          </div>
+
+          <!-- Hardware Feature Toggles -->
+          <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-2">Hardware Must-Haves</span>
+
+            <label class="flex items-center gap-2.5 text-xs text-slate-600 dark:text-slate-400 cursor-pointer select-none">
+              <input type="checkbox" id="swappableRamToggle" class="rounded text-indigo-600 focus:ring-indigo-500 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700">
+              <span>Swappable / Upgradable RAM</span>
+            </label>
+
+            <label class="flex items-center gap-2.5 text-xs text-slate-600 dark:text-slate-400 cursor-pointer select-none">
+              <input type="checkbox" id="ultralightToggle" class="rounded text-indigo-600 focus:ring-indigo-500 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700">
+              <span>Ultralight / Compact (&le; 1.4 kg)</span>
+            </label>
+
+            <label class="flex items-center gap-2.5 text-xs text-slate-600 dark:text-slate-400 cursor-pointer select-none">
+              <input type="checkbox" id="hideStaleToggle" class="rounded text-indigo-600 focus:ring-indigo-500 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700">
+              <span>Hide stale listings (&gt; 30 days)</span>
+            </label>
+          </div>
+
+        </div>
+
+        <!-- Honorable Mentions / External Retailers -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+          <h3 class="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+            <span>🌟 Direct Retail Outlets</span>
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Leading Israeli outlets protected by strict bot firewalls. Visit them directly for live stock:
+          </p>
+          <ul class="space-y-2 text-xs">
+            <li>
+              <a href="https://www.pelephone.co.il/ds/heb/eshop/lobby/outlet/" target="_blank" rel="noopener noreferrer" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-indigo-50 dark:hover:bg-slate-800 border border-slate-100 dark:border-slate-800 flex items-center gap-2 transition group">
+                <span class="text-base">📱</span>
+                <div>
+                  <div class="font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">פלאפון Outlet</div>
+                  <div class="text-[10px] text-slate-400">iPhones, iPads, Galaxy & Tablets</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="https://ksp.co.il/web/cat/31635..1215" target="_blank" rel="noopener noreferrer" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-indigo-50 dark:hover:bg-slate-800 border border-slate-100 dark:border-slate-800 flex items-center gap-2 transition group">
+                <span class="text-base">💻</span>
+                <div>
+                  <div class="font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">KSP מציאון ועודפים</div>
+                  <div class="text-[10px] text-slate-400">Direct clearance laptops & mobile</div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Content Feed (Col-Span 9) -->
+      <section class="lg:col-span-9 space-y-6">
+
+        <!-- Results Toolbar -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span id="resultsCount" class="font-semibold text-slate-900 dark:text-white text-sm">Showing 0 listings</span>
+            <span id="activePresetBadge" class="hidden text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+              Filter Active
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2.5 text-xs">
+            <label for="sortSelect" class="text-slate-500 dark:text-slate-400 font-medium">Sort by:</label>
+            <select id="sortSelect" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 font-medium focus:ring-2 focus:ring-indigo-500/20 focus:outline-none text-slate-800 dark:text-slate-200">
+              <option value="value-desc" selected>🏆 Best Value (Specs per ₪)</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="ram-desc">RAM Capacity</option>
+              <option value="storage-desc">Storage Capacity</option>
+              <option value="weight-asc">Weight: Lightest</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Catalog Container (Grid / Table rendered dynamically by JS) -->
+        <div id="catalogContent" class="space-y-6" aria-live="polite"></div>
+
+        <!-- Markdown Document Section (Market Guide) -->
+        <article id="documentContent" class="hidden bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm prose dark:prose-invert max-w-none" aria-live="polite"></article>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Floating Side-by-Side Comparison Dock -->
+  <div id="compareDock" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 transition-all duration-300 transform translate-y-32 opacity-0 pointer-events-none">
+    <div class="bg-slate-900/95 dark:bg-slate-800/95 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-5">
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"/></svg>
+          Compare (<span id="compareCount">0</span>/3):
+        </span>
+        <div id="compareThumbnails" class="flex items-center gap-2"></div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="clearCompareBtn" type="button" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded transition">Clear</button>
+        <button id="openCompareModalBtn" type="button" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md transition">
+          Compare Now ↗
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison Modal -->
+  <div id="compareModal" class="modal-overlay" style="display: none;" aria-hidden="true" role="dialog" aria-labelledby="compareModalTitle">
+    <div class="modal-card max-w-4xl w-full max-h-[90vh] flex flex-col">
+      <div class="modal-header flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📊</span>
+          <h2 id="compareModalTitle" class="font-bold text-lg text-slate-900 dark:text-white">Side-by-Side Comparison</h2>
+        </div>
+        <button id="closeCompareModalBtn" type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg p-1">✕</button>
+      </div>
+      <div id="compareModalBody" class="modal-body py-4 overflow-y-auto flex-1">
+        <!-- Dynamically rendered comparative matrix -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scraper Run Status Modal -->
+  <div id="scraperStatusModal" class="modal-overlay" style="display: none;" aria-hidden="true" role="dialog" aria-labelledby="statusModalTitle">
+    <div class="modal-card max-w-2xl w-full">
+      <div class="modal-header flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🤖</span>
+          <div>
+            <h2 id="statusModalTitle" class="font-bold text-base text-slate-900 dark:text-white">Scraper Run Status & Store Health</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400" id="statusModalSubtitle">Showing status of automated scraping runs</p>
+          </div>
+        </div>
+        <button id="closeStatusModalBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg p-1" type="button" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body py-4 space-y-4 max-h-[60vh] overflow-y-auto" id="scraperStatusBody">
+        <!-- Dynamically populated by app.js -->
+      </div>
+      <div class="modal-footer pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <p class="text-[11px] text-slate-500 dark:text-slate-400 max-w-md">ℹ️ Multi-store live scraper feed. Protected stores preserve last known stock.</p>
+        <button id="closeStatusModalFooterBtn" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white dark:bg-white dark:text-slate-900 transition" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application JS -->
+  <script src="./app.js" defer></script>
+</body>
 </html>
