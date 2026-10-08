@@ -565,7 +565,8 @@ class HardwareClassifier:
         if any(k in t for k in ['p52', 'p15 gen', 'p15 g1', 'zbook fury 15', 'p1 gen 3']): return (90, "chassis_decoder") if return_source else 90
         if any(k in t for k in ['zbook 15 g6', '5531', '5431', 'p15v']): return (68, "chassis_decoder") if return_source else 68
         if any(k in t for k in ['7420', '7430', '5420', '5421', '5520', '5521']): return (63, "chassis_decoder") if return_source else 63
-        if any(k in t for k in ['x1 carbon', 't14s', '7320', '7330', '5430', '5530', '5330', 't490s']): return (57, "chassis_decoder") if return_source else 57
+        if any(k in t for k in ['x1 carbon', 't14s', '7320', '7330', '7440', '5430', '5530', '5330', 't490s']): return (57, "chassis_decoder") if return_source else 57
+        if any(k in t for k in ['firefly 15', '855 g7', '855 g8', '845 g7', '845 g8']): return (56, "chassis_decoder") if return_source else 56
         if any(k in t for k in ['t14', 'p14s', 'e14 gen 4', '830 g8', '840 g8', 'firefly 14', 'p15s', 't490']): return (51, "chassis_decoder") if return_source else 51
         if any(k in t for k in ['a2337', 'a1706', 'a1708', 'a1989', 'a2179', 'a2251', 'surface 3', 'surface 4']): return (49, "chassis_decoder") if return_source else 49
         if any(k in t for k in ['e480', '5410', '5480', 'x280', 'x13', '840 g3', 'e7440', '435 g7']): return (45, "chassis_decoder") if return_source else 45

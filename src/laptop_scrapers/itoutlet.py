@@ -144,13 +144,22 @@ class ITOutletScraper:
             except Exception as e:
                 logger.error(f"Error scraping IT Outlet page {page}: {e}")
 
-        # Concurrently fetch detail pages for exact specs
-        urls_to_fetch = [pi[2] for pi in parsed_items]
+        # Fast-path: Only fetch detail pages for items missing essential specs from the catalog title
+        urls_to_fetch = []
+        for title, raw_price, full_link, deal_price, deal_label, img in parsed_items:
+            ram = HardwareClassifier.detect_ram_gb(title)
+            storage = HardwareClassifier.detect_storage_gb(title)
+            cpu = HardwareClassifier.detect_cpu(title)
+            if not ram or not storage or cpu in ('Intel Core', ''):
+                urls_to_fetch.append(full_link)
+
         details_map = {}
-        with ThreadPoolExecutor(max_workers=6) as executor:
-            desc_results = executor.map(self._fetch_detail_specs, urls_to_fetch)
-            for url, desc in zip(urls_to_fetch, desc_results):
-                details_map[url] = desc
+        if urls_to_fetch:
+            logger.info("IT Outlet: fetching detail pages for %d/%d listings missing specs...", len(urls_to_fetch), len(parsed_items))
+            with ThreadPoolExecutor(max_workers=6) as executor:
+                desc_results = executor.map(self._fetch_detail_specs, urls_to_fetch)
+                for url, desc in zip(urls_to_fetch, desc_results):
+                    details_map[url] = desc
 
         for title, raw_price, full_link, deal_price, deal_label, img in parsed_items:
             detail_specs = details_map.get(full_link, "")

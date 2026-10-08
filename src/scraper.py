@@ -127,7 +127,7 @@ def main():
     parser.add_argument("--json", action="store_true", help="Dump JSON output to stdout")
     parser.add_argument("--no-md", action="store_true", help="Disable automatic full_catalog.md update")
     parser.add_argument("--include-legacy", action="store_true", help="Include older/legacy CPUs (<8th Gen Intel) in stores with legacy inventory (default: modern only)")
-    parser.add_argument("--workers", type=int, default=4, help="Max concurrent store threads")
+    parser.add_argument("--workers", type=int, default=8, help="Max concurrent store threads")
 
     args = parser.parse_args()
 

@@ -143,7 +143,7 @@ class GroqSpecEnhancer:
 
         return chunk
 
-    def enhance_batch(self, items: List[LaptopItem], chunk_size: int = 5) -> List[LaptopItem]:
+    def enhance_batch(self, items: List[LaptopItem], chunk_size: int = 15) -> List[LaptopItem]:
         """Enhances items in sequential chunks to respect Groq rate limits with minimal latency."""
         if not self.enabled or not items:
             return items

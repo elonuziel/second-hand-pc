@@ -232,7 +232,7 @@ def create_resilient_session(
         status_forcelist=[429, 500, 502, 503, 504],
         allowed_methods=["HEAD", "GET", "OPTIONS"]
     )
-    adapter = HTTPAdapter(max_retries=retry_strategy, pool_connections=15, pool_maxsize=30)
+    adapter = HTTPAdapter(max_retries=retry_strategy, pool_connections=50, pool_maxsize=100)
     session.mount("https://", adapter)
     session.mount("http://", adapter)
 

@@ -92,13 +92,23 @@ class OfekPCScraper:
                     break
                 page += 1
 
-            # Fetch detailed product specifications concurrently
-            urls_to_fetch = [pi[2] for pi in parsed_items]
+            # Fast-path: Only fetch detailed specs if essential hardware specs are missing from card
+            urls_to_fetch = []
+            for raw_title, price, full_url, desc, img in parsed_items:
+                card_text = f"{raw_title} {desc}"
+                ram = HardwareClassifier.detect_ram_gb(card_text)
+                storage = HardwareClassifier.detect_storage_gb(card_text)
+                cpu = HardwareClassifier.detect_cpu(card_text)
+                if not ram or not storage or cpu in ('Intel Core', ''):
+                    urls_to_fetch.append(full_url)
+
             details_map = {}
-            with ThreadPoolExecutor(max_workers=6) as executor:
-                desc_results = executor.map(self._fetch_detail_specs, urls_to_fetch)
-                for u, d in zip(urls_to_fetch, desc_results):
-                    details_map[u] = d
+            if urls_to_fetch:
+                logger.info("Ofek PC: fetching detail pages for %d/%d listings missing specs...", len(urls_to_fetch), len(parsed_items))
+                with ThreadPoolExecutor(max_workers=6) as executor:
+                    desc_results = executor.map(self._fetch_detail_specs, urls_to_fetch)
+                    for u, d in zip(urls_to_fetch, desc_results):
+                        details_map[u] = d
 
             for raw_title, price, full_url, desc, img in parsed_items:
                 detail_specs = details_map.get(full_url, "")

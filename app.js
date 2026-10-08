@@ -203,10 +203,10 @@ function getCpuGenRank(cpuStr) {
   return 0;
 }
 
-function matchesCpuGen(cpuStr, cpuGen, dir = 'up') {
+function matchesCpuGen(cpuStr, cpuGen, dir = 'up', precomputedRank = null) {
   if (!cpuGen || cpuGen === 'all') return true;
   const cpuL = String(cpuStr || '').toLowerCase();
-  const rank = getCpuGenRank(cpuL);
+  const rank = precomputedRank !== null && precomputedRank !== undefined ? precomputedRank : getCpuGenRank(cpuL);
 
   // Range options (& Up / & Down) - backward compatibility
   if (typeof cpuGen === 'string' && cpuGen.endsWith('-up')) {
@@ -412,6 +412,16 @@ function normalizeLaptopItems(laptopsUnified) {
       is_stale
     };
     item.value_score = calculateValueScore(item);
+
+    // Fast-path indexing for sub-millisecond filtering & search
+    item._cpuRank = getCpuGenRank(cpu);
+    item._price = deal_price_ils || price_ils || 0;
+    item._brandLower = brand.toLowerCase();
+    const touchKeywords = item.is_touch || item.is_2in1 ? 'touch touchscreen טאץ טאצ' : '';
+    const formKeywords = item.is_2in1 ? '2in1 2-in-1 convertible 360' : 'clamshell';
+    const storageStr = item.storage_gb ? `${item.storage_gb}gb ${item.storage_gb} ssd` : '';
+    item._searchIndex = `${item.title} ${brand} ${store} ${cpu} ${ram_gb}gb ${item.ram_gen} ${storageStr} ${item.screen_size_in}inch ${item.weight_kg}kg ${item.battery_wh}wh ${item.storage_type} ${touchKeywords} ${formKeywords} ${item.warranty_months}months`.toLowerCase();
+
     return item;
   });
 }
@@ -463,6 +473,14 @@ function normalizeMobileItems(mobileUnified) {
       is_stale
     };
     item.value_score = calculateValueScore(item);
+
+    // Fast-path indexing for sub-millisecond filtering & search
+    item._cpuRank = 0;
+    item._price = deal_price_ils || price_ils || 0;
+    item._brandLower = brand.toLowerCase();
+    const devStorageStr = item.storage_gb ? `${item.storage_gb}gb` : '';
+    item._searchIndex = `${item.title} ${brand} ${store} ${item.cpu} ${ram_gb}gb ${devStorageStr} ${item.device_type}`.toLowerCase();
+
     return item;
   });
 }
@@ -1057,21 +1075,23 @@ function renderCatalog() {
     if (state.catalogFilters.hideStale && item.is_stale) return false;
 
     if (brands && brands.length > 0) {
-      if (!brands.some((b) => b.toLowerCase() === item.brand.toLowerCase())) return false;
-    } else if (brand !== 'all' && item.brand.toLowerCase() !== brand.toLowerCase()) {
-      return false;
+      const bLower = item._brandLower || item.brand.toLowerCase();
+      if (!brands.some((b) => b.toLowerCase() === bLower)) return false;
+    } else if (brand !== 'all') {
+      const bLower = item._brandLower || item.brand.toLowerCase();
+      if (bLower !== brand.toLowerCase()) return false;
     }
 
     // Dual Price Range Slider (arbitrary range between 2 sliding buttons)
     const minBudget = Number(priceMin) || 800;
     const maxBudget = Number(priceMax) || 5000;
     if (minBudget > 800 || maxBudget < 5000) {
-      const pVal = item.deal_price_ils || item.price_ils || 0;
+      const pVal = item._price !== undefined ? item._price : (item.deal_price_ils || item.price_ils || 0);
       if (minBudget > 800 && pVal < minBudget) return false;
       if (maxBudget < 5000 && pVal > maxBudget) return false;
     }
 
-    if (!matchesCpuGen(item.cpu, cpuGen, dirs.cpuGen || 'up')) return false;
+    if (!matchesCpuGen(item.cpu, cpuGen, dirs.cpuGen || 'up', item._cpuRank !== undefined ? item._cpuRank : null)) return false;
 
     // RAM (Button-controlled: ≥ Up, ≤ Down, or Exact)
     if (ram && ram !== '0' && ram !== 0) {
@@ -1162,11 +1182,8 @@ function renderCatalog() {
     }
 
     if (q) {
-      const touchKeywords = item.is_touch || item.is_2in1 ? 'touch touchscreen טאץ טאצ' : '';
-      const formKeywords = item.is_2in1 ? '2in1 2-in-1 convertible 360' : 'clamshell';
-      const storageStr = item.storage_gb ? `${item.storage_gb}gb ${item.storage_gb} ssd` : '';
-      const searchHaystack = `${item.title} ${item.brand} ${item.store} ${item.cpu} ${item.ram_gb}GB ${item.ram_gen} ${storageStr} ${item.screen_size_in}inch ${item.weight_kg}kg ${item.battery_wh}wh ${item.storage_type} ${touchKeywords} ${formKeywords} ${item.warranty_months}months`.toLowerCase();
-      if (!searchHaystack.includes(q)) return false;
+      const haystack = item._searchIndex || `${item.title} ${item.brand} ${item.store} ${item.cpu}`.toLowerCase();
+      if (!haystack.includes(q)) return false;
     }
 
     return true;
