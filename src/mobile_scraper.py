@@ -1001,20 +1001,17 @@ class MasterMobileAuditor:
         return results
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Master Multi-Store Refurbished Mobile Device Scraper & Auditor")
-    parser.add_argument("--store", choices=['itoutlet', 'gomobile', 'partner', 'dynamica', 'vmobile', 'lastprice', 'istore', 'buymobile', 'all'], default='all', help="Specific store to scrape")
-    parser.add_argument("--csv", action="store_true", help="Also export devices to CSV")
-    parser.add_argument("--json", action="store_true", help="Dump JSON output to stdout")
-    parser.add_argument("--no-md", action="store_true", help="Disable automatic full_mobile_catalog.md update")
-    parser.add_argument("--workers", type=int, default=4, help="Max concurrent store threads")
-
-    args = parser.parse_args()
-
+def run_mobile_pipeline(
+    store: str = "all",
+    csv: bool = False,
+    json_dump: bool = False,
+    no_md: bool = False,
+    workers: int = 4,
+) -> Dict[str, List[MobileItem]]:
     auditor = MasterMobileAuditor()
     results = auditor.run(
-        store_filter=None if args.store == 'all' else args.store,
-        max_workers=args.workers
+        store_filter=None if store == 'all' else store,
+        max_workers=workers
     )
 
     fresh_counts: Dict[str, int] = {_name: len(_items) for _name, _items in results.items()}
@@ -1043,8 +1040,7 @@ def main():
                         for _d in _prev_raw[_key]
                         if isinstance(_d, dict)
                     ]
-                    # Rebuild all_items to include re-instated items
-            if args.store != 'all':
+            if store != 'all':
                 for _k, _v in _prev_raw.items():
                     if _k not in results and isinstance(_v, list):
                         results[_k] = [
@@ -1060,10 +1056,10 @@ def main():
     ReportGenerator_export = MobileReportGenerator
     ReportGenerator_export.export_json(results, JSON_PATH)
 
-    if args.csv:
+    if csv:
         ReportGenerator_export.export_csv(all_items, CSV_PATH)
 
-    if not args.no_md:
+    if not no_md:
         ReportGenerator_export.update_summary_markdown(results, FULL_MOBILE_CATALOG_MD_PATH)
 
     ReportGenerator_export.update_scraper_status(results, fresh_counts, preserved_counts)
@@ -1074,8 +1070,30 @@ def main():
     for name, items in results.items():
         print(f"  • {name:18}: {len(items):2d} mobile devices found")
 
-    if args.json:
+    if json_dump:
         print("\n" + json.dumps({k: [i.to_dict() for i in v] for k, v in results.items()}, ensure_ascii=False, indent=2))
+
+    return results
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Master Multi-Store Refurbished Mobile Device Scraper & Auditor")
+    parser.add_argument("--store", choices=['itoutlet', 'gomobile', 'partner', 'dynamica', 'vmobile', 'lastprice', 'istore', 'buymobile', 'all'], default='all', help="Specific store to scrape")
+    parser.add_argument("--csv", action="store_true", help="Also export devices to CSV")
+    parser.add_argument("--json", action="store_true", help="Dump JSON output to stdout")
+    parser.add_argument("--no-md", action="store_true", help="Disable automatic full_mobile_catalog.md update")
+    parser.add_argument("--workers", type=int, default=4, help="Max concurrent store threads")
+
+    args = parser.parse_args()
+    run_mobile_pipeline(
+        store=args.store,
+        csv=args.csv,
+        json_dump=args.json,
+        no_md=args.no_md,
+        workers=args.workers,
+    )
+
 
 if __name__ == "__main__":
     main()
+

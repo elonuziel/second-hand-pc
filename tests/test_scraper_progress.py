@@ -103,6 +103,49 @@ class TestScraperProgress(unittest.TestCase):
         tracker.finish()
         self.assertEqual(tracker._completed_count, 0)
 
+    def test_prompt_user_mode_choices(self):
+        from unittest.mock import patch
+        from scraper import prompt_user_mode
+
+        with patch("builtins.input", return_value="1"):
+            self.assertEqual(prompt_user_mode(), "all")
+        with patch("builtins.input", return_value=""):
+            self.assertEqual(prompt_user_mode(), "all")
+        with patch("builtins.input", return_value="2"):
+            self.assertEqual(prompt_user_mode(), "laptops")
+        with patch("builtins.input", return_value="3"):
+            self.assertEqual(prompt_user_mode(), "mobile")
+        with patch("builtins.input", return_value="phones"):
+            self.assertEqual(prompt_user_mode(), "mobile")
+        with patch("builtins.input", return_value="4"):
+            self.assertEqual(prompt_user_mode(), "store")
+        with patch("builtins.input", return_value="0"):
+            with self.assertRaises(SystemExit):
+                prompt_user_mode()
+
+    def test_prompt_specific_store_choices(self):
+        from unittest.mock import patch
+        from scraper import prompt_specific_store
+
+        with patch("builtins.input", return_value="1"):
+            cat, store = prompt_specific_store()
+            self.assertEqual(cat, "laptops")
+            self.assertEqual(store, "itoutlet")
+
+        with patch("builtins.input", return_value="superprice"):
+            cat, store = prompt_specific_store()
+            self.assertEqual(cat, "laptops")
+            self.assertEqual(store, "superprice")
+
+        with patch("builtins.input", return_value="gomobile"):
+            cat, store = prompt_specific_store()
+            self.assertEqual(cat, "mobile")
+            self.assertEqual(store, "gomobile")
+
+        with patch("builtins.input", return_value="0"):
+            with self.assertRaises(SystemExit):
+                prompt_specific_store()
+
 
 if __name__ == "__main__":
     unittest.main()

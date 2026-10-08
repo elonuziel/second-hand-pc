@@ -216,16 +216,54 @@ than silently empty — no content is returned. That case needs a non-blocked IP
 
 ## 🧪 Usage
 
-Run the scraper:
+### Interactive Menu Mode
+Run `scraper.py` directly in your terminal to choose what to scrape:
 
 ```bash
 python scraper.py
 ```
 
-View the dataset:
+```text
+=================================================================
+🤖 Second-Hand & Refurbished Hardware Scraper Suite
+=================================================================
+What would you like to scrape?
+  [1] 🌐 All Catalogs (Laptops + Mobile phones & Tablets)
+  [2] 💻 Laptops Only (17 stores: ThinkPads, MacBooks, Dell, Asus...)
+  [3] 📱 Phones & Tablets Only (8 stores: iPhones, Galaxy, iPads...)
+  [4] 🎯 Specific Store (choose from 25 stores)
+  [0] ❌ Exit
+-----------------------------------------------------------------
+Enter choice [1-4, default: 1]:
+```
+
+### Command-Line Arguments & Automation
+
+Run directly without interactive prompts:
 
 ```bash
-cat scraped_laptops.csv
+# Scrape everything (Laptops + Mobile phones & tablets)
+python scraper.py --all
+
+# Scrape laptops only (17 stores)
+python scraper.py --laptops
+
+# Scrape phones & tablets only (8 stores)
+python scraper.py --phones
+
+# Scrape a specific store
+python scraper.py --store superprice
+python scraper.py --store gomobile
+
+# Export to CSV with AI hardware spec enhancement
+python scraper.py --all --csv --ai
+```
+
+View the generated datasets:
+
+```bash
+cat data/scraped_laptops.csv
+cat data/scraped_mobile.csv
 ```
 
 Explore documentation:
