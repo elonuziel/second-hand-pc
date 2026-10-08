@@ -59,6 +59,8 @@ from laptop_scrapers import (
     KTWOScraper,
     SuperPriceScraper,
     PCILScraper,
+    IvoryScraper,
+    EspirScraper,
     DEFAULT_SCRAPER_CLASSES,
 )
 

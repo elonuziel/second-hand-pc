@@ -18,6 +18,7 @@ from __future__ import annotations
 import os
 import re
 import csv
+import html
 import json
 import logging
 import argparse
@@ -522,7 +523,8 @@ class MobileReportGenerator:
             "4. 🏬 **Dynamica Outlet (דינמיקה אאוטלט):** [dynamica.co.il/325880-Outlet](https://www.dynamica.co.il/325880-Outlet)\n",
             "5. 🏬 **VMobile (וי מובייל):** [vmobile.co.il/361324-מחודשים](https://www.vmobile.co.il/361324-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)\n",
             "6. 🏬 **LastPrice (לאסטפרייס):** [lastprice.co.il/טלפונים-סלולרים-מחודשים](https://www.lastprice.co.il/c/531/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%95%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%A1%D7%9C%D7%95%D7%9C%D7%A8/%D7%98%D7%9C%D7%A4%D7%95%D7%A0%D7%99%D7%9D-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D?filter1=20710526,20670485)\n",
-            "7. 🏬 **iStore CPO (אייסטור מחודשים ועודפים):** [istoreil.co.il/refurbish](https://www.istoreil.co.il/refurbish)\n\n",
+            "7. 🏬 **iStore CPO (אייסטור מחודשים ועודפים):** [istoreil.co.il/refurbish](https://www.istoreil.co.il/refurbish)\n",
+            "8. 🏬 **BuyMobile (ביי מובייל תצוגה / מחודש):** [buy-mobile.co.il](https://buy-mobile.co.il/product-category/%D7%AA%D7%A6%D7%95%D7%92%D7%94/)\n\n",
             f"*Last Automated Live Audit: {now_str}*\n\n",
             "---\n\n",
             "## 📱 Live Mobile Devices Catalog & Stock Audit\n\n",
@@ -771,16 +773,17 @@ class IStoreMobileScraper:
         "https://www.istoreil.co.il/refurbish/ipad",
     ]
 
-    def __init__(self, session: Any):
-        self.session = session
+    def __init__(self, session: Optional[Any] = None):
+        self.session = session or create_resilient_session()
 
     def _fetch(self, url: str, timeout: int = 20) -> str:
-        try:
-            r = self.session.get(url, timeout=timeout)
-            if r.status_code == 200 and r.text:
-                return r.text
-        except Exception as ex:
-            logger.debug("Session.get failed for %s: %s", url, ex)
+        if self.session:
+            try:
+                r = self.session.get(url, timeout=timeout)
+                if r.status_code == 200 and r.text:
+                    return r.text
+            except Exception as ex:
+                logger.debug("Session.get failed for %s: %s", url, ex)
         try:
             status, text = fetch_resilient_url(url, timeout=timeout)
             if status == 200 and text:
@@ -843,6 +846,93 @@ class IStoreMobileScraper:
         return items
 
 
+class BuyMobileScraper:
+    STORE_NAME = "BuyMobile"
+    CATALOG_URL = "https://buy-mobile.co.il/wp-json/wc/store/v1/products?category=19&per_page=50"
+
+    def __init__(self, session: Optional[Any] = None):
+        self.session = session or create_resilient_session()
+
+    def scrape(self) -> List[MobileItem]:
+        logger.info("Scraping BuyMobile (תצוגה / מחודש)...")
+        items: List[MobileItem] = []
+        try:
+            resp = None
+            if self.session:
+                try:
+                    resp = self.session.get(self.CATALOG_URL, timeout=15)
+                except Exception as ex:
+                    logger.debug("BuyMobile session.get failed: %s", ex)
+
+            if not resp or getattr(resp, "status_code", 0) != 200:
+                try:
+                    status, text = fetch_resilient_url(self.CATALOG_URL, timeout=15)
+                    if status == 200 and text:
+                        class _MockResp:
+                            def __init__(self, t):
+                                self.text = t
+                                self.status_code = 200
+                            def json(self):
+                                return json.loads(self.text)
+                        resp = _MockResp(text)
+                except Exception as ex:
+                    logger.debug("BuyMobile resilient fetch failed: %s", ex)
+
+            if resp and getattr(resp, "status_code", 0) == 200:
+                data = resp.json()
+                for p in data:
+                    if not isinstance(p, dict):
+                        continue
+                    name = html.unescape(p.get("name", "")).strip()
+                    if not MobileClassifier.is_mobile_device(name):
+                        continue
+                    if not p.get("is_in_stock", True):
+                        continue
+
+                    prices = p.get("prices", {})
+                    minor = prices.get("currency_minor_unit", 2)
+                    raw_price = prices.get("price") or prices.get("regular_price")
+                    try:
+                        price_val = int(round(float(raw_price) / (10 ** minor)))
+                    except Exception:
+                        continue
+                    if price_val < 200:
+                        continue
+
+                    # Sale price check
+                    sale_price_raw = prices.get("sale_price")
+                    deal_price = price_val
+                    deal_label = f"{price_val:,} ₪"
+                    if sale_price_raw and str(sale_price_raw).isdigit():
+                        try:
+                            sale_val = int(round(float(sale_price_raw) / (10 ** minor)))
+                            if 200 <= sale_val < price_val:
+                                deal_price = sale_val
+                                deal_label = f"{sale_val:,} ₪ (Sale)"
+                        except Exception:
+                            pass
+
+                    url = p.get("permalink", "")
+                    images = p.get("images", [])
+                    img_url = images[0].get("src", "") if images else ""
+
+                    items.append(MobileClassifier.build_item(
+                        store=self.STORE_NAME,
+                        title=name,
+                        price_ils=price_val,
+                        url=url,
+                        deal_price_ils=deal_price,
+                        deal_label=deal_label,
+                        image_url=img_url,
+                        warranty_months=12
+                    ))
+        except Exception as e:
+            logger.error("Error scraping BuyMobile: %s", e)
+
+        logger.info("BuyMobile: scraped %d mobile items.", len(items))
+        return items
+
+
 class MasterMobileAuditor:
     def __init__(self, session: Optional[Any] = None):
         self.session = session or create_resilient_session()
@@ -853,7 +943,8 @@ class MasterMobileAuditor:
             'dynamica': DynamicaScraper,
             'vmobile': VMobileScraper,
             'lastprice': LastPriceMobileScraper,
-            'istore': IStoreMobileScraper
+            'istore': IStoreMobileScraper,
+            'buymobile': BuyMobileScraper,
         }
 
     def run(self, store_filter: Optional[str] = None, max_workers: int = 4) -> Dict[str, List[MobileItem]]:
@@ -884,7 +975,7 @@ class MasterMobileAuditor:
 
 def main():
     parser = argparse.ArgumentParser(description="Master Multi-Store Refurbished Mobile Device Scraper & Auditor")
-    parser.add_argument("--store", choices=['itoutlet', 'gomobile', 'partner', 'dynamica', 'vmobile', 'lastprice', 'istore', 'all'], default='all', help="Specific store to scrape")
+    parser.add_argument("--store", choices=['itoutlet', 'gomobile', 'partner', 'dynamica', 'vmobile', 'lastprice', 'istore', 'buymobile', 'all'], default='all', help="Specific store to scrape")
     parser.add_argument("--csv", action="store_true", help="Also export devices to CSV")
     parser.add_argument("--json", action="store_true", help="Dump JSON output to stdout")
     parser.add_argument("--no-md", action="store_true", help="Disable automatic full_mobile_catalog.md update")

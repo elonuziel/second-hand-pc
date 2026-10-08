@@ -145,6 +145,10 @@ class ReportGenerator:
         volt_items = all_results.get('volt', [])
         ofek_items = all_results.get('ofekpc', [])
         ktwo_items = all_results.get('ktwo', [])
+        superprice_items = all_results.get('superprice', [])
+        pcil_items = all_results.get('pcil', [])
+        ivory_items = all_results.get('ivory', [])
+        espir_items = all_results.get('espir', [])
 
         # Flatten all items to dynamically compute Top Overall Picks
         all_laptops: List[LaptopItem] = []
@@ -169,6 +173,10 @@ class ReportGenerator:
 11. 🏬 **VOLT (וולט מחשוב ירוק):** [volt.co.il/23409-ניידים-מחודשים](https://www.volt.co.il/23409-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
 12. 🏬 **Ofek PC (אופק פי סי):** [ofekpc.co.il/מחשבים-ניידים-מחודשים](https://ofekpc.co.il/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-%D7%9E%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%9D)
 13. 🏬 **KTWO (קיי טו):** [ktwo.co.il/category/laptop](https://www.ktwo.co.il/category/laptop/)
+14. 🏬 **SuperPrice (סופר פרייס):** [superprice.co.il/product-category/מחשבים-ניידים](https://superprice.co.il/product-category/%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D/)
+15. 🏬 **PC-Online (PCIL):** [pcil.co.il/categories/clearance](https://pcil.co.il/categories/clearance)
+16. 🏬 **Ivory Outlet (אייבורי עודפים / מציאון):** [ivory.co.il/catalog.php?act=cat&q=מוחדש](https://www.ivory.co.il/catalog.php?act=cat&q=%D7%9E%D7%95%D7%97%D7%93%D7%A9)
+17. 🏬 **Espircom (אספירקום):** [espir.co.il](https://www.espir.co.il/)
 
 *Last Automated Live Audit: {now_str}*
 
@@ -193,6 +201,10 @@ class ReportGenerator:
 - [🏬 VOLT Live Audit](#-11-volt-וולט-מחשוב-ירוק--live-stock-audit)
 - [🏬 Ofek PC Live Audit](#-12-ofek-pc-אופק-פי-סי--live-stock-audit)
 - [🏬 KTWO Live Audit](#-13-ktwo-קיי-טו--live-stock-audit)
+- [🏬 SuperPrice Live Audit](#-14-superprice-סופר-פרייס--live-stock-audit)
+- [🏬 PC-Online Live Audit](#-15-pc-online-pcil--live-stock-audit)
+- [🏬 Ivory Outlet Live Audit](#-16-ivory-outlet-אייבורי-עודפים--מציאון--live-stock-audit)
+- [🏬 Espircom Live Audit](#-17-espircom-אספירקום--live-stock-audit)
 - [🎯 Buyer Rules of Thumb](#-quick-rules-of-thumb)
 
 ---
@@ -318,6 +330,10 @@ IT Outlet features multiple discount programs. Note that coupons and club discou
         _append_store_section(11, "VOLT (וולט מחשוב ירוק)", volt_items)
         _append_store_section(12, "Ofek PC (אופק פי סי)", ofek_items)
         _append_store_section(13, "KTWO (קיי טו)", ktwo_items, "Refurbished business laptops with hardware warranty")
+        _append_store_section(14, "SuperPrice (סופר פרייס)", superprice_items, "Renewed & open-box certified laptops")
+        _append_store_section(15, "PC-Online (PCIL)", pcil_items, "Clearance & open-box certified laptops")
+        _append_store_section(16, "Ivory Outlet (אייבורי עודפים / מציאון)", ivory_items, "Renewed & outlet laptops")
+        _append_store_section(17, "Espircom (אספירקום)", espir_items, "Business laptops & workstations")
 
         md_parts.append("""
 ---

@@ -300,7 +300,13 @@ function getBrandBadge(brand) {
 function getStoreClass(store) {
   const s = (store || '').toLowerCase();
   if (s.includes('dynamica')) return 'store-dynamica';
-  if (s.includes('it outlet') || (s.includes('outlet') && !s.includes('dynamica') && !s.includes('p1000'))) return 'store-itoutlet';
+  if (s.includes('superprice') || s.includes('סופר פרייס')) return 'store-superprice';
+  if (s.includes('pcil') || s.includes('pc-online')) return 'store-pcil';
+  if (s.includes('ivory') || s.includes('איבורי') || s.includes('אייבורי')) return 'store-ivory';
+  if (s.includes('espir') || s.includes('אספיר')) return 'store-espir';
+  if (s.includes('istore') || s.includes('איסטור') || s.includes('אייסטור')) return 'store-istore';
+  if (s.includes('buymobile') || s.includes('buy-mobile') || s.includes('ביי מובייל')) return 'store-buymobile';
+  if (s.includes('it outlet') || (s.includes('outlet') && !s.includes('dynamica') && !s.includes('p1000') && !s.includes('ivory'))) return 'store-itoutlet';
   if (s.includes('ecology') || s.includes('אקולוגיה')) return 'store-ecology';
   if (s.includes('lts') || s.includes('laptoptech') || s.includes('לפטופטק')) return 'store-lts';
   if (s.includes('recomp') || s.includes('ריקומפ')) return 'store-recomp';
@@ -666,19 +672,22 @@ function adaptFilterControlsForMode(isMobile) {
     if (isMobile) {
       storeFilter.innerHTML = `
         <option value="all">All Stores</option>
-        <option value="LastPrice Mobile">LastPrice Mobile</option>
+        <option value="LastPrice">LastPrice Mobile</option>
         <option value="GoMobile">GoMobile</option>
-        <option value="Partner">Partner</option>
+        <option value="Partner Plus">Partner Plus</option>
         <option value="VMobile">VMobile</option>
-        <option value="Dynamica">Dynamica</option>
+        <option value="Dynamica Outlet">Dynamica Outlet</option>
+        <option value="IT Outlet">IT Outlet</option>
+        <option value="iStore CPO">iStore CPO (אפל מחודש)</option>
+        <option value="BuyMobile">BuyMobile (ביי מובייל)</option>
       `;
     } else {
       storeFilter.innerHTML = `
         <option value="all">All Stores</option>
-        <option value="Ecology">Ecology (אקולוגיה לקהילה)</option>
+        <option value="Ecology Computers">Ecology (אקולוגיה לקהילה)</option>
         <option value="IT Outlet">IT Outlet (איי טי אאוטלט)</option>
-        <option value="LTS">LTS (לפטופטק)</option>
-        <option value="Recomp">Recomp (ריקומפ)</option>
+        <option value="LaptopTech LTS">LTS (לפטופטק)</option>
+        <option value="Recomp Computers">Recomp (ריקומפ)</option>
         <option value="Olam HaKolnoa">Olam HaKolnoa (עולם הקולנוע)</option>
         <option value="Payngo">Payngo (מחסני חשמל)</option>
         <option value="ALM">A.L.M (א.ל.מ)</option>
@@ -687,6 +696,11 @@ function adaptFilterControlsForMode(isMobile) {
         <option value="LastPrice">LastPrice (לאסטפרייס)</option>
         <option value="Volt">Volt (וולט קומפיוטינג)</option>
         <option value="Ofek PC">Ofek PC (אופק פי סי)</option>
+        <option value="KTWO">KTWO (קיי טו)</option>
+        <option value="SuperPrice">SuperPrice (סופר פרייס)</option>
+        <option value="PC-Online (PCIL)">PC-Online (PCIL)</option>
+        <option value="Ivory Outlet">Ivory Outlet (אייבורי עודפים/מציאון)</option>
+        <option value="Espircom">Espircom (אספירקום)</option>
       `;
     }
   }
@@ -1071,7 +1085,13 @@ function renderCatalog() {
   let filtered = state.catalogData.filter((item) => {
     if (state.catalogFilters.category === 'laptops' && item.category !== 'laptops') return false;
     if (state.catalogFilters.category === 'phones' && item.category !== 'phones') return false;
-    if (store !== 'all' && item.store !== store) return false;
+    if (store !== 'all') {
+      const sLower = store.toLowerCase();
+      const itemStoreLower = (item.store || '').toLowerCase();
+      if (item.store !== store && !itemStoreLower.includes(sLower) && !sLower.includes(itemStoreLower)) {
+        return false;
+      }
+    }
     if (state.catalogFilters.hideStale && item.is_stale) return false;
 
     if (brands && brands.length > 0) {

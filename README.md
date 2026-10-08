@@ -26,6 +26,52 @@ This project provides:
 
 ---
 
+## 🏬 Supported Stores & Market Coverage
+
+The platform provides automated live scraping and catalog audit across leading refurbished computer and mobile vendors in Israel:
+
+### 💻 Laptop Stores (17 Scrapers)
+| Store | Hebrew Name | URL / Catalog Target | Specialty / Notes |
+| :--- | :--- | :--- | :--- |
+| **IT Outlet** | איי טי אאוטלט | [itoutlet.co.il](https://www.itoutlet.co.il) | Refurbished & open-box business laptops |
+| **Ecology Computers** | אקולוגיה לקהילה מוגנת | [ecommunity.org.il](https://www.ecommunity.org.il) | 24-month hardware warranty standard |
+| **LaptopTech LTS** | לפטופ.טק | [lts.co.il](https://lts.co.il) | Store API integration; strict in-stock filter |
+| **Recomp Computers** | ריקומפ | [recomp.co.il](https://recomp.co.il) | Verified in-stock Store API integration |
+| **Olam HaKolnoa** | עולם הקולנוע | [cwc.co.il](https://www.cwc.co.il) | 36-month hardware warranty |
+| **Machsanei Hashmal (Payngo)** | מחסני חשמל | [payngo.co.il](https://www.payngo.co.il) | Official direct imports & outlet |
+| **A.L.M** | א.ל.מ | [alm.co.il](https://www.alm.co.il) | Certified refurbished outlet laptops |
+| **Shufersal Online** | שופרסל אונליין | [shufersal.co.il](https://www.shufersal.co.il) | Consumer marketplace deals |
+| **P1000** | פי אלף | [p1000.co.il](https://www.p1000.co.il) | Daily clearance & outlet offerings |
+| **LastPrice** | לאסטפרייס | [lastprice.co.il](https://www.lastprice.co.il) | Certified renewed laptops |
+| **VOLT** | וולט מחשוב ירוק | [volt.co.il](https://www.volt.co.il) | Green computing & enterprise renewed |
+| **Ofek PC** | אופק פי סי | [ofekpc.co.il](https://ofekpc.co.il) | Business workstations & ThinkPads |
+| **KTWO** | קיי טו | [ktwo.co.il](https://www.ktwo.co.il) | Business laptops with warranty |
+| **SuperPrice** | סופר פרייס | [superprice.co.il](https://superprice.co.il) | WooCommerce API; modern high-spec units |
+| **PC-Online (PCIL)** | פי סי אונליין | [pcil.co.il](https://pcil.co.il) | Clearance & open-box laptops |
+| **Ivory Outlet** | אייבורי עודפים / מציאון | [ivory.co.il](https://www.ivory.co.il) | Renewed & outlet laptops |
+| **Espircom** | אספירקום מערכות | [espir.co.il](https://www.espir.co.il) | Business enterprise Dell & Apple laptops |
+
+### 📱 Mobile & Tablet Stores (8 Scrapers)
+| Store | Hebrew Name | URL / Catalog Target | Specialty / Notes |
+| :--- | :--- | :--- | :--- |
+| **IT Outlet Mobile** | איי טי אאוטלט | [itoutlet.co.il](https://www.itoutlet.co.il) | Phones & tablets outlet |
+| **GoMobile Outlet** | גו מוביל | [gomobile.co.il](https://gomobile.co.il) | Renewed flagships & budget devices |
+| **Partner Plus Renewed** | פרטנר פלוס | [partnerplus.partner.co.il](https://partnerplus.partner.co.il) | Carrier refurbished & tested |
+| **Dynamica Outlet** | דינמיקה אאוטלט | [dynamica.co.il](https://www.dynamica.co.il) | Carrier outlet smartphones |
+| **VMobile** | וי מובייל | [vmobile.co.il](https://www.vmobile.co.il) | Refurbished Android & iOS flagships |
+| **LastPrice Mobile** | לאסטפרייס סלולר | [lastprice.co.il](https://www.lastprice.co.il) | Certified refurbished phones |
+| **iStore CPO** | אייסטור מחודשים | [istoreil.co.il](https://www.istoreil.co.il) | Apple Certified Pre-Owned iPhones & iPads |
+| **BuyMobile** | ביי מובייל | [buy-mobile.co.il](https://buy-mobile.co.il) | Display & renewed smartphones |
+
+### 🌟 Honorable Mentions / רשתות נוספות
+
+While the majority of Israeli second-hand and refurbished hardware stores are scraped and audited automatically, several major retail chains feature high-volume stock of refurbished, clearance, and display devices behind aggressive perimeter anti-bot defenses (e.g. Imperva Incapsula, Akamai Bot Manager). These stores cannot be reliably scraped in headless CI runs, and are recommended for direct browsing:
+
+1. [פלאפון Outlet - המחירים הכי שווים לסלולר, טאבלטים, אייפד, אייפון, גלקסי ועוד | פלאפון](https://www.pelephone.co.il/ds/heb/eshop/lobby/outlet/) — Official carrier outlet for smartphones, tablets, iPads, iPhones, Galaxy devices, and more with official Pelephone warranty.
+2. [מציאון ותצוגות מחשבים וסלולר ב- KSP](https://ksp.co.il/web/cat/31635..1215) — Dedicated national branch network clearance and open-box display section for laptops, PC hardware, and mobile devices.
+
+---
+
 ## 📁 Repository Structure
 
 ```
@@ -41,7 +87,7 @@ second-hand-pc/
 │   ├── laptop_pipeline.py            # Concurrent execution & store isolation
 │   ├── laptop_recommendations.py     # Deterministic top-pick selection
 │   ├── laptop_reports.py             # Markdown generator & audit reports
-│   └── laptop_scrapers/              # Store scraper adapters (12 stores)
+│   └── laptop_scrapers/              # Store scraper adapters (17 stores)
 │
 ├── data/                             # Scraped live datasets & audit catalogs
 │   ├── scraped_laptops.json          # Live laptop catalog (JSON)

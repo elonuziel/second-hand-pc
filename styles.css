@@ -612,6 +612,86 @@ h1 {
   color: var(--primary-strong);
 }
 
+.honorable-mentions-card {
+  border-left: 3px solid #f59e0b;
+  background: rgba(245, 158, 11, 0.05);
+}
+
+[data-theme="dark"] .honorable-mentions-card {
+  background: rgba(245, 158, 11, 0.08);
+  border-left-color: #fbbf24;
+}
+
+.honorable-mentions-card h3 {
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.honorable-mentions-card p {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+
+.honorable-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.honorable-links li a {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--text);
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm, 6px);
+  background: var(--surface, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+  line-height: 1.35;
+}
+
+[data-theme="dark"] .honorable-links li a {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.honorable-links li a:hover {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  transform: translateX(-2px);
+}
+
+.honorable-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.honorable-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.honorable-text strong {
+  color: var(--primary);
+  font-size: 0.85rem;
+}
+
+.honorable-text span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.3;
+}
+
 .document-panel {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -1095,6 +1175,41 @@ h1 {
 .store-vmobile {
   background: rgba(13, 148, 136, 0.12);
   color: #0f766e;
+}
+
+.store-superprice {
+  background: rgba(234, 88, 12, 0.12);
+  color: #ea580c;
+}
+
+.store-pcil {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+
+.store-ivory {
+  background: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
+}
+
+.store-espir {
+  background: rgba(79, 70, 229, 0.12);
+  color: #4f46e5;
+}
+
+.store-istore {
+  background: rgba(100, 116, 139, 0.15);
+  color: #334155;
+}
+
+[data-theme="dark"] .store-istore {
+  background: rgba(226, 232, 240, 0.15);
+  color: #cbd5e1;
+}
+
+.store-buymobile {
+  background: rgba(6, 182, 212, 0.12);
+  color: #0891b2;
 }
 
 .store-default {

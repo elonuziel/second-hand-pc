@@ -15,7 +15,7 @@ import subprocess
 import sys
 import time
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 logger = logging.getLogger(__name__)
 
@@ -49,8 +49,10 @@ from scraper import (
     KTWOScraper,
     SuperPriceScraper,
     PCILScraper,
+    IvoryScraper,
+    EspirScraper,
 )
-from mobile_scraper import IStoreMobileScraper
+from mobile_scraper import IStoreMobileScraper, BuyMobileScraper
 
 
 class TestCatalogDataHealth(unittest.TestCase):
@@ -1651,6 +1653,197 @@ class TestNewCandidateScrapers(unittest.TestCase):
         self.assertEqual(item.brand, "Apple")
         self.assertEqual(item.price_ils, 2299)
         self.assertEqual(item.storage_gb, 128)
+
+    def test_ivory_scraper_parsing(self):
+        sample_html = """
+        <html><body>
+        <div class="product_item">
+          <div class="title_product_catalog">
+            <a href="catalog.php?id=98765" title="מציאון - מחשב נייד Lenovo ThinkPad E14 Gen 4 Core i5-1235U 16GB 512GB SSD - מוחדש" onclick="location.href='catalog.php?id=98765'">
+              מציאון - מחשב נייד Lenovo ThinkPad E14 Gen 4
+            </a>
+            <span class="price">2,490</span>
+            <img data-src="files/catalog/thumb_98765.jpg" />
+          </div>
+        </div>
+        </body></html>
+        """
+        scraper = IvoryScraper(session=None)
+        with patch.object(scraper, "_get_html", return_value=sample_html):
+            items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        item = items[0]
+        self.assertEqual(item.store, "Ivory Outlet")
+        self.assertEqual(item.brand, "Lenovo")
+        self.assertEqual(item.price_ils, 2490)
+        self.assertEqual(item.ram_gb, 16)
+        self.assertEqual(item.storage_gb, 512)
+        self.assertEqual(item.url, "https://www.ivory.co.il/catalog.php?id=98765")
+
+    def test_espir_scraper_parsing(self):
+        sample_html = """
+        <html><body>
+        <div class="product-box">
+          <a href="/product/dell-latitude-5420" ee_list_itemprice="1,850" ee_list_itemname="מחשב נייד Dell Latitude 5420 Core i5-1145G7 16GB 512GB SSD 3Y">
+            Dell Latitude 5420
+          </a>
+        </div>
+        </body></html>
+        """
+        scraper = EspirScraper(session=None)
+        with patch.object(scraper, "_get_html", return_value=sample_html):
+            items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        item = items[0]
+        self.assertEqual(item.store, "Espircom")
+        self.assertEqual(item.brand, "Dell")
+        self.assertEqual(item.price_ils, 1850)
+        self.assertEqual(item.ram_gb, 16)
+        self.assertEqual(item.storage_gb, 512)
+        self.assertEqual(item.warranty_months, 36)
+
+    def test_buymobile_scraper_parsing(self):
+        sample_payload = [
+            {
+                "id": 501,
+                "name": "Apple iPhone 13 128GB - תצוגה",
+                "permalink": "https://buy-mobile.co.il/product/iphone-13-128gb-display/",
+                "is_in_stock": True,
+                "prices": {
+                    "price": "189900",
+                    "regular_price": "189900",
+                    "currency_minor_unit": 2,
+                },
+                "images": [{"src": "https://buy-mobile.co.il/img.jpg"}]
+            }
+        ]
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = sample_payload
+        mock_session = MagicMock()
+        mock_session.get.return_value = mock_resp
+
+        scraper = BuyMobileScraper(session=mock_session)
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        item = items[0]
+        self.assertEqual(item.store, "BuyMobile")
+        self.assertEqual(item.brand, "Apple")
+        self.assertEqual(item.price_ils, 1899)
+        self.assertEqual(item.storage_gb, 128)
+        self.assertEqual(item.warranty_months, 12)
+        self.assertEqual(item.url, "https://buy-mobile.co.il/product/iphone-13-128gb-display/")
+
+    def test_ivory_scraper_non_laptop_filtering_and_clean_titles(self):
+        sample_html = """
+        <html><body>
+        <div class="product_item">
+          <div class="title_product_catalog">
+            <a href="catalog.php?id=11111" title="מציאון - ראוטר אלחוטי TP-Link Archer AX50">ראוטר</a>
+            <span class="price">399</span>
+          </div>
+        </div>
+        <div class="product_item">
+          <div class="title_product_catalog">
+            <a href="catalog.php?id=22222" title="מחשב נייד Asus TUF Gaming A15 16GB 512GB SSD - מוחדש">
+              מחשב נייד Asus TUF Gaming A15
+            </a>
+            <span class="price">3,290</span>
+          </div>
+        </div>
+        <div class="product_item">
+          <div class="title_product_catalog">
+            <a href="catalog.php?id=33333" title="מציאון - עכבר אלחוטי Logitech Master 3">עכבר</a>
+            <span class="price">250</span>
+          </div>
+        </div>
+        </body></html>
+        """
+        scraper = IvoryScraper(session=None)
+        with patch.object(scraper, "_get_html", return_value=sample_html):
+            items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].brand, "Asus")
+        self.assertEqual(items[0].price_ils, 3290)
+        self.assertEqual(items[0].url, "https://www.ivory.co.il/catalog.php?id=22222")
+
+    def test_espir_scraper_arbitrary_attribute_order_and_filtering(self):
+        sample_html = """
+        <html><body>
+        <div class="product-box">
+          <!-- Name appears before href and price -->
+          <a ee_list_itemname="מחשב נייד HP EliteBook 840 G8 Core i7-1165G7 16GB 512GB SSD" href="/product/hp-elitebook-840-g8" ee_list_itemprice="2,200">
+            HP EliteBook
+          </a>
+        </div>
+        <div class="product-box">
+          <!-- Accessory / low price item -->
+          <a href="/product/dell-cable" ee_list_itemprice="79" ee_list_itemname="כבל מתאם כוח Dell">כבל</a>
+        </div>
+        </body></html>
+        """
+        scraper = EspirScraper(session=None)
+        with patch.object(scraper, "_get_html", return_value=sample_html):
+            items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].store, "Espircom")
+        self.assertEqual(items[0].brand, "HP")
+        self.assertEqual(items[0].price_ils, 2200)
+        self.assertEqual(items[0].warranty_months, 12)  # Default 1Y warranty when 3Y not specified
+
+    def test_buymobile_scraper_accessory_and_stock_filtering(self):
+        sample_payload = [
+            {
+                "id": 601,
+                "name": "כיסוי סיליקון מקורי ל-iPhone 13",
+                "permalink": "https://buy-mobile.co.il/product/case/",
+                "is_in_stock": True,
+                "prices": {"price": "9900", "currency_minor_unit": 2}
+            },
+            {
+                "id": 602,
+                "name": "Samsung Galaxy S22 128GB - תצוגה",
+                "permalink": "https://buy-mobile.co.il/product/s22/",
+                "is_in_stock": False,  # Sold out / out of stock
+                "prices": {"price": "149900", "currency_minor_unit": 2}
+            },
+            {
+                "id": 603,
+                "name": "Samsung Galaxy S23 256GB - תצוגה",
+                "permalink": "https://buy-mobile.co.il/product/s23/",
+                "is_in_stock": True,
+                "prices": {
+                    "price": "219900",
+                    "regular_price": "239900",
+                    "sale_price": "219900",
+                    "currency_minor_unit": 2
+                }
+            }
+        ]
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = sample_payload
+        mock_session = MagicMock()
+        mock_session.get.return_value = mock_resp
+
+        scraper = BuyMobileScraper(session=mock_session)
+        items = scraper.scrape()
+        self.assertEqual(len(items), 1)
+        item = items[0]
+        self.assertEqual(item.brand, "Samsung")
+        self.assertEqual(item.price_ils, 2199)
+        self.assertEqual(item.storage_gb, 256)
+
+    def test_scrapers_safe_initialization_with_none_session(self):
+        """All newly introduced scrapers must safely accept session=None without crashing."""
+        s1 = BuyMobileScraper(session=None)
+        self.assertIsNotNone(s1.session)
+        s2 = IStoreMobileScraper(session=None)
+        self.assertIsNotNone(s2.session)
+        s3 = IvoryScraper(session=None)
+        self.assertIsNotNone(s3.session)
+        s4 = EspirScraper(session=None)
+        self.assertIsNotNone(s4.session)
 
 
 if __name__ == "__main__":
