@@ -1,27 +1,3 @@
-
-function matchesCpuGen(cpuStr, cpuGenVal, dir = 'up') {
-  if (!cpuGenVal || cpuGenVal === 'all' || cpuGenVal === '0') return true;
-  
-  let targetGen = 0;
-  let targetDir = dir;
-
-  if (typeof cpuGenVal === 'string' && cpuGenVal.includes('-')) {
-    const parts = cpuGenVal.split('-');
-    targetGen = parseInt(parts[0], 10) || 0;
-    targetDir = parts[1] || 'up';
-  } else if (typeof cpuGenVal === 'number') {
-    targetGen = cpuGenVal;
-  } else {
-    targetGen = parseInt(cpuGenVal, 10) || 0;
-  }
-
-  const rank = getCpuGenRank(cpuStr);
-  if (targetDir === 'down') {
-    return rank <= targetGen;
-  }
-  return rank >= targetGen;
-}
-
 /* ==========================================================================
    Second-Hand PC Hub — Refurbished Laptop & Mobile Catalog Application
    ========================================================================== */
@@ -164,7 +140,7 @@ function getCpuGenRank(cpuStr) {
   if (s.includes('9th') || s.includes('9-')) return 9;
   if (s.includes('8th') || s.includes('8-')) return 8;
   if (s.includes('ryzen 7') || s.includes('ryzen 5') || s.includes('ryzen 3') || s.includes('ryzen 9')) return 10;
-  
+
   const iMatch = s.match(/i[3579]-?(\d{1,2})\d{3}/);
   if (iMatch && iMatch[1]) {
     const gen = parseInt(iMatch[1], 10);
@@ -173,12 +149,36 @@ function getCpuGenRank(cpuStr) {
   return 0;
 }
 
+function matchesCpuGen(cpuStr, cpuGenVal, dir = 'up') {
+  if (!cpuGenVal || cpuGenVal === 'all' || cpuGenVal === '0') return true;
+
+  let targetGen = 0;
+  let targetDir = dir;
+
+  if (typeof cpuGenVal === 'string' && cpuGenVal.includes('-')) {
+    const parts = cpuGenVal.split('-');
+    targetGen = parseInt(parts[0], 10) || 0;
+    targetDir = parts[1] || 'up';
+  } else if (typeof cpuGenVal === 'number') {
+    targetGen = cpuGenVal;
+  } else {
+    targetGen = parseInt(cpuGenVal, 10) || 0;
+  }
+
+  const rank = getCpuGenRank(cpuStr);
+  if (targetDir === 'down') {
+    return rank <= targetGen;
+  }
+  return rank >= targetGen;
+}
+
 function calculateValueScore(item) {
-  const price = item.deal_price_ils || item.price_ils || 1;
-  const ram = item.ram_gb || 8;
-  const ssd = item.storage_gb || 256;
+  if (!item) return 5.0;
+  const price = Number(item.deal_price_ils || item.price_ils) || 1;
+  const ram = Number(item.ram_gb) || 8;
+  const ssd = Number(item.storage_gb) || 256;
   const cpuRank = item._cpuRank || getCpuGenRank(item.cpu);
-  const upgrade = item.upgradability_score || 5;
+  const upgrade = Number(item.upgradability_score) || 5;
 
   const specPoints = (ram * 12) + (ssd * 0.25) + (cpuRank * 20) + (upgrade * 8);
   let rawScore = (specPoints / price) * 120;
@@ -190,7 +190,7 @@ function calculateValueScore(item) {
 function cleanTitle(title, brand) {
   if (!title) return 'Refurbished Device';
   let clean = String(title);
-  
+
   // Remove raw SKUs, trailing specs, repeated RAM/SSD
   clean = clean.replace(/\s*\(?(?:i[3579]|Ryzen\s*\d|Apple\s*M\d)\s*[\/\-,\s]*\d+\s*GB[\/\-,\s]*\d+\s*(?:GB|TB)?(?:\s*SSD)?\)?/gi, '');
   clean = clean.replace(/\s*\d+\s*GB\s*(?:RAM|DDR\d)?\s*[\/\-,\s]*\d+\s*(?:GB|TB)\s*(?:SSD|NVMe)?/gi, '');
@@ -200,7 +200,7 @@ function cleanTitle(title, brand) {
   clean = clean.replace(/\s*מחודש\s*/gi, ' ');
   clean = clean.replace(/\s*עודפים\s*/gi, ' ');
   clean = clean.trim();
-  
+
   if (clean.length < 3) return title;
   return clean;
 }
@@ -272,12 +272,12 @@ function normalizeLaptopItems(laptopsUnified) {
       days_old,
       is_stale
     };
-    
+
     item._cpuRank = getCpuGenRank(cpu);
     item.value_score = calculateValueScore(item);
     item._price = deal_price_ils || price_ils || 0;
     item._brandLower = brand.toLowerCase();
-    
+
     const touchKeywords = item.is_touch || item.is_2in1 ? 'touch touchscreen טאץ טאצ' : '';
     const formKeywords = item.is_2in1 ? '2in1 convertible' : 'clamshell';
     item._searchIndex = `${item.title} ${brand} ${store} ${cpu} ${ram_gb}gb ${storage_gb}gb ${item.screen_size_in}inch ${item.weight_kg}kg ${touchKeywords} ${formKeywords}`.toLowerCase();
@@ -328,7 +328,7 @@ function normalizeMobileItems(mobileUnified) {
       days_old,
       is_stale
     };
-    
+
     item._cpuRank = 0;
     item.value_score = calculateValueScore(item);
     item._price = deal_price_ils || price_ils || 0;
@@ -491,8 +491,8 @@ function renderCardHtml(item) {
   const isCompared = state.comparedIds.has(item.id);
 
   // Form factor / sublabel
-  let formFactorStr = item.category === 'phones' 
-    ? (item.device_type === 'tablet' ? 'Tablet' : 'Smartphone') 
+  let formFactorStr = item.category === 'phones'
+    ? (item.device_type === 'tablet' ? 'Tablet' : 'Smartphone')
     : (item.is_2in1 ? '2-in-1 Touchscreen' : 'Clamshell Notebook');
   let sublabel = `${formFactorStr} • Grade A • ${item.warranty_months}M Warranty`;
 
@@ -537,7 +537,7 @@ function renderCardHtml(item) {
             </span>
             ${isTopValue ? `<span class="badge-chip px-2 py-0.5 text-[10px] font-bold uppercase rounded-full bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800">Best Value</span>` : ''}
           </div>
-          
+
           <div class="px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-mono text-xs font-bold border border-emerald-200 dark:border-emerald-800/60 shrink-0">
             ★ ${item.value_score}
           </div>
@@ -582,20 +582,20 @@ function renderCardHtml(item) {
         </div>
 
         <div class="flex items-center gap-2">
-          <button 
-            type="button" 
+          <button
+            type="button"
             onclick="toggleCompare('${item.id}')"
-            class="p-2 rounded-xl border transition ${isCompared ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-indigo-400'}" 
+            class="p-2 rounded-xl border transition ${isCompared ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-indigo-400'}"
             title="${isCompared ? 'Remove from compare' : 'Add to compare'}"
           >
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"/>
             </svg>
           </button>
-          <a 
-            href="${escapeHtml(item.url)}" 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          <a
+            href="${escapeHtml(item.url)}"
+            target="_blank"
+            rel="noopener noreferrer"
             class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-indigo-600 dark:bg-white dark:hover:bg-indigo-500 text-white dark:text-slate-900 dark:hover:text-white font-medium text-xs transition shadow-xs flex items-center gap-1"
           >
             View Store ↗
@@ -742,7 +742,7 @@ function setupCatalogObserver() {
    7. COMPARISON DOCK & MODAL
    -------------------------------------------------------------------------- */
 
-const toggleCompare = (typeof window !== "undefined" ? window : global).toggleCompare = function (id) {
+const toggleCompare = (typeof window !== 'undefined' ? window : global).toggleCompare = function (id) {
   if (state.comparedIds.has(id)) {
     state.comparedIds.delete(id);
   } else {
@@ -801,7 +801,7 @@ function renderCompareModalMatrix() {
           <span class="text-[10px] uppercase font-bold text-indigo-500">${escapeHtml(item.brand)} • ${escapeHtml(item.store)}</span>
           <h4 class="font-bold text-sm text-slate-900 dark:text-white mt-1">${escapeHtml(cleanTitle(item.title, item.brand))}</h4>
         </div>
-        
+
         <div class="font-mono text-base font-extrabold text-indigo-600 dark:text-indigo-400">₪${item._price.toLocaleString()}</div>
 
         <div class="space-y-1.5 pt-2 border-t border-slate-200 dark:border-slate-800">
@@ -849,7 +849,7 @@ async function loadGuideDocument() {
 async function openScraperStatusModal() {
   if (!scraperStatusModal) return;
   scraperStatusModal.style.display = 'flex';
-  
+
   if (!scraperStatusBody) return;
   scraperStatusBody.innerHTML = `<div class="text-center py-4 text-xs text-slate-400">Loading store health telemetry...</div>`;
 
@@ -887,7 +887,7 @@ async function openScraperStatusModal() {
    10. EVENT BINDINGS & CONTROLS
    -------------------------------------------------------------------------- */
 
-const resetAllFilters = (typeof window !== "undefined" ? window : global).resetAllFilters = function () {
+const resetAllFilters = (typeof window !== 'undefined' ? window : global).resetAllFilters = function () {
   state.query = '';
   state.activePreset = 'all';
   state.catalogFilters = {
@@ -970,17 +970,21 @@ function updateFilterPillsUI() {
   }
 
   // Presets
-  document.querySelectorAll('.preset-btn').forEach((btn) => {
-    const preset = btn.getAttribute('data-preset');
-    if (preset === state.activePreset) {
-      btn.className = 'preset-btn active px-3 py-1.5 rounded-full font-medium bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs shrink-0 transition';
-    } else {
-      btn.className = 'preset-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shrink-0 transition';
-    }
-  });
+  if (typeof document !== 'undefined') {
+    document.querySelectorAll('.preset-btn').forEach((btn) => {
+      const preset = btn.getAttribute('data-preset');
+      if (preset === state.activePreset) {
+        btn.className = 'preset-btn active px-3 py-1.5 rounded-full font-medium bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs shrink-0 transition';
+      } else {
+        btn.className = 'preset-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shrink-0 transition';
+      }
+    });
+  }
 }
 
 function bindEvents() {
+  if (typeof document === 'undefined') return;
+
   // Search input listeners (with '/' keyboard shortcut focus)
   const onSearch = debounce((val) => {
     state.query = val;
@@ -1007,7 +1011,7 @@ function bindEvents() {
       const btn = e.target.closest('.category-chip');
       if (!btn) return;
       state.catalogFilters.category = btn.getAttribute('data-category');
-      
+
       if (cpuGenGroup) {
         if (state.catalogFilters.category === 'phones') {
           cpuGenGroup.style.display = 'none';
@@ -1252,7 +1256,7 @@ function bindEvents() {
    -------------------------------------------------------------------------- */
 
 async function init() {
-  // Theme initialization
+  if (typeof document === 'undefined') return;
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark');
@@ -1264,8 +1268,9 @@ async function init() {
   await loadCatalogData();
 }
 
-if (typeof document !== 'undefined') { document.addEventListener('DOMContentLoaded', init); }
-
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', init);
+}
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
