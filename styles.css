@@ -841,7 +841,7 @@ h1 {
   transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.15s cubic-bezier(0.2, 0, 0, 1), border-color 0.15s cubic-bezier(0.2, 0, 0, 1);
   position: relative;
   content-visibility: auto;
-  contain-intrinsic-size: 1px 320px;
+  contain-intrinsic-size: auto 340px;
   will-change: transform, box-shadow;
 }
 
@@ -849,6 +849,40 @@ h1 {
   transform: translateY(-2px);
   box-shadow: var(--shadow);
   border-color: rgba(42, 93, 215, 0.4);
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0 20px;
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.load-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 30px;
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(42, 93, 215, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.load-more-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(42, 93, 215, 0.35);
+}
+
+.load-more-btn:active {
+  transform: translateY(0);
 }
 
 .top-value-card {

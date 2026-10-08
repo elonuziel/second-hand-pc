@@ -575,48 +575,10 @@ function parseDaysOld(scraped_at) {
   return Math.max(0, Math.round((now - sDate) / (1000 * 60 * 60 * 24)));
 }
 
-async function loadCatalogData() {
-  let laptopsUnified = [];
-  try {
-    let res = await fetch('./data/scraped_laptops.json');
-    if (!res.ok) res = await fetch('./scraped_laptops.json');
-    if (res.ok) {
-      const rawJson = await res.json();
-      if (Array.isArray(rawJson)) {
-        laptopsUnified = rawJson;
-      } else if (typeof rawJson === 'object') {
-        Object.keys(rawJson).forEach((key) => {
-          if (Array.isArray(rawJson[key])) {
-            laptopsUnified = laptopsUnified.concat(rawJson[key]);
-          }
-        });
-      }
-    }
-  } catch (err) {
-    console.warn('Failed to load scraped_laptops.json', err);
-  }
+let mobileDataPromise = null;
 
-  let mobileUnified = [];
-  try {
-    let resM = await fetch('./data/scraped_mobile.json');
-    if (!resM.ok) resM = await fetch('./scraped_mobile.json');
-    if (resM.ok) {
-      const rawMJson = await resM.json();
-      if (Array.isArray(rawMJson)) {
-        mobileUnified = rawMJson;
-      } else if (typeof rawMJson === 'object') {
-        Object.keys(rawMJson).forEach((key) => {
-          if (Array.isArray(rawMJson[key])) {
-            mobileUnified = mobileUnified.concat(rawMJson[key]);
-          }
-        });
-      }
-    }
-  } catch (err) {
-    console.warn('Failed to load scraped_mobile.json', err);
-  }
-
-  const laptopItems = laptopsUnified.map((laptop, index) => {
+function normalizeLaptopItems(laptopsUnified) {
+  return (laptopsUnified || []).map((laptop, index) => {
     const brand = laptop.brand || 'Other';
     const store = laptop.store || 'Refurbished Store';
     const deal_price_ils = Number(laptop.deal_price_ils || laptop.price_ils) || 0;
@@ -667,8 +629,10 @@ async function loadCatalogData() {
     item.value_score = calculateValueScore(item);
     return item;
   });
+}
 
-  const mobileItems = mobileUnified.map((dev, index) => {
+function normalizeMobileItems(mobileUnified) {
+  return (mobileUnified || []).map((dev, index) => {
     const brand = dev.brand || 'Mobile';
     const store = dev.store || 'Refurbished Store';
     const deal_price_ils = Number(dev.deal_price_ils || dev.price_ils) || 0;
@@ -716,8 +680,72 @@ async function loadCatalogData() {
     item.value_score = calculateValueScore(item);
     return item;
   });
+}
 
-  state.catalogData = [...laptopItems, ...mobileItems];
+async function loadLaptopData() {
+  let laptopsUnified = [];
+  try {
+    let res = await fetch('./data/scraped_laptops.json');
+    if (!res.ok) res = await fetch('./scraped_laptops.json');
+    if (res.ok) {
+      const rawJson = await res.json();
+      if (Array.isArray(rawJson)) {
+        laptopsUnified = rawJson;
+      } else if (typeof rawJson === 'object') {
+        Object.keys(rawJson).forEach((key) => {
+          if (Array.isArray(rawJson[key])) {
+            laptopsUnified = laptopsUnified.concat(rawJson[key]);
+          }
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to load scraped_laptops.json', err);
+  }
+
+  const laptopItems = normalizeLaptopItems(laptopsUnified);
+  const otherItems = state.catalogData.filter((i) => i.category !== 'laptops');
+  state.catalogData = [...laptopItems, ...otherItems];
+  return laptopItems;
+}
+
+async function loadMobileData() {
+  let mobileUnified = [];
+  try {
+    let resM = await fetch('./data/scraped_mobile.json');
+    if (!resM.ok) resM = await fetch('./scraped_mobile.json');
+    if (resM.ok) {
+      const rawMJson = await resM.json();
+      if (Array.isArray(rawMJson)) {
+        mobileUnified = rawMJson;
+      } else if (typeof rawMJson === 'object') {
+        Object.keys(rawMJson).forEach((key) => {
+          if (Array.isArray(rawMJson[key])) {
+            mobileUnified = mobileUnified.concat(rawMJson[key]);
+          }
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to load scraped_mobile.json', err);
+  }
+
+  const mobileItems = normalizeMobileItems(mobileUnified);
+  const nonMobile = state.catalogData.filter((i) => i.category !== 'phones');
+  state.catalogData = [...nonMobile, ...mobileItems];
+
+  if (state.catalogFilters.category === 'phones' || state.filter === 'mobile-catalog') {
+    renderBrandPills();
+    renderCatalog();
+  }
+  return mobileItems;
+}
+
+async function loadCatalogData() {
+  // Start mobile loading in the background in parallel (instant non-blocking)
+  mobileDataPromise = loadMobileData();
+  // Fetch laptop data first so the catalog renders immediately on first paint
+  await loadLaptopData();
 }
 
 function renderCatalogToc() {
@@ -983,6 +1011,179 @@ function setQuickPreset(preset) {
   renderCatalog();
 }
 
+const PAGE_SIZE = 24;
+let currentFilteredItems = [];
+let currentTopValueIds = new Set();
+let renderedCount = 0;
+let catalogObserver = null;
+
+function renderCardHtml(laptop, isTopValue) {
+  const isMobileItem = laptop.category === 'phones';
+  const isScreenEst = laptop.screen_source !== 'listing_explicit';
+  const isWeightEst = laptop.weight_source !== 'listing_explicit';
+  const isBatteryEst = laptop.battery_source !== 'listing_explicit';
+  const isRamGenEst = laptop.ram_source !== 'listing_explicit';
+
+  const screenText = `${isScreenEst ? '~' : ''}${laptop.screen_size_in}"${isScreenEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+  const weightWarnTag = laptop.weight_warning ? ` <span class="spec-warn-tag" title="${escapeHtml(laptop.weight_warning)}">⚠️ Typo Alert</span>` : '';
+  const batteryWarnTag = laptop.battery_warning ? ` <span class="spec-warn-tag" title="${escapeHtml(laptop.battery_warning)}">⚠️ Typo Alert</span>` : '';
+  const weightText = `⚖️ ${isWeightEst ? '~' : ''}${laptop.weight_kg} kg${isWeightEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}${weightWarnTag}`;
+  const batteryText = `🔋 ${isBatteryEst ? '~' : ''}${laptop.battery_wh} Wh${isBatteryEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}${batteryWarnTag}`;
+  const ramGenText = `${isRamGenEst ? '~' : ''}${escapeHtml(laptop.ram_gen)}${isRamGenEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
+
+  let specsHtml = '';
+  if (isMobileItem) {
+    specsHtml = `
+      <div class="spec-item">
+        <span class="spec-label">Device Type:</span>
+        <span class="spec-value">${laptop.device_type === 'tablet' ? '📱 Tablet' : '📱 Smartphone'}</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">RAM:</span>
+        <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">Storage:</span>
+        <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">Screen Size:</span>
+        <span class="spec-value">${screenText}</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">Warranty:</span>
+        <span class="spec-value">${escapeHtml(laptop.warranty_months)} Months Warranty</span>
+      </div>
+    `;
+  } else {
+    specsHtml = `
+      <div class="spec-item">
+        <span class="spec-label">CPU:</span>
+        <span class="spec-value">${formatCpuHtml(laptop.cpu)}</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">RAM:</span>
+        <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB ${ramGenText} (${escapeHtml(laptop.ram_type)})</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">Storage:</span>
+        <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB (${escapeHtml(laptop.storage_type)})</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">Screen & Weight:</span>
+        <span class="spec-value">${screenText} | ${weightText}</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">Battery Capacity:</span>
+        <span class="spec-value">${batteryText}</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">Upgradability:</span>
+        <span class="spec-value">${getUpgradabilityBadge(laptop.upgradability_score)}</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">Form Factor:</span>
+        <span class="spec-value">${laptop.is_2in1 ? '🔄 2-in-1 Convertible' : laptop.is_touch ? '💻 Touchscreen Clamshell' : '💻 Standard Clamshell'}</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-label">Warranty:</span>
+        <span class="spec-value">${escapeHtml(laptop.warranty_months)} Months Warranty</span>
+      </div>
+    `;
+  }
+
+  const dateText = laptop.scraped_at ? (laptop.days_old === 0 ? 'Today' : laptop.days_old === 1 ? '1d ago' : `${laptop.days_old}d ago`) : '';
+  const dateBadge = laptop.scraped_at ? `<span class="badge-scraped-date" title="Scraped on ${escapeHtml(laptop.scraped_at)}">📅 ${dateText}</span>` : '';
+  const staleBadge = laptop.is_stale ? `<span class="badge-stale" title="Scraped ${laptop.days_old} days ago (${escapeHtml(laptop.scraped_at)})">⚠️ Stale (>30d)</span>` : '';
+
+  return `
+    <div class="catalog-card ${isTopValue ? 'top-value-card' : ''} ${laptop.is_stale ? 'stale-card' : ''}">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="tags-row">
+            ${getBrandBadge(laptop.brand)}
+            <span class="store-tag ${getStoreClass(laptop.store)}">${escapeHtml(laptop.store)}</span>
+            ${laptop.warranty_months >= 24 ? '<span class="badge-warranty-24m">🛡️ 2-Yr Warranty</span>' : ''}
+            ${isTopValue ? '<span class="value-pick-badge">🏆 Best Value Pick</span>' : ''}
+            ${(laptop.weight_warning || laptop.battery_warning) ? `<span class="badge tag-spec-warn" title="${escapeHtml(laptop.weight_warning || laptop.battery_warning)}">⚠️ Spec Alert</span>` : ''}
+            ${dateBadge}
+            ${staleBadge}
+          </div>
+          <h3 class="laptop-title">${escapeHtml(laptop.title)}</h3>
+        </div>
+        <div class="price-box">
+          <span class="price-value">${laptop.deal_price_ils ? escapeHtml(laptop.deal_price_ils.toLocaleString()) + ' ₪' : 'Check Store'}</span>
+          ${laptop.deal_label && !laptop.deal_label.includes(laptop.deal_price_ils) ? `<span class="deal-note">${escapeHtml(laptop.deal_label)}</span>` : ''}
+          <span class="value-score-badge" title="Algorithm score based on Specs and Price">⭐ ${laptop.value_score}/10 Value</span>
+        </div>
+      </div>
+
+      <div class="specs-grid">
+        ${specsHtml}
+      </div>
+
+      <div class="card-footer">
+        <a href="${escapeHtml(laptop.url)}" target="_blank" rel="noopener noreferrer" class="buy-btn">
+          View on Store ↗
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+function loadMoreCatalogCards() {
+  if (typeof document === 'undefined') return;
+  if (renderedCount >= currentFilteredItems.length) return;
+
+  const nextItems = currentFilteredItems.slice(renderedCount, renderedCount + PAGE_SIZE);
+  renderedCount += nextItems.length;
+
+  const grid = document.getElementById('catalogGrid');
+  if (grid) {
+    const chunkHtml = nextItems.map((item) => renderCardHtml(item, currentTopValueIds.has(item.id))).join('');
+    grid.insertAdjacentHTML('beforeend', chunkHtml);
+  }
+
+  const countDisplay = document.getElementById('catalogDisplayedCount');
+  if (countDisplay) {
+    countDisplay.textContent = renderedCount;
+  }
+
+  const container = document.getElementById('loadMoreContainer');
+  const btn = document.getElementById('loadMoreBtn');
+  if (renderedCount >= currentFilteredItems.length) {
+    if (catalogObserver && container) {
+      catalogObserver.unobserve(container);
+    }
+    if (container) {
+      container.remove();
+    }
+  } else if (btn) {
+    btn.textContent = `Show More (${currentFilteredItems.length - renderedCount} remaining) ▾`;
+  }
+}
+
+function setupCatalogObserver() {
+  if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
+  if (catalogObserver) {
+    catalogObserver.disconnect();
+    catalogObserver = null;
+  }
+
+  const sentinel = document.getElementById('loadMoreContainer');
+  if (!sentinel) return;
+
+  catalogObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        loadMoreCatalogCards();
+      }
+    });
+  }, { rootMargin: '350px' });
+
+  catalogObserver.observe(sentinel);
+}
+
 function renderCatalog() {
   if (!catalogContent) return;
   const { store, brand, brands, priceMin, priceMax, cpuGen, ram, storage, form, screen, weight, battery, upgradability, sort, filterDirs } = state.catalogFilters;
@@ -1177,6 +1378,12 @@ function renderCatalog() {
         <button type="button" class="filter-btn active reset-empty-btn" style="margin-top: 14px; display: inline-flex;">🔄 Reset All Filters</button>
       </div>
     `;
+    if (catalogObserver) {
+      catalogObserver.disconnect();
+      catalogObserver = null;
+    }
+    currentFilteredItems = [];
+    renderedCount = 0;
     bindChipButtons();
     const resetBtn = catalogContent.querySelector('.reset-empty-btn');
     if (resetBtn) {
@@ -1185,133 +1392,46 @@ function renderCatalog() {
     return;
   }
 
-  const cardsHtml = filtered
-    .map((laptop) => {
-      const isTopValue = topValueIds.has(laptop.id);
-      const isMobileItem = laptop.category === 'phones';
-      const isScreenEst = laptop.screen_source !== 'listing_explicit';
-      const isWeightEst = laptop.weight_source !== 'listing_explicit';
-      const isBatteryEst = laptop.battery_source !== 'listing_explicit';
-      const isRamGenEst = laptop.ram_source !== 'listing_explicit';
+  currentFilteredItems = filtered;
+  currentTopValueIds = topValueIds;
+  renderedCount = Math.min(filtered.length, PAGE_SIZE);
 
-      const screenText = `${isScreenEst ? '~' : ''}${laptop.screen_size_in}"${isScreenEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
-      const weightWarnTag = laptop.weight_warning ? ` <span class="spec-warn-tag" title="${escapeHtml(laptop.weight_warning)}">⚠️ Typo Alert</span>` : '';
-      const batteryWarnTag = laptop.battery_warning ? ` <span class="spec-warn-tag" title="${escapeHtml(laptop.battery_warning)}">⚠️ Typo Alert</span>` : '';
-      const weightText = `⚖️ ${isWeightEst ? '~' : ''}${laptop.weight_kg} kg${isWeightEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}${weightWarnTag}`;
-      const batteryText = `🔋 ${isBatteryEst ? '~' : ''}${laptop.battery_wh} Wh${isBatteryEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}${batteryWarnTag}`;
-      const ramGenText = `${isRamGenEst ? '~' : ''}${escapeHtml(laptop.ram_gen)}${isRamGenEst ? ' <small class="spec-est-tag">(est.)</small>' : ''}`;
-
-      let specsHtml = '';
-      if (isMobileItem) {
-        specsHtml = `
-          <div class="spec-item">
-            <span class="spec-label">Device Type:</span>
-            <span class="spec-value">${laptop.device_type === 'tablet' ? '📱 Tablet' : '📱 Smartphone'}</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">RAM:</span>
-            <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Storage:</span>
-            <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Screen Size:</span>
-            <span class="spec-value">${screenText}</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Warranty:</span>
-            <span class="spec-value">${escapeHtml(laptop.warranty_months)} Months Warranty</span>
-          </div>
-        `;
-      } else {
-        specsHtml = `
-          <div class="spec-item">
-            <span class="spec-label">CPU:</span>
-            <span class="spec-value">${formatCpuHtml(laptop.cpu)}</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">RAM:</span>
-            <span class="spec-value">${escapeHtml(laptop.ram_gb)} GB ${ramGenText} (${escapeHtml(laptop.ram_type)})</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Storage:</span>
-            <span class="spec-value">${escapeHtml(laptop.storage_gb)} GB (${escapeHtml(laptop.storage_type)})</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Screen & Weight:</span>
-            <span class="spec-value">${screenText} | ${weightText}</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Battery Capacity:</span>
-            <span class="spec-value">${batteryText}</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Upgradability:</span>
-            <span class="spec-value">${getUpgradabilityBadge(laptop.upgradability_score)}</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Form Factor:</span>
-            <span class="spec-value">${laptop.is_2in1 ? '🔄 2-in-1 Convertible' : laptop.is_touch ? '💻 Touchscreen Clamshell' : '💻 Standard Clamshell'}</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Warranty:</span>
-            <span class="spec-value">${escapeHtml(laptop.warranty_months)} Months Warranty</span>
-          </div>
-        `;
-      }
-
-      const dateText = laptop.scraped_at ? (laptop.days_old === 0 ? 'Today' : laptop.days_old === 1 ? '1d ago' : `${laptop.days_old}d ago`) : '';
-      const dateBadge = laptop.scraped_at ? `<span class="badge-scraped-date" title="Scraped on ${escapeHtml(laptop.scraped_at)}">📅 ${dateText}</span>` : '';
-      const staleBadge = laptop.is_stale ? `<span class="badge-stale" title="Scraped ${laptop.days_old} days ago (${escapeHtml(laptop.scraped_at)})">⚠️ Stale (>30d)</span>` : '';
-
-      return `
-        <div class="catalog-card ${isTopValue ? 'top-value-card' : ''} ${laptop.is_stale ? 'stale-card' : ''}">
-          <div class="card-header">
-            <div class="card-title-group">
-              <div class="tags-row">
-                ${getBrandBadge(laptop.brand)}
-                <span class="store-tag ${getStoreClass(laptop.store)}">${escapeHtml(laptop.store)}</span>
-                ${laptop.warranty_months >= 24 ? '<span class="badge-warranty-24m">🛡️ 2-Yr Warranty</span>' : ''}
-                ${isTopValue ? '<span class="value-pick-badge">🏆 Best Value Pick</span>' : ''}
-                ${(laptop.weight_warning || laptop.battery_warning) ? `<span class="badge tag-spec-warn" title="${escapeHtml(laptop.weight_warning || laptop.battery_warning)}">⚠️ Spec Alert</span>` : ''}
-                ${dateBadge}
-                ${staleBadge}
-              </div>
-              <h3 class="laptop-title">${escapeHtml(laptop.title)}</h3>
-            </div>
-            <div class="price-box">
-              <span class="price-value">${laptop.deal_price_ils ? escapeHtml(laptop.deal_price_ils.toLocaleString()) + ' ₪' : 'Check Store'}</span>
-              ${laptop.deal_label && !laptop.deal_label.includes(laptop.deal_price_ils) ? `<span class="deal-note">${escapeHtml(laptop.deal_label)}</span>` : ''}
-              <span class="value-score-badge" title="Algorithm score based on Specs and Price">⭐ ${laptop.value_score}/10 Value</span>
-            </div>
-          </div>
-
-          <div class="specs-grid">
-            ${specsHtml}
-          </div>
-
-          <div class="card-footer">
-            <a href="${escapeHtml(laptop.url)}" target="_blank" rel="noopener noreferrer" class="buy-btn">
-              View on Store ↗
-            </a>
-          </div>
-        </div>
-      `;
-    })
+  const initialItems = filtered.slice(0, renderedCount);
+  const cardsHtml = initialItems
+    .map((laptop) => renderCardHtml(laptop, topValueIds.has(laptop.id)))
     .join('');
+
+  const remainingCount = filtered.length - renderedCount;
+  const loadMoreHtml = remainingCount > 0 ? `
+    <div class="load-more-container" id="loadMoreContainer">
+      <button type="button" id="loadMoreBtn" class="load-more-btn">
+        Show More (${remainingCount} remaining) ▾
+      </button>
+    </div>
+  ` : '';
 
   catalogContent.innerHTML = `
     ${chipsHtml}
     <div class="catalog-summary-bar">
-      <span>Showing <strong>${filtered.length}</strong> available ${catLabel}</span>
-      <a href="./${state.catalogFilters.category === 'phones' ? 'scraped_mobile.csv' : 'scraped_laptops.csv'}" download="${state.catalogFilters.category === 'phones' ? 'refurbished_mobile.csv' : 'refurbished_laptops.csv'}" class="export-csv-btn">⬇️ Download CSV</a>
+      <span>Showing <strong id="catalogDisplayedCount">${renderedCount}</strong> of <strong>${filtered.length}</strong> available ${catLabel}</span>
+      <a href="./data/${state.catalogFilters.category === 'phones' ? 'scraped_mobile.csv' : 'scraped_laptops.csv'}" download="${state.catalogFilters.category === 'phones' ? 'refurbished_mobile.csv' : 'refurbished_laptops.csv'}" class="export-csv-btn">⬇️ Download CSV</a>
     </div>
-    <div class="catalog-grid">${cardsHtml}</div>
+    <div class="catalog-grid" id="catalogGrid">${cardsHtml}</div>
+    ${loadMoreHtml}
   `;
 
   bindChipButtons();
+
+  if (remainingCount > 0) {
+    const btn = document.getElementById('loadMoreBtn');
+    if (btn) {
+      btn.addEventListener('click', () => loadMoreCatalogCards());
+    }
+    setupCatalogObserver();
+  } else if (catalogObserver) {
+    catalogObserver.disconnect();
+    catalogObserver = null;
+  }
 }
 
 function bindChipButtons() {
@@ -1323,7 +1443,7 @@ function bindChipButtons() {
   });
 }
 
-function updateViewMode() {
+async function updateViewMode() {
   if (state.filter === 'catalog' || state.filter === 'mobile-catalog') {
     if (documentSidebarCard) documentSidebarCard.classList.add('hidden');
     if (catalogFiltersCard) catalogFiltersCard.classList.remove('hidden');
@@ -1349,6 +1469,9 @@ function updateViewMode() {
     const minP = isMobile ? 100 : 800;
     const maxP = isMobile ? 4500 : 5000;
     updateDualPriceSliderUI(state.catalogFilters.priceMin || minP, state.catalogFilters.priceMax || maxP);
+    if (isMobile && mobileDataPromise) {
+      await mobileDataPromise;
+    }
     renderBrandPills();
     renderCatalog();
   } else {
@@ -1419,7 +1542,7 @@ function bindEvents() {
   }
 
   if (categoryFilter) {
-    categoryFilter.addEventListener('change', (e) => {
+    categoryFilter.addEventListener('change', async (e) => {
       const cat = e.target.value;
       state.catalogFilters.category = cat;
       const isMobile = cat === 'phones';
@@ -1430,6 +1553,9 @@ function bindEvents() {
       state.catalogFilters.priceMax = maxP;
       updateDualPriceSliderUI(minP, maxP);
       state.activePreset = '';
+      if (isMobile && mobileDataPromise) {
+        await mobileDataPromise;
+      }
       renderBrandPills();
       renderCatalog();
     });
@@ -1772,11 +1898,26 @@ async function init() {
   updateDirButtonsUI();
   bindEvents();
   await loadCatalogData();
-  updateViewMode();
+  await updateViewMode();
 }
 
 init();
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { docs, state, buildVisibleDocs, escapeHtml, calculateValueScore, formatCpuHtml, matchesCpuGen, getCpuGenRank, getStoreClass, parseDaysOld };
+  module.exports = {
+    docs,
+    state,
+    buildVisibleDocs,
+    escapeHtml,
+    calculateValueScore,
+    formatCpuHtml,
+    matchesCpuGen,
+    getCpuGenRank,
+    getStoreClass,
+    parseDaysOld,
+    loadLaptopData,
+    loadMobileData,
+    renderCardHtml,
+    loadMoreCatalogCards
+  };
 }
