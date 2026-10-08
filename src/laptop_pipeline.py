@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 import logging
+import os
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Dict, List, Mapping, Optional, Type
 
 from laptop_domain import LaptopItem
+from scraper_progress import ScrapeProgressTracker
+
+DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data"))
 
 # Scrapers report WHY they collected nothing (bot challenge, WAF block, unreachable site)
 # so the run summary can name blocked stores instead of only showing a zero count.
@@ -70,9 +74,35 @@ def run_store_scrapers(
 
     results: Dict[str, List[LaptopItem]] = {}
     worker_count = max(1, min(max_workers, len(target_scrapers) or 1))
+
+    progress_file = os.path.join(DATA_DIR, "scraper_progress.json")
+    status_log = os.path.join(DATA_DIR, "scraper_status.log")
+
+    tracker = ScrapeProgressTracker(
+        total_stores=len(target_scrapers),
+        store_names=list(target_scrapers.keys()),
+        worker_count=worker_count,
+        category="laptops",
+        logger=log,
+        progress_json_path=progress_file,
+        status_log_path=status_log,
+    )
+    tracker.start()
+
+    def _scrape_worker(name: str, scraper_cls: Type[Any]) -> List[LaptopItem]:
+        display = getattr(scraper_cls, "STORE_NAME", name)
+        tracker.on_store_start(name, display_name=display)
+        try:
+            items = scraper_cls(session).scrape()
+            tracker.on_store_finish(name, len(items), display_name=display)
+            return items
+        except Exception as ex:
+            tracker.on_store_finish(name, 0, error=ex, display_name=display)
+            raise
+
     with ThreadPoolExecutor(max_workers=worker_count) as executor:
         futures = {
-            executor.submit(scraper_class(session).scrape): name
+            executor.submit(_scrape_worker, name, scraper_class): name
             for name, scraper_class in target_scrapers.items()
         }
         for future in as_completed(futures):
@@ -85,5 +115,6 @@ def run_store_scrapers(
                 display = getattr(target_scrapers[name], "STORE_NAME", name)
                 report_store_block(display, f"scraper raised {type(error).__name__}: {error}")
 
+    tracker.finish()
     _resolve_reasons(target_scrapers)
     return {name: results.get(name, []) for name in target_scrapers}

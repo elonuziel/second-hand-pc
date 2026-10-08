@@ -28,6 +28,7 @@ from dataclasses import dataclass, asdict
 from typing import List, Dict, Optional, Tuple, Any
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from scraper_progress import ScrapeProgressTracker
 import requests
 import urllib3
 from requests.adapters import HTTPAdapter
@@ -956,9 +957,35 @@ class MasterMobileAuditor:
         else:
             target_scrapers = self.scraper_classes
 
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        worker_count = max(1, min(max_workers, len(target_scrapers) or 1))
+        progress_file = os.path.join(DATA_DIR, "scraper_mobile_progress.json")
+        status_log = os.path.join(DATA_DIR, "scraper_status.log")
+
+        tracker = ScrapeProgressTracker(
+            total_stores=len(target_scrapers),
+            store_names=list(target_scrapers.keys()),
+            worker_count=worker_count,
+            category="mobile",
+            logger=logger,
+            progress_json_path=progress_file,
+            status_log_path=status_log,
+        )
+        tracker.start()
+
+        def _scrape_worker(name: str, cls: Type[Any]) -> List[MobileItem]:
+            display = getattr(cls, "STORE_NAME", name)
+            tracker.on_store_start(name, display_name=display)
+            try:
+                items = cls(self.session).scrape()
+                tracker.on_store_finish(name, len(items), display_name=display)
+                return items
+            except Exception as ex:
+                tracker.on_store_finish(name, 0, error=ex, display_name=display)
+                raise
+
+        with ThreadPoolExecutor(max_workers=worker_count) as executor:
             futures = {
-                executor.submit(cls(self.session).scrape): name
+                executor.submit(_scrape_worker, name, cls): name
                 for name, cls in target_scrapers.items()
             }
             for future in as_completed(futures):
@@ -970,6 +997,7 @@ class MasterMobileAuditor:
                     logger.error(f"Mobile scraper '{name}' encountered a critical error: {e}")
                     results[name] = []
 
+        tracker.finish()
         return results
 
 
