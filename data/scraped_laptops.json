@@ -33,7 +33,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -68,7 +68,77 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "IT Outlet",
+      "title": "Lenovo ThinkPad T14s GEN1 Ryzen 5/16GB/512GB SSD",
+      "brand": "Lenovo",
+      "series": "ThinkPad",
+      "model": "Lenovo ThinkPad T14s GEN1 Ryzen 5",
+      "cpu": "AMD Ryzen 5 PRO",
+      "ram_gb": 16,
+      "storage_gb": 512,
+      "price_ils": 2000,
+      "deal_price_ils": 1900,
+      "deal_label": "1,900 ₪ (100 ₪ Coupon)",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Soldered (Fixed)",
+      "upgradability_score": 5.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.itoutlet.co.il/items/9480302-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Lenovo-ThinkPad-T14s-GEN1-Ryzen-5-16GB-512GB-SSD",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://d3m9l0v76dty0.cloudfront.net/system/photos/29954838/show/463230fb1f35604f87482197d17b036e.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.35,
+      "battery_wh": 57,
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "chassis_decoder",
+      "weight_source": "chassis_decoder",
+      "battery_source": "chassis_decoder",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "IT Outlet",
+      "title": "Lenovo ThinkPad T14s GEN1 i7/32GB/1TB SSD",
+      "brand": "Lenovo",
+      "series": "ThinkPad",
+      "model": "Lenovo ThinkPad T14s GEN1 i7",
+      "cpu": "Core i7 (10th Gen)",
+      "ram_gb": 32,
+      "storage_gb": 1000,
+      "price_ils": 2200,
+      "deal_price_ils": 2100,
+      "deal_label": "2,100 ₪ (100 ₪ Coupon)",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Soldered (Fixed)",
+      "upgradability_score": 5.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.itoutlet.co.il/items/8314186-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Lenovo-ThinkPad-T14s-GEN1-i7-32GB-1TB-SSD",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://d3m9l0v76dty0.cloudfront.net/system/photos/17486512/show/71f0148a3a3cc8f61427f2befd1683dd.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.35,
+      "battery_wh": 57,
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder",
+      "screen_source": "chassis_decoder",
+      "weight_source": "chassis_decoder",
+      "battery_source": "chassis_decoder",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -103,7 +173,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -138,7 +208,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -173,7 +243,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -208,7 +278,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -243,7 +313,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -278,7 +348,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -313,7 +383,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -348,7 +418,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -383,7 +453,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -418,7 +488,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -453,7 +523,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -488,7 +558,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -523,7 +593,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -558,7 +628,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -593,7 +663,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -628,7 +698,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -663,7 +733,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -698,7 +768,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -733,7 +803,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -768,7 +838,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -803,7 +873,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -838,7 +908,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -873,7 +943,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -908,7 +978,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -943,7 +1013,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -978,7 +1048,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -1013,7 +1083,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -1048,7 +1118,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -1083,7 +1153,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -1118,7 +1188,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -1153,7 +1223,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "IT Outlet",
@@ -1188,77 +1258,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "IT Outlet",
-      "title": "אריזה פתוחה HP Dragonfly G4 i7/32GB/1TB SSD",
-      "brand": "HP",
-      "series": "Business Series",
-      "model": "אריזה פתוחה HP Dragonfly G4 i7",
-      "cpu": "Core i7",
-      "ram_gb": 32,
-      "storage_gb": 1000,
-      "price_ils": 5799,
-      "deal_price_ils": 5567,
-      "deal_label": "5,567 ₪ (4% Card Disc.)",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.itoutlet.co.il/items/8452579-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%90%D7%A8%D7%99%D7%96%D7%94-%D7%A4%D7%AA%D7%95%D7%97%D7%94-HP-Dragonfly-G4-i7-32GB-1TB-SSD-",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://d3m9l0v76dty0.cloudfront.net/system/photos/18079644/show/4737a51ec721c4bfe77ff96d2b8dc1f6.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 50,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "fallback_estimate",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "IT Outlet",
-      "title": "HP EliteBook 830 G11 ULTRA 7/32GB/512GB SSD",
-      "brand": "HP",
-      "series": "EliteBook",
-      "model": "HP EliteBook 830 G11 ULTRA 7",
-      "cpu": "Intel Core Ultra 7",
-      "ram_gb": 32,
-      "storage_gb": 512,
-      "price_ils": 5800,
-      "deal_price_ils": 5568,
-      "deal_label": "5,568 ₪ (4% Card Disc.)",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.itoutlet.co.il/items/8891633-%D7%9E%D7%97%D7%A9%D7%91-%D7%A0%D7%99%D7%99%D7%93-%D7%9E%D7%97%D7%95%D7%93%D7%A9-HP-EliteBook-830-G11-ULTRA-7-32GB-512GB-SSD",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://d3m9l0v76dty0.cloudfront.net/system/photos/20494064/show/c2685baaefbc64566e7c9fa57310a203.jpg",
-      "screen_size_in": 13.3,
-      "weight_kg": 1.35,
-      "battery_wh": 50,
-      "ram_gen": "DDR5",
-      "ram_source": "chassis_decoder",
-      "screen_source": "chassis_decoder",
-      "weight_source": "chassis_decoder",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ],
   "ecology": [
@@ -1295,7 +1295,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Ecology Computers",
@@ -1330,7 +1330,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Ecology Computers",
@@ -1365,7 +1365,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Ecology Computers",
@@ -1400,7 +1400,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Ecology Computers",
@@ -1435,7 +1435,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Ecology Computers",
@@ -1470,7 +1470,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ],
   "lts": [
@@ -1507,7 +1507,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1542,7 +1542,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1577,7 +1577,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1612,7 +1612,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1647,7 +1647,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1682,7 +1682,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1717,7 +1717,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1752,7 +1752,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1787,7 +1787,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1822,7 +1822,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1857,7 +1857,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "LaptopTech LTS",
@@ -1892,7 +1892,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ],
   "recomp": [
@@ -2176,7 +2176,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2211,7 +2211,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2246,7 +2246,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2281,7 +2281,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2316,7 +2316,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2351,7 +2351,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2386,7 +2386,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2421,7 +2421,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2456,7 +2456,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2491,7 +2491,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2526,7 +2526,42 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "Olam HaKolnoa",
+      "title": "מחשב נייד Precision 3561 Mobile Workstation Core i7-11800H 512GB 32GB 15.6 מחודש דל DELL 4245",
+      "brand": "Dell",
+      "series": "Precision",
+      "model": "מחשב נייד Precision 3561 Mobile Workstation Core i7-11800H 512GB 32GB 15.6 מחודש דל DELL 4245",
+      "cpu": "Core i7 (11th Gen)",
+      "ram_gb": 32,
+      "storage_gb": 512,
+      "price_ils": 2967,
+      "deal_price_ils": 2967,
+      "deal_label": "2,967 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.cwc.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-precision-3561-mobile-workstation-core-i7-11800h-512gb-32gb-15-6-%d7%9e%d7%97%d7%95%d7%93%d7%a9-%d7%93%d7%9c-dell-4245/",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://i0.wp.com/www.cwc.co.il/wp-content/uploads/2026/09/dell-logo-207x40-1.jpg?fit=207%2C40&#038;ssl=1",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.95,
+      "battery_wh": 90,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "chassis_decoder",
+      "battery_source": "chassis_decoder",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2561,7 +2596,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2596,7 +2631,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2631,7 +2666,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2666,7 +2701,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2701,7 +2736,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2736,7 +2771,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2771,7 +2806,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2806,7 +2841,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2841,7 +2876,42 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "Olam HaKolnoa",
+      "title": "מחשב נייד Latitude 7420 i5-1135G7 256GB SSD 16GB 14 W11 Pro דל מחודש DELL",
+      "brand": "Dell",
+      "series": "Latitude",
+      "model": "מחשב נייד Latitude 7420 i5-1135G7 256GB SSD 16GB 14 W11 Pro דל מחודש DELL",
+      "cpu": "Core i5 (11th Gen)",
+      "ram_gb": 16,
+      "storage_gb": 256,
+      "price_ils": 1750,
+      "deal_price_ils": 1750,
+      "deal_label": "1,750 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Soldered (Fixed)",
+      "upgradability_score": 5.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.cwc.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-latitude-7420-i5-1135g7-256gb-ssd-16gb-14-w11-pro-%d7%93%d7%9c-%d7%9e%d7%97%d7%95%d7%93%d7%a9-dell/",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://i0.wp.com/www.cwc.co.il/wp-content/uploads/2026/09/dell-logo-207x40-1.jpg?fit=207%2C40&#038;ssl=1",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.22,
+      "battery_wh": 63,
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder",
+      "screen_source": "chassis_decoder",
+      "weight_source": "chassis_decoder",
+      "battery_source": "chassis_decoder",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2876,7 +2946,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2911,42 +2981,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "Olam HaKolnoa",
-      "title": "מחשב נייד  Latitude 7330 Core i7-1265U vPro 256GB 16GB 13.3 WIN11 Pro דל מחודש Dell מסך מגע",
-      "brand": "Dell",
-      "series": "Latitude",
-      "model": "מחשב נייד  Latitude 7330 Core i7-1265U vPro 256GB 16GB 13.3 WIN11 Pro דל מחודש Dell מסך מגע",
-      "cpu": "Core i7 (12th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 256,
-      "price_ils": 2075,
-      "deal_price_ils": 2075,
-      "deal_label": "2,075 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.cwc.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-latitude-7330-core-i7-1265u-vpro-256gb-16gb-13-3-win11-pro-%d7%93%d7%9c-%d7%9e%d7%97%d7%95%d7%93%d7%a9-dell/",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": false,
-      "image_url": "https://i0.wp.com/www.cwc.co.il/wp-content/uploads/2026/09/dell-logo-207x40-1.jpg?fit=207%2C40&#038;ssl=1",
-      "screen_size_in": 13.3,
-      "weight_kg": 1.2,
-      "battery_wh": 57,
-      "ram_gen": "LPDDR5",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "chassis_decoder",
-      "battery_source": "chassis_decoder",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -2981,7 +3016,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -3016,7 +3051,42 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "Olam HaKolnoa",
+      "title": "מחשב נייד  Latitude 7330 Core i7-1265U vPro 256GB 16GB 13.3 WIN11 Pro דל מחודש Dell מסך מגע",
+      "brand": "Dell",
+      "series": "Latitude",
+      "model": "מחשב נייד  Latitude 7330 Core i7-1265U vPro 256GB 16GB 13.3 WIN11 Pro דל מחודש Dell מסך מגע",
+      "cpu": "Core i7 (12th Gen)",
+      "ram_gb": 16,
+      "storage_gb": 256,
+      "price_ils": 2075,
+      "deal_price_ils": 2075,
+      "deal_label": "2,075 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.cwc.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-latitude-7330-core-i7-1265u-vpro-256gb-16gb-13-3-win11-pro-%d7%93%d7%9c-%d7%9e%d7%97%d7%95%d7%93%d7%a9-dell/",
+      "gpu": "Integrated",
+      "is_touch": true,
+      "is_2in1": false,
+      "image_url": "https://i0.wp.com/www.cwc.co.il/wp-content/uploads/2026/09/dell-logo-207x40-1.jpg?fit=207%2C40&#038;ssl=1",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.2,
+      "battery_wh": 57,
+      "ram_gen": "LPDDR5",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "chassis_decoder",
+      "battery_source": "chassis_decoder",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -3051,7 +3121,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Olam HaKolnoa",
@@ -3066,14 +3136,14 @@
       "deal_price_ils": 1890,
       "deal_label": "1,890 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
+      "ram_type": "2x SODIMM Slots (up to 64GB)",
+      "upgradability_score": 9.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
       "url": "https://www.cwc.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-precision-5560-i5-11gen-256gb-16gb-15-6-nvidia-t1200-win11-d5560-%d7%93%d7%9c-%d7%9e%d7%97%d7%95%d7%93%d7%a9-dell/",
       "gpu": "Integrated",
       "is_touch": false,
-      "is_2in1": false,
+      "is_2in1": true,
       "image_url": "https://i0.wp.com/www.cwc.co.il/wp-content/uploads/2026/09/dell-logo-207x40-1.jpg?fit=207%2C40&#038;ssl=1",
       "screen_size_in": 15.6,
       "weight_kg": 1.95,
@@ -3086,77 +3156,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "Olam HaKolnoa",
-      "title": "מחשב נייד ThinkPad L13 Yoga Gen 2 מעבד I5 דור 11 זיכרון 16GB 256 חלונות 11 פרו מחודש לנובו Lenovo",
-      "brand": "Lenovo",
-      "series": "ThinkPad",
-      "model": "מחשב נייד ThinkPad L13 Yoga Gen 2 מעבד I5 דור 11 זיכרון 16GB 256 חלונות 11 פרו מחודש לנובו Lenovo",
-      "cpu": "Core i5 (11th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 512,
-      "price_ils": 1849,
-      "deal_price_ils": 1849,
-      "deal_label": "1,849 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.cwc.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-thinkpad-l13-yoga-gen-2-%d7%9e%d7%a2%d7%91%d7%93-i5-%d7%93%d7%95%d7%a8-11-%d7%96%d7%99%d7%9b%d7%a8%d7%95%d7%9f-16gb-256-%d7%97%d7%9c%d7%95%d7%a0%d7%95/",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": true,
-      "image_url": "https://i0.wp.com/www.cwc.co.il/wp-content/uploads/2024/12/LENOVO_LOGO.png?fit=207%2C40&#038;ssl=1",
-      "screen_size_in": 13.3,
-      "weight_kg": 1.4,
-      "battery_wh": 50,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "chassis_decoder",
-      "weight_source": "chassis_decoder",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "Olam HaKolnoa",
-      "title": "מחשב נייד מסך מגע ThinkPad X13 Gen 2 Core i5-1145G7 256GB SSD 16GB 13.3 מחודש Lenovo לנובו",
-      "brand": "Lenovo",
-      "series": "ThinkPad",
-      "model": "מחשב נייד מסך מגע ThinkPad X13 Gen 2 Core i5-1145G7 256GB SSD 16GB 13.3 מחודש Lenovo לנובו",
-      "cpu": "Core i5 (11th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 256,
-      "price_ils": 1850,
-      "deal_price_ils": 1850,
-      "deal_label": "1,850 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "2x SODIMM Slots (up to 64GB)",
-      "upgradability_score": 9.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.cwc.co.il/product/%d7%9e%d7%97%d7%a9%d7%91-%d7%a0%d7%99%d7%99%d7%93-thinkpad-x13-gen-2-core-i5-1145g7-256gb-ssd-16gb-13-3-%d7%9e%d7%97%d7%95%d7%93%d7%a9-lenovo-%d7%9c%d7%a0%d7%95%d7%91%d7%95/",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": true,
-      "image_url": "https://i0.wp.com/www.cwc.co.il/wp-content/uploads/2024/12/LENOVO_LOGO.png?fit=207%2C40&#038;ssl=1",
-      "screen_size_in": 15.6,
-      "weight_kg": 1.28,
-      "battery_wh": 45,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "chassis_decoder",
-      "battery_source": "chassis_decoder",
-      "confidence_level": "warning",
-      "weight_warning": "Seller states 1.28kg (unusually low for 15.6\" screen; expected ~1.75kg)",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ],
   "payngo": [
@@ -3335,7 +3335,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "ALM",
@@ -3370,7 +3370,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "ALM",
@@ -3405,7 +3405,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ],
   "shufersal": [
@@ -4008,41 +4008,6 @@
   "p1000": [
     {
       "store": "P1000",
-      "title": "מחשב נייד מסך מגע 2IN1 DELL Latitude 7420 i5 מחודש",
-      "brand": "Dell",
-      "series": "Latitude",
-      "model": "מחשב נייד מסך מגע 2IN1 DELL Latitude 7420 i5 מחודש",
-      "cpu": "Core i5 (11th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 256,
-      "price_ils": 1999,
-      "deal_price_ils": 1999,
-      "deal_label": "1,999 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered (Fixed)",
-      "upgradability_score": 5.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=216717",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": true,
-      "image_url": "https://www.p1000.co.il/media/products/216717.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.18,
-      "battery_wh": 63,
-      "ram_gen": "LPDDR4x",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "listing_explicit",
-      "battery_source": "listing_explicit",
-      "confidence_level": "warning",
-      "weight_warning": "Seller states 1.18kg (likely clamshell typo; 14\" 2-in-1 chassis floor is ~1.36kg)",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
       "title": "מחשב נייד LENOVO ThinkPad X1 Carbon G8 256GB מחודש",
       "brand": "Lenovo",
       "series": "ThinkPad",
@@ -4074,7 +4039,7 @@
       "confidence_level": "warning",
       "weight_warning": "Seller states 1.09kg (likely clamshell typo; 14\" 2-in-1 chassis floor is ~1.36kg)",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "P1000",
@@ -4109,170 +4074,30 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "P1000",
-      "title": "מחשב נייד Dell Latitude 5400 14 i5 256GB SSD מחודש",
+      "title": "מחשב נייד מסך מגע 2IN1 DELL Latitude 7420 i5 מחודש",
       "brand": "Dell",
       "series": "Latitude",
-      "model": "מחשב נייד Dell Latitude 5400 14 i5 256GB SSD מחודש",
-      "cpu": "Core i5 (8th Gen)",
+      "model": "מחשב נייד מסך מגע 2IN1 DELL Latitude 7420 i5 מחודש",
+      "cpu": "Core i5 (11th Gen)",
       "ram_gb": 16,
       "storage_gb": 256,
-      "price_ils": 1379,
-      "deal_price_ils": 1379,
-      "deal_label": "1,379 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=208226",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/208226.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.55,
-      "battery_wh": 50,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "chassis_decoder",
-      "weight_source": "chassis_decoder",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד Dell E6420 I5 2 GEN 128GB SSD מחודש",
-      "brand": "Dell",
-      "series": "Business Series",
-      "model": "מחשב נייד Dell E6420 I5 2 GEN 128GB SSD מחודש",
-      "cpu": "Core i5 (2nd Gen)",
-      "ram_gb": 8,
-      "storage_gb": 128,
-      "price_ils": 999,
-      "deal_price_ils": 999,
-      "deal_label": "999 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=223789",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/223789.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 50,
-      "ram_gen": "DDR3L",
-      "ram_source": "chassis_decoder",
-      "screen_source": "fallback_estimate",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד \"14 256GB דגם Lenovo Thinkpad L470 מחודש",
-      "brand": "Lenovo",
-      "series": "ThinkPad",
-      "model": "מחשב נייד \"14 256GB דגם Lenovo Thinkpad L470 מחודש",
-      "cpu": "Core i5 (7th Gen)",
-      "ram_gb": 8,
-      "storage_gb": 256,
-      "price_ils": 999,
-      "deal_price_ils": 999,
-      "deal_label": "999 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=422834",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/422834.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.87,
-      "battery_wh": 54,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "listing_explicit",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד DELL LATITUDE i5 256SSD E5550 מחודש",
-      "brand": "Dell",
-      "series": "Latitude",
-      "model": "מחשב נייד DELL LATITUDE i5 256SSD E5550 מחודש",
-      "cpu": "Core i5 (8th Gen)",
-      "ram_gb": 8,
-      "storage_gb": 256,
-      "price_ils": 999,
-      "deal_price_ils": 999,
-      "deal_label": "999 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=216685",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/216685.jpg",
-      "screen_size_in": 15.6,
-      "weight_kg": 1.8,
-      "battery_wh": 54,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד Latitude 7420 i7 256GB מבית DELL מחודש",
-      "brand": "Dell",
-      "series": "Latitude",
-      "model": "מחשב נייד Latitude 7420 i7 256GB מבית DELL מחודש",
-      "cpu": "Core i7 (11th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 256,
-      "price_ils": 2090,
-      "deal_price_ils": 2090,
-      "deal_label": "2,090 ₪",
+      "price_ils": 1999,
+      "deal_price_ils": 1999,
+      "deal_label": "1,999 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
       "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=196090",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=216717",
       "gpu": "Integrated",
-      "is_touch": false,
+      "is_touch": true,
       "is_2in1": true,
-      "image_url": "https://www.p1000.co.il/media/products/196090.jpg",
+      "image_url": "https://www.p1000.co.il/media/products/216717.jpg",
       "screen_size_in": 14.0,
       "weight_kg": 1.18,
       "battery_wh": 63,
@@ -4284,357 +4109,7 @@
       "confidence_level": "warning",
       "weight_warning": "Seller states 1.18kg (likely clamshell typo; 14\" 2-in-1 chassis floor is ~1.36kg)",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד Lenovo ThinkPad L13 Yoga i5 256GB מחודש",
-      "brand": "Lenovo",
-      "series": "ThinkPad",
-      "model": "מחשב נייד Lenovo ThinkPad L13 Yoga i5 256GB מחודש",
-      "cpu": "Core i5 (11th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 256,
-      "price_ils": 1899,
-      "deal_price_ils": 1899,
-      "deal_label": "1,899 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=223730",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": true,
-      "image_url": "https://www.p1000.co.il/media/products/223730.jpg",
-      "screen_size_in": 13.3,
-      "weight_kg": 1.4,
-      "battery_wh": 50,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "listing_explicit",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד Lenovo 15.6\" I5 8GB 256GB מחודש",
-      "brand": "Lenovo",
-      "series": "Business Series",
-      "model": "מחשב נייד Lenovo 15.6\" I5 8GB 256GB מחודש",
-      "cpu": "Core i5",
-      "ram_gb": 8,
-      "storage_gb": 256,
-      "price_ils": 1149,
-      "deal_price_ils": 1149,
-      "deal_label": "1,149 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=223800",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/223800.jpg",
-      "screen_size_in": 15.6,
-      "weight_kg": 1.8,
-      "battery_wh": 54,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד 512GB מסך מגע מתהפך \"HP Ultra 5 16 עודפי",
-      "brand": "HP",
-      "series": "Business Series",
-      "model": "מחשב נייד 512GB מסך מגע מתהפך \"HP Ultra 5 16 עודפי",
-      "cpu": "Intel Core Ultra 5",
-      "ram_gb": 16,
-      "storage_gb": 512,
-      "price_ils": 3190,
-      "deal_price_ils": 3190,
-      "deal_label": "3,190 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=1529308",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": true,
-      "image_url": "https://www.p1000.co.il/media/products/1529308.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.88,
-      "battery_wh": 55,
-      "ram_gen": "DDR5",
-      "ram_source": "chassis_decoder",
-      "screen_source": "fallback_estimate",
-      "weight_source": "listing_explicit",
-      "battery_source": "listing_explicit",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד DELL Latitude E7450 i5-6200U 256GB מחודש",
-      "brand": "Dell",
-      "series": "Latitude",
-      "model": "מחשב נייד DELL Latitude E7450 i5-6200U 256GB מחודש",
-      "cpu": "Core i5 (6th Gen)",
-      "ram_gb": 8,
-      "storage_gb": 256,
-      "price_ils": 1299,
-      "deal_price_ils": 1299,
-      "deal_label": "1,299 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=211009",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/211009.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 55,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "fallback_estimate",
-      "weight_source": "fallback_estimate",
-      "battery_source": "listing_explicit",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד DELL LATITUDE 7000 i5-GEN8 256GB מחודש",
-      "brand": "Dell",
-      "series": "Latitude",
-      "model": "מחשב נייד DELL LATITUDE 7000 i5-GEN8 256GB מחודש",
-      "cpu": "Core i5 (8th Gen)",
-      "ram_gb": 8,
-      "storage_gb": 256,
-      "price_ils": 1399,
-      "deal_price_ils": 1399,
-      "deal_label": "1,399 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=211308",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/211308.jpg",
-      "screen_size_in": 12.5,
-      "weight_kg": 1.19,
-      "battery_wh": 60,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "listing_explicit",
-      "battery_source": "listing_explicit",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד Dell Latitude 5420 i5 gen11 256GB מחודש",
-      "brand": "Dell",
-      "series": "Latitude",
-      "model": "מחשב נייד Dell Latitude 5420 i5 gen11 256GB מחודש",
-      "cpu": "Core i5 (11th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 256,
-      "price_ils": 1899,
-      "deal_price_ils": 1899,
-      "deal_label": "1,899 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "2x SODIMM Slots (up to 64GB)",
-      "upgradability_score": 9.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=211312",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/211312.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.4,
-      "battery_wh": 63,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "listing_explicit",
-      "battery_source": "listing_explicit",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד \"LENOVO T14 GEN2 I5 256GB 14 מחודש",
-      "brand": "Lenovo",
-      "series": "Business Series",
-      "model": "מחשב נייד \"LENOVO T14 GEN2 I5 256GB 14 מחודש",
-      "cpu": "Core i5 (11th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 256,
-      "price_ils": 2299,
-      "deal_price_ils": 2299,
-      "deal_label": "2,299 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "1x Soldered + 1x SODIMM Slot (max 48GB)",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=213511",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/213511.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 51,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "listing_explicit",
-      "battery_source": "chassis_decoder",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד \"LENOVO ThinkPad P51 i7 512GB 15.6 מחודש",
-      "brand": "Lenovo",
-      "series": "ThinkPad",
-      "model": "מחשב נייד \"LENOVO ThinkPad P51 i7 512GB 15.6 מחודש",
-      "cpu": "Core i7 (7th Gen)",
-      "ram_gb": 32,
-      "storage_gb": 512,
-      "price_ils": 2599,
-      "deal_price_ils": 2599,
-      "deal_label": "2,599 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=223710",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/223710.jpg",
-      "screen_size_in": 15.6,
-      "weight_kg": 2.45,
-      "battery_wh": 83,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "chassis_decoder",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד Lenovo 14\" I3 8GB 256GB מחודש",
-      "brand": "Lenovo",
-      "series": "Business Series",
-      "model": "מחשב נייד Lenovo 14\" I3 8GB 256GB מחודש",
-      "cpu": "Core i3 (5th Gen)",
-      "ram_gb": 8,
-      "storage_gb": 256,
-      "price_ils": 990,
-      "deal_price_ils": 990,
-      "deal_label": "990 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=223791",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/223791.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 50,
-      "ram_gen": "DDR3L",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד i7 GB512 Elitbook G5  840 HP מחודש",
-      "brand": "HP",
-      "series": "Business Series",
-      "model": "מחשב נייד i7 GB512 Elitbook G5  840 HP מחודש",
-      "cpu": "Core i7 (8th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 512,
-      "price_ils": 1599,
-      "deal_price_ils": 1599,
-      "deal_label": "1,599 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "2x SODIMM Slots (up to 64GB)",
-      "upgradability_score": 9.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=316254",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/316254.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.57,
-      "battery_wh": 46,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "chassis_decoder",
-      "weight_source": "listing_explicit",
-      "battery_source": "listing_explicit",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "P1000",
@@ -4669,77 +4144,112 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "P1000",
-      "title": "מחשב נייד מסך מגע \"14 DELL Latitude 5420 מחודש",
+      "title": "מחשב נייד DELL LATITUDE i5 256SSD E5550 מחודש",
       "brand": "Dell",
       "series": "Latitude",
-      "model": "מחשב נייד מסך מגע \"14 DELL Latitude 5420 מחודש",
-      "cpu": "Core i5 (11th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 512,
-      "price_ils": 1990,
-      "deal_price_ils": 1990,
-      "deal_label": "1,990 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "2x SODIMM Slots (up to 64GB)",
-      "upgradability_score": 9.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=292799",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/292799.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.37,
-      "battery_wh": 63,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "listing_explicit",
-      "battery_source": "listing_explicit",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד \"14 256GB דגם Lenovo T490 מחודש",
-      "brand": "Lenovo",
-      "series": "Business Series",
-      "model": "מחשב נייד \"14 256GB דגם Lenovo T490 מחודש",
+      "model": "מחשב נייד DELL LATITUDE i5 256SSD E5550 מחודש",
       "cpu": "Core i5 (8th Gen)",
       "ram_gb": 8,
       "storage_gb": 256,
-      "price_ils": 1499,
-      "deal_price_ils": 1499,
-      "deal_label": "1,499 ₪",
+      "price_ils": 999,
+      "deal_price_ils": 999,
+      "deal_label": "999 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
       "ram_type": "Modular / Semi-Modular",
       "upgradability_score": 7.5,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=212338",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=216685",
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/212338.jpg",
+      "image_url": "https://www.p1000.co.il/media/products/216685.jpg",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.8,
+      "battery_wh": 54,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד Dell Latitude 5400 14 i5 256GB SSD מחודש",
+      "brand": "Dell",
+      "series": "Latitude",
+      "model": "מחשב נייד Dell Latitude 5400 14 i5 256GB SSD מחודש",
+      "cpu": "Core i5 (8th Gen)",
+      "ram_gb": 16,
+      "storage_gb": 256,
+      "price_ils": 1379,
+      "deal_price_ils": 1379,
+      "deal_label": "1,379 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=208226",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/208226.jpg",
       "screen_size_in": 14.0,
-      "weight_kg": 1.57,
-      "battery_wh": 46,
+      "weight_kg": 1.55,
+      "battery_wh": 50,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "chassis_decoder",
+      "weight_source": "chassis_decoder",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד \"14 256GB דגם Lenovo Thinkpad L470 מחודש",
+      "brand": "Lenovo",
+      "series": "ThinkPad",
+      "model": "מחשב נייד \"14 256GB דגם Lenovo Thinkpad L470 מחודש",
+      "cpu": "Core i5 (7th Gen)",
+      "ram_gb": 8,
+      "storage_gb": 256,
+      "price_ils": 999,
+      "deal_price_ils": 999,
+      "deal_label": "999 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=422834",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/422834.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.87,
+      "battery_wh": 54,
       "ram_gen": "DDR4",
       "ram_source": "chassis_decoder",
       "screen_source": "listing_explicit",
       "weight_source": "listing_explicit",
-      "battery_source": "listing_explicit",
+      "battery_source": "fallback_estimate",
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "P1000",
@@ -4774,42 +4284,42 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "P1000",
-      "title": "מחשב נייד Lenovo ThinkPad T14S 256GB מחודש",
-      "brand": "Lenovo",
-      "series": "ThinkPad",
-      "model": "מחשב נייד Lenovo ThinkPad T14S 256GB מחודש",
-      "cpu": "Core i7 (10th Gen)",
+      "title": "מחשב נייד 512GB מסך מגע מתהפך \"HP Ultra 5 16 עודפי",
+      "brand": "HP",
+      "series": "Business Series",
+      "model": "מחשב נייד 512GB מסך מגע מתהפך \"HP Ultra 5 16 עודפי",
+      "cpu": "Intel Core Ultra 5",
       "ram_gb": 16,
-      "storage_gb": 256,
-      "price_ils": 2390,
-      "deal_price_ils": 2390,
-      "deal_label": "2,390 ₪",
+      "storage_gb": 512,
+      "price_ils": 3190,
+      "deal_price_ils": 3190,
+      "deal_label": "3,190 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered (Fixed)",
-      "upgradability_score": 5.0,
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=1529100",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=1529308",
       "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/1529100.jpg",
+      "is_touch": true,
+      "is_2in1": true,
+      "image_url": "https://www.p1000.co.il/media/products/1529308.jpg",
       "screen_size_in": 14.0,
-      "weight_kg": 1.48,
-      "battery_wh": 57,
-      "ram_gen": "LPDDR4x",
+      "weight_kg": 1.88,
+      "battery_wh": 55,
+      "ram_gen": "DDR5",
       "ram_source": "chassis_decoder",
-      "screen_source": "chassis_decoder",
+      "screen_source": "fallback_estimate",
       "weight_source": "listing_explicit",
-      "battery_source": "chassis_decoder",
-      "confidence_level": "verified",
+      "battery_source": "listing_explicit",
+      "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "P1000",
@@ -4844,65 +4354,30 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "P1000",
-      "title": "מחשב מסך מגע \"14 Lenovo Thinkpad T480 i5 מחודש",
-      "brand": "Lenovo",
-      "series": "ThinkPad",
-      "model": "מחשב מסך מגע \"14 Lenovo Thinkpad T480 i5 מחודש",
-      "cpu": "Core i5 (8th Gen)",
-      "ram_gb": 32,
-      "storage_gb": 512,
-      "price_ils": 2100,
-      "deal_price_ils": 2100,
-      "deal_label": "2,100 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=224148",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/224148.jpg",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 50,
-      "ram_gen": "DDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "P1000",
-      "title": "מחשב נייד Dell Latitude 5420 i5 gen11 256gb מחודש",
+      "title": "מחשב נייד Dell Latitude 5420 i5 gen11 256GB מחודש",
       "brand": "Dell",
       "series": "Latitude",
-      "model": "מחשב נייד Dell Latitude 5420 i5 gen11 256gb מחודש",
+      "model": "מחשב נייד Dell Latitude 5420 i5 gen11 256GB מחודש",
       "cpu": "Core i5 (11th Gen)",
       "ram_gb": 16,
       "storage_gb": 256,
-      "price_ils": 1799,
-      "deal_price_ils": 1799,
-      "deal_label": "1,799 ₪",
+      "price_ils": 1899,
+      "deal_price_ils": 1899,
+      "deal_label": "1,899 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
       "ram_type": "2x SODIMM Slots (up to 64GB)",
       "upgradability_score": 9.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=224149",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=211312",
       "gpu": "Integrated",
-      "is_touch": false,
+      "is_touch": true,
       "is_2in1": false,
-      "image_url": "https://www.p1000.co.il/media/products/224149.jpg",
+      "image_url": "https://www.p1000.co.il/media/products/211312.jpg",
       "screen_size_in": 14.0,
       "weight_kg": 1.4,
       "battery_wh": 63,
@@ -4914,7 +4389,42 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד מסך מגע \"14 DELL Latitude 5420 מחודש",
+      "brand": "Dell",
+      "series": "Latitude",
+      "model": "מחשב נייד מסך מגע \"14 DELL Latitude 5420 מחודש",
+      "cpu": "Core i5 (11th Gen)",
+      "ram_gb": 16,
+      "storage_gb": 512,
+      "price_ils": 1990,
+      "deal_price_ils": 1990,
+      "deal_label": "1,990 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "2x SODIMM Slots (up to 64GB)",
+      "upgradability_score": 9.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=292799",
+      "gpu": "Integrated",
+      "is_touch": true,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/292799.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.37,
+      "battery_wh": 63,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "listing_explicit",
+      "battery_source": "listing_explicit",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "P1000",
@@ -4949,7 +4459,497 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד \"14 256GB דגם Lenovo T490 מחודש",
+      "brand": "Lenovo",
+      "series": "Business Series",
+      "model": "מחשב נייד \"14 256GB דגם Lenovo T490 מחודש",
+      "cpu": "Core i5 (8th Gen)",
+      "ram_gb": 8,
+      "storage_gb": 256,
+      "price_ils": 1499,
+      "deal_price_ils": 1499,
+      "deal_label": "1,499 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=212338",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/212338.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.57,
+      "battery_wh": 46,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "listing_explicit",
+      "battery_source": "listing_explicit",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד Lenovo ThinkPad T14S 256GB מחודש",
+      "brand": "Lenovo",
+      "series": "ThinkPad",
+      "model": "מחשב נייד Lenovo ThinkPad T14S 256GB מחודש",
+      "cpu": "Core i7 (10th Gen)",
+      "ram_gb": 16,
+      "storage_gb": 256,
+      "price_ils": 2390,
+      "deal_price_ils": 2390,
+      "deal_label": "2,390 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Soldered (Fixed)",
+      "upgradability_score": 5.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=1529100",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/1529100.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.48,
+      "battery_wh": 57,
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder",
+      "screen_source": "chassis_decoder",
+      "weight_source": "listing_explicit",
+      "battery_source": "chassis_decoder",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד DELL Latitude E7450 i5-6200U 256GB מחודש",
+      "brand": "Dell",
+      "series": "Latitude",
+      "model": "מחשב נייד DELL Latitude E7450 i5-6200U 256GB מחודש",
+      "cpu": "Core i5 (6th Gen)",
+      "ram_gb": 8,
+      "storage_gb": 256,
+      "price_ils": 1299,
+      "deal_price_ils": 1299,
+      "deal_label": "1,299 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=211009",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/211009.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 55,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "fallback_estimate",
+      "weight_source": "fallback_estimate",
+      "battery_source": "listing_explicit",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד DELL LATITUDE 7000 i5-GEN8 256GB מחודש",
+      "brand": "Dell",
+      "series": "Latitude",
+      "model": "מחשב נייד DELL LATITUDE 7000 i5-GEN8 256GB מחודש",
+      "cpu": "Core i5 (8th Gen)",
+      "ram_gb": 8,
+      "storage_gb": 256,
+      "price_ils": 1399,
+      "deal_price_ils": 1399,
+      "deal_label": "1,399 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=211308",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/211308.jpg",
+      "screen_size_in": 12.5,
+      "weight_kg": 1.19,
+      "battery_wh": 60,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "listing_explicit",
+      "battery_source": "listing_explicit",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד \"LENOVO T14 GEN2 I5 256GB 14 מחודש",
+      "brand": "Lenovo",
+      "series": "Business Series",
+      "model": "מחשב נייד \"LENOVO T14 GEN2 I5 256GB 14 מחודש",
+      "cpu": "Core i5 (11th Gen)",
+      "ram_gb": 16,
+      "storage_gb": 256,
+      "price_ils": 2299,
+      "deal_price_ils": 2299,
+      "deal_label": "2,299 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "1x Soldered + 1x SODIMM Slot (max 48GB)",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=213511",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/213511.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 51,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "listing_explicit",
+      "battery_source": "chassis_decoder",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד Dell E6420 I5 2 GEN 128GB SSD מחודש",
+      "brand": "Dell",
+      "series": "Business Series",
+      "model": "מחשב נייד Dell E6420 I5 2 GEN 128GB SSD מחודש",
+      "cpu": "Core i5 (2nd Gen)",
+      "ram_gb": 8,
+      "storage_gb": 128,
+      "price_ils": 999,
+      "deal_price_ils": 999,
+      "deal_label": "999 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=223789",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/223789.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50,
+      "ram_gen": "DDR3L",
+      "ram_source": "chassis_decoder",
+      "screen_source": "fallback_estimate",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב מסך מגע \"14 Lenovo Thinkpad T480 i5 מחודש",
+      "brand": "Lenovo",
+      "series": "ThinkPad",
+      "model": "מחשב מסך מגע \"14 Lenovo Thinkpad T480 i5 מחודש",
+      "cpu": "Core i5 (8th Gen)",
+      "ram_gb": 32,
+      "storage_gb": 512,
+      "price_ils": 2100,
+      "deal_price_ils": 2100,
+      "deal_label": "2,100 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=224148",
+      "gpu": "Integrated",
+      "is_touch": true,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/224148.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד \"LENOVO ThinkPad P51 i7 512GB 15.6 מחודש",
+      "brand": "Lenovo",
+      "series": "ThinkPad",
+      "model": "מחשב נייד \"LENOVO ThinkPad P51 i7 512GB 15.6 מחודש",
+      "cpu": "Core i7 (7th Gen)",
+      "ram_gb": 32,
+      "storage_gb": 512,
+      "price_ils": 2599,
+      "deal_price_ils": 2599,
+      "deal_label": "2,599 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=223710",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/223710.jpg",
+      "screen_size_in": 15.6,
+      "weight_kg": 2.45,
+      "battery_wh": 83,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "chassis_decoder",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד Lenovo 15.6\" I5 8GB 256GB מחודש",
+      "brand": "Lenovo",
+      "series": "Business Series",
+      "model": "מחשב נייד Lenovo 15.6\" I5 8GB 256GB מחודש",
+      "cpu": "Core i5",
+      "ram_gb": 8,
+      "storage_gb": 256,
+      "price_ils": 1149,
+      "deal_price_ils": 1149,
+      "deal_label": "1,149 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=223800",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/223800.jpg",
+      "screen_size_in": 15.6,
+      "weight_kg": 1.8,
+      "battery_wh": 54,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד Latitude 7420 i7 256GB מבית DELL מחודש",
+      "brand": "Dell",
+      "series": "Latitude",
+      "model": "מחשב נייד Latitude 7420 i7 256GB מבית DELL מחודש",
+      "cpu": "Core i7 (11th Gen)",
+      "ram_gb": 16,
+      "storage_gb": 256,
+      "price_ils": 2090,
+      "deal_price_ils": 2090,
+      "deal_label": "2,090 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Soldered (Fixed)",
+      "upgradability_score": 5.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=196090",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": true,
+      "image_url": "https://www.p1000.co.il/media/products/196090.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.18,
+      "battery_wh": 63,
+      "ram_gen": "LPDDR4x",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "listing_explicit",
+      "battery_source": "listing_explicit",
+      "confidence_level": "warning",
+      "weight_warning": "Seller states 1.18kg (likely clamshell typo; 14\" 2-in-1 chassis floor is ~1.36kg)",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד Dell Latitude 5420 i5 gen11 256gb מחודש",
+      "brand": "Dell",
+      "series": "Latitude",
+      "model": "מחשב נייד Dell Latitude 5420 i5 gen11 256gb מחודש",
+      "cpu": "Core i5 (11th Gen)",
+      "ram_gb": 16,
+      "storage_gb": 256,
+      "price_ils": 1799,
+      "deal_price_ils": 1799,
+      "deal_label": "1,799 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "2x SODIMM Slots (up to 64GB)",
+      "upgradability_score": 9.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=224149",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/224149.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.4,
+      "battery_wh": 63,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "listing_explicit",
+      "battery_source": "listing_explicit",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד Lenovo ThinkPad L13 Yoga i5 256GB מחודש",
+      "brand": "Lenovo",
+      "series": "ThinkPad",
+      "model": "מחשב נייד Lenovo ThinkPad L13 Yoga i5 256GB מחודש",
+      "cpu": "Core i5 (11th Gen)",
+      "ram_gb": 16,
+      "storage_gb": 256,
+      "price_ils": 1899,
+      "deal_price_ils": 1899,
+      "deal_label": "1,899 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=223730",
+      "gpu": "Integrated",
+      "is_touch": true,
+      "is_2in1": true,
+      "image_url": "https://www.p1000.co.il/media/products/223730.jpg",
+      "screen_size_in": 13.3,
+      "weight_kg": 1.4,
+      "battery_wh": 50,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "listing_explicit",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד Lenovo 14\" I3 8GB 256GB מחודש",
+      "brand": "Lenovo",
+      "series": "Business Series",
+      "model": "מחשב נייד Lenovo 14\" I3 8GB 256GB מחודש",
+      "cpu": "Core i3 (5th Gen)",
+      "ram_gb": 8,
+      "storage_gb": 256,
+      "price_ils": 990,
+      "deal_price_ils": 990,
+      "deal_label": "990 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "Modular / Semi-Modular",
+      "upgradability_score": 7.5,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=223791",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/223791.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50,
+      "ram_gen": "DDR3L",
+      "ram_source": "chassis_decoder",
+      "screen_source": "listing_explicit",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "P1000",
+      "title": "מחשב נייד i7 GB512 Elitbook G5  840 HP מחודש",
+      "brand": "HP",
+      "series": "Business Series",
+      "model": "מחשב נייד i7 GB512 Elitbook G5  840 HP מחודש",
+      "cpu": "Core i7 (8th Gen)",
+      "ram_gb": 16,
+      "storage_gb": 512,
+      "price_ils": 1599,
+      "deal_price_ils": 1599,
+      "deal_label": "1,599 ₪",
+      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
+      "ram_type": "2x SODIMM Slots (up to 64GB)",
+      "upgradability_score": 9.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.p1000.co.il/sales/saledetails.aspx?productid=316254",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "https://www.p1000.co.il/media/products/316254.jpg",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.57,
+      "battery_wh": 46,
+      "ram_gen": "DDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "chassis_decoder",
+      "weight_source": "listing_explicit",
+      "battery_source": "listing_explicit",
+      "confidence_level": "verified",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     }
   ],
   "lastprice": [
@@ -5233,7 +5233,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5268,7 +5268,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5303,7 +5303,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5338,7 +5338,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5373,7 +5373,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5408,7 +5408,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5443,7 +5443,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5478,7 +5478,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5513,7 +5513,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5548,7 +5548,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5583,7 +5583,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5618,7 +5618,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5653,7 +5653,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5688,7 +5688,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5723,7 +5723,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5758,7 +5758,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5793,7 +5793,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5828,7 +5828,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5863,7 +5863,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5898,7 +5898,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5933,7 +5933,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -5968,7 +5968,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6003,7 +6003,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6038,7 +6038,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6073,7 +6073,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6108,7 +6108,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6143,7 +6143,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6178,7 +6178,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6213,7 +6213,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6248,7 +6248,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6283,7 +6283,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6318,7 +6318,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6353,7 +6353,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6388,7 +6388,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6423,7 +6423,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6458,7 +6458,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6493,7 +6493,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6528,7 +6528,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6563,7 +6563,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6598,7 +6598,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6633,7 +6633,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6668,7 +6668,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6703,7 +6703,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6738,7 +6738,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6773,7 +6773,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6808,7 +6808,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6843,7 +6843,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6878,7 +6878,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6913,7 +6913,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6948,7 +6948,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -6983,7 +6983,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -7018,7 +7018,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -7053,7 +7053,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -7088,7 +7088,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -7123,7 +7123,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -7158,7 +7158,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -7193,7 +7193,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -7228,7 +7228,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -7263,7 +7263,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Volt",
@@ -7298,7 +7298,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ],
   "ofekpc": [
@@ -7335,7 +7335,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Ofek PC",
@@ -7370,7 +7370,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Ofek PC",
@@ -7405,7 +7405,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Ofek PC",
@@ -7440,7 +7440,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Ofek PC",
@@ -7475,7 +7475,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Ofek PC",
@@ -7510,7 +7510,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ],
   "ktwo": [
@@ -7547,7 +7547,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7582,7 +7582,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7617,7 +7617,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7652,7 +7652,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7687,7 +7687,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7722,7 +7722,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7757,7 +7757,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7792,7 +7792,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7827,7 +7827,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7838,9 +7838,9 @@
       "cpu": "Core i7 (11th Gen)",
       "ram_gb": 16,
       "storage_gb": 512,
-      "price_ils": 2350,
-      "deal_price_ils": 2350,
-      "deal_label": "2,350 ₪",
+      "price_ils": 2450,
+      "deal_price_ils": 2450,
+      "deal_label": "2,450 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
       "ram_type": "Soldered (Fixed)",
       "upgradability_score": 5.0,
@@ -7862,7 +7862,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7897,7 +7897,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7932,7 +7932,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -7967,7 +7967,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -8002,7 +8002,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -8037,7 +8037,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -8048,9 +8048,9 @@
       "cpu": "Core i5 (11th Gen)",
       "ram_gb": 16,
       "storage_gb": 256,
-      "price_ils": 1899,
-      "deal_price_ils": 1899,
-      "deal_label": "1,899 ₪",
+      "price_ils": 1990,
+      "deal_price_ils": 1990,
+      "deal_label": "1,990 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
       "ram_type": "1x Soldered + 1x SODIMM Slot (max 48GB)",
       "upgradability_score": 7.5,
@@ -8072,7 +8072,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -8107,7 +8107,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -8142,7 +8142,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -8177,7 +8177,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -8212,7 +8212,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -8247,7 +8247,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "KTWO",
@@ -8282,42 +8282,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "KTWO",
-      "title": "Apple MacBook Pro 13\" M2, 24GB, 512GB SSD, Silver",
-      "brand": "Apple",
-      "series": "MacBook",
-      "model": "Apple MacBook Pro 13\" M2, 24GB, 512GB SSD, Silver",
-      "cpu": "Apple M2",
-      "ram_gb": 24,
-      "storage_gb": 512,
-      "price_ils": 9000,
-      "deal_price_ils": 9000,
-      "deal_label": "9,000 ₪",
-      "storage_type": "🔒 Soldered BGA NVMe / Unified",
-      "ram_type": "Soldered (Non-upgradeable)",
-      "upgradability_score": 1.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.ktwo.co.il/product/apple-macbook-pro-13-z16t-m2-8c-cpu-10c-gpu-24gb-512gb-ssd-silver/",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": false,
-      "image_url": "https://www.ktwo.co.il/wp-content/uploads/2023/06/macbook13_m2001.jpeg",
-      "screen_size_in": 13.3,
-      "weight_kg": 1.3,
-      "battery_wh": 50,
-      "ram_gen": "Unified LPDDR4x",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ],
   "superprice": [
@@ -8354,7 +8319,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8389,7 +8354,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8424,7 +8389,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8459,7 +8424,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8494,7 +8459,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8529,7 +8494,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8564,7 +8529,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8599,7 +8564,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8634,7 +8599,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8669,7 +8634,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8704,7 +8669,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8739,7 +8704,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8774,7 +8739,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8809,7 +8774,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8844,7 +8809,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8879,7 +8844,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8914,7 +8879,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -8949,42 +8914,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "SuperPrice",
-      "title": "15.6” Lenovo IdeaPad Slim3 I7-13 16GB 512SSD WIN 11 PRO – מחשב חדש!!!",
-      "brand": "Lenovo",
-      "series": "IdeaPad",
-      "model": "15.6” Lenovo IdeaPad Slim3 I7-13 16GB 512SSD WIN 11 PRO – מחשב חדש!!!",
-      "cpu": "Core i7 (13th Gen)",
-      "ram_gb": 16,
-      "storage_gb": 512,
-      "price_ils": 2999,
-      "deal_price_ils": 2999,
-      "deal_label": "2,999 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Modular / Semi-Modular",
-      "upgradability_score": 7.5,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://superprice.co.il/product/lenovo-ideapad-slim3-i7-13-16g-512gb/",
-      "gpu": "Integrated",
-      "is_touch": true,
-      "is_2in1": false,
-      "image_url": "https://superprice.co.il/wp-content/uploads/2026/01/Lenovo-IdeaPad-Slim-3-15IRH8.webp",
-      "screen_size_in": 15.6,
-      "weight_kg": 1.8,
-      "battery_wh": 54,
-      "ram_gen": "DDR5",
-      "ram_source": "chassis_decoder",
-      "screen_source": "listing_explicit",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -9019,7 +8949,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -9054,7 +8984,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -9089,7 +9019,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -9124,7 +9054,7 @@
       "confidence_level": "warning",
       "weight_warning": "Seller states 1.75kg (heavy workstation expected ~2.2kg-2.6kg)",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -9159,7 +9089,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "SuperPrice",
@@ -9194,7 +9124,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ],
   "pcil": [
@@ -9231,7 +9161,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "PC-Online (PCIL)",
@@ -9266,7 +9196,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "PC-Online (PCIL)",
@@ -9301,7 +9231,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "PC-Online (PCIL)",
@@ -9336,7 +9266,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ],
   "ivory": [
@@ -10009,41 +9939,6 @@
   "espir": [
     {
       "store": "Espircom",
-      "title": "נייד לנובו Lenovo ThinkPad X1 Carbon Gen 13 AI PC / 14 FHD+ / Intel® Core™ Ultra 7 255U / 16GB / 512GB NVME / WIN 11 PRO / 3Y / 21NX008BIV",
-      "brand": "Lenovo",
-      "series": "ThinkPad",
-      "model": "נייד לנובו Lenovo ThinkPad X1 Carbon Gen 13 AI PC",
-      "cpu": "Intel Core Ultra 7",
-      "ram_gb": 16,
-      "storage_gb": 512,
-      "price_ils": 9190,
-      "deal_price_ils": 9190,
-      "deal_label": "9,190 ₪",
-      "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
-      "ram_type": "Soldered (Fixed)",
-      "upgradability_score": 5.0,
-      "warranty_months": 36,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.espir.co.il/product/נייד-לנובו-lenovo-thinkpad-x1-carbon-gen-13-21nx008biv",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.1,
-      "battery_wh": 57,
-      "ram_gen": "LPDDR5",
-      "ram_source": "chassis_decoder",
-      "screen_source": "chassis_decoder",
-      "weight_source": "chassis_decoder",
-      "battery_source": "chassis_decoder",
-      "confidence_level": "verified",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "Espircom",
       "title": "מקבוק פרו Apple MacBook Pro 14 (2025) / M5 10-Core CPU / 16GB / 512GB / 10-Core GPU / Space Black / MDE04HB/A",
       "brand": "Apple",
       "series": "MacBook",
@@ -10075,7 +9970,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10110,7 +10005,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10145,7 +10040,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10180,7 +10075,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10215,7 +10110,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10250,77 +10145,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "Espircom",
-      "title": "מקבוק ניאו Apple MacBook Neo 13 (2026) / A18 Pro 6‑Core CPU / 8GB / 512GB / 5-Core GPU / Citrus / MHFE4HB/A",
-      "brand": "Apple",
-      "series": "MacBook",
-      "model": "מקבוק ניאו Apple MacBook Neo 13 (2026)",
-      "cpu": "Core i5",
-      "ram_gb": 8,
-      "storage_gb": 512,
-      "price_ils": 2990,
-      "deal_price_ils": 2990,
-      "deal_label": "2,990 ₪",
-      "storage_type": "🔒 Soldered BGA NVMe / Unified",
-      "ram_type": "Soldered (Non-upgradeable)",
-      "upgradability_score": 1.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.espir.co.il/product/מקבוק-ניאו-apple-macbook-neo-13-2026-a18-pro-mhfe4hba",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 50,
-      "ram_gen": "LPDDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "fallback_estimate",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "Espircom",
-      "title": "מקבוק ניאו Apple MacBook Neo 13 (2026) / A18 Pro 6‑Core CPU / 8GB / 512GB / 5-Core GPU / Silver / MHFC4HB/A",
-      "brand": "Apple",
-      "series": "MacBook",
-      "model": "מקבוק ניאו Apple MacBook Neo 13 (2026)",
-      "cpu": "Core i5",
-      "ram_gb": 8,
-      "storage_gb": 512,
-      "price_ils": 2990,
-      "deal_price_ils": 2990,
-      "deal_label": "2,990 ₪",
-      "storage_type": "🔒 Soldered BGA NVMe / Unified",
-      "ram_type": "Soldered (Non-upgradeable)",
-      "upgradability_score": 1.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.espir.co.il/product/מקבוק-ניאו-apple-macbook-neo-13-2026-a18-mhfc4hba",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 50,
-      "ram_gen": "LPDDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "fallback_estimate",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10355,7 +10180,42 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "Espircom",
+      "title": "מקבוק ניאו Apple MacBook Neo 13 (2026) / A18 Pro 6‑Core CPU / 8GB / 512GB / 5-Core GPU / Citrus / MHFE4HB/A",
+      "brand": "Apple",
+      "series": "MacBook",
+      "model": "מקבוק ניאו Apple MacBook Neo 13 (2026)",
+      "cpu": "Core i5",
+      "ram_gb": 8,
+      "storage_gb": 512,
+      "price_ils": 2990,
+      "deal_price_ils": 2990,
+      "deal_label": "2,990 ₪",
+      "storage_type": "🔒 Soldered BGA NVMe / Unified",
+      "ram_type": "Soldered (Non-upgradeable)",
+      "upgradability_score": 1.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.espir.co.il/product/מקבוק-ניאו-apple-macbook-neo-13-2026-a18-pro-mhfe4hba",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50,
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "fallback_estimate",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10390,7 +10250,42 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "Espircom",
+      "title": "מקבוק ניאו Apple MacBook Neo 13 (2026) / A18 Pro 6‑Core CPU / 8GB / 512GB / 5-Core GPU / Silver / MHFC4HB/A",
+      "brand": "Apple",
+      "series": "MacBook",
+      "model": "מקבוק ניאו Apple MacBook Neo 13 (2026)",
+      "cpu": "Core i5",
+      "ram_gb": 8,
+      "storage_gb": 512,
+      "price_ils": 2990,
+      "deal_price_ils": 2990,
+      "deal_label": "2,990 ₪",
+      "storage_type": "🔒 Soldered BGA NVMe / Unified",
+      "ram_type": "Soldered (Non-upgradeable)",
+      "upgradability_score": 1.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.espir.co.il/product/מקבוק-ניאו-apple-macbook-neo-13-2026-a18-mhfc4hba",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50,
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "fallback_estimate",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10425,7 +10320,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10460,7 +10355,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10495,7 +10390,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10530,7 +10425,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10565,7 +10460,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10600,7 +10495,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10635,42 +10530,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "Espircom",
-      "title": "מקבוק אייר MacBook Air 13 (2026) / M5 US Layout 10-Core CPU / 16GB / 512GB / 8-Core GPU / Silver / Z1L0000FB",
-      "brand": "Apple",
-      "series": "MacBook",
-      "model": "מקבוק אייר MacBook Air 13 (2026)",
-      "cpu": "Core i5",
-      "ram_gb": 16,
-      "storage_gb": 512,
-      "price_ils": 5180,
-      "deal_price_ils": 5180,
-      "deal_label": "5,180 ₪",
-      "storage_type": "🔒 Soldered BGA NVMe / Unified",
-      "ram_type": "Soldered (Non-upgradeable)",
-      "upgradability_score": 1.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.espir.co.il/product/macbook-air-13-2026-z1l6001ub",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 50,
-      "ram_gen": "LPDDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "fallback_estimate",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10705,26 +10565,26 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
-      "title": "מקבוק אייר MacBook Air 13 (2026) / M5 10-Core CPU / 16GB / 512GB / 10-Core GPU / Sky Blue / Z1L9000FQ",
+      "title": "מקבוק אייר MacBook Air 13 (2026) / M5 US Layout 10-Core CPU / 16GB / 512GB / 8-Core GPU / Silver / Z1L0000FB",
       "brand": "Apple",
       "series": "MacBook",
       "model": "מקבוק אייר MacBook Air 13 (2026)",
       "cpu": "Core i5",
       "ram_gb": 16,
       "storage_gb": 512,
-      "price_ils": 5390,
-      "deal_price_ils": 5390,
-      "deal_label": "5,390 ₪",
+      "price_ils": 5180,
+      "deal_price_ils": 5180,
+      "deal_label": "5,180 ₪",
       "storage_type": "🔒 Soldered BGA NVMe / Unified",
       "ram_type": "Soldered (Non-upgradeable)",
       "upgradability_score": 1.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://www.espir.co.il/product/מקבוק-אייר-macbook-air-13-2026-m5-z1l9000fq",
+      "url": "https://www.espir.co.il/product/macbook-air-13-2026-z1l6001ub",
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
@@ -10740,7 +10600,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10775,7 +10635,42 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "Espircom",
+      "title": "מקבוק אייר MacBook Air 13 (2026) / M5 10-Core CPU / 16GB / 512GB / 10-Core GPU / Sky Blue / Z1L9000FQ",
+      "brand": "Apple",
+      "series": "MacBook",
+      "model": "מקבוק אייר MacBook Air 13 (2026)",
+      "cpu": "Core i5",
+      "ram_gb": 16,
+      "storage_gb": 512,
+      "price_ils": 5390,
+      "deal_price_ils": 5390,
+      "deal_label": "5,390 ₪",
+      "storage_type": "🔒 Soldered BGA NVMe / Unified",
+      "ram_type": "Soldered (Non-upgradeable)",
+      "upgradability_score": 1.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.espir.co.il/product/מקבוק-אייר-macbook-air-13-2026-m5-z1l9000fq",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50,
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "fallback_estimate",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10810,7 +10705,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10845,7 +10740,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10880,42 +10775,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "Espircom",
-      "title": "מקבוק אייר MacBook Air 13 (2026) / M5 10-Core CPU / 24GB / 512GB / 10-Core GPU / Sky Blue / Z1L9001GE",
-      "brand": "Apple",
-      "series": "MacBook",
-      "model": "מקבוק אייר MacBook Air 13 (2026)",
-      "cpu": "Core i5",
-      "ram_gb": 24,
-      "storage_gb": 512,
-      "price_ils": 5690,
-      "deal_price_ils": 5690,
-      "deal_label": "5,690 ₪",
-      "storage_type": "🔒 Soldered BGA NVMe / Unified",
-      "ram_type": "Soldered (Non-upgradeable)",
-      "upgradability_score": 1.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.espir.co.il/product/מקבוק-אייר-macbook-air-13-2026-m5-z1l9001ge",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 50,
-      "ram_gen": "LPDDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "fallback_estimate",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10950,7 +10810,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -10985,7 +10845,42 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "Espircom",
+      "title": "מקבוק אייר MacBook Air 13 (2026) / M5 10-Core CPU / 24GB / 512GB / 10-Core GPU / Sky Blue / Z1L9001GE",
+      "brand": "Apple",
+      "series": "MacBook",
+      "model": "מקבוק אייר MacBook Air 13 (2026)",
+      "cpu": "Core i5",
+      "ram_gb": 24,
+      "storage_gb": 512,
+      "price_ils": 5690,
+      "deal_price_ils": 5690,
+      "deal_label": "5,690 ₪",
+      "storage_type": "🔒 Soldered BGA NVMe / Unified",
+      "ram_type": "Soldered (Non-upgradeable)",
+      "upgradability_score": 1.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.espir.co.il/product/מקבוק-אייר-macbook-air-13-2026-m5-z1l9001ge",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50,
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "fallback_estimate",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11020,77 +10915,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "Espircom",
-      "title": "מקבוק אייר MacBook Air 13 (2026) / M5 US Layout 10-Core CPU / 24GB / 512GB / 10-Core GPU / Midnight / Z1L6001FT",
-      "brand": "Apple",
-      "series": "MacBook",
-      "model": "מקבוק אייר MacBook Air 13 (2026)",
-      "cpu": "Core i5",
-      "ram_gb": 24,
-      "storage_gb": 512,
-      "price_ils": 5790,
-      "deal_price_ils": 5790,
-      "deal_label": "5,790 ₪",
-      "storage_type": "🔒 Soldered BGA NVMe / Unified",
-      "ram_type": "Soldered (Non-upgradeable)",
-      "upgradability_score": 1.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.espir.co.il/product/macbook-air-13-2026-z1l6001ft",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 50,
-      "ram_gen": "LPDDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "fallback_estimate",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
-    },
-    {
-      "store": "Espircom",
-      "title": "מקבוק אייר MacBook Air 13 (2026) M5 US Layout 10-Core CPU/24GB/512GB/10-Core GPU Silver Z1L0001P2",
-      "brand": "Apple",
-      "series": "MacBook",
-      "model": "מקבוק אייר MacBook Air 13 (2026) M5 US Layout 10-Core CPU",
-      "cpu": "Core i5",
-      "ram_gb": 24,
-      "storage_gb": 512,
-      "price_ils": 5790,
-      "deal_price_ils": 5790,
-      "deal_label": "5,790 ₪",
-      "storage_type": "🔒 Soldered BGA NVMe / Unified",
-      "ram_type": "Soldered (Non-upgradeable)",
-      "upgradability_score": 1.0,
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.espir.co.il/product/מקבוק-אייר-macbook-air-13-2026-m5-z1l0001p2",
-      "gpu": "Integrated",
-      "is_touch": false,
-      "is_2in1": false,
-      "image_url": "",
-      "screen_size_in": 14.0,
-      "weight_kg": 1.5,
-      "battery_wh": 50,
-      "ram_gen": "LPDDR4",
-      "ram_source": "chassis_decoder",
-      "screen_source": "fallback_estimate",
-      "weight_source": "fallback_estimate",
-      "battery_source": "fallback_estimate",
-      "confidence_level": "estimated",
-      "weight_warning": "",
-      "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11125,26 +10950,26 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
-      "title": "מקבוק אייר MacBook Air 15 (2026) / M5 10-Core CPU / 16GB / 512GB / 10-Core GPU / Sky Blue / MDVQ4HB/A",
+      "title": "מקבוק אייר MacBook Air 13 (2026) / M5 US Layout 10-Core CPU / 24GB / 512GB / 10-Core GPU / Midnight / Z1L6001FT",
       "brand": "Apple",
       "series": "MacBook",
-      "model": "מקבוק אייר MacBook Air 15 (2026)",
+      "model": "מקבוק אייר MacBook Air 13 (2026)",
       "cpu": "Core i5",
-      "ram_gb": 16,
+      "ram_gb": 24,
       "storage_gb": 512,
-      "price_ils": 5890,
-      "deal_price_ils": 5890,
-      "deal_label": "5,890 ₪",
+      "price_ils": 5790,
+      "deal_price_ils": 5790,
+      "deal_label": "5,790 ₪",
       "storage_type": "🔒 Soldered BGA NVMe / Unified",
       "ram_type": "Soldered (Non-upgradeable)",
       "upgradability_score": 1.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://www.espir.co.il/product/מקבוק-אייר-macbook-air-13-2026-m5-1mdvq4hba",
+      "url": "https://www.espir.co.il/product/macbook-air-13-2026-z1l6001ft",
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
@@ -11160,7 +10985,42 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "Espircom",
+      "title": "מקבוק אייר MacBook Air 13 (2026) M5 US Layout 10-Core CPU/24GB/512GB/10-Core GPU Silver Z1L0001P2",
+      "brand": "Apple",
+      "series": "MacBook",
+      "model": "מקבוק אייר MacBook Air 13 (2026) M5 US Layout 10-Core CPU",
+      "cpu": "Core i5",
+      "ram_gb": 24,
+      "storage_gb": 512,
+      "price_ils": 5790,
+      "deal_price_ils": 5790,
+      "deal_label": "5,790 ₪",
+      "storage_type": "🔒 Soldered BGA NVMe / Unified",
+      "ram_type": "Soldered (Non-upgradeable)",
+      "upgradability_score": 1.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.espir.co.il/product/מקבוק-אייר-macbook-air-13-2026-m5-z1l0001p2",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50,
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "fallback_estimate",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11195,7 +11055,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11230,7 +11090,42 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
+    },
+    {
+      "store": "Espircom",
+      "title": "מקבוק אייר MacBook Air 15 (2026) / M5 10-Core CPU / 16GB / 512GB / 10-Core GPU / Sky Blue / MDVQ4HB/A",
+      "brand": "Apple",
+      "series": "MacBook",
+      "model": "מקבוק אייר MacBook Air 15 (2026)",
+      "cpu": "Core i5",
+      "ram_gb": 16,
+      "storage_gb": 512,
+      "price_ils": 5890,
+      "deal_price_ils": 5890,
+      "deal_label": "5,890 ₪",
+      "storage_type": "🔒 Soldered BGA NVMe / Unified",
+      "ram_type": "Soldered (Non-upgradeable)",
+      "upgradability_score": 1.0,
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.espir.co.il/product/מקבוק-אייר-macbook-air-13-2026-m5-1mdvq4hba",
+      "gpu": "Integrated",
+      "is_touch": false,
+      "is_2in1": false,
+      "image_url": "",
+      "screen_size_in": 14.0,
+      "weight_kg": 1.5,
+      "battery_wh": 50,
+      "ram_gen": "LPDDR4",
+      "ram_source": "chassis_decoder",
+      "screen_source": "fallback_estimate",
+      "weight_source": "fallback_estimate",
+      "battery_source": "fallback_estimate",
+      "confidence_level": "estimated",
+      "weight_warning": "",
+      "battery_warning": "",
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11265,7 +11160,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11300,11 +11195,11 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
-      "title": "מקבוק אייר MacBook Air 13 (2026) M5 10-Core CPU/16GB/1TB/10-Core GPU Silver MDH84HB/A",
+      "title": "מקבוק אייר MacBook Air 13 (2026) M5 10-Core CPU/16GB/1TB/10-Core GPU Sky Blue MDHJ4HB/A",
       "brand": "Apple",
       "series": "MacBook",
       "model": "מקבוק אייר MacBook Air 13 (2026) M5 10-Core CPU",
@@ -11319,7 +11214,7 @@
       "upgradability_score": 1.0,
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://www.espir.co.il/product/מקבוק-אייר-macbook-air-13-2026-m5-mdh84hba",
+      "url": "https://www.espir.co.il/product/מקבוק-אייר-macbook-air-13-2026-m5-mdhj4hba",
       "gpu": "Integrated",
       "is_touch": false,
       "is_2in1": false,
@@ -11335,7 +11230,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11370,7 +11265,7 @@
       "confidence_level": "estimated",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11405,7 +11300,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11440,7 +11335,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11475,7 +11370,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11510,7 +11405,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11545,7 +11440,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11580,7 +11475,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11615,7 +11510,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11650,7 +11545,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11661,9 +11556,9 @@
       "cpu": "Intel Core Ultra 7",
       "ram_gb": 32,
       "storage_gb": 1000,
-      "price_ils": 9190,
-      "deal_price_ils": 9190,
-      "deal_label": "9,190 ₪",
+      "price_ils": 9090,
+      "deal_price_ils": 9090,
+      "deal_label": "9,090 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
       "ram_type": "Modular / Semi-Modular",
       "upgradability_score": 7.5,
@@ -11685,7 +11580,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     },
     {
       "store": "Espircom",
@@ -11696,9 +11591,9 @@
       "cpu": "Intel Core Ultra 7",
       "ram_gb": 32,
       "storage_gb": 1000,
-      "price_ils": 9390,
-      "deal_price_ils": 9390,
-      "deal_label": "9,390 ₪",
+      "price_ils": 9290,
+      "deal_price_ils": 9290,
+      "deal_label": "9,290 ₪",
       "storage_type": "⚡ M.2 2280 PCIe NVMe (Swappable)",
       "ram_type": "Modular / Semi-Modular",
       "upgradability_score": 7.5,
@@ -11720,7 +11615,7 @@
       "confidence_level": "verified",
       "weight_warning": "",
       "battery_warning": "",
-      "scraped_at": "2026-10-26"
+      "scraped_at": "2026-10-27"
     }
   ]
 }
