@@ -1,178 +1,5 @@
 {
-  "itoutlet": [
-    {
-      "store": "IT Outlet",
-      "title": "טלפון סלולרי מחודש Samsung Galaxy S10 128GB",
-      "brand": "Samsung",
-      "model": "טלפון סלולרי מחודש Samsung Galaxy S10 128GB",
-      "device_type": "phone",
-      "ram_gb": 6,
-      "storage_gb": 128,
-      "price_ils": 349,
-      "deal_price_ils": 349,
-      "deal_label": "349 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.itoutlet.co.il/items/8597495-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Samsung-Galaxy-S10-128GB-%D7%A1%D7%9E%D7%A1%D7%95%D7%A0%D7%92",
-      "screen_size_in": 6.1,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "IT Outlet",
-      "title": "טלפון סלולרי מחודש Samsung Galaxy S10 PLUS 128GB",
-      "brand": "Samsung",
-      "model": "טלפון סלולרי מחודש Samsung Galaxy S10 PLUS 128GB",
-      "device_type": "phone",
-      "ram_gb": 8,
-      "storage_gb": 128,
-      "price_ils": 549,
-      "deal_price_ils": 549,
-      "deal_label": "549 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.itoutlet.co.il/items/5987191-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Samsung-Galaxy-S10-PLUS-128GB-%D7%A1%D7%9E%D7%A1%D7%95%D7%A0%D7%92",
-      "screen_size_in": 6.7,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "IT Outlet",
-      "title": "טאבלט מחודש Samsung Galaxy Tab A 10.1 (2019)",
-      "brand": "Samsung",
-      "model": "טאבלט מחודש Samsung Galaxy Tab A 10.1 (2019)",
-      "device_type": "tablet",
-      "ram_gb": 6,
-      "storage_gb": 128,
-      "price_ils": 549,
-      "deal_price_ils": 549,
-      "deal_label": "549 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.itoutlet.co.il/items/9107086-%D7%98%D7%90%D7%91%D7%9C%D7%98-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Samsung-Galaxy-Tab-A-10-1-2019-%D7%A1%D7%9E%D7%A1%D7%95%D7%A0%D7%92",
-      "screen_size_in": 10.1,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "IT Outlet",
-      "title": "טאבלט מחודש Apple iPad Air 10.5",
-      "brand": "Apple",
-      "model": "טאבלט מחודש Apple iPad Air 10.5",
-      "device_type": "tablet",
-      "ram_gb": 4,
-      "storage_gb": 128,
-      "price_ils": 649,
-      "deal_price_ils": 649,
-      "deal_label": "649 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.itoutlet.co.il/items/9690762-%D7%98%D7%90%D7%91%D7%9C%D7%98-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Apple-iPad-Air-10-5-64GB-A2123-",
-      "screen_size_in": 10.5,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "IT Outlet",
-      "title": "טלפון סלולרי מחודש Apple iPhone 12 64GB",
-      "brand": "Apple",
-      "model": "טלפון סלולרי מחודש Apple iPhone 12 64GB",
-      "device_type": "phone",
-      "ram_gb": 4,
-      "storage_gb": 64,
-      "price_ils": 749,
-      "deal_price_ils": 749,
-      "deal_label": "749 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.itoutlet.co.il/items/7949343-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Apple-iPhone-12-64GB-",
-      "screen_size_in": 6.1,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "IT Outlet",
-      "title": "טלפון סלולרי מחודש Apple iPhone 12 128GB",
-      "brand": "Apple",
-      "model": "טלפון סלולרי מחודש Apple iPhone 12 128GB",
-      "device_type": "phone",
-      "ram_gb": 4,
-      "storage_gb": 128,
-      "price_ils": 800,
-      "deal_price_ils": 800,
-      "deal_label": "800 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.itoutlet.co.il/items/9689629-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Apple-iPhone-12-128GB-",
-      "screen_size_in": 6.1,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "IT Outlet",
-      "title": "טלפון סלולרי מחודש Samsung Galaxy S20 FE 128GB",
-      "brand": "Samsung",
-      "model": "טלפון סלולרי מחודש Samsung Galaxy S20 FE 128GB",
-      "device_type": "phone",
-      "ram_gb": 8,
-      "storage_gb": 128,
-      "price_ils": 849,
-      "deal_price_ils": 849,
-      "deal_label": "849 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.itoutlet.co.il/items/9143332-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Samsung-Galaxy-S20-FE-128GB-%D7%A1%D7%9E%D7%A1%D7%95%D7%A0%D7%92",
-      "screen_size_in": 6.1,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "IT Outlet",
-      "title": "טלפון סלולרי מחודש Apple iPhone 12 128GB",
-      "brand": "Apple",
-      "model": "טלפון סלולרי מחודש Apple iPhone 12 128GB",
-      "device_type": "phone",
-      "ram_gb": 4,
-      "storage_gb": 128,
-      "price_ils": 1000,
-      "deal_price_ils": 1000,
-      "deal_label": "1,000 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.itoutlet.co.il/items/8429497-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Apple-iPhone-12-128GB-",
-      "screen_size_in": 6.1,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    }
-  ],
   "gomobile": [
-    {
-      "store": "GoMobile Outlet",
-      "title": "טלפון סלולרי וואן פלוס OnePlus 12 5G 512GB 16GB RAM מחודש",
-      "brand": "OnePlus",
-      "model": "טלפון סלולרי וואן פלוס OnePlus 12 5G 512GB 16GB RAM מחודש",
-      "device_type": "phone",
-      "ram_gb": 16,
-      "storage_gb": 512,
-      "price_ils": 1399,
-      "deal_price_ils": 1399,
-      "deal_label": "1,399 ₪",
-      "warranty_months": 3,
-      "stock_status": "🟢 In Stock",
-      "url": "https://www.gomobile.co.il/product/%d7%98%d7%9c%d7%a4%d7%95%d7%9f-%d7%a1%d7%9c%d7%95%d7%9c%d7%a8%d7%99-%d7%95%d7%95%d7%90%d7%9f-%d7%a4%d7%9c%d7%95%d7%a1-oneplus-12-5g-512gb-16gb-ram-%d7%9e%d7%97%d7%95%d7%93%d7%a9/",
-      "screen_size_in": 6.7,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
     {
       "store": "GoMobile Outlet",
       "title": "טלפון סלולרי OnePlus 15 512GB 16GB RAM וואן פלוס מחודש",
@@ -190,7 +17,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "GoMobile Outlet",
@@ -209,7 +36,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "GoMobile Outlet",
@@ -228,7 +55,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "GoMobile Outlet",
@@ -247,7 +74,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "GoMobile Outlet",
@@ -266,7 +93,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "GoMobile Outlet",
@@ -285,7 +112,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "GoMobile Outlet",
@@ -304,7 +131,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "GoMobile Outlet",
@@ -323,7 +150,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "GoMobile Outlet",
@@ -342,67 +169,183 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "GoMobile Outlet",
+      "title": "טלפון סלולרי Samsung Galaxy S26 S942B/DS 512GB 12GB RAM סמסונג מחודש שריטה במסך צד שמאל למטה",
+      "brand": "Samsung",
+      "model": "טלפון סלולרי Samsung Galaxy S26 S942B/DS 512GB 12GB RAM סמסונג מחודש שריטה במסך צד שמאל למטה",
+      "device_type": "phone",
+      "ram_gb": 12,
+      "storage_gb": 512,
+      "price_ils": 2799,
+      "deal_price_ils": 2799,
+      "deal_label": "2,799 ₪",
+      "warranty_months": 3,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.gomobile.co.il/product/%d7%98%d7%9c%d7%a4%d7%95%d7%9f-%d7%a1%d7%9c%d7%95%d7%9c%d7%a8%d7%99-samsung-galaxy-s26-s942b-ds-512gb-12gb-ram-%d7%a1%d7%9e%d7%a1%d7%95%d7%a0%d7%92-%d7%9e%d7%97%d7%95%d7%93%d7%a9-%d7%a9%d7%a8%d7%99/",
+      "screen_size_in": 5.8,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    }
+  ],
+  "itoutlet": [
+    {
+      "store": "IT Outlet",
+      "title": "טלפון סלולרי מחודש Samsung Galaxy S10 128GB",
+      "brand": "Samsung",
+      "model": "טלפון סלולרי מחודש Samsung Galaxy S10 128GB",
+      "device_type": "phone",
+      "ram_gb": 6,
+      "storage_gb": 128,
+      "price_ils": 349,
+      "deal_price_ils": 349,
+      "deal_label": "349 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.itoutlet.co.il/items/8597495-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Samsung-Galaxy-S10-128GB-%D7%A1%D7%9E%D7%A1%D7%95%D7%A0%D7%92",
+      "screen_size_in": 6.1,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "IT Outlet",
+      "title": "טלפון סלולרי מחודש Samsung Galaxy S10 PLUS 128GB",
+      "brand": "Samsung",
+      "model": "טלפון סלולרי מחודש Samsung Galaxy S10 PLUS 128GB",
+      "device_type": "phone",
+      "ram_gb": 8,
+      "storage_gb": 128,
+      "price_ils": 549,
+      "deal_price_ils": 549,
+      "deal_label": "549 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.itoutlet.co.il/items/5987191-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Samsung-Galaxy-S10-PLUS-128GB-%D7%A1%D7%9E%D7%A1%D7%95%D7%A0%D7%92",
+      "screen_size_in": 6.7,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "IT Outlet",
+      "title": "טאבלט מחודש Samsung Galaxy Tab A 10.1 (2019)",
+      "brand": "Samsung",
+      "model": "טאבלט מחודש Samsung Galaxy Tab A 10.1 (2019)",
+      "device_type": "tablet",
+      "ram_gb": 6,
+      "storage_gb": 128,
+      "price_ils": 549,
+      "deal_price_ils": 549,
+      "deal_label": "549 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.itoutlet.co.il/items/9107086-%D7%98%D7%90%D7%91%D7%9C%D7%98-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Samsung-Galaxy-Tab-A-10-1-2019-%D7%A1%D7%9E%D7%A1%D7%95%D7%A0%D7%92",
+      "screen_size_in": 10.1,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "IT Outlet",
+      "title": "טאבלט מחודש Apple iPad Air 10.5",
+      "brand": "Apple",
+      "model": "טאבלט מחודש Apple iPad Air 10.5",
+      "device_type": "tablet",
+      "ram_gb": 4,
+      "storage_gb": 128,
+      "price_ils": 649,
+      "deal_price_ils": 649,
+      "deal_label": "649 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.itoutlet.co.il/items/9690762-%D7%98%D7%90%D7%91%D7%9C%D7%98-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Apple-iPad-Air-10-5-64GB-A2123-",
+      "screen_size_in": 10.5,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "IT Outlet",
+      "title": "טלפון סלולרי מחודש Apple iPhone 12 64GB",
+      "brand": "Apple",
+      "model": "טלפון סלולרי מחודש Apple iPhone 12 64GB",
+      "device_type": "phone",
+      "ram_gb": 4,
+      "storage_gb": 64,
+      "price_ils": 749,
+      "deal_price_ils": 749,
+      "deal_label": "749 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.itoutlet.co.il/items/7949343-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Apple-iPhone-12-64GB-",
+      "screen_size_in": 6.1,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "IT Outlet",
+      "title": "טלפון סלולרי מחודש Apple iPhone 12 128GB",
+      "brand": "Apple",
+      "model": "טלפון סלולרי מחודש Apple iPhone 12 128GB",
+      "device_type": "phone",
+      "ram_gb": 4,
+      "storage_gb": 128,
+      "price_ils": 800,
+      "deal_price_ils": 800,
+      "deal_label": "800 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.itoutlet.co.il/items/9689629-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Apple-iPhone-12-128GB-",
+      "screen_size_in": 6.1,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "IT Outlet",
+      "title": "טלפון סלולרי מחודש Samsung Galaxy S20 FE 128GB",
+      "brand": "Samsung",
+      "model": "טלפון סלולרי מחודש Samsung Galaxy S20 FE 128GB",
+      "device_type": "phone",
+      "ram_gb": 8,
+      "storage_gb": 128,
+      "price_ils": 849,
+      "deal_price_ils": 849,
+      "deal_label": "849 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.itoutlet.co.il/items/9143332-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Samsung-Galaxy-S20-FE-128GB-%D7%A1%D7%9E%D7%A1%D7%95%D7%A0%D7%92",
+      "screen_size_in": 6.1,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "IT Outlet",
+      "title": "טלפון סלולרי מחודש Apple iPhone 12 128GB",
+      "brand": "Apple",
+      "model": "טלפון סלולרי מחודש Apple iPhone 12 128GB",
+      "device_type": "phone",
+      "ram_gb": 4,
+      "storage_gb": 128,
+      "price_ils": 1000,
+      "deal_price_ils": 1000,
+      "deal_label": "1,000 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://www.itoutlet.co.il/items/8429497-%D7%98%D7%9C%D7%A4%D7%95%D7%9F-%D7%A1%D7%9C%D7%95%D7%9C%D7%A8%D7%99-%D7%9E%D7%97%D7%95%D7%93%D7%A9-Apple-iPhone-12-128GB-",
+      "screen_size_in": 6.1,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
     }
   ],
   "partner": [
-    {
-      "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 15 Pro Max 256GB 5G מחודש",
-      "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 15 Pro Max 256GB 5G מחודש",
-      "device_type": "phone",
-      "ram_gb": 8,
-      "storage_gb": 256,
-      "price_ils": 2599,
-      "deal_price_ils": 2599,
-      "deal_label": "2,599 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-dakq5n0d",
-      "screen_size_in": 6.7,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "Partner Plus",
-      "title": "טלפון סלולרי Galaxy S22 Plus 5G 256GB מחודש",
-      "brand": "Samsung",
-      "model": "טלפון סלולרי Galaxy S22 Plus 5G 256GB מחודש",
-      "device_type": "phone",
-      "ram_gb": 8,
-      "storage_gb": 256,
-      "price_ils": 1299,
-      "deal_price_ils": 1299,
-      "deal_label": "1,299 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d3bai0qj",
-      "screen_size_in": 6.7,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "Partner Plus",
-      "title": "טלפון סלולרי Samsung Galaxy S24 Ultra 256GB מחודש",
-      "brand": "Samsung",
-      "model": "טלפון סלולרי Samsung Galaxy S24 Ultra 256GB מחודש",
-      "device_type": "phone",
-      "ram_gb": 12,
-      "storage_gb": 256,
-      "price_ils": 2999,
-      "deal_price_ils": 2999,
-      "deal_label": "2,999 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-dakq5n78",
-      "screen_size_in": 6.7,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
     {
       "store": "Partner Plus",
       "title": "טלפון סלולרי Samsung S24 FE 256GB מחודש - צבע אפור",
@@ -420,26 +363,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 15 Pro 128GB 5G מחודש",
-      "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 15 Pro 128GB 5G מחודש",
-      "device_type": "phone",
-      "ram_gb": 8,
-      "storage_gb": 128,
-      "price_ils": 2099,
-      "deal_price_ils": 2099,
-      "deal_label": "2,099 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-dbaf1btx",
-      "screen_size_in": 6.1,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -458,26 +382,64 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 14 Plus 256GB מחודש",
+      "title": "טלפון סלולרי iPhone 15 Pro 128GB 5G מחודש",
       "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 14 Plus 256GB מחודש",
+      "model": "טלפון סלולרי iPhone 15 Pro 128GB 5G מחודש",
       "device_type": "phone",
-      "ram_gb": 4,
-      "storage_gb": 256,
-      "price_ils": 1699,
-      "deal_price_ils": 1699,
-      "deal_label": "1,699 ₪",
+      "ram_gb": 8,
+      "storage_gb": 128,
+      "price_ils": 2099,
+      "deal_price_ils": 2099,
+      "deal_label": "2,099 ₪",
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d6gl38xe",
+      "url": "https://partnerplus.partner.co.il/1-dbaf1btx",
+      "screen_size_in": 6.1,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "Partner Plus",
+      "title": "טלפון סלולרי Galaxy S22 Plus 5G 256GB מחודש",
+      "brand": "Samsung",
+      "model": "טלפון סלולרי Galaxy S22 Plus 5G 256GB מחודש",
+      "device_type": "phone",
+      "ram_gb": 8,
+      "storage_gb": 256,
+      "price_ils": 1299,
+      "deal_price_ils": 1299,
+      "deal_label": "1,299 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://partnerplus.partner.co.il/1-d3bai0qj",
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "Partner Plus",
+      "title": "טלפון סלולרי iPhone 15 Pro Max 256GB 5G מחודש",
+      "brand": "Apple",
+      "model": "טלפון סלולרי iPhone 15 Pro Max 256GB 5G מחודש",
+      "device_type": "phone",
+      "ram_gb": 8,
+      "storage_gb": 256,
+      "price_ils": 2599,
+      "deal_price_ils": 2599,
+      "deal_label": "2,599 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://partnerplus.partner.co.il/1-dakq5n0d",
+      "screen_size_in": 6.7,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -496,64 +458,45 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 14 256GB 5G מחודש",
+      "title": "טלפון סלולרי Samsung Galaxy S24 Ultra 256GB מחודש",
+      "brand": "Samsung",
+      "model": "טלפון סלולרי Samsung Galaxy S24 Ultra 256GB מחודש",
+      "device_type": "phone",
+      "ram_gb": 12,
+      "storage_gb": 256,
+      "price_ils": 2999,
+      "deal_price_ils": 2999,
+      "deal_label": "2,999 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://partnerplus.partner.co.il/1-dakq5n78",
+      "screen_size_in": 6.7,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "Partner Plus",
+      "title": "טלפון סלולרי iPhone 14 Plus 256GB מחודש",
       "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 14 256GB 5G מחודש",
+      "model": "טלפון סלולרי iPhone 14 Plus 256GB מחודש",
       "device_type": "phone",
       "ram_gb": 4,
       "storage_gb": 256,
-      "price_ils": 1499,
-      "deal_price_ils": 1499,
-      "deal_label": "1,499 ₪",
+      "price_ils": 1699,
+      "deal_price_ils": 1699,
+      "deal_label": "1,699 ₪",
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d3bai0pi",
-      "screen_size_in": 6.1,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 14 Pro Max 128GB מחודש",
-      "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 14 Pro Max 128GB מחודש",
-      "device_type": "phone",
-      "ram_gb": 8,
-      "storage_gb": 128,
-      "price_ils": 1749,
-      "deal_price_ils": 1749,
-      "deal_label": "1,749 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d1m4ry0g",
+      "url": "https://partnerplus.partner.co.il/1-d6gl38xe",
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 14 Pro Max 256GB מחודש",
-      "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 14 Pro Max 256GB מחודש",
-      "device_type": "phone",
-      "ram_gb": 8,
-      "storage_gb": 256,
-      "price_ils": 1899,
-      "deal_price_ils": 1899,
-      "deal_label": "1,899 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d1m4ry1h",
-      "screen_size_in": 6.7,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -572,64 +515,26 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 14 Plus 128GB מחודש",
+      "title": "טלפון סלולרי iPhone 14 Pro Max 128GB מחודש",
       "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 14 Plus 128GB מחודש",
+      "model": "טלפון סלולרי iPhone 14 Pro Max 128GB מחודש",
       "device_type": "phone",
-      "ram_gb": 4,
+      "ram_gb": 8,
       "storage_gb": 128,
-      "price_ils": 1499,
-      "deal_price_ils": 1499,
-      "deal_label": "1,499 ₪",
+      "price_ils": 1749,
+      "deal_price_ils": 1749,
+      "deal_label": "1,749 ₪",
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d1zdkaj8",
+      "url": "https://partnerplus.partner.co.il/1-d1m4ry0g",
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 13 Pro 256GB מחודש",
-      "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 13 Pro 256GB מחודש",
-      "device_type": "phone",
-      "ram_gb": 6,
-      "storage_gb": 256,
-      "price_ils": 1499,
-      "deal_price_ils": 1499,
-      "deal_label": "1,499 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d1isoax9",
-      "screen_size_in": 6.1,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "Partner Plus",
-      "title": "טלפון סלולרי Samsung S22 Ultra 256GB מחודש",
-      "brand": "Samsung",
-      "model": "טלפון סלולרי Samsung S22 Ultra 256GB מחודש",
-      "device_type": "phone",
-      "ram_gb": 12,
-      "storage_gb": 256,
-      "price_ils": 1499,
-      "deal_price_ils": 1499,
-      "deal_label": "1,499 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d1umip5y",
-      "screen_size_in": 6.7,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -648,83 +553,102 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
-      "title": "טלפון סלולרי Samsung Galaxy S23 Ultra 256GB מחודש",
-      "brand": "Samsung",
-      "model": "טלפון סלולרי Samsung Galaxy S23 Ultra 256GB מחודש",
+      "title": "טלפון סלולרי iPhone 14 Pro Max 256GB מחודש",
+      "brand": "Apple",
+      "model": "טלפון סלולרי iPhone 14 Pro Max 256GB מחודש",
       "device_type": "phone",
-      "ram_gb": 12,
+      "ram_gb": 8,
       "storage_gb": 256,
       "price_ils": 1899,
       "deal_price_ils": 1899,
       "deal_label": "1,899 ₪",
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-deccvtee",
+      "url": "https://partnerplus.partner.co.il/1-d1m4ry1h",
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 13 Pro Max 128GB מחודש",
+      "title": "טלפון סלולרי iPhone 13 Pro 256GB מחודש",
       "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 13 Pro Max 128GB מחודש",
+      "model": "טלפון סלולרי iPhone 13 Pro 256GB מחודש",
       "device_type": "phone",
-      "ram_gb": 8,
-      "storage_gb": 128,
-      "price_ils": 1399,
-      "deal_price_ils": 1399,
-      "deal_label": "1,399 ₪",
+      "ram_gb": 6,
+      "storage_gb": 256,
+      "price_ils": 1499,
+      "deal_price_ils": 1499,
+      "deal_label": "1,499 ₪",
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d1akkfpy",
-      "screen_size_in": 6.7,
+      "url": "https://partnerplus.partner.co.il/1-d1isoax9",
+      "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
-      "title": "טלפון סלולרי Samsung S24 Plus 256GB מחודש",
+      "title": "טלפון סלולרי Samsung S22 Ultra 256GB מחודש",
       "brand": "Samsung",
-      "model": "טלפון סלולרי Samsung S24 Plus 256GB מחודש",
+      "model": "טלפון סלולרי Samsung S22 Ultra 256GB מחודש",
       "device_type": "phone",
       "ram_gb": 12,
       "storage_gb": 256,
-      "price_ils": 1799,
-      "deal_price_ils": 1799,
-      "deal_label": "1,799 ₪",
+      "price_ils": 1499,
+      "deal_price_ils": 1499,
+      "deal_label": "1,499 ₪",
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-dcr9h6ge",
+      "url": "https://partnerplus.partner.co.il/1-d1umip5y",
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 15 Pro Max 512GB מחודש",
+      "title": "טלפון סלולרי iPhone 14 256GB 5G מחודש",
       "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 15 Pro Max 512GB מחודש",
+      "model": "טלפון סלולרי iPhone 14 256GB 5G מחודש",
       "device_type": "phone",
-      "ram_gb": 8,
-      "storage_gb": 512,
-      "price_ils": 3199,
-      "deal_price_ils": 3199,
-      "deal_label": "3,199 ₪",
+      "ram_gb": 4,
+      "storage_gb": 256,
+      "price_ils": 1499,
+      "deal_price_ils": 1499,
+      "deal_label": "1,499 ₪",
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-ddnzojup",
+      "url": "https://partnerplus.partner.co.il/1-d3bai0pi",
+      "screen_size_in": 6.1,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "Partner Plus",
+      "title": "טלפון סלולרי iPhone 14 Plus 128GB מחודש",
+      "brand": "Apple",
+      "model": "טלפון סלולרי iPhone 14 Plus 128GB מחודש",
+      "device_type": "phone",
+      "ram_gb": 4,
+      "storage_gb": 128,
+      "price_ils": 1499,
+      "deal_price_ils": 1499,
+      "deal_label": "1,499 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://partnerplus.partner.co.il/1-d1zdkaj8",
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -743,26 +667,45 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
-      "title": "טלפון סלולרי iPhone 14 Pro 256GB 5G מחודש",
-      "brand": "Apple",
-      "model": "טלפון סלולרי iPhone 14 Pro 256GB 5G מחודש",
+      "title": "טלפון סלולרי Samsung Galaxy S23 Ultra 256GB מחודש",
+      "brand": "Samsung",
+      "model": "טלפון סלולרי Samsung Galaxy S23 Ultra 256GB מחודש",
       "device_type": "phone",
-      "ram_gb": 6,
+      "ram_gb": 12,
       "storage_gb": 256,
-      "price_ils": 1999,
-      "deal_price_ils": 1999,
-      "deal_label": "1,999 ₪",
+      "price_ils": 1899,
+      "deal_price_ils": 1899,
+      "deal_label": "1,899 ₪",
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d1a6chd3",
-      "screen_size_in": 6.1,
+      "url": "https://partnerplus.partner.co.il/1-deccvtee",
+      "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "Partner Plus",
+      "title": "טלפון סלולרי Samsung S24 Plus 256GB מחודש",
+      "brand": "Samsung",
+      "model": "טלפון סלולרי Samsung S24 Plus 256GB מחודש",
+      "device_type": "phone",
+      "ram_gb": 12,
+      "storage_gb": 256,
+      "price_ils": 1799,
+      "deal_price_ils": 1799,
+      "deal_label": "1,799 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://partnerplus.partner.co.il/1-dcr9h6ge",
+      "screen_size_in": 6.7,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -781,7 +724,26 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "Partner Plus",
+      "title": "טלפון סלולרי iPhone 15 Pro Max 512GB מחודש",
+      "brand": "Apple",
+      "model": "טלפון סלולרי iPhone 15 Pro Max 512GB מחודש",
+      "device_type": "phone",
+      "ram_gb": 8,
+      "storage_gb": 512,
+      "price_ils": 3199,
+      "deal_price_ils": 3199,
+      "deal_label": "3,199 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://partnerplus.partner.co.il/1-ddnzojup",
+      "screen_size_in": 6.7,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -800,26 +762,45 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
-      "title": "טלפון סלולרי Samsung Galaxy S24 FE 128GB מחודש בצבע אפור",
-      "brand": "Samsung",
-      "model": "טלפון סלולרי Samsung Galaxy S24 FE 128GB מחודש בצבע אפור",
+      "title": "טלפון סלולרי iPhone 14 Pro 256GB 5G מחודש",
+      "brand": "Apple",
+      "model": "טלפון סלולרי iPhone 14 Pro 256GB 5G מחודש",
       "device_type": "phone",
-      "ram_gb": 12,
-      "storage_gb": 128,
-      "price_ils": 999,
-      "deal_price_ils": 999,
-      "deal_label": "999 ₪",
+      "ram_gb": 6,
+      "storage_gb": 256,
+      "price_ils": 1999,
+      "deal_price_ils": 1999,
+      "deal_label": "1,999 ₪",
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-dghwmxom",
+      "url": "https://partnerplus.partner.co.il/1-d1a6chd3",
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "Partner Plus",
+      "title": "טלפון סלולרי iPhone 13 Pro Max 128GB מחודש",
+      "brand": "Apple",
+      "model": "טלפון סלולרי iPhone 13 Pro Max 128GB מחודש",
+      "device_type": "phone",
+      "ram_gb": 8,
+      "storage_gb": 128,
+      "price_ils": 1399,
+      "deal_price_ils": 1399,
+      "deal_label": "1,399 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://partnerplus.partner.co.il/1-d1akkfpy",
+      "screen_size_in": 6.7,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -838,26 +819,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
-    },
-    {
-      "store": "Partner Plus",
-      "title": "טלפון סלולרי Samsung Galaxy S23 FE 128GB מחודש",
-      "brand": "Samsung",
-      "model": "טלפון סלולרי Samsung Galaxy S23 FE 128GB מחודש",
-      "device_type": "phone",
-      "ram_gb": 12,
-      "storage_gb": 128,
-      "price_ils": 1099,
-      "deal_price_ils": 1099,
-      "deal_label": "1,099 ₪",
-      "warranty_months": 12,
-      "stock_status": "🟢 In Stock",
-      "url": "https://partnerplus.partner.co.il/1-d0wrhay6",
-      "screen_size_in": 6.1,
-      "image_url": "",
-      "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -876,7 +838,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -895,7 +857,45 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "Partner Plus",
+      "title": "טלפון סלולרי Samsung Galaxy S23 FE 128GB מחודש",
+      "brand": "Samsung",
+      "model": "טלפון סלולרי Samsung Galaxy S23 FE 128GB מחודש",
+      "device_type": "phone",
+      "ram_gb": 12,
+      "storage_gb": 128,
+      "price_ils": 1099,
+      "deal_price_ils": 1099,
+      "deal_label": "1,099 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://partnerplus.partner.co.il/1-d0wrhay6",
+      "screen_size_in": 6.1,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
+    },
+    {
+      "store": "Partner Plus",
+      "title": "טלפון סלולרי Samsung Galaxy S24 FE 128GB מחודש בצבע אפור",
+      "brand": "Samsung",
+      "model": "טלפון סלולרי Samsung Galaxy S24 FE 128GB מחודש בצבע אפור",
+      "device_type": "phone",
+      "ram_gb": 12,
+      "storage_gb": 128,
+      "price_ils": 999,
+      "deal_price_ils": 999,
+      "deal_label": "999 ₪",
+      "warranty_months": 12,
+      "stock_status": "🟢 In Stock",
+      "url": "https://partnerplus.partner.co.il/1-dghwmxom",
+      "screen_size_in": 6.1,
+      "image_url": "",
+      "confidence_level": "verified",
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Partner Plus",
@@ -914,7 +914,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     }
   ],
   "istore": [
@@ -1148,7 +1148,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1167,7 +1167,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1186,7 +1186,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1205,7 +1205,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1224,7 +1224,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1243,7 +1243,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1262,7 +1262,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1281,7 +1281,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1300,7 +1300,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1319,7 +1319,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1338,7 +1338,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1357,7 +1357,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1376,7 +1376,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1395,7 +1395,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1414,7 +1414,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1433,7 +1433,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1452,7 +1452,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1471,7 +1471,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1490,7 +1490,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1509,7 +1509,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1528,7 +1528,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1547,7 +1547,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1566,7 +1566,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1585,7 +1585,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1604,7 +1604,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1623,7 +1623,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1642,7 +1642,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1661,7 +1661,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1680,7 +1680,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1699,7 +1699,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1718,7 +1718,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1737,7 +1737,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1756,7 +1756,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1775,7 +1775,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "Dynamica Outlet",
@@ -1794,7 +1794,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     }
   ],
   "buymobile": [
@@ -1815,7 +1815,7 @@
       "screen_size_in": 6.7,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2026/10/0002856_-15-apple-iphone-15-pro-natural-titanium-128gb_510-800t.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -1834,7 +1834,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2026/10/0002856_-15-apple-iphone-15-pro-natural-titanium-128gb_510-800t.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -1853,7 +1853,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2026/10/0002856_-15-apple-iphone-15-pro-natural-titanium-128gb_510-800t.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -1872,7 +1872,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2024/02/14-plus-yellow-scaled.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -1891,7 +1891,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2026/10/14-white-800t.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -1910,7 +1910,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2023/09/3e6f3cfbc96e0e789086b23f54788ea2.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -1929,7 +1929,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2023/09/3e6f3cfbc96e0e789086b23f54788ea2.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -1948,7 +1948,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2023/09/3e6f3cfbc96e0e789086b23f54788ea2.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -1958,16 +1958,16 @@
       "device_type": "phone",
       "ram_gb": 6,
       "storage_gb": 256,
-      "price_ils": 1690,
-      "deal_price_ils": 1690,
-      "deal_label": "1,690 ₪",
+      "price_ils": 1680,
+      "deal_price_ils": 1680,
+      "deal_label": "1,680 ₪",
       "warranty_months": 12,
       "stock_status": "🟢 In Stock",
       "url": "https://buy-mobile.co.il/product/%d7%90%d7%99%d7%99%d7%a4%d7%95%d7%9f-%d7%98%d7%9c%d7%a4%d7%95%d7%9f-%d7%a1%d7%9c%d7%95%d7%9c%d7%a8%d7%99-apple-iphone-14-pro-256gb-%d7%90%d7%a4%d7%9c-%d7%9e%d7%90%d7%95%d7%a7%d7%98%d7%91/",
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2026/10/846949e5e00d8afb18ad9a9b238e6ba6-800t.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -1986,7 +1986,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2026/10/0002856_-15-apple-iphone-15-pro-natural-titanium-128gb_510-800t.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2005,7 +2005,7 @@
       "screen_size_in": 6.7,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2026/10/0002856_-15-apple-iphone-15-pro-natural-titanium-128gb_510-800t.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2024,7 +2024,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2023/09/3e6f3cfbc96e0e789086b23f54788ea2.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2043,7 +2043,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2023/05/0338f3e281ca2c92a3a3711e5b5c56e9.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2062,7 +2062,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2026/10/14-black-800t.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2081,7 +2081,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2026/10/0002892_-15-apple-iphone-15-black-128gb_510-800t.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2100,7 +2100,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2023/10/15-265.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2119,7 +2119,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2023/11/iphone-14-blue.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2138,7 +2138,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2024/01/12-white.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2157,7 +2157,7 @@
       "screen_size_in": 6.1,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2023/09/3e6f3cfbc96e0e789086b23f54788ea2.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2176,7 +2176,7 @@
       "screen_size_in": 5.8,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2024/01/13-mini-black.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "BuyMobile",
@@ -2195,7 +2195,7 @@
       "screen_size_in": 6.7,
       "image_url": "https://buy-mobile.co.il/wp-content/uploads/2026/10/d5eb3a9e04618681ffed3ba38f3d4ff8-800t.webp",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     }
   ],
   "vmobile": [
@@ -2216,7 +2216,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2235,7 +2235,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2254,7 +2254,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2273,7 +2273,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2292,7 +2292,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2311,7 +2311,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2330,7 +2330,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2349,7 +2349,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2368,7 +2368,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2387,7 +2387,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2406,7 +2406,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2425,7 +2425,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2444,7 +2444,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2463,7 +2463,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2482,7 +2482,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2501,7 +2501,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2520,7 +2520,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2539,7 +2539,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2558,7 +2558,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2577,7 +2577,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2596,7 +2596,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2615,7 +2615,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2634,7 +2634,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2653,7 +2653,7 @@
       "screen_size_in": 6.1,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2672,7 +2672,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2691,7 +2691,7 @@
       "screen_size_in": 5.8,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     },
     {
       "store": "VMobile",
@@ -2710,7 +2710,7 @@
       "screen_size_in": 6.7,
       "image_url": "",
       "confidence_level": "verified",
-      "scraped_at": "2026-11-05"
+      "scraped_at": "2026-11-06"
     }
   ]
 }
