@@ -1,12 +1,12 @@
 {
-  "last_updated": "2026-11-12T14:48:13.652621",
+  "last_updated": "2026-11-13T14:27:44.253264",
   "laptops": {
-    "total_items": 324,
+    "total_items": 330,
     "stores": {
       "itoutlet": {
         "display_name": "IT Outlet",
         "count": 36,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -14,7 +14,7 @@
       "ecology": {
         "display_name": "Ecology Computers",
         "count": 5,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -22,7 +22,7 @@
       "lts": {
         "display_name": "LaptopTech LTS",
         "count": 9,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -32,13 +32,13 @@
         "count": 7,
         "scraped_at": "2026-10-29",
         "status": "preserved",
-        "days_ago": 14,
-        "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
+        "days_ago": 15,
+        "note": "Preserved stock (catalog unreachable from this IP (every URL attempt failed))"
       },
       "cwc": {
         "display_name": "Olam HaKolnoa",
         "count": 17,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -48,7 +48,7 @@
         "count": 4,
         "scraped_at": "2026-10-08",
         "status": "preserved",
-        "days_ago": 35,
+        "days_ago": 36,
         "note": "Preserved stock (catalog blocked (HTTP 403) and the browser fallback could not clear it)"
       },
       "alm": {
@@ -56,7 +56,7 @@
         "count": 4,
         "scraped_at": "2026-11-01",
         "status": "preserved",
-        "days_ago": 11,
+        "days_ago": 12,
         "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
       },
       "shufersal": {
@@ -64,13 +64,13 @@
         "count": 17,
         "scraped_at": "2026-10-08",
         "status": "preserved",
-        "days_ago": 35,
+        "days_ago": 36,
         "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
       },
       "p1000": {
         "display_name": "P1000",
         "count": 27,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -80,13 +80,13 @@
         "count": 7,
         "scraped_at": "2026-10-08",
         "status": "preserved",
-        "days_ago": 35,
+        "days_ago": 36,
         "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
       },
       "volt": {
         "display_name": "Volt",
         "count": 60,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -94,15 +94,15 @@
       "ofekpc": {
         "display_name": "Ofek PC",
         "count": 6,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
       },
       "ktwo": {
         "display_name": "KTWO",
-        "count": 17,
-        "scraped_at": "2026-11-12",
+        "count": 18,
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -110,7 +110,7 @@
       "superprice": {
         "display_name": "SuperPrice",
         "count": 42,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -118,7 +118,7 @@
       "pcil": {
         "display_name": "PC-Online (PCIL)",
         "count": 4,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -128,13 +128,13 @@
         "count": 19,
         "scraped_at": "2026-10-08",
         "status": "preserved",
-        "days_ago": 35,
+        "days_ago": 36,
         "note": "Preserved stock (Anti-bot challenge or unreachable in CI)"
       },
       "espir": {
         "display_name": "Espircom",
-        "count": 43,
-        "scraped_at": "2026-11-12",
+        "count": 48,
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -147,31 +147,7 @@
       "gomobile": {
         "display_name": "GoMobile Outlet",
         "count": 10,
-        "scraped_at": "2026-11-12",
-        "status": "fresh",
-        "days_ago": 0,
-        "note": "Successfully scraped fresh catalog"
-      },
-      "partner": {
-        "display_name": "Partner Plus",
-        "count": 30,
-        "scraped_at": "2026-11-12",
-        "status": "fresh",
-        "days_ago": 0,
-        "note": "Successfully scraped fresh catalog"
-      },
-      "vmobile": {
-        "display_name": "VMobile",
-        "count": 27,
-        "scraped_at": "2026-11-12",
-        "status": "fresh",
-        "days_ago": 0,
-        "note": "Successfully scraped fresh catalog"
-      },
-      "itoutlet": {
-        "display_name": "IT Outlet",
-        "count": 8,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -179,7 +155,31 @@
       "dynamica": {
         "display_name": "Dynamica Outlet",
         "count": 35,
-        "scraped_at": "2026-11-12",
+        "scraped_at": "2026-11-13",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "itoutlet": {
+        "display_name": "IT Outlet",
+        "count": 8,
+        "scraped_at": "2026-11-13",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "vmobile": {
+        "display_name": "VMobile",
+        "count": 27,
+        "scraped_at": "2026-11-13",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
+      },
+      "partner": {
+        "display_name": "Partner Plus",
+        "count": 30,
+        "scraped_at": "2026-11-13",
         "status": "fresh",
         "days_ago": 0,
         "note": "Successfully scraped fresh catalog"
@@ -189,24 +189,24 @@
         "count": 5,
         "scraped_at": "2026-10-08",
         "status": "preserved",
-        "days_ago": 35,
+        "days_ago": 36,
         "note": "Preserved stock (anti-bot challenge or unreachable in CI)"
+      },
+      "buymobile": {
+        "display_name": "BuyMobile",
+        "count": 22,
+        "scraped_at": "2026-11-13",
+        "status": "fresh",
+        "days_ago": 0,
+        "note": "Successfully scraped fresh catalog"
       },
       "lastprice": {
         "display_name": "LastPrice",
         "count": 6,
         "scraped_at": "2026-10-08",
         "status": "preserved",
-        "days_ago": 35,
+        "days_ago": 36,
         "note": "Preserved stock (anti-bot challenge or unreachable in CI)"
-      },
-      "buymobile": {
-        "display_name": "BuyMobile",
-        "count": 22,
-        "scraped_at": "2026-11-12",
-        "status": "fresh",
-        "days_ago": 0,
-        "note": "Successfully scraped fresh catalog"
       }
     }
   }
